@@ -578,3 +578,5 @@
   --
   L'introspection remplace les types dynamiques
   
+  --
+  implémenter dans le futur un opérateur like gérant des regexp avancées.
