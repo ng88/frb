@@ -25,7 +25,7 @@ class FrBCppObjectAllocator
 
 
 /** FrB class from C++ binding */
-class FrBCppClass : public FrBClass
+class FrBCppClass : public FrBImplClass
 {
 private:
 
