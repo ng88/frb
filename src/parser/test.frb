@@ -1,0 +1,139 @@
+
+
+DefLang EN
+Import FrB.Utils.* 
+
+Public Class A
+
+    TypeDef Int Entier
+    TypeDef (B.membre.getType) Test    
+
+    Public Class B
+    
+    	Public Sub sub1()
+            a=5*2^3/4\78*classe.member-5*(7+9)*classe.fn()
+            b=1 And 0 Or a
+            c:=a : c+=1 : c-=1 : c/=1 : c\=1 : c^=1 : c*=1
+            d = (a == b) And (c <> b) Or (4>8)
+            d = Not d Xor (a<8) And a<=8 And a>=8
+            b = SizeOf Int
+            x = AddressOf a
+            
+            a = 5
+            b = 5.5
+            C = &L789
+            V = &S777
+            l = &F7895464
+            
+            m = -1 
+            
+            array := {1,2,3}
+            
+            array := Nothing
+            
+            Delete a
+            
+            long_def = {1,2,3,   4, 5, 5, 7, 8, 999999, 01, _
+                                                         2, _
+                                                         3, _
+                                                         3, _
+                                                         3, _
+                                                         3, _
+                                                         3, _
+                                                         3, _
+                                                         1, 2, 3 }
+	    u = long_def[1+8]
+            v = __salut__
+            v = sal__ut__
+            v = __sa
+            v = _a
+            v = ___
+            
+            A::B::test("salut")
+            
+        End Sub
+        
+        Public Shared Function test(type As String) As (unObj.getType())
+            Dim a, b, c As String = "test"
+            Dim i As Int = 5, j As Long = 89789, c, d As B = Nothing
+            Dim t As MonType
+        
+            Dim v As B := New B()
+            Dim v As B := New B(a, b, c)
+            
+            Dim d As (type.getType()) := New (type.getType())()
+            
+            Delete d
+  
+            TypeDef (type.getType()) ddd
+            TypeUndef ddd
+            
+            Return 36
+        End Function
+        
+        Public Function test() As Int
+            Dim a As Int = add(5, 8)
+            Return 36
+        End Function
+        
+        Public Function add(a As Const Int, b As Const Int) As Int
+            Return (a+b)
+        End Function
+	
+    
+    	Private Const Sub sub2()
+
+	End Sub
+	
+    
+    	Public Property Set nom() 
+	End Property
+        
+    	Public Property Get nom() As Int
+            Dim i As Array := {1, 2, 3}, j As (getType())
+            
+            Return i
+	End Property
+        
+        Public Operator-(droite As B) As B
+            Return New B(Me._data + droite._data)
+        End Operator
+        
+        Public Operator()()
+        End Operator
+        
+        Public Operator[]()
+        End Operator
+        
+        Public Shared Const Operator+()
+        End Operator
+        
+    
+    End Class
+    
+    Public Class C1
+        Public Class C12
+            Public Class C13
+            
+                
+            End Class
+        End Class
+        
+    End Class
+
+End Class
+
+TypeDef A MaClasseA 
+TypeUndef A
+
+
+DefLang FR 
+
+Publique Classe Test
+
+    Publique Fonction test() Un Entier
+        Soit a Un Entier = 85
+        
+    Fin Fonction
+
+Fin Classe

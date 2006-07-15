@@ -1,0 +1,26 @@
+
+
+' FrBasic
+
+Dim i As Int                ' i = ObjectFactory::newObject("Int") - Initialisé à 0
+
+i = 5                       ' Boxing : tmpX = ObjectFactory::newObject("Int") qui vaut 5
+                            ' puis appel de i.operator=(tmpX) puis delete(tmpX)
+
+Dim j As Int, k As Int      ' ( ObjectFactory::newObject("Int") - Initialisé à 0 ) * 2
+
+k = 12                      ' Boxing : tmpX = ObjectFactory::newObject("Int") qui vaut 14
+                            ' puis appel de k.operator=(tmpX) puis delete(tmpX)
+
+j = k + i + 4               ' Appel de ( k.operator+(i) ).operator+(tmpX) (boxing pour tmpX)
+
+Dim console As Console      ' console = ObjectFactory::newObject("Console")
+console.write(j)            ' Appel de write(Int) avec j
+
+
+
+
+
+
+
+

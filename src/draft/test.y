@@ -1,0 +1,6 @@
+
+
+%pointer
+%option noyywrap
+
+%%

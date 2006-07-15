@@ -1,0 +1,11 @@
+Code organisation:
+-------------------
+* common: common code
+* trad: translations (for error messages, FrB keywords, ...)
+* parser: (uses trad) contains the lexical and grammatical analysers that provide a class tree from a text source
+* interpreter: (uses parser, binding/cpp) get the class tree from the parser and interpret it
+* binding:
+    * cpp: C++ binding, allow to create FrB classes with C++ code
+    * qt: (uses binding/cpp) FrB binding for the C++ Qt library
+* system: system dependant code
+* compiler: compiles the class tree

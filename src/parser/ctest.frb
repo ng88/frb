@@ -1,0 +1,51 @@
+
+DefLang FR
+
+Publique Classe Fr1
+    
+    Publique Partagee Proc Constructeur()
+    Fin Proc
+    
+DefLang EN End DefLang FR Classe
+
+
+
+DefLang EN
+
+Public Class Main
+
+    Public Shared Sub Initialize()
+        1+1
+    End Sub
+    
+    Public Shared Sub Dispose()
+    End Sub
+    
+    Public Shared Sub main()
+        Dim hello, hello1 As Int
+        Dim aaaa As Int := 157
+        
+        Dim dbg As Debug
+        
+    End Sub
+    
+   
+    Public Shared Sub main(a As Int)
+        
+    End Sub
+    
+    Public Shared Sub main(a As Int, ByRef b As Int, ByVal c As Fr1)
+        Dim a As Int := 5
+        
+    End Sub
+    
+    Public Shared Sub main(yo As Main, ParamArray d As Int)
+        
+    End Sub
+    
+    Public Shared Sub main(Optional yo As Main, Optional i As Int := 5)
+        
+    End Sub
+    
+End Class
+

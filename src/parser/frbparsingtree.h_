@@ -1,0 +1,85 @@
+#ifndef FRBPARSINGTREE_H
+#define FRBPARSINGTREE_H
+
+#include <vector>
+#include <map>
+#include <stack>
+#include <iostream>
+#include "string.h"
+//#include "frbtypes.h"
+#include "assert.h"
+
+ /* operator representation */
+
+//prototype de la fonction toString des expressions/statements
+//#define TOSTRING_FN_PROTO virtual String toString(int ident = 0)
+//#define TOSTRING_FN_PROTO virtual void put(std::ostream& stream, int ident = 0)
+
+/* La base des objets FrB */
+
+
+
+
+
+
+
+
+
+
+
+/* a changer, doit être une classe comme un tableau, ...*/
+class FrBType
+{
+protected:
+    bool _const;
+public:
+    FrBType(bool cst) : _const(cst) {}
+    virtual ~FrBType() {}
+    virtual FrBBaseObject* getType() = 0;
+    inline bool isConst() { return _const; }
+};
+
+
+class FrBTypeS : public FrBType /* static type */
+{
+private:
+    String _tname;
+    
+public:
+    FrBTypeS(String tname, bool cst)
+     : FrBType(cst), _tname(tname)
+    {
+    }
+    
+    
+    FrBBaseObject* getType()
+    {
+        return NULL;
+    }
+    
+};
+
+class FrBTypeD : public FrBType /* dynamic type */
+{
+private:
+    FrBExpr* _expr;
+    
+public:
+    
+    FrBTypeD(FrBExpr * expr, bool cst)
+     : FrBType(cst), _expr(expr)
+    {
+        frb_assert2(expr, "frbparsingtree.h::FrBTypeD::FrBTypeD()");
+    }
+    
+    FrBBaseObject* getType()
+    {
+        return _expr->eval();
+    }
+    
+};
+
+
+
+#endif
+

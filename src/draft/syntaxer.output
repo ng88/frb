@@ -1,0 +1,379 @@
+
+
+Terminals which are not used:
+
+   FRB_TYPE_BUILTIN_DOUBLE
+   FRB_TYPE_BUILTIN_SRING
+   FRB_TYPE_BUILTIN_CHAR
+   FRB_OP_PLUS
+   FRB_OP_MINUS
+   FRB_OP_DIVIDE
+   FRB_OP_MULT
+   FRB_OP_POW
+   FRB_END_OF_FILE
+   FRB_OP_UNARYMINUS
+
+
+State 9 contains 1 shift/reduce conflict.
+State 12 contains 1 shift/reduce conflict.
+State 19 contains 1 shift/reduce conflict.
+
+Grammar
+rule 1    list ->		/* empty */
+rule 2    list -> list stat FRB_END_LINE
+rule 3    list -> list dec FRB_END_LINE
+rule 4    list -> FRB_END_LINE
+rule 5    list -> list error FRB_END_LINE
+rule 6    stat -> expr
+rule 7    stat -> dec
+rule 8    expr -> FRB_OP_LPAR expr FRB_OP_RPAR
+rule 9    expr -> FRB_TYPE_BUILTIN_INT
+rule 10   dec -> FRB_STAT_DECLARE dec_as_list
+rule 11   dec_as_list -> dec_as_list dec_id_list FRB_STAT_DECLAREAS FRB_IDENTIFIER
+rule 12   dec_as_list -> dec_as_list FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER expr
+rule 13   dec_as_list -> dec_id_list FRB_STAT_DECLAREAS FRB_IDENTIFIER
+rule 14   dec_as_list -> FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER expr
+rule 15   dec_id_list -> dec_id_list FRB_IDENTIFIER
+rule 16   dec_id_list -> FRB_IDENTIFIER
+
+Terminals, with rules where they appear
+
+$ (-1)
+error (256) 5
+FRB_TYPE_BUILTIN_DOUBLE (258)
+FRB_TYPE_BUILTIN_INT (259) 9
+FRB_TYPE_BUILTIN_SRING (260)
+FRB_TYPE_BUILTIN_CHAR (261)
+FRB_OP_PLUS (262)
+FRB_OP_MINUS (263)
+FRB_OP_DIVIDE (264)
+FRB_OP_MULT (265)
+FRB_OP_POW (266)
+FRB_OP_LPAR (267) 8
+FRB_OP_RPAR (268) 8
+FRB_END_LINE (269) 2 3 4 5
+FRB_END_OF_FILE (270)
+FRB_STAT_DECLARE (271) 10
+FRB_STAT_DECLAREAS (272) 11 12 13 14
+FRB_IDENTIFIER (273) 11 12 13 14 15 16
+FRB_OP_UNARYMINUS (274)
+
+Nonterminals, with rules where they appear
+
+list (20)
+    on left: 1 2 3 4 5, on right: 2 3 5
+stat (21)
+    on left: 6 7, on right: 2
+expr (22)
+    on left: 8 9, on right: 6 8 12 14
+dec (23)
+    on left: 10, on right: 3 7
+dec_as_list (24)
+    on left: 11 12 13 14, on right: 10 11 12
+dec_id_list (25)
+    on left: 15 16, on right: 11 13 15
+
+
+state 0
+
+    FRB_END_LINE	shift, and go to state 1
+
+    $default	reduce using rule 1 (list)
+
+    list	go to state 2
+
+
+
+state 1
+
+    list  ->  FRB_END_LINE .   (rule 4)
+
+    $default	reduce using rule 4 (list)
+
+
+
+state 2
+
+    list  ->  list . stat FRB_END_LINE   (rule 2)
+    list  ->  list . dec FRB_END_LINE   (rule 3)
+    list  ->  list . error FRB_END_LINE   (rule 5)
+
+    $   	go to state 31
+    error	shift, and go to state 3
+    FRB_TYPE_BUILTIN_INT	shift, and go to state 4
+    FRB_OP_LPAR	shift, and go to state 5
+    FRB_STAT_DECLARE	shift, and go to state 6
+
+    stat	go to state 7
+    expr	go to state 8
+    dec 	go to state 9
+
+
+
+state 3
+
+    list  ->  list error . FRB_END_LINE   (rule 5)
+
+    FRB_END_LINE	shift, and go to state 10
+
+
+
+state 4
+
+    expr  ->  FRB_TYPE_BUILTIN_INT .   (rule 9)
+
+    $default	reduce using rule 9 (expr)
+
+
+
+state 5
+
+    expr  ->  FRB_OP_LPAR . expr FRB_OP_RPAR   (rule 8)
+
+    FRB_TYPE_BUILTIN_INT	shift, and go to state 4
+    FRB_OP_LPAR	shift, and go to state 5
+
+    expr	go to state 11
+
+
+
+state 6
+
+    dec  ->  FRB_STAT_DECLARE . dec_as_list   (rule 10)
+
+    FRB_IDENTIFIER	shift, and go to state 12
+
+    dec_as_list	go to state 13
+    dec_id_list	go to state 14
+
+
+
+state 7
+
+    list  ->  list stat . FRB_END_LINE   (rule 2)
+
+    FRB_END_LINE	shift, and go to state 15
+
+
+
+state 8
+
+    stat  ->  expr .   (rule 6)
+
+    $default	reduce using rule 6 (stat)
+
+
+
+state 9
+
+    list  ->  list dec . FRB_END_LINE   (rule 3)
+    stat  ->  dec .   (rule 7)
+
+    FRB_END_LINE	shift, and go to state 16
+
+    FRB_END_LINE	[reduce using rule 7 (stat)]
+    $default	reduce using rule 7 (stat)
+
+
+
+state 10
+
+    list  ->  list error FRB_END_LINE .   (rule 5)
+
+    $default	reduce using rule 5 (list)
+
+
+
+state 11
+
+    expr  ->  FRB_OP_LPAR expr . FRB_OP_RPAR   (rule 8)
+
+    FRB_OP_RPAR	shift, and go to state 17
+
+
+
+state 12
+
+    dec_as_list  ->  FRB_IDENTIFIER . FRB_STAT_DECLAREAS FRB_IDENTIFIER expr   (rule 14)
+    dec_id_list  ->  FRB_IDENTIFIER .   (rule 16)
+
+    FRB_STAT_DECLAREAS	shift, and go to state 18
+
+    FRB_STAT_DECLAREAS	[reduce using rule 16 (dec_id_list)]
+    $default	reduce using rule 16 (dec_id_list)
+
+
+
+state 13
+
+    dec  ->  FRB_STAT_DECLARE dec_as_list .   (rule 10)
+    dec_as_list  ->  dec_as_list . dec_id_list FRB_STAT_DECLAREAS FRB_IDENTIFIER   (rule 11)
+    dec_as_list  ->  dec_as_list . FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER expr   (rule 12)
+
+    FRB_IDENTIFIER	shift, and go to state 19
+
+    $default	reduce using rule 10 (dec)
+
+    dec_id_list	go to state 20
+
+
+
+state 14
+
+    dec_as_list  ->  dec_id_list . FRB_STAT_DECLAREAS FRB_IDENTIFIER   (rule 13)
+    dec_id_list  ->  dec_id_list . FRB_IDENTIFIER   (rule 15)
+
+    FRB_STAT_DECLAREAS	shift, and go to state 21
+    FRB_IDENTIFIER	shift, and go to state 22
+
+
+
+state 15
+
+    list  ->  list stat FRB_END_LINE .   (rule 2)
+
+    $default	reduce using rule 2 (list)
+
+
+
+state 16
+
+    list  ->  list dec FRB_END_LINE .   (rule 3)
+
+    $default	reduce using rule 3 (list)
+
+
+
+state 17
+
+    expr  ->  FRB_OP_LPAR expr FRB_OP_RPAR .   (rule 8)
+
+    $default	reduce using rule 8 (expr)
+
+
+
+state 18
+
+    dec_as_list  ->  FRB_IDENTIFIER FRB_STAT_DECLAREAS . FRB_IDENTIFIER expr   (rule 14)
+
+    FRB_IDENTIFIER	shift, and go to state 23
+
+
+
+state 19
+
+    dec_as_list  ->  dec_as_list FRB_IDENTIFIER . FRB_STAT_DECLAREAS FRB_IDENTIFIER expr   (rule 12)
+    dec_id_list  ->  FRB_IDENTIFIER .   (rule 16)
+
+    FRB_STAT_DECLAREAS	shift, and go to state 24
+
+    FRB_STAT_DECLAREAS	[reduce using rule 16 (dec_id_list)]
+    $default	reduce using rule 16 (dec_id_list)
+
+
+
+state 20
+
+    dec_as_list  ->  dec_as_list dec_id_list . FRB_STAT_DECLAREAS FRB_IDENTIFIER   (rule 11)
+    dec_id_list  ->  dec_id_list . FRB_IDENTIFIER   (rule 15)
+
+    FRB_STAT_DECLAREAS	shift, and go to state 25
+    FRB_IDENTIFIER	shift, and go to state 22
+
+
+
+state 21
+
+    dec_as_list  ->  dec_id_list FRB_STAT_DECLAREAS . FRB_IDENTIFIER   (rule 13)
+
+    FRB_IDENTIFIER	shift, and go to state 26
+
+
+
+state 22
+
+    dec_id_list  ->  dec_id_list FRB_IDENTIFIER .   (rule 15)
+
+    $default	reduce using rule 15 (dec_id_list)
+
+
+
+state 23
+
+    dec_as_list  ->  FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER . expr   (rule 14)
+
+    FRB_TYPE_BUILTIN_INT	shift, and go to state 4
+    FRB_OP_LPAR	shift, and go to state 5
+
+    expr	go to state 27
+
+
+
+state 24
+
+    dec_as_list  ->  dec_as_list FRB_IDENTIFIER FRB_STAT_DECLAREAS . FRB_IDENTIFIER expr   (rule 12)
+
+    FRB_IDENTIFIER	shift, and go to state 28
+
+
+
+state 25
+
+    dec_as_list  ->  dec_as_list dec_id_list FRB_STAT_DECLAREAS . FRB_IDENTIFIER   (rule 11)
+
+    FRB_IDENTIFIER	shift, and go to state 29
+
+
+
+state 26
+
+    dec_as_list  ->  dec_id_list FRB_STAT_DECLAREAS FRB_IDENTIFIER .   (rule 13)
+
+    $default	reduce using rule 13 (dec_as_list)
+
+
+
+state 27
+
+    dec_as_list  ->  FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER expr .   (rule 14)
+
+    $default	reduce using rule 14 (dec_as_list)
+
+
+
+state 28
+
+    dec_as_list  ->  dec_as_list FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER . expr   (rule 12)
+
+    FRB_TYPE_BUILTIN_INT	shift, and go to state 4
+    FRB_OP_LPAR	shift, and go to state 5
+
+    expr	go to state 30
+
+
+
+state 29
+
+    dec_as_list  ->  dec_as_list dec_id_list FRB_STAT_DECLAREAS FRB_IDENTIFIER .   (rule 11)
+
+    $default	reduce using rule 11 (dec_as_list)
+
+
+
+state 30
+
+    dec_as_list  ->  dec_as_list FRB_IDENTIFIER FRB_STAT_DECLAREAS FRB_IDENTIFIER expr .   (rule 12)
+
+    $default	reduce using rule 12 (dec_as_list)
+
+
+
+state 31
+
+    $   	go to state 32
+
+
+
+state 32
+
+    $default	accept

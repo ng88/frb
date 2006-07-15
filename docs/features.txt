@@ -1,0 +1,580 @@
+         Implémentation FrBasic 
+         ----------------------
+ 
+ * Déclaration avec initialisation : Dim id As expr = expr
+ * Une fonction est une valeur (Function/UserFunction)
+ * Une classe aussi (Class/UserClass)
+ * Application partielle -- après avec construction de classe partielle (différent de partial classe)
+ * Utilisation du mot clef Return dans une fonction
+ * Surcharge d'opérateur dans les classes (Operator+(), Operator*(), ... ou simplement Public (Sub) +())
+ * Recusivité dans les fonctions et classes (Class A : A a : End Class)
+ * ':' pour plusieurs instructions à la suite (i = 1 : j = 2 : k = i + j)
+ * Déclaration de classes et de fonctions nichées
+ * Héritage multiple
+ * Construction de classes partielles (application partielle du constructeur)
+ * Partial classe
+ 
+ 
+ *** Beaucoup de choses sont obsoletes, cf le document "FrB Specification [draft]" pour une version correcte ***
+ 
+ --
+ Il est déconseillé d'utiliser des id commencant par une maj mais ce n'est pas illégal.
+ (obsolete)
+ 
+ --
+ Const s'utilise comme Dim sous que l'initialisation est obligatoire :
+ Const i As Int = 3
+ (obsolete => Private i As Const Int)
+ 
+ 
+ --
+ Static s'utilise uniquement dans des fonctions :
+ Static i As Int = 3
+ 
+ --
+ Shared est l'équivalent du static C++ pour les membres des classes
+ Public Shared Function fn() As type
+ 
+ --
+ Private, Public, Protected s'utilise uniquement dans des classes
+ Ainsi, un membre peut se déclarer :
+ Public|Private|Protected|Friend [Shared|Virtual|PureVirtual] [Const] [Function|Sub|Operator|Property (Set|Get)] id( [ByVal|ByRef] id As type,
+         [Optional id As type = expr]|[ParamArray args[] As type) As type
+
+ Un évenement est obligatoirement publique :
+ Event id(id As type...)
+ 
+ Les fonctions sont des instances de la classe Function qui surcharge ()
+ 
+ --
+ Operator ne concerne que les fonctions membres.
+ (obsolete, toutes les fonctions sont membres, un operateur doit être public par contre)
+ 
+ --
+ Dim correspond donc à Public
+ 
+ --
+ Class déclare une classe, Implements définit l'implémentation d'une interface et Inherits l'héritage :
+ 
+ Class A
+     
+     Public Sub test()
+     End Sub
+ 
+ End Class
+ 
+ Class B
+     Inherits A
+     
+     Public Sub test2()
+     End Sub
+     
+ End Class
+ 
+ --
+ Réfléchir au type partiel basée sur l'application partielle (en fait c'est l'application partielle sur un constructeur)
+ 
+ --
+ Interface déclare une interface
+ 
+ Interface A
+ 
+ End Interface
+ 
+ Une interface peut implémenter une interface mais pas une classe.
+ Une interface peut contenir du code, il sera ignoré.
+ 
+ --
+ Un membre peut etre virtuel mais pas virtuel pure, pour cela on utilise une Interface
+ NON il peut. Une interface est simplement une classe avec seulement des membres virtuels pures
+ 
+ --
+ L'utilisation du mot clef Virtual pour les membres des interfaces est superflu, ils sont virtuel pure
+ automatiquement.
+ 
+ --
+ Une fonction de type X à 1 argument ou plus ne retourne pas forcément du X mais peut
+ retourner une autre fonction si l'application partielle est utilisée.
+ 
+ --
+ Pareil pour une sub, elle peut retourner qqch en cas d'application partielle.
+ 
+ --
+ Le mot clef Operator déclare la surcharge d'un opérateur dans une classe :
+ Public Operator +(x As type) As type
+ End Operator
+ 
+ Les opérateurs sont les suivants :
+ = := += -= *= /= + ++ ++ - -(unary) * / \ Mod ^
+ < <= > >= <> == Is (Is non utile)
+ [] ()
+ And Or Xor Not
+ & ~ | ou surcharge de des opérateur And Or... pr les types entiers --> OUI
+ Cependant on utilisera un opérateur & pour la concaténation
+ IsTypeOf SizeOf IsInstanceOf InheritsFrom AddressOf
+ << >>
+ 
+ AddressOf renvoie un Int -> utile ?
+ 
+ Le & de VB6 permettant la concaténation a été abandonné. On utilise l'opérateur + pour cela.
+ NON on peut surcharger &
+ 
+ --
+ Les tableaux utilisent [] et non () comme en VB6 car :
+     * On peut confondre avec une fonction
+     * Les opérateurs () et [] seraient les mêmes pour une classe
+     
+ --
+ Les classes ont un initilisateur et un desctructeur :
+ Class A
+     Public Function initialize() As Boolean
+     End Sub
+     
+     'ou
+     
+     Public Sub initialize()
+     End Sub
+          
+     Public Sub initialize(nom As String, prenom As String)
+     End Sub
+     
+     Public Sub dispose()
+     End Sub
+ End Class
+ 
+ --
+ Pour les tests :
+ If condition Then
+     code
+ Else If condition Then
+     code
+ Else
+     code
+ End If
+ 
+ --
+ Une autre nouveauté, un équivalent de l'opérateur ternaire C++ :
+ var = If condition Then val Else val
+ ' ou     / J'hésite encore /
+ var = condition ? val : val
+ 
+ --
+ Contrairement a VB6, les arguments sont évalués que si c'est nécessaires.
+ Si faisable (par exemple évaluation dès qu'on en a besoin ds la fonction)
+ 
+ --
+ Les boucles :
+ Dim i As Int
+ For i = dep To|DownTo fin [Step pas]
+ Next i
+ 'ou
+ For i As Int = dep To|DownTo fin [Step pas]
+ Next i
+ 
+ Do [While condition]
+ Loop [Until condition]
+ 
+ While cond ... Wend n'existe pas en FrB.
+ 
+ On peut aussi utiliser la récursivité pour boucler
+ 
+ --
+ Les tableaux :
+ Dim tbl[] As String
+ Dim tbl[x] As String
+ 
+ tbl[0] = "test"
+ 
+ Equivalent a des vecteurs en C++
+ (obsolete)
+ 
+ --
+ {1, 2, 3} renvoie un Int[3], on peut donc faire :
+ Dim tbl[3] As Int = {1, 2, 3}
+ 
+ --
+ Possibilité d'utiliser la programmation générique :
+ (mais plus tard, ce n'est pas absolument necessaire pour le moment
+ vu que les objets appartiennent à une hierarchie unique)
+ 
+ Class Buffer<T As Class, size As Int>
+     
+     Private _data[size] As T
+     
+     Public Sub initialize(Optional foo As Int = 0)
+     End Sub
+     '...
+     
+  End Class
+ 
+ Public Function generic_function<T As Class>(arg1 As T, arg2 As T) As T
+     Return arg1 + arg2
+ End Function
+ 
+ 'utilisation
+ 
+ Dim buff1 As Buffer<Char, 128>
+ Dim buff2 As Buffer<Int, 32> = New Buffer<Int, 32>(30)
+ 
+ Call generic_function<Int>(30, 45)
+ 
+ Dim str As String = "salut"
+ 
+ Call generic_function<TypeOf(str)>(str, " vous")
+ 
+ 'le compilo devra etre en mesure de deviner (mais plus tard)
+ 
+ --
+ Note au passage, ca serait bien que Initialize() retourne un booléan indiquant
+ si l'initialisation s'est bien passée
+ Non exception plutot
+ 
+ --
+ Les fonctions/sub ne s'appellent que par call :
+ Call foo()        'legal
+ Call foo(bar)     'legal
+ foobar = foo(bar) 'legal
+ Call foo          'illegal
+ foo               'illegal
+ foo bar           'illegal
+ foo()             'legal, en particulier dans une expression
+ foo(bar)          'idem
+ Pas forcément utilse et il faudra surement utiliser un type __VOID__ dans l'implémentation
+ 
+ --
+ Select Case value
+     Case value, value, value
+     Case value
+     Case value To|DownTo value 'utilise l'opérateur ++/--
+     Case Else
+ End Select
+ 
+ --
+ Opérateur TypeOf(), renvoie le type :
+ Dim i As Int
+ If TypeOf(i) == Int Then
+ End If
+ 
+ --
+ Exemple d'implémentation d'une fonction type printf() :
+ 
+ Public Sub printf(format As String, ParamArray args[] As Object)
+     Dim tmp As String = format
+     For i As Int = 0 To args.Count() - 1
+         Select Case TypeOf(args[i])
+             Case String
+                 '...
+             Case Int
+                 '...
+        End Select
+     End For
+ End Sub
+ 
+ --
+ Token : : Permet d'ecrire plusieurs intructions sur la même ligne :
+ Dim i As Int
+ i = 3 : i += 2
+ 
+ --
+ Systeme d'appel de fonction dynamique :
+ 
+ Public Sub test(a As Int, b As String) As String
+ End Sub
+ 
+ Dim fn_call As CallMechanism
+ 
+ fn_call.push("salut")
+ fn_call.push(35)
+ fn_call.call(test)
+ 
+ --
+ Object factory :
+ 
+ Dim str As String = "Int"
+ 
+ Dim a As ObjectFactory.newObject(str)
+ 
+ (TypeOf(A) Is Int) ' renvoie True
+ 
+ --
+ Préprocesseur : le même genre qu'en C/C++ (j'hésite ?)
+ 
+ --
+ L'équivalent des namespace du C++ sont les modules (qui peuvent être considérés comme des classes dont tous
+ les membres sont shared et sans Initialize/Dispose
+ 
+ Module MonModule
+ 
+     Class A
+     End Class
+ 
+     Sub B() 
+     End Sub
+ End Module
+ 
+ Dim t As MonModule.A
+ 
+ Call MonModule.B()
+ 
+ 'ou
+ Import MonModule
+ Dim t As A
+ Call B()
+ 
+ --
+ Les énumérations :
+ Enum Bool
+     False = 0
+     True = 1
+ End Enum
+ 
+ Dim b As Bool
+ 
+ --
+ J'hésite encore à implémenter des strutures (struct de C++ / type de VB6), je pense que les classes
+ suffisent.
+ Oui.
+ 
+ --
+ Propriétés ds les classes : Property Get/Set, pas de Property Let comme en VB6
+ 
+ --
+ Gestion de signals/evenements : connectEvent(), disconnectEvent(), raiseEvent() membres de Object, Public Event pr declarer un event.
+ 
+ --
+ Gestion des exceptions Try Catch Finally
+ 
+ --
+ Sortir d'une boucle : Exit Do/For
+ 
+ --
+ Partial class ? Oui.
+ 
+ --
+ L'héritage est publique et les mot clefs Implements et Inherits doivent être les premiers de la classe.
+ 
+ --
+ Objet possède clone() toString() addressOf() - non pas clone, on se servira du constructeur de copie -- en fait si pr polymorphisme mais dans IClonable
+ A revoir en particulier pas de toString() (IStringConvertible, INumberConvertible)
+ 
+ --
+ Conversion entre type a l'aide des construteurs
+ 
+ --
+ Cas particulier pr les opérateur And et Or avec des opérandes bool (evaluer le nécessaire seulement)
+ 
+ --
+ Les types nuémriques possèderont setEpsilon() (shared) pr la précision de comparaison
+ 
+ --
+ Acces Friend pr une classe (=package acces de java)
+ A voir ca car c'est un peu plus tordu que ca vu qu'ici les packages sont des modules
+ 
+ --
+ Ca y est je me suis décidé pour les types :)
+ 
+ Dim v As Int ' declaration de v par valeur
+ ' on pourra passer v par ref à une fonction en utilisant ByRef
+ 
+ v = 5
+ 
+ Dim r As Ref Int ' declare une référence vers un entier nouvellement créé
+ 
+ r = AddressOf v
+ 
+ Dim a As Int = ValueOf r
+ 
+ ' si on utilise ByRef, on passe un Pointeur sur un pointeur
+ ' en fait Ref est un modificateur, (Ref Int) est de type Class (?)
+ 
+ --
+ hmm on aboli ByRef, ByVal ?
+ on pourrait le remplacer comme ca :
+ 
+ Function fn(ByRef ref As Int)
+ <=>
+ Function fn(ref As Ref Int)
+ 
+ je ne sais pas comment le Ref Int apres, comme un Int ou un pointeur  ?!
+ 
+ non on garde byref ca sera vraiment equivalent au ref C++
+ 
+ et on traite les Ref Object comme des pointeurs
+ 
+ non non non
+ on garde byval et buref point (équivalent à un = et :=) pas d'histoire de Ref, on va pas refaire le C :)
+ 
+ --
+ non non on change tt
+ tout est géré par ref :
+ Dim i As Int ' initialisé ac le construteur par defaut
+ Dim i As Int = 5 'initialisé à 5
+ Dim i As Int = Nothing 'non initialisé
+ ' Soit A une classe ss construteur par défaut :
+ Dim i As A 'incorrect, pas de construteur par defaut, il faut ecrire
+ 
+ Dim i As A = Nothing 'ok
+ i = New A(param)
+ 
+ ' ou
+ 
+ Dim i As A = New A(param)
+ 
+ ByRef ne fait rien de spécial
+ ByVal fait une copie
+ 
+ Dim a As Int = 6, b As Int
+ a = b ' copie de b dans a en utilisant le copy construteur, l'opérateur = n'est pas surchargeable
+ a := b ' alias, a et b reference la mm variable, l'opérateur := n'est pas surchargeable
+ ' ici AddressOf a == AddressOf b vaut True
+ 
+ --
+ Il faudrait un modificateur pour déclarer une variable constante et non un truc du genre
+ Const a As b
+ 
+ Dim a As Const b
+ Function fn(a As Const b)
+ Const Function fn(a As Const b) 'fonction ne modifiant pas la classe
+ 
+ --
+ Idée d'implémentation du type dynamique
+ Dim var As type 'où type est de type classe
+ 
+ ' table des references :
+ struct
+ {
+     String name; // nom de la variable
+     BaseObject * obj; //ptr vers l'objet
+ };
+ 
+ class Object
+ {
+     //...
+  private:
+         Class * type; //ptr vers le type de l'objet
+     //...
+ };
+ 
+ /*
+     démarrage de l'interpreteur
+     dans la table des reférence on ajoute une instance de 
+     Class("String", builtin)
+     on a donc un
+     Class * type; (type->name == "String", builtin)
+ */
+ 
+ Dim str As String
+     name = "str"
+     obj ---> Class::getType("String")->newInstance();
+         newInstance regarde si c'est un type builtin, si c'est le cas on utilise
+         l'object factory pour créer l'instance sinon on créé une instance de UserClass
+         qui dérive de Object
+         
+         Class devra avoir une membre getFunction("prototype") qui retourne soit une
+         UserFunction (non builtin) soit une BuiltinFunction qui encapsule une fonction
+         C++
+
+ --
+ On peux utiliser un opérateur pour les conversions implicites :
+ Class MaClasse
+ 
+     Public Operator String() As String
+         Return "blabla"
+     End Operator
+ 
+ End Class
+ 
+ Dim a As MaClasse
+ Dim str As String = a
+ 
+ --
+ Implémentation de ForEach (les classes implémenteront INumerable par exemple pr pouvoir etre utilisée via ForEach)
+ 
+ --
+ Pour l'affection on utilise bien la surcharge de Operator =() dès que possible
+ 
+ --
+ Implémenter With ?
+ With MonObject
+     .methode()
+     .prop = 3
+ End With
+         
+ --
+ 2 syntaxes pour import :
+ Import "fichier local.ext"
+ Import FrB.Classe 'import des lib standards
+ 
+ ext l'extension peut être une des suivantes :
+     * .frb = fichier code source non parsé
+     * .frb.s/.frbs = fichier code source parsé, sérialisé
+     * .frb.c/.frbc = fichier code source compilé (so/dll)
+ si ext n'est pas précisé, frb cherche le .frbc puis le .frbs puis le .frb et prend le plus récent
+ 
+ Import ne doit pas changer le set, on sauvegarde le set, on importe et on remet l'ancien set
+ 
+ --
+  Class A
+
+     Public Sub Explicit initialize(i As Int)
+     End Sub
+     
+  End Class
+  
+  --
+  Optimisation de l'arbre : traiter -5 comme une constante entière négative et non pas comme l'opérateur moins unaire appliqué a 5
+  
+  
+  --
+  Idée pour les Stream :
+  
+  Exemple
+  
+  Partial Class Stream
+  ...
+  
+      Public Operator<<(a As IStringConvertible) As Stream
+          Operator<<(a.toString())
+      End Operator
+      
+  End Class
+  
+  
+  Class Int
+  ...
+  End Class
+  
+  'par exemple
+  
+  Partial Class Stream
+  
+      Public Operator<<(a As Int) As Stream
+      End Operator
+      
+  End Class
+  
+  --
+  Les modules sont des classes sealed, shared et partial
+  
+  --
+  Les objets instanciés par le parsage, ie sur la meme static & shared doivent être constant (ConstString sous classe de String qui devra se dubliquer en cas de modif mais c'est transparent pr l'utilisateur))
+  
+  --
+  Faire un truc à la c++ pr l'initialisation des membres ds les constructeurs
+  S
+  
+  
+  --
+  Créer une classe qui fera ds l'interprétation dynamique et qui poura renvoyer une Class, une Function à partir d'une chaine
+  
+  --
+  Un truc interessant : appeler une fonction avec un tableau
+  genre fn(ParamArray {1, 2, 3}) équivalent à fn(1, 2, 3)
+  (ParamArray != du ParamArray pr le nb variable de paramètre)
+  
+  --
+  Le prob des interdépendance est résolu grace au partial class
+  
+  --
+  L'introspection remplace les types dynamiques
+  
