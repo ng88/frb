@@ -39,7 +39,7 @@ Public Class Main
         
     End Sub
     
-    Public Shared Sub main(yo As Main, ParamArray d As Int)
+    Protected Const Function test(yo As Main, ParamArray d As Int) As Int
         
     End Sub
     

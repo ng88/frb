@@ -23,6 +23,7 @@ protected:
     bool _sub;
     bool _shared;
     bool _const; 
+    bool _abstract;
     //TODO, const=true => Me est const dans cette foction
     String _name;
     
@@ -47,7 +48,7 @@ public:
                    MATCH_WITH_OPT,
                    MATCH } match_t;
  
-    inline FrBFunction() : _sub(false), _shared(false), _const(false), _firstOptional(-1),
+    inline FrBFunction() : _sub(false), _shared(false), _const(false), _abstract(false), _firstOptional(-1),
                            _paramArray(false), _scope(SC_PUBLIC)  {};
                              
     virtual ~FrBFunction() {}
@@ -61,6 +62,9 @@ public:
     
     inline void setConst(bool v) { _const = v; }
     inline bool isConst() const { return _const; }
+    
+    inline void setAbstract(bool v) { _abstract = v; }
+    inline bool abstract() const { return _abstract; }
     
     inline scope_t scope() const { return _scope; }
     inline void setScope(scope_t v) { _scope = v; }

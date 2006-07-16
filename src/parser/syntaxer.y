@@ -45,6 +45,13 @@ struct FnCParam
     char *     str;
 };
 
+struct FnAttr
+{
+    int   scope;
+    int   class_attr;
+    bool  is_const;
+};
+
 %}
 
 %name FrBSyntaxicalParser
@@ -60,6 +67,7 @@ struct FnCParam
     int                        vint;
     FnCParam                   param;
     bool                       vbool;
+    FnAttr                     fnattr;
 }
 
 %start program_file
@@ -221,19 +229,24 @@ member_scope_attr:
     ;
 
 fn_class_attr:
-      FRB_KW_TOKEN_SHARED
-    | FRB_KW_TOKEN_VIRTUAL
-    | FRB_KW_TOKEN_PUREVIRTUAL
-    | /* empty */
+      FRB_KW_TOKEN_SHARED       { $<vint>$ = SC_SHARED; }
+    //| FRB_KW_TOKEN_VIRTUAL
+    | FRB_KW_TOKEN_PUREVIRTUAL  { $<vint>$ = SC_ABSTRACT; }
+    | /* empty */               { $<vint>$ = SC_DEFAULT; }
     ;    
 
 fn_const_attr:
-      FRB_KW_TOKEN_CONST
-    | /* empty  */
+      FRB_KW_TOKEN_CONST  { $<vbool>$ = true; }
+    | /* empty  */        { $<vbool>$ = false; }
     ;
     
 fn_attr:
       member_scope_attr fn_class_attr fn_const_attr
+      {
+          $<fnattr>$.scope = $<vint>1;
+          $<fnattr>$.class_attr = $<vint>2;
+          $<fnattr>$.is_const = $<vbool>3;
+      }
     ;
     
       /*Public|Private|Protected|Friend [Shared|Virtual|PureVirtual] [Const] [Function|Sub|Operator|Property (Set|Get)] id( [ByVal|ByRef] id As type,
@@ -272,6 +285,14 @@ function:
            
            nfn->setSub($<str>2 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_SUB));
            nfn->setName(String($<str>3));
+           
+           nfn->setScope( (scope_t)($<fnattr>1.scope) );
+           nfn->setShared( $<fnattr>1.class_attr == SC_SHARED );
+           nfn->setAbstract( $<fnattr>1.class_attr == SC_ABSTRACT );
+           nfn->setConst( $<fnattr>1.is_const );
+           
+           
+           //$<fnattr>$
                
                               
            
@@ -315,7 +336,10 @@ function:
                 frb_error->error(FrBErrors::FRB_ERR_FN_RETURN_TYPE,
                     FrBErrors::FRB_ERR_PARSE,
                     frb_lexer->lineno(), "", "", "",
-                    String(frb_lexer->YYText())); 
+                    String(frb_lexer->YYText()));
+                    
+            current_fn()->setReturnType($<vtype>6);        
+           
       }
       function_content_list /*8*/
       FRB_KW_TOKEN_END /*9*/ function_type /*10*/
