@@ -27,6 +27,8 @@ Public Class Main
         
         Dim dbg As Debug
         
+        5+6+8+0
+        
     End Sub
     
    
@@ -36,7 +38,7 @@ Public Class Main
     
     Public Shared Sub main(a As Int, ByRef b As Int, ByVal c As Fr1)
         Dim a As Int := 5
-        '1 + 1
+
     End Sub
     
     Protected Const Function test(yo As Main, ParamArray d As Int) As Int

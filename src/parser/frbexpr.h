@@ -27,7 +27,7 @@ private:
     FrBFunction *_fn;
     
 public:
-    FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op) throw (FrBFunctionNotFoundException);
+    FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException);
     ~FrBBinOpExpr();
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;

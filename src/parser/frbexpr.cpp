@@ -9,7 +9,7 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 
 /*        FrBBinOpExpr            */
-FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op) throw (FrBFunctionNotFoundException)
+FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException)
     : _rhs(rhs), _lhs(lhs), _op(op)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
@@ -41,6 +41,7 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op) throw (FrBFunctio
                 args.clear();
                 args.push_back(cr);
                 _fn = cl->findOperator(op, args);
+                if(_fn->shared()) throw FrBFunctionNotFoundException("");
             }
             catch(FrBFunctionNotFoundException)
             {
@@ -74,13 +75,22 @@ FrBBinOpExpr::~FrBBinOpExpr()
 FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
 {
 
+    frb_assert2(_fn, "frbexpr.cpp::FrBOpExpr::val() - _fn is a null pointer");
+    frb_assert2(_lhs, "frbexpr.cpp::FrBOpExpr::val() - _lhs is a null pointer");
+    frb_assert2(_rhs, "frbexpr.cpp::FrBOpExpr::val() - _rhs is a null pointer");
+
+    
+    
     FrBBaseObject* lval = _lhs->eval();
     FrBBaseObject* rval = _rhs->eval();
+    
+    std::cout << "_fn->shared()=" << _fn->shared() << "\n";
     
     if(_fn->shared())
         return _fn->execute(0, lval, rval);
     else
         return _fn->execute(lval, rval);
+        
 
 }
 

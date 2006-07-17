@@ -8,6 +8,18 @@
 /*            FrBInt            */
 FrBCppClass * FrBInt::_cpp_class = NULL;
 
+
+FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    int a = (static_cast<FrBInt*>(me))->value();
+    int b = (static_cast<FrBInt*>(arg0))->value();
+    
+    std::cout << "operator_add_FrBInt_FrBInt(" << a << ", " << b << ")\n";
+    
+    return new FrBInt(a + b);
+}
+
+
 FrBCppClass * FrBInt::initClass()
 {
     frb_assert2(_cpp_class == NULL, "FrBInt:initClass(), already initialized");
@@ -19,8 +31,16 @@ FrBCppClass * FrBInt::initClass()
     _cpp_class->setSealed(true);
     _cpp_class->setScope(SC_PUBLIC);
     
-    //TODO _cpp_class->addOperator("+", new FrBCppFunction("+", operator_add));
-    //TODO utiliser un tableau pr les operateurs
+    FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBInt, FrBInt::getCppClass(), false);
+    f->setReturnType(FrBInt::getCppClass());
+    f->setName("operator+(FrBint)");
+    f->setSub(false);
+    f->setShared(false);
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
     
     return _cpp_class;
 }
@@ -35,13 +55,7 @@ FrBInt::~FrBInt()
 {
 }
 
-FrBInt * operator_add(FrBInt * a, FrBInt * b)
-{
-    return NULL;
-    //TODO FrBInt * ret = new FrBInt(a->_val + v->_val);
-    //TODO HeapMemory::addObject(ret); //singleton
-    //TODO return ret;
-}
+
 
 
 /*                   FrBDebug                       */
@@ -64,15 +78,7 @@ FrBBaseObject * print_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
     return 0;
 }
 
-FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
-{
-    int a = (static_cast<FrBInt*>(me))->value();
-    int b = (static_cast<FrBInt*>(arg0))->value();
-    
-    std::cout << "operator_add_FrBInt_FrBInt(" << a << ", " << b << ")\n";
-    
-    return new FrBInt(a + b);
-}
+
 
 
 FrBCppClass * FrBDebug::initClass()
@@ -104,14 +110,7 @@ FrBCppClass * FrBDebug::initClass()
     
     _cpp_class->addFunction(f);
     
-    f = new FrBUnaryCppFunction(operator_add_FrBInt, FrBInt::getCppClass(), false);
-    f->setName("operator+(FrBint)");
-    f->setSub(false);
-    f->setShared(true);
-    f->setConst(true);
-    f->setScope(SC_PUBLIC);
-    
-    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
     
     return _cpp_class;
 }
