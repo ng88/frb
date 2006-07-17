@@ -9,18 +9,61 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 
 /*        FrBBinOpExpr            */
-FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op)
+FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op) throw (FrBFunctionNotFoundException)
     : _rhs(rhs), _lhs(lhs), _op(op)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
     
-    /*try
+    const FrBClass * cl = lhs->getClass();
+    const FrBClass * cr = rhs->getClass();
+    
+    FrBConstClassList args;
+    args.push_back(cl);
+    args.push_back(cr);
+    
+    
+    try
     {
-        _fn = lhs->getClass()->findOperator(op
+        _fn = cl->findOperator(op, args);
+        if(!_fn->shared()) throw FrBFunctionNotFoundException("");
     }
     catch(FrBFunctionNotFoundException)
     {
-    }*/
+        try
+        {
+            _fn = cr->findOperator(op, args);
+            if(!_fn->shared()) throw FrBFunctionNotFoundException("");
+        }
+        catch(FrBFunctionNotFoundException)
+        {
+            try
+            {
+                args.clear();
+                args.push_back(cr);
+                _fn = cl->findOperator(op, args);
+            }
+            catch(FrBFunctionNotFoundException)
+            {
+                FrBFunctionNotFoundException ex(
+                                String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
+                                    .append(FrBKeywords::getKeywordOrSymbol(_op)),
+                                args
+                                                );
+                
+                const FrBClass::OperatorContainer * ops = cl->operatorList();
+                
+                for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+                        ex.addCandidate(itf->second);
+                        
+                ops = cr->operatorList();
+                
+                for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+                        ex.addCandidate(itf->second);
+                                                                       
+                throw ex;
+            }
+        }
+    }
 }
 FrBBinOpExpr::~FrBBinOpExpr()
 {
@@ -31,10 +74,13 @@ FrBBinOpExpr::~FrBBinOpExpr()
 FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
 {
 
-    /*FrBBaseObject* lval = _rhs->eval();
-    FrBBaseObject* rval = _lhs->eval();
+    FrBBaseObject* lval = _lhs->eval();
+    FrBBaseObject* rval = _rhs->eval();
     
-    return lval->callOperator('+', */
+    if(_fn->shared())
+        return _fn->execute(0, lval, rval);
+    else
+        return _fn->execute(lval, rval);
 
 }
 

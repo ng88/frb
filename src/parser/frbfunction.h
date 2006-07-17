@@ -14,6 +14,7 @@ enum { SC_ABSTRACT = 1, SC_SHARED, SC_SEALED };
 class FrBClass;
 class FrBFunction;
 typedef std::vector<FrBClass*> FrBClassList;
+typedef std::vector<const FrBClass*> FrBConstClassList;
 typedef std::map<const String, FrBClass*> FrBClassMap;
 typedef std::vector<FrBFunction*> FrBFunctionList;
 
@@ -86,11 +87,15 @@ public:
     inline const String& name() const { return _name; }
     
     virtual FrBBaseObject * execute(FrBBaseObject * me) const throw (FrBExecutionException);
+    virtual FrBBaseObject * execute(FrBBaseObject * me, FrBBaseObject * arg0) const
+        throw (FrBExecutionException);
+    virtual FrBBaseObject * execute(FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
+        throw (FrBExecutionException);
     virtual FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException) = 0;
     
     /*virtual*/ match_t matchParameters(const FrBBaseObjectList& args);
-    /*virtual*/ match_t matchParameters(const FrBClassList& args);
+    /*virtual*/ match_t matchParameters(const FrBConstClassList& args);
     
 
     template<class It, class ArgContainer>    

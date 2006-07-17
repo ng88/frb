@@ -64,6 +64,16 @@ FrBBaseObject * print_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
     return 0;
 }
 
+FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    int a = (static_cast<FrBInt*>(me))->value();
+    int b = (static_cast<FrBInt*>(arg0))->value();
+    
+    std::cout << "operator_add_FrBInt_FrBInt(" << a << ", " << b << ")\n";
+    
+    return new FrBInt(a + b);
+}
+
 
 FrBCppClass * FrBDebug::initClass()
 {
@@ -83,7 +93,6 @@ FrBCppClass * FrBDebug::initClass()
     f->setShared(false);
     f->setConst(false);
     f->setScope(SC_PUBLIC);
-    f->setParamArrayUsed(false);
     
     _cpp_class->addConstructor(f);
     
@@ -92,10 +101,17 @@ FrBCppClass * FrBDebug::initClass()
     f->setSub(true);
     f->setShared(false);
     f->setConst(true);
-    f->setScope(SC_PUBLIC);
-    f->setParamArrayUsed(false);
     
     _cpp_class->addFunction(f);
+    
+    f = new FrBUnaryCppFunction(operator_add_FrBInt, FrBInt::getCppClass(), false);
+    f->setName("operator+(FrBint)");
+    f->setSub(false);
+    f->setShared(true);
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
     
     return _cpp_class;
 }

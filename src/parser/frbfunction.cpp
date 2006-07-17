@@ -16,10 +16,28 @@ FrBBaseObject * FrBFunction::execute(FrBBaseObject * me) const throw (FrBExecuti
     return execute(me, args);
 }
 
+FrBBaseObject * FrBFunction::execute(FrBBaseObject * me, FrBBaseObject * arg0) const
+        throw (FrBExecutionException)
+{
+    FrBBaseObjectList args;
+    args.push_back(arg0);
+    return execute(me, args);
+}
+
+FrBBaseObject * FrBFunction::execute(FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
+        throw (FrBExecutionException)
+{
+    FrBBaseObjectList args;
+    args.push_back(arg0);
+    args.push_back(arg1);
+    return execute(me, args);
+}
+
+
 
 //     <ATTENTION / WARNING = Répétition de code / Code repetition>
 
-FrBFunction::match_t FrBFunction::matchParameters(const FrBClassList& args)
+FrBFunction::match_t FrBFunction::matchParameters(const FrBConstClassList& args)
 {
     int count = parameterCount();
     int pcount = args.size();

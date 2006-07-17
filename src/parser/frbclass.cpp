@@ -86,12 +86,23 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     sout << ident << "\t+ Functions:" << endl;
     
     const FunctionContainer * fns = functionList();
-    const ClassContainer * inners = innerClassList();
+    
     
     for(FunctionContainer::const_iterator itf = fns->begin(); itf != fns->end(); ++itf)
             itf->second->put(sout, level);
-        
+    
+    sout << ident << "\t+ Operators:" << endl;
+    
+    const OperatorContainer * ops = operatorList();
+    
+    
+    for(OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+            itf->second->put(sout, level);
+            
+                
     sout << ident << "\t+ Inner classes:" << endl;
+    
+    const ClassContainer * inners = innerClassList();
     
     for(ClassContainer::const_iterator it = inners->begin(); it != inners->end(); ++it)
         it->second->put(sout, level + 1);

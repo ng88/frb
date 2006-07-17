@@ -74,13 +74,15 @@ public:
              virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
              */
              
-    inline FrBFunction * findConstructor(const FrBBaseObjectList& args) const
+    template<class ArgContainer>
+    inline FrBFunction * findConstructor(const ArgContainer& args) const
           throw (FrBFunctionNotFoundException)
     {
         return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
     }
     
-    inline FrBFunction * findFunction(const String& name, const FrBBaseObjectList& args) const
+    template<class ArgContainer>
+    inline FrBFunction * findFunction(const String& name, const ArgContainer& args) const
          throw (FrBFunctionNotFoundException)
     {
         typedef FunctionContainer::const_iterator It;
@@ -92,7 +94,8 @@ public:
                 args);
     }
     
-    inline FrBFunction * findOperator(int op, const FrBBaseObjectList& args) const
+    template<class ArgContainer>
+    inline FrBFunction * findOperator(int op, const ArgContainer& args) const
          throw (FrBFunctionNotFoundException)
     {
         typedef OperatorContainer::const_iterator It;
@@ -165,6 +168,7 @@ public:
     inline void addDestructor(FrBFunction * f) { _dtor = f; }
 
     inline const ClassContainer* innerClassList() const { return &_innerClasses; }
+    inline const OperatorContainer* operatorList() const { return &_operators; }
     inline const FunctionContainer* functionList() const { return &_functions; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
