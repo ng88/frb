@@ -20,6 +20,46 @@ FrBClass * FrBClass::getClassFromString(const String& name) throw (FrBClassNotFo
         return f->second;
 }
 
+void FrBClass::executeDefaultConstructor(FrBBaseObject * me) const throw (FrBExecutionException)
+{
+    if(_defaultCtor)
+    {
+        _defaultCtor->execute(me);
+    }
+    else
+    {
+        if(_ctors.size() > 0)
+            throw FrBDefaultCtorNotFoundException();
+        else
+            ;//TODO  default ctor creation & execution
+    }
+        
+}
+
+FrBBaseObject * FrBClass::createInstance() const throw (FrBExecutionException)
+{
+    FrBBaseObject * o = allocateInstance();
+    
+    executeDefaultConstructor(o);
+   
+        
+    return o;
+}
+
+FrBBaseObject * FrBClass::createInstance(const FrBBaseObjectList& args) const throw (FrBExecutionException)
+{
+    FrBBaseObject * o = allocateInstance();
+    executeConstructor(o, args);
+    return o;
+}
+
+void FrBClass::destroyInstance(FrBBaseObject * o) const throw (FrBExecutionException)
+{
+    executeDestructor(o);
+    FrBMemory::getMemory()->deleteObject(o);
+}
+
+
 std::ostream& FrBClass::put(std::ostream& sout, int level) const
 {
     using namespace std;
@@ -59,56 +99,7 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     return sout;
 }
 
-FrBBaseObject * FrBClass::createInstance() const throw (FrBExecutionException)
-{
-    FrBBaseObject * o = allocateInstance();
-    
-    executeDefaultConstructor(o);
-   
-        
-    return o;
-}
-
-FrBBaseObject * FrBClass::createInstance(const FrBBaseObjectList& args) const throw (FrBExecutionException)
-{
-    FrBBaseObject * o = allocateInstance();
-    executeConstructor(o, args);
-    return o;
-}
-
-void FrBClass::destroyInstance(FrBBaseObject * o) const throw (FrBExecutionException)
-{
-    executeDestructor(o);
-    FrBMemory::getMemory()->deleteObject(o);
-}
-
 FrBClass::~FrBClass()
-{
-
-}
-
-/*           FrBImplClass                  */
-
-void FrBImplClass::executeDefaultConstructor(FrBBaseObject * me) const throw (FrBExecutionException)
-{
-    if(_defaultCtor)
-    {
-        _defaultCtor->execute(me);
-    }
-    else
-    {
-        if(_ctors.size() > 0)
-            throw FrBDefaultCtorNotFoundException();
-        else
-            ;//TODO  default ctor creation & execution
-    }
-        
-}
-
-
-
-
-FrBImplClass::~FrBImplClass()
 {
     for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it) //destuct inner classes
         delete it->second;
@@ -127,8 +118,7 @@ FrBImplClass::~FrBImplClass()
     _ctors.clear();
     
     delete _dtor;
-}
-
+};
 
 /*        FrBCodeClass            */
 
@@ -145,5 +135,3 @@ const char* FrBCodeClass::specString() const
 }
 
 
-    
-    
