@@ -17,6 +17,73 @@ FrBBaseObject * FrBFunction::execute(FrBBaseObject * me) const throw (FrBExecuti
 }
 
 
+//     <ATTENTION / WARNING = Répétition de code / Code repetition>
+
+FrBFunction::match_t FrBFunction::matchParameters(const FrBClassList& args)
+{
+    int count = parameterCount();
+    int pcount = args.size();
+    
+    bool full_match = true;
+    
+    if(_paramArray)
+    {
+        if(pcount < count - 1)
+            return NO_MATCH;
+            
+        for(int i = 0; i < count - 1; ++i) /* fn pour ca */
+        {
+            if(parameterType(i) != args[i])
+            {
+                if(/*compatibile with*/true)
+                    full_match = false;
+                else
+                    return NO_MATCH;
+            }
+        }
+        
+        for(int i = count - 1; i < pcount; ++i)/* fn pour ca */
+        {
+            if(parameterType(count - 1) != args[i])
+            {
+                if(/*compatibile with*/true)
+                    full_match = false;
+                else
+                    return NO_MATCH;
+            }
+        }
+            
+        return full_match ? MATCH_WITH_PARAM_ARRAY : MATCH_WITH_CONV;
+    }
+    else
+    {
+        if(pcount > count)
+            return NO_MATCH;
+            
+        bool opt_match = (_firstOptional > -1);
+        
+        if(!opt_match && pcount != count )
+            return NO_MATCH;
+            
+        if(opt_match && pcount < _firstOptional )
+            return NO_MATCH;
+
+        for(int i = 0; i < pcount; ++i)/* fn pour ca */
+        {
+            if(parameterType(i) != args[i])
+            {
+                if(/*compatibile with*/true)
+                    full_match = false;
+                else
+                    return NO_MATCH;
+            }
+        }
+        
+        return full_match ? (opt_match ? MATCH_WITH_OPT : MATCH) : MATCH_WITH_CONV;
+    }
+}
+
+
 FrBFunction::match_t FrBFunction::matchParameters(const FrBBaseObjectList& args)
 {
     int count = parameterCount();
@@ -80,6 +147,8 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBBaseObjectList& args)
         return full_match ? (opt_match ? MATCH_WITH_OPT : MATCH) : MATCH_WITH_CONV;
     }
 }
+
+//     </ATTENTION / WARNING>
 
 
 std::ostream& FrBFunction::put(std::ostream& stream, int indent) const

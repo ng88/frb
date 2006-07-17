@@ -90,10 +90,11 @@ public:
         throw (FrBExecutionException) = 0;
     
     /*virtual*/ match_t matchParameters(const FrBBaseObjectList& args);
+    /*virtual*/ match_t matchParameters(const FrBClassList& args);
     
 
-    template<class It>    
-    static FrBFunction* findOverload(It begin, const It& end, const FrBBaseObjectList& args)
+    template<class It, class ArgContainer>    
+    static FrBFunction* findOverload(It begin, const It& end, const ArgContainer& args)
         throw (FrBFunctionNotFoundException)
     {
         FrBFunction * bestMatch = 0;

@@ -1,5 +1,6 @@
 #include "frbexpr.h"
 #include "../common/assert.h"
+#include "frbkeywords.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 {
@@ -8,10 +9,18 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 
 /*        FrBBinOpExpr            */
-FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, char* op)
+FrBBinOpExpr::FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op)
     : _rhs(rhs), _lhs(lhs), _op(op)
 {
-    frb_assert2(rhs && lhs, "frbparsingtree.h::FrBOpExpr::FrBOpExpr()");
+    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
+    
+    /*try
+    {
+        _fn = lhs->getClass()->findOperator(op
+    }
+    catch(FrBFunctionNotFoundException)
+    {
+    }*/
 }
 FrBBinOpExpr::~FrBBinOpExpr()
 {
@@ -21,23 +30,23 @@ FrBBinOpExpr::~FrBBinOpExpr()
 
 FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
 {
-    /*
-    FrBBaseObject* lval = _rhs->execute();
-    FrBBaseObject* rval = _lhs->execute();
+
+    /*FrBBaseObject* lval = _rhs->eval();
+    FrBBaseObject* rval = _lhs->eval();
     
-    return lval->callOperator('+', 
-    */
-    return NULL;
+    return lval->callOperator('+', */
+
 }
 
 const FrBClass* FrBBinOpExpr::getClass() const
 {
-    return NULL;
+    frb_assert2(_fn, "frbexpr.cpp::FrBOpExpr::getClass() - _fn is a null pointer");
+    return _fn->returnType();
 }
 
 std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 {
-    return stream << '(' << *_rhs << _op << *_lhs << ')';
+    return stream << '(' << *_rhs << ' ' << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_lhs << ')';
 }
 
 

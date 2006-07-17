@@ -21,12 +21,13 @@ typedef std::vector<FrBExpr*> FrBExprList;
 class FrBBinOpExpr : public FrBExpr
 {
 private:
-    FrBExpr* _rhs;
-    FrBExpr* _lhs;
-    char*    _op;
+    FrBExpr     *_rhs;
+    FrBExpr     *_lhs;
+    int          _op;
+    FrBFunction *_fn;
     
 public:
-    FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, char* op);
+    FrBBinOpExpr(FrBExpr* rhs, FrBExpr* lhs, int op);
     ~FrBBinOpExpr();
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
@@ -54,13 +55,13 @@ class FrBLiteralExpr : public FrBExpr
 {
 private:
     FrBCppObject* _pvalue;
+    //literal_type  _value;
     
 public:
     FrBLiteralExpr(const literal_type& v)
     {
-        /*_pvalue = FrBBoxing::box(v);
-        mem->push_back(_pvalue);*/
         _pvalue = new boxing_type(v);
+        //_value = v;
         //TODO pvalue ne doit pas etre modifié, doit etre de type FrBConstInt
     }
     
@@ -68,6 +69,7 @@ public:
     {
         //FrBBoxing::dispose_obj(_pvalue);
         //on ne delete pas _pvalue
+        //on devrait pourtant, enfin on vera ca plus tard
     }
     
     FrBBaseObject* eval() const throw (FrBEvaluationException)
@@ -82,7 +84,8 @@ public:
     
     std::ostream& put(std::ostream& stream) const
     {
-        return stream << "<val=" << 0 /*FrBCppObject::put() */ << ">";
+        //return stream << "<val=" << _value << ">";
+        return stream << "<literal_val>";
     }    
 };
 

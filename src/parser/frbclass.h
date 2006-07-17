@@ -81,6 +81,7 @@ public:
         
     virtual void addInnerClass(FrBClass * c) = 0;
     virtual void addFunction(FrBFunction * f) = 0;
+    virtual void addOperator(int op, FrBFunction * f) = 0;
     virtual void addConstructor(FrBFunction * f) = 0;
     virtual void addDestructor(FrBFunction * f) = 0;
 
@@ -166,6 +167,7 @@ public:
     
         
     void addInnerClass(FrBClass * c) { _class->addInnerClass(c); }
+    void addOperator(int op, FrBFunction * f) { _class->addOperator(op, f); }
     void addFunction(FrBFunction * f) { _class->addFunction(f); }
     void addConstructor(FrBFunction * f) { _class->addConstructor(f); }
     void addDestructor(FrBFunction * f) { _class->addDestructor(f); }
@@ -213,15 +215,13 @@ protected:
     bool     _abstract; /* abstract class, ie interface */
     bool     _sealed; /* sealed class */
     
-    //TODO: utiliser des maps partout
-    
     scope_t  _scope;
     String   _name;
 
     FunctionContainer _functions;
     ClassContainer _innerClasses;
     
-    OperatorContainer _operators; /* optimiser avec un int */
+    OperatorContainer _operators;
     
     ConstructorContainer _ctors;
     FrBFunction * _defaultCtor;
@@ -247,10 +247,6 @@ public:
              
              virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
              */
-             
-             /* get function get operator --> execute,tout ca se fait sur place */
-             
-             /* a oter tout ca */
 
 //TODO mettre la def des inline en dessous avec le mot cleef inline, pas de mot clef inline en déclaration
     
@@ -304,6 +300,9 @@ public:
     //TODO /* throw si existe deja */
     void addInnerClass(FrBClass * c) { _innerClasses[c->name()] = c; }
     void addFunction(FrBFunction * f) { _functions.insert(std::make_pair(f->name(), f)); }
+    //TODO vérifier que au moins l'un des params concerne la classe (ie pour int il faut 
+    // op(int, int) op(int, double) ou op(double, int) mais pas op(double, single)
+    void addOperator(int op, FrBFunction * f) { _operators.insert(std::make_pair(op, f)); }
     //TODO /* verifier la validité des params et retour */
     void addConstructor(FrBFunction * f)
     {
