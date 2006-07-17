@@ -14,11 +14,15 @@ FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
     int a = (static_cast<FrBInt*>(me))->value();
     int b = (static_cast<FrBInt*>(arg0))->value();
     
-    std::cout << "operator_add_FrBInt_FrBInt(" << a << ", " << b << ")\n";
+    std::cout << "operator_add_FrBInt(" << a << ", " << b << ")\n";
     
     return new FrBInt(a + b);
 }
 
+FrBBaseObject * operator_mul_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    return new FrBInt((static_cast<FrBInt*>(me))->value() * (static_cast<FrBInt*>(arg0))->value());
+}
 
 FrBCppClass * FrBInt::initClass()
 {
@@ -40,6 +44,16 @@ FrBCppClass * FrBInt::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+    
+    f = new FrBUnaryCppFunction(operator_mul_FrBInt, FrBInt::getCppClass(), false);
+    f->setReturnType(FrBInt::getCppClass());
+    f->setName("operator*(FrBint)");
+    f->setSub(false);
+    f->setShared(false);
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
 
     
     return _cpp_class;

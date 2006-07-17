@@ -84,8 +84,6 @@ FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
     FrBBaseObject* lval = _lhs->eval();
     FrBBaseObject* rval = _rhs->eval();
     
-    std::cout << "_fn->shared()=" << _fn->shared() << "\n";
-    
     if(_fn->shared())
         return _fn->execute(0, lval, rval);
     else
