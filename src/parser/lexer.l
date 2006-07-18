@@ -104,7 +104,11 @@ frb_deflang           ("DefLang")
                                             yymore();
                                         }
                                         else
+                                        {
+                                            yytext[ yyleng - 1 ] = 0;
+                                            YYLVAL.str = ++yytext;
                                             return TOKEN(FRB_TYPE_LITERAL_STRING);
+                                        }
                                     }
                                     
 \"[^"\n]*\n                         { 

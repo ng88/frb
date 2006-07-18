@@ -65,7 +65,15 @@ FrBCppClass * FrBInt::initClass()
 
 FrBBaseObject * operator_add_FrBString(FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
+    //return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
+    
+    
+    String a = (static_cast<FrBString*>(me))->value();
+    String b = (static_cast<FrBString*>(arg0))->value();
+    
+    std::cout << "operator_add_FrBString(" << a << ", " << b << ")\n";
+    
+    return new FrBString(a + b);
 }
 
 

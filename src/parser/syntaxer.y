@@ -765,7 +765,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_INT            { $<expr>$ = new FrBIntExpr($<vint>1); }
     | FRB_TYPE_LITERAL_LONGINT
     | FRB_TYPE_LITERAL_SHORTINT
-    | FRB_TYPE_LITERAL_STRING
+    | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
     | FRB_IDENTIFIER    
     | FRB_KW_TOKEN_NOTHING

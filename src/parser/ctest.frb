@@ -28,6 +28,7 @@ Public Class Main
         Dim dbg As Debug
         
         (5+3)*2+0
+        "salut"+" "+"vous"+""
         
     End Sub
     

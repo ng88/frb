@@ -50,7 +50,7 @@ public:
     std::ostream& put(std::ostream& stream) const;    
 };*/
 
-template<class literal_type, class boxing_type>
+template<class literal_type>
 class FrBLiteralExpr : public FrBExpr
 {
 private:
@@ -60,7 +60,7 @@ private:
 public:
     FrBLiteralExpr(const literal_type& v)
     {
-        _pvalue = new boxing_type(v);
+        _pvalue = new FrBPrimitive<literal_type>(v);
         //_value = v;
         //TODO pvalue ne doit pas etre modifié, doit etre de type FrBConstInt
     }
@@ -89,12 +89,12 @@ public:
     }    
 };
 
-typedef FrBLiteralExpr<int, FrBInt>        FrBIntExpr;
+typedef FrBLiteralExpr<int>        FrBIntExpr;
 // typedef FrBLiteralExpr<double>          FrBDoubleExpr;
 // typedef FrBLiteralExpr<float>           FrBSingleExpr;
 // typedef FrBLiteralExpr<short int>       FrBShortIntExpr;
 // typedef FrBLiteralExpr<long int>        FrBLongIntExpr;
-// typedef FrBLiteralExpr<String>          FrBStringExpr;
+typedef FrBLiteralExpr<String>          FrBStringExpr;
 // typedef FrBLiteralExpr<char>            FrBCharExpr;
 
 
