@@ -353,10 +353,6 @@ function:
           fn_stack.pop();
       }
       
-    | fn_attr FRB_KW_TOKEN_OPERATOR operator_overloadable fn_arg_list /* operator (sub) */
-      function_content_list
-      FRB_KW_TOKEN_END FRB_KW_TOKEN_OPERATOR
-      
     | fn_attr FRB_KW_TOKEN_OPERATOR operator_overloadable fn_arg_list as_type /* operator (function) */
       function_content_list
       FRB_KW_TOKEN_END FRB_KW_TOKEN_OPERATOR

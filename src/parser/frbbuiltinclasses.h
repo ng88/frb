@@ -5,25 +5,26 @@
 #include "frbcppbinding.h"
 #include "frbmemory.h"
 
-class FrBInt : public FrBCppObject
+template<class primitive_t>
+class FrBPrimitive : public FrBCppObject
 {
 private:
-    int _val;
+    primitive_t _val;
     static FrBCppClass * _cpp_class;
 
 public:
 
     static FrBCppClass * initClass();
     
-    inline FrBInt() : _val(0) {};
-    inline FrBInt(const int& v) : _val(v) {};
+    inline FrBPrimitive() : _val(0) {};
+    inline FrBPrimitive(const primitive_t& v) : _val(v) {};
     
-    inline void setValue(int v) { _val = v; }
-    inline int value() { return _val; }
+    ~FrBPrimitive() {}
     
-    virtual ~FrBInt();
+    inline void setValue(const primitive_t& v) { _val = v; }
+    inline const primitive_t& value() { return _val; }
     
-    FrBClass * getClass();
+    
     
     inline static FrBClass * getCppClass()
     {
@@ -32,13 +33,19 @@ public:
     }
     
 
+    FrBClass * getClass() { return getCppClass(); }
     
     
+    class Allocator : public FrBCppObjectAllocator
+    {
+        FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(); }
+    };
+    
 };
-class FrBIntAllocator : public FrBCppObjectAllocator
-{
-    FrBCppObject * createObject() const { return new FrBInt(); }
-};
+
+typedef FrBPrimitive<int> FrBInt;
+typedef FrBPrimitive<String> FrBString;
+
 
 
 
@@ -67,14 +74,14 @@ public:
         return _cpp_class;
     }
     
+    class Allocator : public FrBCppObjectAllocator
+    {
+        FrBCppObject * createObject() const { return new FrBDebug(); }
+    };
+        
+    
+};
 
-    
-    
-};
-class FrBDebugAllocator : public FrBCppObjectAllocator
-{
-    FrBCppObject * createObject() const { return new FrBDebug(); }
-};
 
 
 #endif

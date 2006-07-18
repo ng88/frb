@@ -13,6 +13,7 @@ int main(int argc, char ** argv)
     {
     
         (*(parser.classList()))["Int"] = FrBInt::initClass();
+        (*(parser.classList()))["String"] = FrBString::initClass();
         (*(parser.classList()))["Debug"] = FrBDebug::initClass();
         
         

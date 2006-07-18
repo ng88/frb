@@ -181,7 +181,7 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
             << str_indent << "\t\t- Shared=" << shared() << endl
             << str_indent << "\t\t- Sub=" << sub() << endl
             << str_indent << "\t\t- Const=" << isConst() << endl
-            << str_indent << "\t\t- Virtual=" << abstract() << endl
+            << str_indent << "\t\t- Abstract=" << abstract() << endl
             << str_indent << "\t\t- Parameters:" << endl;
             
     for(int i = 0; i < parameterCount(); ++i)
