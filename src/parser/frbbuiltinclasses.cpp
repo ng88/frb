@@ -11,12 +11,7 @@ template<class primitive_t> FrBCppClass * FrBPrimitive<primitive_t>::_cpp_class 
 
 FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    int a = (static_cast<FrBInt*>(me))->value();
-    int b = (static_cast<FrBInt*>(arg0))->value();
-    
-    std::cout << "operator_add_FrBInt(" << a << ", " << b << ")\n";
-    
-    return new FrBInt(a + b);
+    return new FrBInt((static_cast<FrBInt*>(me))->value() + (static_cast<FrBInt*>(arg0))->value());
 }
 
 FrBBaseObject * operator_mul_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
@@ -65,15 +60,7 @@ FrBCppClass * FrBInt::initClass()
 
 FrBBaseObject * operator_add_FrBString(FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    //return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
-    
-    
-    String a = (static_cast<FrBString*>(me))->value();
-    String b = (static_cast<FrBString*>(arg0))->value();
-    
-    std::cout << "operator_add_FrBString(" << a << ", " << b << ")\n";
-    
-    return new FrBString(a + b);
+    return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
 }
 
 

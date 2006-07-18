@@ -121,7 +121,7 @@ FrBClass::~FrBClass()
     _innerClasses.clear();
     
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf) //destuct functions
-            delete itf->second;
+        delete itf->second;
 
             
     _functions.clear();

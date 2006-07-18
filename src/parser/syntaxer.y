@@ -90,25 +90,28 @@ struct FnAttr
 
 /* Priorité des opérateurs */
 
-/* 1. Opérateurs de comparaison */
+/* 1. Opérateur de concaténation */
+%left FRB_KW_TOKEN_OP_CONCAT
+
+/* 2. Opérateurs de comparaison */
 %left FRB_KW_TOKEN_OP_EQ FRB_KW_TOKEN_OP_NE FRB_KW_TOKEN_OP_LT FRB_KW_TOKEN_OP_GT FRB_KW_TOKEN_OP_LE FRB_KW_TOKEN_OP_GE
 
-/* 2. Opérateurs logiques */
+/* 3. Opérateurs logiques */
 %left FRB_KW_TOKEN_OP_LOG_AND FRB_KW_TOKEN_OP_LOG_OR FRB_KW_TOKEN_OP_LOG_XOR FRB_KW_TOKEN_OP_LOG_NOT
 
-/* 3. Opérateurs d'assignement */
+/* 4. Opérateurs d'assignement */
 %right FRB_KW_TOKEN_OP_ASSIGN_VAL FRB_KW_TOKEN_OP_ASSIGN_REF FRB_KW_TOKEN_OP_ADD_ASSIGN FRB_KW_TOKEN_OP_SUB_ASSIGN FRB_KW_TOKEN_OP_MUL_ASSIGN FRB_KW_TOKEN_OP_DIV_ASSIGN FRB_KW_TOKEN_OP_INT_DIV_ASSIGN FRB_KW_TOKEN_OP_POW_ASSIGN
 
-/* 4. Opérateurs arithmétiques */
+/* 5. Opérateurs arithmétiques */
 %left FRB_KW_TOKEN_OP_ADD FRB_KW_TOKEN_OP_SUB
 %left FRB_KW_TOKEN_OP_MOD
 %left FRB_KW_TOKEN_OP_DIV FRB_KW_TOKEN_OP_MUL FRB_KW_TOKEN_OP_INT_DIV
 %right FRB_KW_TOKEN_OP_POW
 
-/* 5. Opérateur membre */
+/* 6. Opérateur membre */
 %left FRB_KW_TOKEN_OP_MEMBER
 
-/* 6. Opérateur d'objet */
+/* 7. Opérateur d'objet */
 %left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
 %nonassoc FRB_KW_TOKEN_OP_ADDRESSOF FRB_KW_TOKEN_OP_SIZEOF
 
