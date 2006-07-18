@@ -1,5 +1,6 @@
 #include "frbclass.h"
 #include "frbmemory.h"
+#include "frbkeywords.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 {
@@ -97,8 +98,10 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     
     
     for(OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
-            itf->second->put(sout, level);
-            
+    {
+        sout << ident << "\tFor operator " << FrBKeywords::getKeywordOrSymbol(itf->first) << endl;
+        itf->second->put(sout, level);
+    }        
                 
     sout << ident << "\t+ Inner classes:" << endl;
     

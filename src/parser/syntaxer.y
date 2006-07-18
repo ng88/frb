@@ -699,6 +699,9 @@ expr:
     | expr FRB_KW_TOKEN_OP_INT_DIV expr                 /* expr \ expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
       
+    | expr FRB_KW_TOKEN_OP_CONCAT expr                 /* expr & expr */
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_CONCAT); }
+      
     | expr FRB_KW_TOKEN_OP_MOD expr                         /* expr Mod expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
       

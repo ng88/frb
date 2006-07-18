@@ -88,11 +88,12 @@ FrBCppClass * FrBString::initClass()
     
     FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBString, _cpp_class, false);
     f->setReturnType(_cpp_class);
-    f->setName("operator+(FrBString)");
+    f->setName("operator+/&(FrBString)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
 
     return _cpp_class;
 }

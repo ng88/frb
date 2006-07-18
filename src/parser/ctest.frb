@@ -29,6 +29,7 @@ Public Class Main
         
         (5+3)*2+0
         "salut"+" "+"vous"+""
+        "essai" & " avec " & "operateur de concatenation" & ":)"
         
     End Sub
     
