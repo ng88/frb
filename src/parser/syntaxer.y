@@ -61,6 +61,7 @@ struct FnAttr
     char *                     str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
+    FrBIdExpr *                exprid;
     FrBClass *                 vtype;
     FrBStatement *             stat;
     FrBExprList*               exprs;
@@ -113,7 +114,7 @@ struct FnAttr
 
 /* 7. Opérateur d'objet */
 %left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
-%nonassoc FRB_KW_TOKEN_OP_ADDRESSOF FRB_KW_TOKEN_OP_SIZEOF
+%nonassoc FRB_KW_TOKEN_OP_SIZEOF
 
 %nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END
 
@@ -751,12 +752,11 @@ expr:
 //     | expr FRB_KW_TOKEN_OP_CLASS_TYPEOF expr               /* expr IsTypeOf expr */
 //     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr */
 //     | expr FRB_KW_TOKEN_OP_CLASS_INHERITS expr           /* expr Inherits expr */
-    | FRB_KW_TOKEN_OP_ADDRESSOF expr                    /* AddressOf expr */
     
     | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
     
-    | expr FRB_KW_TOKEN_OP_MEMBER expr                     /* expr.expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+    | expr FRB_KW_TOKEN_OP_MEMBER expr_id                     /* expr.expr_id */
+      { $<expr>$ = new FrBMemberOpExpr($<expr>1, $<exprid>3); }
       
     | new_expr                            /* New */
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
@@ -778,10 +778,13 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
-    | FRB_IDENTIFIER                  { $<expr>$ = new FrBIdExpr($<str>1); free($<str>1); }
+    | expr_id                         { $<expr>$ = $<exprid>1; }
     | FRB_KW_TOKEN_NOTHING
     | array
     ;
+
+expr_id:
+      FRB_IDENTIFIER                  { $<exprid>$ = new FrBIdExpr($<str>1); free($<str>1); }
 
 array: /* {expr, expr, ...} */
       FRB_KW_TOKEN_OP_ARRAY_INI_BEGIN array_elt_list FRB_KW_TOKEN_OP_ARRAY_INI_END

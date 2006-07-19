@@ -11,12 +11,17 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 /*        FrBIdExpr            */
 
-FrBIdExpr::FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException)
+FrBIdExpr::FrBIdExpr(const String& str)
+ : _wrapper(0), _name(str)
 {
     //TODO
 }
 
 FrBIdExpr::~FrBIdExpr()
+{
+}
+
+void FrBIdExpr::resolve(const FrBClass * context)  throw (FrBUndeclaredIdentifierException)
 {
 }
 
@@ -37,6 +42,37 @@ std::ostream& FrBIdExpr::put(std::ostream& stream) const
 {
     return stream << "<identifier>";
 }
+
+/*     FrBMemberOpExpr      */
+
+FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBIdExpr* rhs)
+ : _lhs(lhs), _rhs(rhs)
+{
+}
+
+FrBMemberOpExpr::~FrBMemberOpExpr()
+{
+    delete _lhs;
+    delete _rhs;
+}
+
+FrBBaseObject* FrBMemberOpExpr::eval() const throw (FrBEvaluationException)
+{
+    return 0;
+}
+
+const FrBClass* FrBMemberOpExpr::getClass() const
+{
+    return 0;
+}
+
+std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
+{
+    return stream << '(' << *_rhs << ' '
+        << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
+        << ' ' << *_lhs << ')';
+}
+  
 
 
 /*        FrBBinOpExpr            */

@@ -24,10 +24,28 @@ class FrBIdExpr : public FrBExpr
 {
 private:
     FrBBaseObject* _wrapper;
+    String _name;
     
 public:
-    FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException);
+    FrBIdExpr(const String& str);
     ~FrBIdExpr();
+    
+    void resolve(const FrBClass * context)  throw (FrBUndeclaredIdentifierException);
+    
+    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;  
+};
+
+/** Member operator (.) */
+class FrBMemberOpExpr : public FrBExpr
+{
+    FrBExpr     *_lhs;
+    FrBIdExpr   *_rhs;
+    
+public:
+    FrBMemberOpExpr(FrBExpr* lhs, FrBIdExpr* rhs);
+    ~FrBMemberOpExpr();
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
