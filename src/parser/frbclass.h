@@ -205,13 +205,14 @@ public:
     static FrBClassMap * root;
     static FrBClass * getClassFromString(const String& name) throw (FrBClassNotFoundException);
     
-    static FrBBaseObject* convert(FrBBaseObject * from, const FrBClass * to) throw (FrBIncompatibleClassException)
-    {
-        if(from->getClass() != to)
-            throw FrBIncompatibleClassException(from->getClass(), to);
-            
-        return from;
-    }
+    /** Check if from and to are compatibles and convert from to to */
+    static FrBBaseObject* convert(FrBBaseObject * from, const FrBClass * to)throw (FrBIncompatibleClassException);
+    
+    /** Convert from to to without check */
+    static FrBBaseObject* forceConvert(FrBBaseObject * from, const FrBClass * to);
+    
+    /** Check if from and to are compatibles */
+    static bool areCompatibles(const FrBClass * from, const FrBClass * to);
     
 };
 

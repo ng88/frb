@@ -19,9 +19,15 @@ FrBBaseObject * operator_mul_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
     return new FrBInt((static_cast<FrBInt*>(me))->value() * (static_cast<FrBInt*>(arg0))->value());
 }
 
+FrBBaseObject * operator_affect_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    (static_cast<FrBInt*>(me))->setValue( (static_cast<FrBInt*>(arg0))->value() );
+    return me;
+}
+
 FrBCppClass * FrBInt::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBInt:initClass(), already initialized");
+    frb_assert2(_cpp_class == NULL, "FrBInt::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
     _cpp_class->setName("Int");
@@ -33,8 +39,6 @@ FrBCppClass * FrBInt::initClass()
     FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);
     f->setName("operator+(FrBint)");
-    f->setSub(false);
-    f->setShared(false);
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
@@ -43,13 +47,19 @@ FrBCppClass * FrBInt::initClass()
     f = new FrBUnaryCppFunction(operator_mul_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);
     f->setName("operator*(FrBint)");
-    f->setSub(false);
-    f->setShared(false);
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
+    
+    f = new FrBUnaryCppFunction(operator_affect_FrBInt, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator=(FrBint)");
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ASSIGN_VAL, f);
 
+    //TODO ajouter _cpp_class au module frb::std
     
     return _cpp_class;
 }
@@ -66,7 +76,7 @@ FrBBaseObject * operator_add_FrBString(FrBBaseObject * me, FrBBaseObject * arg0)
 
 FrBCppClass * FrBString::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBString:initClass(), already initialized");
+    frb_assert2(_cpp_class == NULL, "FrBString::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
     _cpp_class->setName("String");
@@ -88,7 +98,34 @@ FrBCppClass * FrBString::initClass()
 
 
 
+/*            FrBClassWrapper            */
 
+FrBCppClass * FrBClassWrapper::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBClassWrapper::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
+    _cpp_class->setName("Class");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+
+    return _cpp_class;
+}
+
+
+/*            FrBFunctionWrapper            */
+
+FrBCppClass * FrBFunctionWrapper::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBFunctionWrapper::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
+    _cpp_class->setName("Function");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+
+    return _cpp_class;
+}
 
 
 
@@ -118,7 +155,7 @@ FrBBaseObject * print_FrBObject(FrBBaseObject*, FrBBaseObject * arg0)
 
 FrBCppClass * FrBDebug::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBDebug:initClass(), already initialized");
+    frb_assert2(_cpp_class == NULL, "FrBDebug::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBDebug::Allocator());
     _cpp_class->setName("Debug");

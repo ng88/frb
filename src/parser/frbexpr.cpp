@@ -8,6 +8,37 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 }
 
 
+
+/*        FrBIdExpr            */
+
+FrBIdExpr::FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException)
+{
+    //TODO
+}
+
+FrBIdExpr::~FrBIdExpr()
+{
+}
+
+
+FrBBaseObject* FrBIdExpr::eval() const throw (FrBEvaluationException)
+{
+    return _wrapper;
+}
+
+const FrBClass* FrBIdExpr::getClass() const
+{
+    frb_assert2(_wrapper, "frbexpr.cpp::FrBIdExpr::getClass() - _wrapper is a null pointer");
+    
+    return _wrapper->getClass();
+}
+
+std::ostream& FrBIdExpr::put(std::ostream& stream) const
+{
+    return stream << "<identifier>";
+}
+
+
 /*        FrBBinOpExpr            */
 FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException)
     : _rhs(rhs), _lhs(lhs), _op(op)

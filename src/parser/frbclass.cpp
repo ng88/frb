@@ -113,6 +113,28 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     return sout;
 }
 
+
+FrBBaseObject* FrBClass::convert(FrBBaseObject * from, const FrBClass * to) throw (FrBIncompatibleClassException)
+{
+    if(!areCompatibles(from->getClass(), to))
+        throw FrBIncompatibleClassException(from->getClass(), to);
+        
+    return forceConvert(from, to);
+}
+
+
+FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
+{
+    return from;
+}
+
+
+bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
+{
+    return from == to;
+}
+
+
 FrBClass::~FrBClass()
 {
     for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it) //destuct inner classes

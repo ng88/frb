@@ -8,6 +8,18 @@ std::ostream& operator<<(std::ostream& s, const FrBException& c)
     return c.put(s);
 }
 
+/*             FrBUndeclaredIdentifierException                */
+
+FrBUndeclaredIdentifierException::FrBUndeclaredIdentifierException(const String& name)
+  : _name(name)
+{
+}
+
+std::ostream& FrBUndeclaredIdentifierException::put(std::ostream& stream) const
+{
+    return stream << _name << ": " << FrBErrors::getMsg(FrBErrors::FRB_ERR_UNDECL_ID);
+}
+
 /*             FrBFunctionNotFoundException                */
 
 

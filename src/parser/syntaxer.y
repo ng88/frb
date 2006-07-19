@@ -25,6 +25,7 @@
 
 
 /* il faut freer tous les IDENTIFICATER et seulement les identificateurs */
+//TODO passer yytext et le copier coté syntaxer comme ca on evite les free
 
 %}
 
@@ -664,10 +665,10 @@ expr:
       { $<expr>$ = $<expr>2; }
       
     | expr FRB_KW_TOKEN_OP_ASSIGN_REF expr           /* expr := expr */
-      { $<expr>$ = $<expr>1 = $<expr>3; }
+      { $<expr>$ = $<expr>1 = $<expr>3; } //TODO je pense pas que ca marche comme ca 
       
     | expr FRB_KW_TOKEN_OP_ASSIGN_VAL expr           /* expr = expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ASSIGN_VAL); }
       
     | expr FRB_KW_TOKEN_OP_ADD_ASSIGN expr          /* expr += expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
@@ -760,6 +761,11 @@ expr:
       
     | new_expr                            /* New */
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
+      {
+          //$<expr>1
+          //$<exprs>2
+      }
+      
     | expr array_expr_list                /* array sub expr[expr, expr...] */
     | literal_expr
     ;
@@ -773,7 +779,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
-    | FRB_IDENTIFIER    
+    | FRB_IDENTIFIER                  { $<expr>$ = new FrBIdExpr($<str>1); free($<str>1); }
     | FRB_KW_TOKEN_NOTHING
     | array
     ;

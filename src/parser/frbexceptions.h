@@ -38,6 +38,17 @@ class FrBAllocationException : public FrBExecutionException
 };
 
 
+class FrBUndeclaredIdentifierException : public FrBExecutionException
+{
+protected:
+    String _name;
+    
+public:
+    FrBUndeclaredIdentifierException(const String& name);
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline const String& name() { return _name; }
+};
 
 
 
