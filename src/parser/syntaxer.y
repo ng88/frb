@@ -25,7 +25,6 @@
 
 
 /* il faut freer tous les IDENTIFICATER et seulement les identificateurs */
-//TODO passer yytext et le copier coté syntaxer comme ca on evite les free
 
 %}
 
