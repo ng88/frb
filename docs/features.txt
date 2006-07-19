@@ -114,7 +114,7 @@
  IsTypeOf SizeOf IsInstanceOf InheritsFrom AddressOf
  << >>
  
- AddressOf renvoie un Int -> utile ?
+ AddressOf renvoie un Int -> utile ? non pas d'addressof...
  
  Le & de VB6 permettant la concaténation a été abandonné. On utilise l'opérateur + pour cela.
  NON on peut surcharger &
