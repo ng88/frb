@@ -27,9 +27,7 @@ Public Class Main
         
         Dim dbg As Debug
         
-        (5+3)*2+0
-        "salut"+" "+"vous"+""
-        "essai" & " avec " & "operateur de concatenation" & ":)"
+   
         
     End Sub
     
@@ -41,7 +39,7 @@ Public Class Main
     Public Shared Sub main(a As Int, ByRef b As Int, ByVal c As Fr1)
         Dim a As Int := 5
 
-        a
+        
         
     End Sub
     

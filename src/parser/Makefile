@@ -35,6 +35,7 @@ frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltincl
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
 frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o
 frbbaseobject.o: frbbaseobject.h frbbaseobject.cpp
+frbmemory.o: frbmemory.h frbmemory.cpp
 frbmemory.o:
 frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcppbinding.o
 frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h frbbaseobject.o

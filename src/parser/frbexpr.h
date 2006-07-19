@@ -23,14 +23,11 @@ typedef std::vector<FrBExpr*> FrBExprList;
 class FrBIdExpr : public FrBExpr
 {
 private:
-    FrBBaseObject* _wrapper;
-    String _name;
+    FrBBaseObject* _object;
     
 public:
-    FrBIdExpr(const String& str);
+    FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException);
     ~FrBIdExpr();
-    
-    void resolve(const FrBClass * context)  throw (FrBUndeclaredIdentifierException);
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;

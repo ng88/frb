@@ -109,7 +109,12 @@ public:
     /** taille en block */
     inline size_t bsize() const { return _data.size(); }
         
-    inline FrBBaseObject* getObject(const String& name) { return _data[name].value; }
+    inline FrBBaseObject* getObject(const String& name)
+    {
+        Storage::iterator it = _data.find(name);
+        
+        return (it == _data.end()) ? 0 : it->second.value;
+    }
     
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
 };

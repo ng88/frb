@@ -11,31 +11,43 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 /*        FrBIdExpr            */
 
-FrBIdExpr::FrBIdExpr(const String& str)
- : _wrapper(0), _name(str)
+FrBIdExpr::FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException)
 {
-    //TODO
+    //TODO the method used to handle local var is not thread safe
+    //TODO il faudra un dico local
+    
+    /*
+        We look for:
+            1. local var
+            2. function parameter
+            3. local class member
+            4. local class function/sub
+            5. local class property
+            6. class names of the inners classes
+            7. class names of the outer class
+            8. imported class name
+    
+    */
+    
+    _object = FrBMemory::getMemory()->getObject(str);
+    
+    if(!_object) throw FrBUndeclaredIdentifierException(str);
 }
 
 FrBIdExpr::~FrBIdExpr()
 {
 }
 
-void FrBIdExpr::resolve(const FrBClass * context)  throw (FrBUndeclaredIdentifierException)
-{
-}
-
-
 FrBBaseObject* FrBIdExpr::eval() const throw (FrBEvaluationException)
 {
-    return _wrapper;
+    return _object;
 }
 
 const FrBClass* FrBIdExpr::getClass() const
 {
-    frb_assert2(_wrapper, "frbexpr.cpp::FrBIdExpr::getClass() - _wrapper is a null pointer");
+    frb_assert2(_object, "frbexpr.cpp::FrBIdExpr::getClass() - _wrapper is a null pointer");
     
-    return _wrapper->getClass();
+    return _object->getClass();
 }
 
 std::ostream& FrBIdExpr::put(std::ostream& stream) const

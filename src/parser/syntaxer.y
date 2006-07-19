@@ -755,8 +755,11 @@ expr:
     
     | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
     
-    | expr FRB_KW_TOKEN_OP_MEMBER expr_id                     /* expr.expr_id */
-      { $<expr>$ = new FrBMemberOpExpr($<expr>1, $<exprid>3); }
+    | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
+      {
+          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          free($<str>3);
+      }
       
     | new_expr                            /* New */
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
@@ -778,13 +781,11 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
-    | expr_id                         { $<expr>$ = $<exprid>1; }
+    | FRB_IDENTIFIER                  { $<expr>$ = new FrBIdExpr($<str>1); free($<str>1); }
     | FRB_KW_TOKEN_NOTHING
     | array
     ;
 
-expr_id:
-      FRB_IDENTIFIER                  { $<exprid>$ = new FrBIdExpr($<str>1); free($<str>1); }
 
 array: /* {expr, expr, ...} */
       FRB_KW_TOKEN_OP_ARRAY_INI_BEGIN array_elt_list FRB_KW_TOKEN_OP_ARRAY_INI_END
