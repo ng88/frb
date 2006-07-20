@@ -32,6 +32,8 @@ public:
     typedef std::multimap<int, FrBFunction*>            OperatorContainer;
     typedef FrBFunctionList                             ConstructorContainer;
     typedef FrBClassMap                                 ClassContainer;
+    typedef FunctionContainer::const_iterator           FnContIt;
+    typedef std::pair<FnContIt, FnContIt>               FnPairIt;
     
 protected:
 
@@ -81,12 +83,16 @@ public:
         return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
     }
     
+    inline FnPairIt findFunctions(const String& name)
+    {
+        return _functions.equal_range(name);
+    }
+    
     template<class ArgContainer>
     inline FrBFunction * findFunction(const String& name, const ArgContainer& args) const
          throw (FrBFunctionNotFoundException)
     {
-        typedef FunctionContainer::const_iterator It;
-        std::pair<It, It> seq = _functions.equal_range(name);
+        FnPairIt seq = _functions.equal_range(name);
         
         return FrBFunction::findOverload(
                 const_map_snd_iterator<FunctionContainer>(seq.first),

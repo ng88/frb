@@ -52,7 +52,6 @@ struct FnAttr
     bool  is_const;
 };
 
-typedef std::map<const String, unsigned int> SymbolTable;
 
 %}
 
@@ -802,7 +801,95 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
-    | FRB_IDENTIFIER                  { $<expr>$ = new FrBIdExpr($<str>1); free($<str>1); }
+    | FRB_IDENTIFIER                  
+      {
+      
+            String name($<str>1);
+            free($<str>1);
+            
+            const FrBClass * cc = current_class();
+            const FrBCodeFunction * cf = current_fn();
+            
+            //TODO the method used to handle local var is not thread safe
+            //TODO il faudra un dico local
+            
+            /*
+                We look for:
+                  X 1. local var
+                  X 2. function parameter
+                    3. local class member
+                  X 4. local class function/sub
+                    5. local class property
+                  X 6. class names of the inners classes
+                    7. class names of the outer class
+                  X 8. imported class name
+            
+            */
+            
+            /* 1. local var */
+            SymbolTable::iterator it = symbol_table.find(name);
+            
+            if(it != symbol_table.end())
+            {
+                /* found */
+                
+                //it->second.value
+                
+                break;
+            }
+            
+            /* 2. function parameter */
+            const FrBCodeFunction::Param * param = cf->getParam(name);
+            
+            if(param)
+            {
+                /* found */
+                
+                break;
+            }
+            
+            /* 4. local class function/sub */
+            FrBClass::FnPairIt pit = cc->findFunctions(name);
+            
+            if(pit.first != pit.second)
+            {
+                /* ambiguity */
+                
+                break
+            }
+            else if(pit != cc->functionList()->end())
+            {
+                /* found */
+                
+                break;
+            }
+            
+            /* 6. class names of the inners classes */
+            FrBClass::ClassContainer::iterator iit = cc->innerClassList()->find(name);
+            
+            if(iit != cc->innerClassList()->end())
+            {
+                /* found */
+
+                break;
+            }
+            
+            
+            /* 8. imported class name */
+            const FrBClass * c = FrBClass::getClassFromString(name);
+            
+            if(c)
+            {
+                /* found */
+                
+                break;
+            }
+            
+            
+      
+          $<expr>$ = new FrBIdExpr(name, &symbol_table, cf, cc);
+          
+      }
     | FRB_KW_TOKEN_NOTHING
     | array
     ;

@@ -5,6 +5,8 @@
 #include "frbbuiltinclasses.h"
 #include "frbexceptions.h"
 
+typedef std::map<const String, unsigned int> SymbolTable;
+
 class FrBExpr
 {
 public:
@@ -26,7 +28,8 @@ private:
     FrBBaseObject* _object;
     
 public:
-    FrBIdExpr(const String& str/*, SymbolTable * local, FrBCodeFunction * f, FrBClass c */) throw (FrBUndeclaredIdentifierException);
+    FrBIdExpr(const String& str,const SymbolTable * local,const FrBCodeFunction * f,const FrBClass * c)
+        throw (FrBUndeclaredIdentifierException);
     ~FrBIdExpr();
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);

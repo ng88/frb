@@ -169,6 +169,13 @@ public:
         _param.push_back(Param(v, byval, init));
     }
     
+    inline const Param * getParam(const String& name) const
+    {
+        NameParamList::const_iterator it = _paramName.find(name);
+        
+        return (it == _paramName.end()) ? 0 : &_param[it->second];
+    }
+    
     /** Display on stream a string representation of this */
     std::ostream& put(std::ostream& stream, int indent = 0) const;
     

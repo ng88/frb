@@ -11,23 +11,10 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 /*        FrBIdExpr            */
 
-FrBIdExpr::FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException)
+FrBIdExpr::FrBIdExpr(const String& str, const SymbolTable * local, const FrBCodeFunction * f, const FrBClass * c)
+    throw (FrBUndeclaredIdentifierException)
 {
-    //TODO the method used to handle local var is not thread safe
-    //TODO il faudra un dico local
-    
-    /*
-        We look for:
-            1. local var
-            2. function parameter
-            3. local class member
-            4. local class function/sub
-            5. local class property
-            6. class names of the inners classes
-            7. class names of the outer class
-            8. imported class name
-    
-    */
+
     
     _object = FrBMemory::getMemory()->getObject(str);
     
