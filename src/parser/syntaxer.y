@@ -52,6 +52,8 @@ struct FnAttr
     bool  is_const;
 };
 
+typedef std::map<const String, unsigned int> SymbolTable;
+
 %}
 
 %name FrBSyntaxicalParser
@@ -287,6 +289,9 @@ function:
            
            FrBCodeFunction * nfn = new FrBCodeFunction();
            
+           symbol_table.clear();
+           symbol_count = 0;
+           
            nfn->setSub($<str>2 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_SUB));
            nfn->setName(String($<str>3));
            
@@ -413,6 +418,14 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 current_fn()->addStat( new FrBDeclareStatement( (*it), $<vtype>4, $<expr>5 ) );
+                symbol_table[*it] = symbol_count++;
+                
+                if(symbol_table.size() < symbol_count)
+                    frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
+                    FrBErrors::FRB_ERR_SEMANTIC,
+                    frb_lexer->lineno(), "", "", "",
+                    String(*it));
+                
                 free(*it);
             }
             id_list.clear();
@@ -422,6 +435,14 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 current_fn()->addStat( new FrBDeclareStatement( (*it), $<vtype>2, $<expr>3 ) );
+                symbol_table[*it] = symbol_count++;
+
+                if(symbol_table.size() < symbol_count)
+                    frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
+                    FrBErrors::FRB_ERR_SEMANTIC,
+                    frb_lexer->lineno(), "", "", "",
+                    String(*it));
+                
                 free(*it);
             }
             id_list.clear();

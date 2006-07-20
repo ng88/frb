@@ -40,12 +40,11 @@ Public Class Main
         Dim a As Int := 5
 
         
-        
     End Sub
     
     Protected Const Function test(yo As Main, ParamArray d As Int) As Int
         
-    End Sub
+    End Function
     
     Public Shared Sub main(Optional yo As Main, Optional i As Int := 5)
         

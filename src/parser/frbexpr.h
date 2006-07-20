@@ -26,7 +26,7 @@ private:
     FrBBaseObject* _object;
     
 public:
-    FrBIdExpr(const String& str) throw (FrBUndeclaredIdentifierException);
+    FrBIdExpr(const String& str/*, SymbolTable * local, FrBCodeFunction * f, FrBClass c */) throw (FrBUndeclaredIdentifierException);
     ~FrBIdExpr();
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);

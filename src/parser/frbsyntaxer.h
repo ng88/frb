@@ -23,6 +23,8 @@
          FrBCodeClassStack class_stack; \
          FrBCodeFunctionStack fn_stack; \
          CStringList id_list; \
+         SymbolTable symbol_table; \
+         unsigned int symbol_count; \
          inline FrBCodeClass* current_class() \
          { \
              frb_assert2(!class_stack.empty(), "frbsyntaxer.h::FrBSynater::current_class()");  \
