@@ -46,8 +46,8 @@ public:
 typedef FrBPrimitive<int> FrBInt;
 typedef FrBPrimitive<String> FrBString;
 
-typedef FrBPrimitive<FrBClass*> FrBClassWrapper;
-typedef FrBPrimitive<FrBFunction*> FrBFunctionWrapper;
+typedef FrBPrimitive<const FrBClass*> FrBClassWrapper;
+typedef FrBPrimitive<const FrBFunction*> FrBFunctionWrapper;
 
 
 

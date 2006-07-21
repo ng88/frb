@@ -861,6 +861,8 @@ literal_expr:
             {
                 /* found */
                 
+                $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
+                
                 break;
             }
             
@@ -870,6 +872,8 @@ literal_expr:
             if(iit != cc->innerClassList()->end())
             {
                 /* found */
+                
+                $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper( iit->second ));
 
                 break;
             }
@@ -881,6 +885,8 @@ literal_expr:
             if(c)
             {
                 /* found */
+                
+                $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper(c));
                 
                 break;
             }
