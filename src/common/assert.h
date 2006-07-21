@@ -1,43 +1,41 @@
 #ifndef FRB_ASSERT_H
 #define FRB_ASSERT_H
 
-#include <cstdio>
-#include <cstdlib>
+#include <iostream>
 
 #define DEBUG_ASSERT
 
 #ifdef DEBUG_ASSERT
 
-#define __assert(cond, line, file, str, cond_str) \
-        { \
-            if(!(cond)) \
-            { \
-                fprintf( stderr, \
-                         "assertion error on `%s' in %s at line %d: %s\n",  \
-                         (cond_str), \
-                         (file), \
-                         (line), \
-                         (str) ); \
-                exit(1); \
-            } \
-        }
+inline void __assert(bool cond, int line, char * file, char * str, char * cond_str)
+{
+    using namespace std;
+    
+    if(!(cond))
+    {
+        cerr << "assertion error on `" << cond_str << "' in " << file
+             << " at line " << line  << ": " << str << ", should we continue (y/n)? ";
+
+        string str;
+        cin >> str;
         
-#define __warning(cond, line, file, str, cond_str) \
-        { \
-            if(!(cond)) \
-            { \
-                fprintf( stderr, \
-                         "warning on `%s' in %s at line %d: %s\n",  \
-                         (cond_str), \
-                         (file), \
-                         (line), \
-                         (str) ); \
-            } \
-        }
+        if(str[0] != 'y' && str[0] != 'Y') exit(1);
+    }
+}
+
+inline void __warning(bool cond, int line, char * file, char * str, char * cond_str)
+{
+    if(!(cond))
+    {
+        std::cerr << "warning on `" << cond_str << "' in " << file
+                    << " at line " << line  << ": " << str << std::endl;
+    }
+}
 
 #else
 
 #define __assert(cond, line, file, str, cond_str)
+#define __warning(cond, line, file, str, cond_str)
 
 #endif
 
@@ -49,4 +47,3 @@
 #define frb_warning(cond) frb_warning2((cond), "warning")
 
 #endif
-
