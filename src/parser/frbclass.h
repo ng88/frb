@@ -83,7 +83,7 @@ public:
         return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
     }
     
-    inline FnPairIt findFunctions(const String& name)
+    inline FnPairIt findFunctions(const String& name) const
     {
         return _functions.equal_range(name);
     }

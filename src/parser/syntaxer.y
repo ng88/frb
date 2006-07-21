@@ -855,9 +855,9 @@ literal_expr:
             {
                 /* ambiguity */
                 
-                break
+                break;
             }
-            else if(pit != cc->functionList()->end())
+            else if(pit.first != cc->functionList()->end())
             {
                 /* found */
                 
@@ -865,7 +865,7 @@ literal_expr:
             }
             
             /* 6. class names of the inners classes */
-            FrBClass::ClassContainer::iterator iit = cc->innerClassList()->find(name);
+            FrBClass::ClassContainer::const_iterator iit = cc->innerClassList()->find(name);
             
             if(iit != cc->innerClassList()->end())
             {
