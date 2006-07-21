@@ -887,7 +887,7 @@ literal_expr:
             
             
       
-          $<expr>$ = new FrBIdExpr(name, &symbol_table, cf, cc);
+          //$<expr>$ = new FrBIdExpr(name, &symbol_table, cf, cc);
           
       }
     | FRB_KW_TOKEN_NOTHING

@@ -21,20 +21,30 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
 typedef std::vector<FrBExpr*> FrBExprList;
 
 
-/** This class handles an identifier and have to search if it's a function, a class, an object ... and return the corresponding wrapper or object */
+/** This class handles an identifier and return the corresponding wrapper or object */
 class FrBIdExpr : public FrBExpr
 {
 private:
     FrBBaseObject* _object;
     
 public:
-    FrBIdExpr(const String& str,const SymbolTable * local,const FrBCodeFunction * f,const FrBClass * c)
-        throw (FrBUndeclaredIdentifierException);
     ~FrBIdExpr();
+    std::ostream& put(std::ostream& stream) const;  
+};
+
+/** Particular FrBIdExpr for object resolved at parse-time (like class or function) */
+class FrBObjectIdExpr : public FrBIdExpr
+{
+private:
+    FrBBaseObject* _object;
+    
+public:
+    FrBObjectIdExpr(FrBBaseObject* o);
+    ~FrBObjectIdExpr();
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const;  
+    std::ostream& put(std::ostream& stream) const;
 };
 
 /** Member operator (.) */

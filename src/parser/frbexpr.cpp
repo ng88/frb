@@ -11,36 +11,43 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 /*        FrBIdExpr            */
 
-FrBIdExpr::FrBIdExpr(const String& str, const SymbolTable * local, const FrBCodeFunction * f, const FrBClass * c)
-    throw (FrBUndeclaredIdentifierException)
-{
-
-    
-    _object = FrBMemory::getMemory()->getObject(str);
-    
-    if(!_object) throw FrBUndeclaredIdentifierException(str);
-}
 
 FrBIdExpr::~FrBIdExpr()
 {
 }
 
-FrBBaseObject* FrBIdExpr::eval() const throw (FrBEvaluationException)
-{
-    return _object;
-}
-
-const FrBClass* FrBIdExpr::getClass() const
-{
-    frb_assert2(_object, "frbexpr.cpp::FrBIdExpr::getClass() - _wrapper is a null pointer");
-    
-    return _object->getClass();
-}
 
 std::ostream& FrBIdExpr::put(std::ostream& stream) const
 {
     return stream << "<identifier>";
 }
+/*        FrBObjectIdExpr            */
+
+FrBObjectIdExpr::FrBObjectIdExpr(FrBBaseObject* o)
+ : _object(o)
+{
+    frb_assert2(o, "FrBObjectIdExpr::FrBObjectIdExpr(FrBBaseObject*o) - o is a null pointer");
+}
+
+FrBObjectIdExpr::~FrBObjectIdExpr()
+{
+}
+
+FrBBaseObject* FrBObjectIdExpr::eval() const throw (FrBEvaluationException)
+{
+    return _object;
+}
+
+const FrBClass* FrBObjectIdExpr::getClass() const
+{
+    return _object->getClass();
+}
+
+std::ostream& FrBObjectIdExpr::put(std::ostream& stream) const
+{
+    return stream << "<static_identifier>";
+}
+
 
 /*     FrBMemberOpExpr      */
 
