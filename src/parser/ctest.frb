@@ -27,6 +27,7 @@ Public Class Main
         
         Dim dbg As Debug
         
+        aaa
    
         
     End Sub

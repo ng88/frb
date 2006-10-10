@@ -835,6 +835,10 @@ literal_expr:
                 
                 //it->second.value
                 
+                //$<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( it->second.value ));
+                
+                puts("ID FOUND -- /* 1. local var */\n");
+                
                 break;
             }
             
@@ -845,6 +849,9 @@ literal_expr:
             {
                 /* found */
                 
+                //$<expr>$ = 
+                
+                puts("ID FOUND -- /* 2. function parameter */\n");
                 break;
             }
             
@@ -855,6 +862,9 @@ literal_expr:
             {
                 /* ambiguity */
                 
+                puts("ID AMBIGUITY -- /* 4. local class function/sub */\n");
+                exit(0);
+                
                 break;
             }
             else if(pit.first != cc->functionList()->end())
@@ -862,6 +872,8 @@ literal_expr:
                 /* found */
                 
                 $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
+                
+                puts("ID FOUND -- /* 4. local class function/sub */\n");
                 
                 break;
             }
@@ -874,6 +886,8 @@ literal_expr:
                 /* found */
                 
                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper( iit->second ));
+                
+                puts("ID FOUND --  /* 6. class names of the inners classes */\n");
 
                 break;
             }
@@ -888,10 +902,10 @@ literal_expr:
                 
                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper(c));
                 
+                puts("ID FOUND --  /* 8. imported class name */\n");
+                
                 break;
             }
-            
-            
       
           //$<expr>$ = new FrBIdExpr(name, &symbol_table, cf, cc);
           
