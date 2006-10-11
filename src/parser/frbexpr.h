@@ -53,11 +53,11 @@ public:
 class FrBLocalVarExpr : public FrBExpr
 {
 private:
-    FrBCodeFunction * _fn;
+    const FrBCodeFunction * _fn;
     int               _varid;
     
 public:
-    FrBLocalVarExpr(FrBCodeFunction * fn, int varid);
+    FrBLocalVarExpr(const FrBCodeFunction * fn, int varid);
     ~FrBLocalVarExpr();
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);

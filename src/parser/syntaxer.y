@@ -288,9 +288,6 @@ function:
            
            FrBCodeFunction * nfn = new FrBCodeFunction();
            
-           symbol_table.clear();
-           symbol_count = 0;
-           
            nfn->setSub($<str>2 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_SUB));
            nfn->setName(String($<str>3));
            
@@ -417,13 +414,11 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             FrBCodeFunction * fn = current_fn();
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
-                
-                fn->addStat( new FrBDeclareStatement(fn, fn->localVarCount(), $<expr>5) );
+                int var_count = fn->localVarCount();
+                fn->addStat( new FrBDeclareStatement(fn, var_count, $<expr>5) );
                 fn->addLocalVar((*it), $<vtype>4);
                 
-                symbol_table[*it] = symbol_count++;
-                
-                if(symbol_table.size() < symbol_count)
+                if(fn->localVarCount() == var_count)
                     frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
@@ -438,12 +433,11 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             FrBCodeFunction * fn = current_fn();
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
-                fn->addStat( new FrBDeclareStatement(fn, fn->localVarCount(), $<expr>3) );
+                int var_count = fn->localVarCount();
+                fn->addStat( new FrBDeclareStatement(fn, var_count, $<expr>3) );
                 fn->addLocalVar((*it), $<vtype>2);
-                
-                symbol_table[*it] = symbol_count++;
 
-                if(symbol_table.size() < symbol_count)
+                if(fn->localVarCount() == var_count)
                     frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
@@ -841,15 +835,13 @@ literal_expr:
             */
             
             /* 1. local var */
-            SymbolTable::iterator it = symbol_table.find(name);
-            
-            if(it != symbol_table.end())
+           
+            int idvar = cf->findLocalVar(name);
+            if(idvar > -1)
             {
                 /* found */
                 
-                //it->second.value
-
-                //$<expr>$ = FrBLocalVarExpr
+                $<expr>$ = new FrBLocalVarExpr(cf, idvar);
                 
                 puts("ID FOUND -- /* 1. local var */\n");
                 
@@ -920,8 +912,6 @@ literal_expr:
                 
                 break;
             }
-      
-          //$<expr>$ = new FrBIdExpr(name, &symbol_table, cf, cc);
           
       }
     | FRB_KW_TOKEN_NOTHING

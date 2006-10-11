@@ -30,7 +30,7 @@ void FrBDeclareStatement::execute() const throw (FrBExecutionException)
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
 {
-    stream << "declare var" << _varid << " (" << _fn->getLocalVar(_varid)->name() << ')';
+    stream << "declare <local_var:" << _varid << "> (" << _fn->getLocalVar(_varid)->name() << ')';
     
     if(_init)
         stream << " with init value " << *_init;

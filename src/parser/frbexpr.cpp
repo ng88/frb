@@ -52,7 +52,7 @@ std::ostream& FrBObjectIdExpr::put(std::ostream& stream) const
 
 /*         FrBLocalVarExpr        */
 
-FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, int varid)
+FrBLocalVarExpr::FrBLocalVarExpr(const FrBCodeFunction * fn, int varid)
  : _fn(fn), _varid(varid)
 {
 }
