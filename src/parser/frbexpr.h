@@ -5,6 +5,8 @@
 #include "frbbuiltinclasses.h"
 #include "frbexceptions.h"
 
+class FrBCodeFunction;
+
 typedef std::map<const String, unsigned int> SymbolTable;
 
 class FrBExpr
@@ -41,6 +43,22 @@ private:
 public:
     FrBObjectIdExpr(FrBBaseObject* o);
     ~FrBObjectIdExpr();
+    
+    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+};
+
+/** Local var */
+class FrBLocalVarExpr : public FrBExpr
+{
+private:
+    FrBCodeFunction * _fn;
+    int               _varid;
+    
+public:
+    FrBLocalVarExpr(FrBCodeFunction * fn, int varid);
+    ~FrBLocalVarExpr();
     
     FrBBaseObject* eval() const throw (FrBEvaluationException);
     const FrBClass* getClass() const;

@@ -12,8 +12,8 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 
 /*                 FrBDeclareStatement              */
 
-FrBDeclareStatement::FrBDeclareStatement(const String& var_name, FrBClass * var_type, FrBExpr * init_val)
-    : _name(var_name), _type(var_type), _init(init_val)
+FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * fn, int varid, FrBExpr * init_val)
+    : _fn(fn), _varid(varid), _init(init_val)
 {
 }
 
@@ -21,19 +21,16 @@ void FrBDeclareStatement::execute() const throw (FrBExecutionException)
 {
     //allocation d'un frbobject + declaration d'une var
     
-    FrBBaseObject * val = (_init == 0) ? _type->createInstance() : FrBClass::convert(_init->eval(), _type);
+    //TODO empilage
+    
+    /*FrBBaseObject * val = (_init == 0) ? _type->createInstance() : FrBClass::convert(_init->eval(), _type);
 
-    FrBMemory::getMemory()->addObject(_name, _type, val);
+    FrBMemory::getMemory()->addObject(_name, _type, val);*/
 }
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
 {
-    stream << "Declare " << _name << " As ";
-    
-    if(_type == 0)
-        stream << "<unknow_type>";
-    else
-        stream << _type->name();
+    stream << "declare var" << _varid << " (" << _fn->getLocalVar(_varid)->name() << ')';
     
     if(_init)
         stream << " with init value " << *_init;
@@ -43,7 +40,6 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
 
 FrBDeclareStatement::~FrBDeclareStatement()
 {
-    delete _type;
 }
 
 /*                 FrBExprStatement                */

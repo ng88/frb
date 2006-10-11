@@ -414,9 +414,13 @@ declare_init:
 declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As type [= init], ... */
       declare_list FRB_KW_TOKEN_OP_LIST_SEP identifier_list as_type declare_init
       {
+            FrBCodeFunction * fn = current_fn();
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
-                current_fn()->addStat( new FrBDeclareStatement( (*it), $<vtype>4, $<expr>5 ) );
+                
+                fn->addStat( new FrBDeclareStatement(fn, fn->localVarCount(), $<expr>5) );
+                fn->addLocalVar((*it), $<vtype>4);
+                
                 symbol_table[*it] = symbol_count++;
                 
                 if(symbol_table.size() < symbol_count)
@@ -431,9 +435,12 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
       }
     | identifier_list as_type declare_init
       {
+            FrBCodeFunction * fn = current_fn();
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
-                current_fn()->addStat( new FrBDeclareStatement( (*it), $<vtype>2, $<expr>3 ) );
+                fn->addStat( new FrBDeclareStatement(fn, fn->localVarCount(), $<expr>3) );
+                fn->addLocalVar((*it), $<vtype>2);
+                
                 symbol_table[*it] = symbol_count++;
 
                 if(symbol_table.size() < symbol_count)
@@ -780,7 +787,7 @@ expr:
           //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
           free($<str>3);
       }
-    | expr FRB_KW_TOKEN_OPERATOR operator_overloadable 
+    | expr FRB_KW_TOKEN_OP_MEMBER FRB_KW_TOKEN_OPERATOR operator_overloadable 
       {
 
       }
@@ -841,8 +848,8 @@ literal_expr:
                 /* found */
                 
                 //it->second.value
-                
-                //$<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( it->second.value ));
+
+                //$<expr>$ = FrBLocalVarExpr
                 
                 puts("ID FOUND -- /* 1. local var */\n");
                 

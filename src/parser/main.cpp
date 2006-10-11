@@ -25,15 +25,9 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--no-mem"))
             args_switch[SHOW_MEM] = false;
         else if(!strcmp(argv[i], "--main-class") && i + 1 < argc)
-        {
-            i++;
-            arg_main_class = argv[i];
-        }
+            arg_main_class = argv[++i];
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
-        {
-            i++;
-            arg_main_function = argv[i];
-        }   
+            arg_main_function = argv[++i];  
     }
 
     FrBParser parser;

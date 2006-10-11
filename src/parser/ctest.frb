@@ -30,8 +30,7 @@ Public Class Main
         Dim aaaa As Int := 157
         
         Dim dbg As Debug
-        
-        aaaa
+
    
         
     End Sub

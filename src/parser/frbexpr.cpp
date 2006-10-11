@@ -1,6 +1,8 @@
 #include "frbexpr.h"
 #include "../common/assert.h"
 #include "frbkeywords.h"
+#include "frbfunction.h"
+
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 {
@@ -47,6 +49,34 @@ std::ostream& FrBObjectIdExpr::put(std::ostream& stream) const
 {
     return stream << "<static_identifier>";
 }
+
+/*         FrBLocalVarExpr        */
+
+FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, int varid)
+ : _fn(fn), _varid(varid)
+{
+}
+
+FrBLocalVarExpr::~FrBLocalVarExpr()
+{
+}
+
+FrBBaseObject* FrBLocalVarExpr::eval() const throw (FrBEvaluationException)
+{
+    //TODO recup dans la pile...
+    return 0;
+}
+
+const FrBClass* FrBLocalVarExpr::getClass() const
+{
+    return _fn->getLocalVar(_varid);
+}
+
+std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
+{
+    return stream << "<local_var:" << _varid << ">";
+}
+
 
 
 /*     FrBMemberOpExpr      */

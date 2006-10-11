@@ -211,7 +211,7 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     
     for(int i = 0; i < localVarCount(); ++i)
     {
-        stream << str_indent << "\t\t\t* " << i << " (" << getLocalVar(i) << ")" << endl;
+        stream << str_indent << "\t\t\t* " << i << " (" << getLocalVar(i)->name() << ")" << endl;
     }
             
     stream  << str_indent << "\t\t- Statements:" << endl;

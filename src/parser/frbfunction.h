@@ -153,7 +153,7 @@ public:
     typedef int VarID;
     
     typedef std::map<const String, VarID> NameVarList;
-    typedef std::vector<FrBBaseObject*> VarList;
+    typedef std::vector<const FrBClass*> VarList;
     
 protected:
     
@@ -199,7 +199,7 @@ public:
     /* local var handling functions */
     
     /** add a local var */
-    inline void addLocalVar(String name, FrBBaseObject * type)
+    inline void addLocalVar(String name, const FrBClass * type)
     {
         _varName[name] = _var.size();
         _var.push_back(type);
@@ -213,7 +213,7 @@ public:
         return (it == _varName.end()) ? -1 : it->second;
     }
     
-    inline FrBBaseObject * getLocalVar(VarID id) const { return _var[id]; }
+    inline const FrBClass * getLocalVar(VarID id) const { return _var[id]; }
     
     inline int localVarCount() const { return _var.size(); }
     

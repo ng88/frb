@@ -4,7 +4,7 @@ ifndef TRAD_LANG
 endif
 
 ifdef DEBUG
-    DEBUGFLAGS=-g -D_FRB_DEBUG_
+    DEBUGFLAGS=-g -dH -D_FRB_DEBUG_
 else
     DEBUGFLAGS=
 endif
