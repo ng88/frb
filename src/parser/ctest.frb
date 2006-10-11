@@ -6,6 +6,10 @@ Publique Classe Fr1
     Publique Partagee Proc Constructeur()
     Fin Proc
     
+    Publique Partagee Proc principale()
+        Soit dbg Un Debug, d2 Un Debug
+    Fin Proc
+    
 DefLang EN End DefLang FR Classe
 
 
@@ -27,7 +31,7 @@ Public Class Main
         
         Dim dbg As Debug
         
-        aaa
+        aaaa
    
         
     End Sub

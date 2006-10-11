@@ -127,6 +127,7 @@ public:
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn);
 
 //TODO il faut resoudre les types directement
+//TODO rendre l'interpreteur thread safe (gestion de la mémoire, du GC, des local var ds les codefunctions)
 
 class FrBCodeFunction : public FrBFunction
 {
@@ -149,11 +150,19 @@ public:
     typedef std::map<const String, int> NameParamList;
     typedef std::vector<Param>          ParamList;
     
+    typedef int VarID;
+    
+    typedef std::map<const String, VarID> NameVarList;
+    typedef std::vector<FrBBaseObject*> VarList;
+    
 protected:
     
     FrBStatementlist     _stats;
     NameParamList        _paramName;
     ParamList            _param;
+    
+    NameVarList          _varName;
+    VarList              _var;
     
 
     
@@ -169,6 +178,7 @@ public:
         _param.push_back(Param(v, byval, init));
     }
     
+    /** Return a pointer to a Param struct if found or 0 if not found */
     inline const Param * getParam(const String& name) const
     {
         NameParamList::const_iterator it = _paramName.find(name);
@@ -185,6 +195,25 @@ public:
     
     FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
+        
+    /* local var handling functions */
+    
+    /** add a local var */
+    inline void addLocalVar(String name, FrBBaseObject * type)
+    {
+        _varName[name] = _var.size();
+        _var.push_back(type);
+    }
+    
+    /** Return a pointer to a Param struct if found or 0 if not found */
+    inline VarID findLocalVar(String name) const
+    {
+        NameVarList::const_iterator it = _varName.find(name);
+        
+        return (it == _varName.end()) ? -1 : it->second;
+    }
+    
+    inline FrBBaseObject * getLocalVar(VarID id) const { return _var[id]; }
     
 };
 

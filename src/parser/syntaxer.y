@@ -780,6 +780,10 @@ expr:
           //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
           free($<str>3);
       }
+    | expr FRB_KW_TOKEN_OPERATOR operator_overloadable 
+      {
+
+      }
       
     | new_expr                            /* New */
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
@@ -805,10 +809,13 @@ literal_expr:
       {
       
             String name($<str>1);
+            printf("ID NAME %s\n", $<str>1);
             free($<str>1);
             
             const FrBClass * cc = current_class();
             const FrBCodeFunction * cf = current_fn();
+            
+            
             
             //TODO the method used to handle local var is not thread safe
             //TODO il faudra un dico local
@@ -926,4 +933,6 @@ array_elt_list:
     ;
 
 
+    //TODO : pour le for avec déclaration (ie <=> for(int i = 0; ....)) faire une
+    //       forme sépciale qui déclare directement For i As Int = 0
 

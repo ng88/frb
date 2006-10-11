@@ -9,6 +9,33 @@ inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] 
 int main(int argc, char ** argv)
 {
 
+    enum { SHOW_TREE = 0, SHOW_MEM, SWITCH_COUNT };
+    bool args_switch[SWITCH_COUNT];
+    
+    args_switch[SHOW_TREE] = true;
+    args_switch[SHOW_MEM] = true;
+    
+    char * arg_main_class = "Main";
+    char * arg_main_function = "main";
+    
+    for(int i = 0; i < argc; ++i)
+    {
+        if(!strcmp(argv[i], "--no-tree"))
+            args_switch[SHOW_TREE] = false;
+        else if(!strcmp(argv[i], "--no-mem"))
+            args_switch[SHOW_MEM] = false;
+        else if(!strcmp(argv[i], "--main-class") && i + 1 < argc)
+        {
+            i++;
+            arg_main_class = argv[i];
+        }
+        else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
+        {
+            i++;
+            arg_main_function = argv[i];
+        }   
+    }
+
     FrBParser parser;
     FrBParser::Tree * tree = parser.classList();
     
@@ -25,16 +52,22 @@ int main(int argc, char ** argv)
         if(!parser.parse())
             return 1;
 
-        parser.printTree();
+        if(args_switch[SHOW_TREE])
+            parser.printTree();
     
-        FrBClass * main = FrBClass::getClassFromString("Main");
+        FrBClass * main = FrBClass::getClassFromString(arg_main_class);
     
+        cout << "Call to " << arg_main_class << "::" << arg_main_function << "()...\n";
+        
         FrBBaseObjectList args;
-        main->executeFunction("main", 0, args);
+        main->executeFunction(arg_main_function, 0, args);
     
-        cout << "Mem after Main::main() call:\n";
-        FrBMemory::getMemory()->print(1);
-    
+        if(args_switch[SHOW_MEM])
+        {
+            cout << "Mem after " << arg_main_class << "::" << arg_main_function << "() call:\n";
+            FrBMemory::getMemory()->print(1);
+        }
+        
         FrBMemory::destroyMemory();
     }
     catch(const FrBExecutionException &e)
