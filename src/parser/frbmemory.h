@@ -5,13 +5,18 @@
 #include "frbclass.h"
 
 
-//TODO c'est la zone mémoire qui doit etre const
-//TODO ou simulation de const : on copie le baseobject en le mettant const
-//TODO solution pour const :
+//TODO au sujet de const
+// c'est la zone mémoire qui doit etre const
+// ou simulation de const : on copie le baseobject en le mettant const
+// solution pour const :
 // faire un wrapper class pr const
 // mais pour ca ilfaut generaliser un peu, FrBClass aura quaisment tout
 // en pure virtuel et introduire une FrBImplClass et une FrBConstClass
 
+
+//TODO il faut pouvoir empiler/depiler donc avoir un stack pointer par
+// interpreteur mais il faut trouver le moyen de connaitre l'interpreteur
+// courant dans les declare/expr qui ont besoins de la pile
 
 struct FrBVar
 {
@@ -32,7 +37,7 @@ public:
     static const size_t B = 1;
     static const size_t KB = 1024 * B;
     static const size_t MB = 1024 * KB;
-    
+        inline int stackPointer
     static const size_t BLOCK_SIZE = sizeof (FrBVar);
     
 private:
@@ -115,6 +120,7 @@ public:
         
         return (it == _data.end()) ? 0 : it->second.value;
     }
+    
     
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
 };
