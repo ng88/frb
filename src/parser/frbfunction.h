@@ -215,7 +215,7 @@ public:
     
     inline const FrBClass * getLocalVar(VarID id) const { return _var[id]; }
     
-    inline int localVarCount() const { return _var.size(); }
+    inline int localVarCount() const { return _varName.size(); }
     
 };
 
