@@ -215,6 +215,8 @@ public:
     
     inline FrBBaseObject * getLocalVar(VarID id) const { return _var[id]; }
     
+    inline int localVarCount() const { return _var.size(); }
+    
 };
 
 

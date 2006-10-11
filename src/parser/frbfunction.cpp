@@ -111,8 +111,6 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBBaseObjectList& args)
     COMMON_MATCH_PARAM_BODY((args[i]->getClass()));
 }
 
-//     </ATTENTION / WARNING>
-
 
 std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 {
@@ -208,6 +206,13 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     String str_indent(indent, '\t');
 
     FrBFunction::put(stream, indent);
+    
+    stream  << str_indent << "\t\t- Local vars:" << endl;
+    
+    for(int i = 0; i < localVarCount(); ++i)
+    {
+        stream << str_indent << "\t\t\t* " << i << " (" << getLocalVar(i) << ")" << endl;
+    }
             
     stream  << str_indent << "\t\t- Statements:" << endl;
     

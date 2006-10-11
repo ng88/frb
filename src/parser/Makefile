@@ -3,9 +3,16 @@ ifndef TRAD_LANG
     TRAD_LANG=EN
 endif
 
+ifdef DEBUG
+    DEBUGFLAGS=-g -D_FRB_DEBUG_
+else
+    DEBUGFLAGS=
+endif
 
 CXX=g++
-CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_
+CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_ $(DEBUGFLAGS)
+
+
 
 SRC= $(wildcard *.cpp)
 OBJS= $(SRC:.cpp=.o)
