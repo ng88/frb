@@ -29,11 +29,12 @@ int main(int argc, char ** argv)
 
     /******** Anaylse des paramètres ********/
 
-    enum { SHOW_TREE = 0, SHOW_MEM, SWITCH_COUNT };
+    enum { SHOW_TREE = 0, SHOW_MEM, SHOW_STACK, SWITCH_COUNT };
     bool args_switch[SWITCH_COUNT];
     
     args_switch[SHOW_TREE] = true;
     args_switch[SHOW_MEM] = true;
+    args_switch[SHOW_STACK] = true;
     
     char * arg_main_class = "Main";
     char * arg_main_function = "main";
@@ -44,6 +45,8 @@ int main(int argc, char ** argv)
             args_switch[SHOW_TREE] = false;
         else if(!strcmp(argv[i], "--no-mem"))
             args_switch[SHOW_MEM] = false;
+        else if(!strcmp(argv[i], "--no-stack"))
+            args_switch[SHOW_STACK] = false;
         else if(!strcmp(argv[i], "--main-class") && i + 1 < argc)
             arg_main_class = argv[++i];
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
@@ -89,6 +92,11 @@ int main(int argc, char ** argv)
         {
             cout << "Mem after " << arg_main_class << "::" << arg_main_function << "() call:\n";
             memory.print(1);
+        }
+        
+        if(args_switch[SHOW_STACK])
+        {
+            env.stack().print();
         }
         
     }

@@ -162,6 +162,8 @@ public:
     
     inline int pointer() { return _stack_ptr; }
     
+    std::ostream& print(std::ostream& stream = std::cout) const;
+    
 
 };
 

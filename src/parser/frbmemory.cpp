@@ -61,12 +61,23 @@ FrBMemStack::FrBMemStack(int res)
     _res_step = res;
     _stack_ptr = -1;
     _mem.resize(_res_step);
+
+#ifdef _FRB_DEBUG_
+    for(unsigned int i = 0; i < _mem.size(); ++i)
+        _mem[i] = 0;
+#endif
+
 }
 
 void FrBMemStack::check_space(int nb)
 {
     if(_stack_ptr + nb > (int)_mem.size() - 1)
         _mem.resize(_stack_ptr + nb + 1 + _res_step);
+        
+#ifdef _FRB_DEBUG_
+    for(unsigned int i = _stack_ptr + 1; i < _mem.size(); ++i)
+        _mem[i] = 0;
+#endif
         
 }
 
@@ -124,5 +135,23 @@ void FrBMemStack::push(const FrBBaseObjectList& lo)
     for(FrBBaseObjectList::const_iterator it = lo.begin(); it != lo.end(); ++it)
         _mem[++_stack_ptr] = (*it);
 }
+
+std::ostream& FrBMemStack::print(std::ostream& stream) const
+{
+    stream << "Stack:" << std::endl;
+
+    for(int i = _mem.size() - 1; i > -1; --i)
+    {
+        if(i == _stack_ptr)
+            stream << " --> ";
+        else
+            stream << "     ";
+        
+        
+        stream << "@" << i << " " << _mem[_stack_ptr] << " <var:" << (_stack_ptr - i) << ">" << std::endl;
+    }
     
+    return stream;
+}
+     
     

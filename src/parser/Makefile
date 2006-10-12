@@ -22,14 +22,16 @@ ifndef TRAD_LANG
 endif
 
 ifdef DEBUG
-    DEBUGFLAGS=-g -dH -D_FRB_DEBUG_
+    DEBUGFLAGS=-g -dH -D_FRB_DEBUG_=1 -DDEBUG_ASSERT=1
+    STRIP=echo '*** No strip in debug mode *** '
 else
     DEBUGFLAGS=
+    STRIP=strip
 endif
 
 CXX=g++
 CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_ $(DEBUGFLAGS)
-STRIP=strip
+
 
 
 SRC= $(wildcard *.cpp)
