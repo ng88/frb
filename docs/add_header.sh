@@ -10,8 +10,8 @@ then
     exit 1
 fi
 
-$tmp=/tmp/add_header__$$_f.tmp
-$header="$1"
+tmp=/tmp/add_header__$$_f.tmp
+header="$1"
 
 shift
 
@@ -20,6 +20,7 @@ do
     echo $i...
     cp -f "$i" "$tmp"
     cat "$header" > "$i"
+    echo ""      >> "$i"
     cat "$tmp"   >> "$i"
 done
 
