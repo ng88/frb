@@ -27,6 +27,8 @@ inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] 
 int main(int argc, char ** argv)
 {
 
+    /******** Anaylse des paramètres ********/
+
     enum { SHOW_TREE = 0, SHOW_MEM, SWITCH_COUNT };
     bool args_switch[SWITCH_COUNT];
     
@@ -47,6 +49,8 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
             arg_main_function = argv[++i];  
     }
+    
+    /******** Parsage ********/
 
     FrBParser parser;
     FrBParser::Tree * tree = parser.classList();
@@ -67,6 +71,12 @@ int main(int argc, char ** argv)
         if(args_switch[SHOW_TREE])
             parser.printTree();
     
+            
+        /******** Interprétation/exécution ********/
+            
+        FrBMemory memory;
+        
+        
         FrBClass * main = FrBClass::getClassFromString(arg_main_class);
     
         cout << "Call to " << arg_main_class << "::" << arg_main_function << "()...\n";
@@ -77,10 +87,9 @@ int main(int argc, char ** argv)
         if(args_switch[SHOW_MEM])
         {
             cout << "Mem after " << arg_main_class << "::" << arg_main_function << "() call:\n";
-            FrBMemory::getMemory()->print(1);
+            memory.print(1);
         }
         
-        FrBMemory::destroyMemory();
     }
     catch(const FrBExecutionException &e)
     {

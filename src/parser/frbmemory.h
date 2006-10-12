@@ -70,17 +70,12 @@ private:
     /** _collect_threshold est un nombre de FrBVar */ 
     size_t _collect_threshold;
    
-
-protected:
-    
     inline FrBMemory() : _collect_threshold(1 * MB / BLOCK_SIZE) {};
     
     ~FrBMemory();
     
 public:
 
-    inline static FrBMemory * getMemory() { return _mem; }
-    inline static void destroyMemory() { delete _mem; }
 
     /** collect_threshold est en octet */
     inline void setCollectThreshold(size_t s) { _collect_threshold = s / BLOCK_SIZE + 1; }

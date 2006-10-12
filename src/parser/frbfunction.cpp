@@ -205,7 +205,6 @@ FrBBaseObject * FrBCodeFunction::execute(FrBBaseObject * me, const FrBBaseObject
     throw (FrBExecutionException)
 {
     //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
-    //TODO dico des variables locales (dont paramètre et Me)
     
     FrBExecutionEnvironment env(0, parameterCount() + localVarCount() + 1 /*si non shared */);
     FrBBaseObject * ret;
