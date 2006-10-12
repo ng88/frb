@@ -208,21 +208,28 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     throw (FrBExecutionException)
 {
 
-    FrBBaseObject * ret;
     
-    /* in env
-     *   - var [| 0, parameterCount() - 1 |] : parameters
-     *   - var [|parameterCount(), parameterCount() + localVarCount() - 1 |] : local var
-     *   - var c : me
-     */
+    int var_count = args.size() + localVarCount() + 2;
+     
+    /* empile les paramètres */
+    e.stack().push(args);
+        
+    /* empile me */
+    e.stack().push(me);
+    
+    /* empile une place pr le retour et les variables locales */
+    e.stack().push_empty(localVarCount() + 1);
     
     for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
         (*it)->execute(e);
+       
+
+    FrBBaseObject * ret = e.stack().getTopValue(localVarCount());
+
+    e.stack().pop(var_count);
     
-    if(_sub)
-        return 0;
-    else
-        return ret;
+    return _sub ? 0 : ret;
+    
 }
 
 std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const

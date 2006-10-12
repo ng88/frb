@@ -42,8 +42,7 @@ std::ostream& FrBMemory::print(int cols, std::ostream& out) const
     for(Storage::const_iterator it = _data.begin(); it != _data.end(); ++it)
     {
         out << '[' <<  it->first << '@' << reinterpret_cast<void*>(it->second.value)
-                         << ':' << it->second.type->typeID() << '('
-                         << it->second.type->name() << "), l" << it->second.links << "]\t";
+                         << ':' << it->second.links << "]\t";
         nb++;
         
         if(nb % cols == 0) out << '\n';
@@ -101,17 +100,28 @@ void FrBMemStack::pop(int n)
     _stack_ptr -= n;
 }
 
+void FrBMemStack::reserve(int nb)
+{
+    check_space(nb);
+}
+
+void FrBMemStack::push_empty(int nb)
+{
+    check_space(nb);
+    _stack_ptr += nb;
+}
+
 void FrBMemStack::push(FrBBaseObject* o)
 {
     check_space(1);
     _mem[++_stack_ptr] = o;
 }
 
-void FrBMemStack::push(FrBBaseObjectList* lo)
+void FrBMemStack::push(const FrBBaseObjectList& lo)
 {
-    check_space(lo->size());
+    check_space(lo.size());
     
-    for(FrBBaseObjectList::iterator it = lo->begin(); it != lo->end(); ++it)
+    for(FrBBaseObjectList::const_iterator it = lo.begin(); it != lo.end(); ++it)
         _mem[++_stack_ptr] = (*it);
 }
     

@@ -20,8 +20,8 @@
 #ifndef FRBMEMORY_H
 #define FRBMEMORY_H
 
-#include "frbclass.h"
-
+#include "frbbaseobject.h"
+#include <iostream>
 
 //TODO au sujet de const
 // c'est la zone mémoire qui doit etre const
@@ -34,15 +34,11 @@
 
 struct FrBVar
 {
-    const FrBClass * type; //TODO virer ca car inutile (double verif)
     FrBBaseObject *  value;
     int              links;
-    
-    FrBVar()
-    : type(0), value(0), links(0) {}
-    
-    FrBVar(const FrBClass * c, FrBBaseObject * v)
-     : type(c), value(v), links(0) {}
+
+    FrBVar(FrBBaseObject * v = 0)
+     : value(v), links(0) {}
 };
 
 class FrBMemory
@@ -83,14 +79,14 @@ public:
     inline void setCollectThreshold(size_t s) { _collect_threshold = s / BLOCK_SIZE + 1; }
     
     //TODO verifier l'existance
-    FrBBaseObject* addObject(const String& name, const FrBClass * type, FrBBaseObject* obj)
+    FrBBaseObject* addObject(const String& name, FrBBaseObject* obj)
     {
         /* en cas de succès */
         
         if(_data.size() >= _collect_threshold)
             collect();
         
-        _data[name] = FrBVar(type, obj);
+        _data[name] = FrBVar(obj);
         return obj;
     }
     
@@ -158,8 +154,11 @@ public:
     FrBBaseObject* top();
     FrBBaseObject* pop();
     void pop(int nb = 0);
+    void push_empty(int nb);
     void push(FrBBaseObject* o);
-    void push(FrBBaseObjectList* lo);
+    void push(const FrBBaseObjectList& lo);
+    
+    void reserve(int nb);
     
     inline int pointer() { return _stack_ptr; }
     
