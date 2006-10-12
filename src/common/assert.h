@@ -21,8 +21,6 @@
 
 #include <iostream>
 
-#define DEBUG_ASSERT
-
 #ifdef DEBUG_ASSERT
 
 inline void __assert(bool cond, int line, char * file, char * str, char * cond_str)
