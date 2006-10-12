@@ -72,7 +72,14 @@ protected:
     ConstructorContainer _ctors;
     FrBFunction * _defaultCtor;
     FrBFunction * _dtor;
+    
+    /** Create a new non-initialized instance */
+    virtual FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException) = 0;
 
+    /** Free instance without call the destructor */
+    virtual void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
+        throw (FrBAllocationException) = 0;
+    
 public:
 
     FrBClass()
@@ -215,14 +222,14 @@ public:
     inline void setName(String v) { _name = v; }
     
     inline unsigned int typeID() const { return reinterpret_cast<unsigned int>(this); }
+   
     
-    /** Create a new non-initialized instance */
-    virtual FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException) = 0;
-    
-    /** sur place aussi, appel de allocateInstance() et du constructeur */
+    /** allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
+    
+    /** call the destructor and free instance */
     void destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException);
     
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -237,7 +244,7 @@ public:
     /** Check if from and to are compatibles and convert from to to */
     static FrBBaseObject* convert(FrBBaseObject * from, const FrBClass * to)throw (FrBIncompatibleClassException);
     
-    /** Convert from to to without check */
+    /** Convert from from to to without check */
     static FrBBaseObject* forceConvert(FrBBaseObject * from, const FrBClass * to);
     
     /** Check if from and to are compatibles */
@@ -251,17 +258,27 @@ public:
 class FrBCodeClass : public FrBClass
 {
 
+protected:
+
+    FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException)
+    {
+        //TODO
+        FrBObject * o = new FrBObject(this, 0 /*nb membre */);
+        e.addGarbagedObject(o);
+        /* pr chaque membre on construit */
+        return o;
+    }
+    
+    void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBAllocationException)
+    {
+        e.delGarbagedObject(o);
+    }
+
 public:
     FrBCodeClass();
     ~FrBCodeClass();
 
-    FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException)
-    {
-        //TODO
-        FrBObject * o = new FrBObject(this, 0 /*nb membre */);
-        /* pr chaque membre on construit */
-        return o;
-    }
+
     
     virtual const char* specString() const;
    

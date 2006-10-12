@@ -25,9 +25,17 @@ FrBCppClass::~FrBCppClass()
     delete _allocator;
 }
 
-FrBBaseObject * FrBCppClass::allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException)
+FrBBaseObject * FrBCppClass::allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException)
 {
-    return 0;//_allocator.createObject();
+    FrBBaseObject * o = _allocator->createObject();
+    e.addGarbagedObject(o);
+    return o;
+}
+
+void FrBCppClass::freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
+                throw (FrBAllocationException)
+{
+    e.addGarbagedObject(o);
 }
 
 

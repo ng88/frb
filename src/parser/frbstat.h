@@ -50,13 +50,12 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat);
 class FrBDeclareStatement : public FrBStatement
 {
 private:
-    FrBCodeFunction *  _fn;
     int                _varid;
+    const FrBClass *   _type;
     FrBExpr *          _init;
     
-    
 public:
-    FrBDeclareStatement(FrBCodeFunction * fn, int varid, FrBExpr * init_val = 0);
+    FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr * init_val = 0);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream) const;
     
@@ -67,7 +66,8 @@ public:
 class FrBExprStatement : public FrBStatement
 {
 private:
-    FrBExpr* _expr;
+    FrBExpr*         _expr;
+    
     
 public:
     FrBExprStatement(FrBExpr* expr);

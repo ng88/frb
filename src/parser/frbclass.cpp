@@ -76,6 +76,7 @@ FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBa
 void FrBClass::destroyInstance(FrBExecutionEnvironment&e, FrBBaseObject * o) const throw (FrBExecutionException)
 {
     executeDestructor(e, o);
+    freeInstance(e, o);
 }
 
 

@@ -433,7 +433,14 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                fn->addStat( new FrBDeclareStatement(fn, var_count, $<expr>5) );
+                
+                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>4, $<expr>5->getClass()));
+                    frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
+                    FrBErrors::FRB_ERR_SEMANTIC,
+                    frb_lexer->lineno(), "", "", "",
+                    String(*it));
+                
+                fn->addStat( new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5) );
                 fn->addLocalVar((*it), $<vtype>4);
                 
                 if(fn->localVarCount() == var_count)
@@ -452,7 +459,14 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                fn->addStat( new FrBDeclareStatement(fn, var_count, $<expr>3) );
+                
+                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>2, $<expr>5->getClass()));
+                    frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
+                    FrBErrors::FRB_ERR_SEMANTIC,
+                    frb_lexer->lineno(), "", "", "",
+                    String(*it));
+                
+                fn->addStat( new FrBDeclareStatement(var_count, $<vtype>2, $<expr>3) );
                 fn->addLocalVar((*it), $<vtype>2);
 
                 if(fn->localVarCount() == var_count)

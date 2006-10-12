@@ -56,6 +56,7 @@ public:
     
     class Allocator : public FrBCppObjectAllocator
     {
+      public:
         FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(); }
     };
     
@@ -94,6 +95,7 @@ public:
     
     class Allocator : public FrBCppObjectAllocator
     {
+      public:
         FrBCppObject * createObject() const { return new FrBDebug(); }
     };
         

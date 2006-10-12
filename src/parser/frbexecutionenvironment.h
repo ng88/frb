@@ -50,6 +50,18 @@ public:
     inline FrBMemStack& stack() { return _stack; }
     inline FrBMemory * memory() { return _mem; }
     
+    /** Add the object to the FrBMemory so that it can be garbage-collected */
+    inline void addGarbagedObject(FrBBaseObject * o)
+    {
+        //TODO
+    }
+    
+    /** Del the object to the FrBMemory (will be collected as soon as possible)*/
+    inline void delGarbagedObject(FrBBaseObject * o)
+    {
+        //TODO
+    }
+    
     
 
 };

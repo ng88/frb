@@ -90,13 +90,13 @@ FrBBaseObject* FrBMemStack::top()
 
 FrBBaseObject* FrBMemStack::pop()
 {
-    frb_assert(_stack_ptr > 0);
+    frb_assert(_stack_ptr >= 0);
     return _mem[_stack_ptr--];
 }
 
 void FrBMemStack::pop(int n)
 {
-    frb_assert(_stack_ptr - n > -1);
+    frb_assert(_stack_ptr - n >= -1);
     _stack_ptr -= n;
 }
 

@@ -38,6 +38,7 @@ public:
 
 class FrBCppObjectAllocator
 {
+public:
     virtual FrBCppObject * createObject() const = 0;
 };
 
@@ -49,6 +50,10 @@ private:
 
     FrBCppObjectAllocator * _allocator;
 
+protected:
+
+    FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException);
+    void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBAllocationException);
 
 public:
     inline FrBCppClass(FrBCppObjectAllocator * a)
@@ -59,7 +64,7 @@ public:
     
     
 
-    FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException);
+    
     const char* specString() const;
 
 };

@@ -1,29 +1,8 @@
 
-DefLang FR
-
-Publique Classe Fr1
-    
-    Publique Partagee Proc Constructeur()
-    Fin Proc
-    
-    Publique Partagee Proc principale()
-        Soit dbg Un Debug, d2 Un Debug
-    Fin Proc
-    
-DefLang EN End DefLang FR Classe
-
-
-
 DefLang EN
 
 Public Class Main
 
-    Public Shared Sub Initialize()
-        '1+1
-    End Sub
-    
-    Public Shared Sub Dispose()
-    End Sub
     
     Public Shared Sub main()
         Dim hello, hello1 As Int
@@ -31,28 +10,8 @@ Public Class Main
         
         Dim dbg As Debug
 
-   aaaa
         
     End Sub
-    
-   
-    Public Shared Sub main(a As Int)
-        
-    End Sub
-    
-    Public Shared Sub main(a As Int, ByRef b As Int, ByVal c As Fr1)
-        Dim a As Int := 5
 
-        
-    End Sub
-    
-    Protected Const Function test(yo As Main, ParamArray d As Int) As Int
-        
-    End Function
-    
-    Public Shared Sub main(Optional yo As Main, Optional i As Int := 5)
-        
-    End Sub
-    
 End Class
 

@@ -29,7 +29,7 @@ endif
 
 CXX=g++
 CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_ $(DEBUGFLAGS)
-
+STRIP=strip
 
 
 SRC= $(wildcard *.cpp)
@@ -48,6 +48,8 @@ start:
 $(EXE): start main.o
 	@echo Linking $@...
 	@$(CXX) *.o ../common/*.o -o $@ $(CXXFLAGS)
+	@echo Striping $@...
+	@$(STRIP) $@
 	@echo Done.
 
 
