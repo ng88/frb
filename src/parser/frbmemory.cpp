@@ -17,6 +17,7 @@
 
 
 #include "frbmemory.h"
+#include "../common/assert.h"
 
 
 FrBMemory * FrBMemory::_mem = new FrBMemory();
@@ -29,7 +30,6 @@ FrBMemory::~FrBMemory()
         
     frb_warning2(false, "memory not disposed");
 }
-
 
 
 std::ostream& FrBMemory::print(int cols, std::ostream& out) const
@@ -53,3 +53,66 @@ std::ostream& FrBMemory::print(int cols, std::ostream& out) const
     
     return out;
 }
+
+/**** stack ***********/
+
+
+FrBMemStack::FrBMemStack(int res)
+{
+    _res_step = res;
+    _stack_ptr = -1;
+    _mem.resize(_res_step);
+}
+
+void FrBMemStack::check_space(int nb)
+{
+    if(_stack_ptr + nb > (int)_mem.size() - 1)
+        _mem.resize(_stack_ptr + nb + 1 + _res_step);
+        
+}
+
+FrBBaseObject* FrBMemStack::getTopValue(int addr)
+{
+    frb_assert(addr >= 0 && addr <= _stack_ptr);
+    return _mem[_stack_ptr - addr];
+}
+
+void FrBMemStack::setTopValue(int addr, FrBBaseObject* v)
+{
+    frb_assert(addr >= 0 && addr <= _stack_ptr);
+    _mem[_stack_ptr - addr] = v;
+}
+
+FrBBaseObject* FrBMemStack::top()
+{
+    frb_assert(_stack_ptr > -1 && _stack_ptr < (int)_mem.size());
+    return _mem[_stack_ptr];
+}
+
+FrBBaseObject* FrBMemStack::pop()
+{
+    frb_assert(_stack_ptr > 0);
+    return _mem[_stack_ptr--];
+}
+
+void FrBMemStack::pop(int n)
+{
+    frb_assert(_stack_ptr - n > -1);
+    _stack_ptr -= n;
+}
+
+void FrBMemStack::push(FrBBaseObject* o)
+{
+    check_space(1);
+    _mem[++_stack_ptr] = o;
+}
+
+void FrBMemStack::push(FrBBaseObjectList* lo)
+{
+    check_space(lo->size());
+    
+    for(FrBBaseObjectList::iterator it = lo->begin(); it != lo->end(); ++it)
+        _mem[++_stack_ptr] = (*it);
+}
+    
+    

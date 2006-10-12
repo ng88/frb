@@ -136,5 +136,36 @@ public:
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
 };
 
+
+class FrBMemStack
+{
+protected:
+
+    FrBBaseObjectList _mem;
+    int               _stack_ptr;
+    int               _res_step;
+
+    void check_space(int nb);
+    
+public:
+
+    FrBMemStack(int res_step = 10);
+    
+    /** addr is the address from top */
+    FrBBaseObject* getTopValue(int addr);
+    void setTopValue(int addr, FrBBaseObject* v);
+    
+    FrBBaseObject* top();
+    FrBBaseObject* pop();
+    void pop(int nb = 0);
+    void push(FrBBaseObject* o);
+    void push(FrBBaseObjectList* lo);
+    
+    inline int pointer() { return _stack_ptr; }
+    
+
+};
+
+
 #endif
 
