@@ -141,31 +141,35 @@ public:
     }
     
     /** Execute the default constructor (with no param). If no ctor exists and if there are no other ctor, a default ctor is created and executed */
-    void executeDefaultConstructor(FrBBaseObject * me) const throw (FrBExecutionException);
+    void executeDefaultConstructor(FrBExecutionEnvironment&, FrBBaseObject * me) const
+        throw (FrBExecutionException);
     
-    inline void executeConstructor(FrBBaseObject * me, const FrBBaseObjectList& args) const
+    inline void executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                        const FrBBaseObjectList& args) const
         throw (FrBExecutionException) 
     {
-        findConstructor(args)->execute(me, args);
+        findConstructor(args)->execute(e, me, args);
     }
     
-    inline FrBBaseObject * executeFunction(const String& name, FrBBaseObject * me, const FrBBaseObjectList& args) const
+    inline FrBBaseObject * executeFunction(FrBExecutionEnvironment& e, const String& name, FrBBaseObject * me,
+                                            const FrBBaseObjectList& args) const
         throw (FrBExecutionException) 
     {
-        return findFunction(name, args)->execute(me, args);
+        return findFunction(name, args)->execute(e, me, args);
     }
     
-    inline FrBBaseObject * executeOperator(int op, FrBBaseObject * me, const FrBBaseObjectList& args) const
+    inline FrBBaseObject * executeOperator(FrBExecutionEnvironment& e, int op, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
         throw (FrBExecutionException) 
     {
-        return findOperator(op, args)->execute(me, args);
+        return findOperator(op, args)->execute(e, me, args);
     }
     
-    inline FrBBaseObject * executeDestructor(FrBBaseObject * me) const
+    inline FrBBaseObject * executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
         throw (FrBExecutionException)
     {
         FrBBaseObjectList args;
-        return findDestructor()->execute(me, args);
+        return findDestructor()->execute(e, me, args);
     }
         
     /*virtual FrBBaseObject * callOperator(String name, FrBBaseObjectList args) = 0;
@@ -213,12 +217,13 @@ public:
     inline unsigned int typeID() const { return reinterpret_cast<unsigned int>(this); }
     
     /** Create a new non-initialized instance */
-    virtual FrBBaseObject * allocateInstance() const throw (FrBAllocationException) = 0;
+    virtual FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException) = 0;
     
     /** sur place aussi, appel de allocateInstance() et du constructeur */
-    FrBBaseObject * createInstance() const throw (FrBExecutionException);
-    FrBBaseObject * createInstance(const FrBBaseObjectList& args) const throw (FrBExecutionException);
-    void destroyInstance(FrBBaseObject * o) const throw (FrBExecutionException);
+    FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
+    void destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException);
     
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
@@ -250,8 +255,9 @@ public:
     FrBCodeClass();
     ~FrBCodeClass();
 
-    FrBBaseObject * allocateInstance() const throw (FrBAllocationException)
+    FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException)
     {
+        //TODO
         FrBObject * o = new FrBObject(this, 0 /*nb membre */);
         /* pr chaque membre on construit */
         return o;

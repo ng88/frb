@@ -69,6 +69,8 @@ private:
     
     /** _collect_threshold est un nombre de FrBVar */ 
     size_t _collect_threshold;
+    
+public:
    
     inline FrBMemory() : _collect_threshold(1 * MB / BLOCK_SIZE) {};
     

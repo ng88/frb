@@ -104,12 +104,15 @@ public:
     inline void setName(const String& n) { _name = n; }
     inline const String& name() const { return _name; }
     
-    virtual FrBBaseObject * execute(FrBBaseObject * me) const throw (FrBExecutionException);
-    virtual FrBBaseObject * execute(FrBBaseObject * me, FrBBaseObject * arg0) const
+    virtual FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me) const
         throw (FrBExecutionException);
-    virtual FrBBaseObject * execute(FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
+    virtual FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me, FrBBaseObject * arg0) const
         throw (FrBExecutionException);
-    virtual FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
+    virtual FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me, FrBBaseObject * arg0, 
+                         FrBBaseObject * arg1) const
+        throw (FrBExecutionException);
+    virtual FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me,
+                        const FrBBaseObjectList& args) const
         throw (FrBExecutionException) = 0;
     
     /*virtual*/ match_t matchParameters(const FrBBaseObjectList& args);
@@ -211,7 +214,7 @@ public:
     int parameterCount() const;
     bool parameterByVal(int index) const;
     
-    FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
+    FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
         
     /* local var handling functions */

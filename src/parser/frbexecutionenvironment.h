@@ -21,29 +21,47 @@
 
 #include "frbbaseobject.h"
 
+typedef std::vector<FrBBaseObject*> FrBBaseObjectStack;
+
 class FrBMemory;
 
-/** This class contains the local execution environment for the current function */
+    //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
+
+
+/** This class contains the execution environment (heap & stack...) */
 class FrBExecutionEnvironment
 {
 private:
-    FrBBaseObjectList  _vars;
+
+    FrBBaseObjectStack  _stack;
     FrBMemory * _mem;
+    
+    FrBExecutionEnvironment(const FrBExecutionEnvironment&) {}
+    
 public:
 
     /**
       * @param mem Heap memory
-      * @param lvar_count Local var count
       */
-    FrBExecutionEnvironment(FrBMemory *mem, int lvar_count)
+    FrBExecutionEnvironment(FrBMemory *mem)
      : _mem(mem)
     {
-        _vars.resize(lvar_count);
     }
     
     
-    inline FrBBaseObject* getVarValue(int id) { return _vars[id]; }
-    inline void setVarValue(int id, FrBBaseObject* v) { _vars[id] = v;; }
+    inline FrBBaseObject* getStackValue(int address) { return _stack[address]; }
+    inline void setStackValue(int address, FrBBaseObject* v) { _stack[address] = v;; }
+    
+    inline void popStack() { _stack.pop_back(); }
+    inline void pushStack(FrBBaseObject* o) { _stack.push_back(o); }
+    
+    inline void pushStack(FrBBaseObjectList* lo)
+    {
+        for(FrBBaseObjectList::iterator it = lo->begin(); it != lo->end(); ++it)
+            _stack.push_back(*it);
+    }
+    
+    
     
     inline FrBMemory * memory() { return _mem; }
     

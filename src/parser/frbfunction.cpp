@@ -29,27 +29,29 @@ std::ostream& operator<<(std::ostream& s, const FrBFunction& fn)
 /*          FrBFunction             */
 
 
-FrBBaseObject * FrBFunction::execute(FrBBaseObject * me) const throw (FrBExecutionException)
+FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me) const
+    throw (FrBExecutionException)
 {
     FrBBaseObjectList args;
-    return execute(me, args);
+    return execute(e, me, args);
 }
 
-FrBBaseObject * FrBFunction::execute(FrBBaseObject * me, FrBBaseObject * arg0) const
+FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0) const
         throw (FrBExecutionException)
 {
     FrBBaseObjectList args;
     args.push_back(arg0);
-    return execute(me, args);
+    return execute(e, me, args);
 }
 
-FrBBaseObject * FrBFunction::execute(FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
+FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                        FrBBaseObject * arg0, FrBBaseObject * arg1) const
         throw (FrBExecutionException)
 {
     FrBBaseObjectList args;
     args.push_back(arg0);
     args.push_back(arg1);
-    return execute(me, args);
+    return execute(e, me, args);
 }
 
 // Pas tres propre mais j'ai pas mieux pour le moment :
@@ -201,12 +203,11 @@ bool FrBCodeFunction::parameterByVal(int index) const
 }
 
 
-FrBBaseObject * FrBCodeFunction::execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
+FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
     throw (FrBExecutionException)
 {
-    //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
-    
-    FrBExecutionEnvironment env(0, parameterCount() + localVarCount() + 1 /*si non shared */);
+
     FrBBaseObject * ret;
     
     /* in env
@@ -216,7 +217,7 @@ FrBBaseObject * FrBCodeFunction::execute(FrBBaseObject * me, const FrBBaseObject
      */
     
     for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
-        (*it)->execute(env);
+        (*it)->execute(e);
     
     if(_sub)
         return 0;

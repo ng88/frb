@@ -75,6 +75,7 @@ int main(int argc, char ** argv)
         /******** Interprétation/exécution ********/
             
         FrBMemory memory;
+        FrBExecutionEnvironment env(&memory);
         
         
         FrBClass * main = FrBClass::getClassFromString(arg_main_class);
@@ -82,7 +83,7 @@ int main(int argc, char ** argv)
         cout << "Call to " << arg_main_class << "::" << arg_main_function << "()...\n";
         
         FrBBaseObjectList args;
-        main->executeFunction(arg_main_function, 0, args);
+        main->executeFunction(env, arg_main_function, 0, args);
     
         if(args_switch[SHOW_MEM])
         {

@@ -206,9 +206,9 @@ FrBBaseObject* FrBBinOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEv
     FrBBaseObject* rval = _rhs->eval(e);
     
     if(_fn->shared())
-        return _fn->execute(0, lval, rval);
+        return _fn->execute(e, 0, lval, rval);
     else
-        return _fn->execute(lval, rval);
+        return _fn->execute(e, lval, rval);
         
 
 }

@@ -39,11 +39,11 @@ FrBClass * FrBClass::getClassFromString(const String& name) throw (FrBClassNotFo
         return f->second;
 }
 
-void FrBClass::executeDefaultConstructor(FrBBaseObject * me) const throw (FrBExecutionException)
+void FrBClass::executeDefaultConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const throw (FrBExecutionException)
 {
     if(_defaultCtor)
     {
-        _defaultCtor->execute(me);
+        _defaultCtor->execute(e, me);
     }
     else
     {
@@ -55,27 +55,27 @@ void FrBClass::executeDefaultConstructor(FrBBaseObject * me) const throw (FrBExe
         
 }
 
-FrBBaseObject * FrBClass::createInstance() const throw (FrBExecutionException)
+FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-    FrBBaseObject * o = allocateInstance();
+    FrBBaseObject * o = allocateInstance(e);
     
-    executeDefaultConstructor(o);
+    executeDefaultConstructor(e, o);
    
         
     return o;
 }
 
-FrBBaseObject * FrBClass::createInstance(const FrBBaseObjectList& args) const throw (FrBExecutionException)
+FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBaseObjectList& args) const
+    throw (FrBExecutionException)
 {
-    FrBBaseObject * o = allocateInstance();
-    executeConstructor(o, args);
+    FrBBaseObject * o = allocateInstance(e);
+    executeConstructor(e, o, args);
     return o;
 }
 
-void FrBClass::destroyInstance(FrBBaseObject * o) const throw (FrBExecutionException)
+void FrBClass::destroyInstance(FrBExecutionEnvironment&e, FrBBaseObject * o) const throw (FrBExecutionException)
 {
-    executeDestructor(o);
-    FrBMemory::getMemory()->deleteObject(o);
+    executeDestructor(e, o);
 }
 
 

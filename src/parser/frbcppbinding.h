@@ -59,7 +59,7 @@ public:
     
     
 
-    FrBBaseObject * allocateInstance() const throw (FrBAllocationException);
+    FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException);
     const char* specString() const;
 
 };
@@ -92,8 +92,10 @@ public:
     bool parameterByVal(int index) const;
     int parameterCount() const;
     
-    FrBBaseObject * execute(FrBBaseObject * me) const throw (FrBExecutionException);
-    FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me) const
+        throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
 };
 
 class FrBUnaryCppFunction : public FrBCppFunction
@@ -118,8 +120,10 @@ public:
     bool parameterByVal(int index) const;
     int parameterCount() const;
     
-    FrBBaseObject * execute(FrBBaseObject * me, FrBBaseObject * arg0) const throw (FrBExecutionException);
-    FrBBaseObject * execute(FrBBaseObject * me, const FrBBaseObjectList& args) const throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0) const
+        throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
 };
 
 

@@ -25,7 +25,7 @@ FrBCppClass::~FrBCppClass()
     delete _allocator;
 }
 
-FrBBaseObject * FrBCppClass::allocateInstance() const throw (FrBAllocationException)
+FrBBaseObject * FrBCppClass::allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException)
 {
     return 0;//_allocator.createObject();
 }
@@ -61,16 +61,17 @@ int FrBNoParamCppFunction::parameterCount() const
 }
 
 
-FrBBaseObject * FrBNoParamCppFunction::execute(FrBBaseObject * me) const
+FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me) const
         throw (FrBExecutionException)
 {
     return _fn(me);
 }
 
-FrBBaseObject * FrBNoParamCppFunction::execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
+FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
         throw (FrBExecutionException)
 {
-    return execute(me);
+    return execute(e, me);
 }
 
 
@@ -95,14 +96,15 @@ int FrBUnaryCppFunction::parameterCount() const
 }
 
 
-FrBBaseObject * FrBUnaryCppFunction::execute(FrBBaseObject * me, FrBBaseObject * arg0) const
+FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0) const
      throw (FrBExecutionException)
 {
     return _fn(me, arg0);
 }
 
 
-FrBBaseObject * FrBUnaryCppFunction::execute(FrBBaseObject * me, const FrBBaseObjectList& args) const
+FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
      throw (FrBExecutionException)
 {
     return _fn(me, args[0]);
