@@ -20,10 +20,8 @@
 #define FRBEXECUTIONENVIRONMENT_H
 
 #include "frbbaseobject.h"
+#include "frbmemory.h"
 
-typedef std::vector<FrBBaseObject*> FrBBaseObjectStack;
-
-class FrBMemory;
 
     //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
 
@@ -33,7 +31,7 @@ class FrBExecutionEnvironment
 {
 private:
 
-    FrBBaseObjectStack  _stack;
+    FrBMemStack  _stack;
     FrBMemory * _mem;
     
     FrBExecutionEnvironment(const FrBExecutionEnvironment&) {}
@@ -49,20 +47,7 @@ public:
     }
     
     
-    inline FrBBaseObject* getStackValue(int address) { return _stack[address]; }
-    inline void setStackValue(int address, FrBBaseObject* v) { _stack[address] = v;; }
-    
-    inline void popStack() { _stack.pop_back(); }
-    inline void pushStack(FrBBaseObject* o) { _stack.push_back(o); }
-    
-    inline void pushStack(FrBBaseObjectList* lo)
-    {
-        for(FrBBaseObjectList::iterator it = lo->begin(); it != lo->end(); ++it)
-            _stack.push_back(*it);
-    }
-    
-    
-    
+    inline FrBMemStack& stack() { return _stack; }
     inline FrBMemory * memory() { return _mem; }
     
     
