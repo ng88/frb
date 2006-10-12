@@ -14,13 +14,9 @@
 // en pure virtuel et introduire une FrBImplClass et une FrBConstClass
 
 
-//TODO il faut pouvoir empiler/depiler donc avoir un stack pointer par
-// interpreteur mais il faut trouver le moyen de connaitre l'interpreteur
-// courant dans les declare/expr qui ont besoins de la pile
-
 struct FrBVar
 {
-    const FrBClass * type;
+    const FrBClass * type; //TODO virer ca car inutile (double verif)
     FrBBaseObject *  value;
     int              links;
     
@@ -37,7 +33,7 @@ public:
     static const size_t B = 1;
     static const size_t KB = 1024 * B;
     static const size_t MB = 1024 * KB;
-        inline int stackPointer
+
     static const size_t BLOCK_SIZE = sizeof (FrBVar);
     
 private:

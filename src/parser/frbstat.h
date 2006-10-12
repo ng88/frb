@@ -6,7 +6,7 @@
 #include "../common/string.h"
 
 #include "frbbaseobject.h"
-
+#include "frbexecutionenvironment.h"
 #include "frbexceptions.h"
 
 class FrBExpr;
@@ -22,7 +22,7 @@ class FrBStatement
 {
 public:
     virtual ~FrBStatement() {}
-    virtual void execute() const throw (FrBExecutionException) = 0;
+    virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
     virtual std::ostream& put(std::ostream& stream) const = 0;
 };
 
@@ -39,7 +39,7 @@ private:
     
 public:
     FrBDeclareStatement(FrBCodeFunction * fn, int varid, FrBExpr * init_val = 0);
-    void execute() const throw (FrBExecutionException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream) const;
     
     ~FrBDeclareStatement();
@@ -53,7 +53,7 @@ private:
     
 public:
     FrBExprStatement(FrBExpr* expr);
-    void execute() const throw (FrBExecutionException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream) const;
     
     ~FrBExprStatement();

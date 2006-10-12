@@ -1,9 +1,9 @@
 #ifndef FRBEXPR_H
 #define FRBEXPR_H
 
-#include "frbbaseobject.h"
 #include "frbbuiltinclasses.h"
 #include "frbexceptions.h"
+#include "frbexecutionenvironment.h"
 
 class FrBCodeFunction;
 
@@ -13,7 +13,7 @@ class FrBExpr
 {
 public:
     virtual ~FrBExpr() {}
-    virtual FrBBaseObject* eval() const throw (FrBEvaluationException) = 0;
+    virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
     virtual const FrBClass* getClass() const = 0;
     virtual std::ostream& put(std::ostream& stream) const = 0;
 };
@@ -24,7 +24,7 @@ typedef std::vector<FrBExpr*> FrBExprList;
 
 
 /** This class handles an identifier and return the corresponding wrapper or object */
-class FrBIdExpr : public FrBExpr
+class FrBIdExpr : public FrBExpr //a virer peut etre
 {
 private:
     FrBBaseObject* _object;
@@ -44,7 +44,7 @@ public:
     FrBObjectIdExpr(FrBBaseObject* o);
     ~FrBObjectIdExpr();
     
-    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
@@ -60,7 +60,7 @@ public:
     FrBLocalVarExpr(const FrBCodeFunction * fn, int varid);
     ~FrBLocalVarExpr();
     
-    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
@@ -74,7 +74,7 @@ class FrBMemberOpExpr : public FrBExpr
 public:
     FrBMemberOpExpr(FrBExpr* lhs, FrBIdExpr* rhs);
     ~FrBMemberOpExpr();
-    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
 };
@@ -90,7 +90,7 @@ private:
 public:
     FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException);
     ~FrBBinOpExpr();
-    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -133,7 +133,7 @@ public:
         //on devrait pourtant, enfin on vera ca plus tard
     }
     
-    FrBBaseObject* eval() const throw (FrBEvaluationException)
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
         return _pvalue;
     }

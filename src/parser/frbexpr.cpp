@@ -35,7 +35,7 @@ FrBObjectIdExpr::~FrBObjectIdExpr()
 {
 }
 
-FrBBaseObject* FrBObjectIdExpr::eval() const throw (FrBEvaluationException)
+FrBBaseObject* FrBObjectIdExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
 {
     return _object;
 }
@@ -61,7 +61,7 @@ FrBLocalVarExpr::~FrBLocalVarExpr()
 {
 }
 
-FrBBaseObject* FrBLocalVarExpr::eval() const throw (FrBEvaluationException)
+FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
 {
     //TODO recup dans la pile...
     return 0;
@@ -92,7 +92,7 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
     delete _rhs;
 }
 
-FrBBaseObject* FrBMemberOpExpr::eval() const throw (FrBEvaluationException)
+FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
 {
     return 0;
 }
@@ -175,7 +175,7 @@ FrBBinOpExpr::~FrBBinOpExpr()
     delete _lhs;
 }
 
-FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
+FrBBaseObject* FrBBinOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
 
     frb_assert2(_fn, "frbexpr.cpp::FrBOpExpr::val() - _fn is a null pointer");
@@ -184,8 +184,8 @@ FrBBaseObject* FrBBinOpExpr::eval() const throw (FrBEvaluationException)
 
     
     
-    FrBBaseObject* lval = _lhs->eval();
-    FrBBaseObject* rval = _rhs->eval();
+    FrBBaseObject* lval = _lhs->eval(e);
+    FrBBaseObject* rval = _rhs->eval(e);
     
     if(_fn->shared())
         return _fn->execute(0, lval, rval);

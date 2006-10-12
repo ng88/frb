@@ -1,6 +1,7 @@
 #include "frbfunction.h"
 #include "frbclass.h"
 #include "../common/assert.h"
+#include "frbexecutionenvironment.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn)
 {
@@ -188,10 +189,17 @@ FrBBaseObject * FrBCodeFunction::execute(FrBBaseObject * me, const FrBBaseObject
     //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
     //TODO dico des variables locales (dont paramètre et Me)
     
+    FrBExecutionEnvironment env(0, parameterCount() + localVarCount() + 1 /*si non shared */);
     FrBBaseObject * ret;
     
+    /* in env
+     *   - var [| 0, parameterCount() - 1 |] : parameters
+     *   - var [|parameterCount(), parameterCount() + localVarCount() - 1 |] : local var
+     *   - var c : me
+     */
+    
     for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
-        (*it)->execute();
+        (*it)->execute(env);
     
     if(_sub)
         return 0;

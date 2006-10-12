@@ -818,9 +818,6 @@ literal_expr:
             
             
             
-            //TODO the method used to handle local var is not thread safe
-            //TODO il faudra un dico local
-            
             /*
                 We look for:
                   X 1. local var
@@ -833,6 +830,9 @@ literal_expr:
                   X 8. imported class name
             
             */
+            
+            //TODO pr les params et les local var et this : meme Expr qui contient leur numéro de var
+            
             
             /* 1. local var */
            

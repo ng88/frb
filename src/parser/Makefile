@@ -38,7 +38,7 @@ main.o: frbparser.o
 frbparser.o: frbparser.h frbparser.cpp parser
 frberrordesc.o: error_msg keywords_db
 frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o 
-frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o
+frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o frbexecutionenvironment.o
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
 frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o
 frbbaseobject.o: frbbaseobject.h frbbaseobject.cpp
@@ -46,6 +46,7 @@ frbmemory.o: frbmemory.h frbmemory.cpp
 frbmemory.o:
 frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcppbinding.o
 frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h frbbaseobject.o
+frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp
  
 .PHONY: exe clean install touchall force doc cleandoc
 

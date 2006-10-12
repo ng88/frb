@@ -17,7 +17,7 @@ FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * fn, int varid, FrBExp
 {
 }
 
-void FrBDeclareStatement::execute() const throw (FrBExecutionException)
+void FrBDeclareStatement::execute(FrBExecutionEnvironment&) const throw (FrBExecutionException)
 {
     //allocation d'un frbobject + declaration d'une var
     
@@ -49,9 +49,9 @@ FrBExprStatement::FrBExprStatement(FrBExpr* expr)
     frb_assert2(expr, "frbparsingtree.h::FrBExprStatement::FrBExprStatement()");
 }
 
-void FrBExprStatement::execute() const throw (FrBExecutionException)
+void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-    _expr->eval();
+    _expr->eval(e);
 }
 
 std::ostream& FrBExprStatement::put(std::ostream& stream) const
