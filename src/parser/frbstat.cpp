@@ -33,11 +33,11 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 FrBDeclareStatement::FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr * init_val)
     : _varid(varid), _type(t), _init(init_val)
 {
+
 }
 
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-
     e.stack().setTopValue(_varid,
         ( (_init == 0) ? _type->createInstance(e) : FrBClass::forceConvert(_init->eval(e), _type) ));
 }

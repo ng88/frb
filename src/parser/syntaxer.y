@@ -433,8 +433,8 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                
-                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>4, $<expr>5->getClass()));
+
+                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>4, $<expr>5->getClass()))
                     frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
@@ -459,8 +459,8 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                
-                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>2, $<expr>5->getClass()));
+
+                if($<expr>3 != 0 && !FrBClass::areCompatibles($<vtype>2, $<expr>3->getClass()))
                     frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",

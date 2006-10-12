@@ -6,7 +6,7 @@ Public Class Main
     
     Public Shared Sub main()
         Dim hello, hello1 As Int
-        Dim aaaa As Int := 157
+        Dim aaaa As Int := 125
         
         Dim dbg As Debug
 

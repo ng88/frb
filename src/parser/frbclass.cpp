@@ -150,6 +150,7 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 
 bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
 {
+    std::cout << "areCompatibles(" << from->name() << ", " << to->name() << ") ?\n";
     return from == to;
 }
 
