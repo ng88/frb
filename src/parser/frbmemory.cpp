@@ -17,10 +17,7 @@
 
 
 #include "frbmemory.h"
-#include "../common/assert.h"
-
-
-FrBMemory * FrBMemory::_mem = new FrBMemory();
+#include "frbclass.h"
 
 FrBMemory::~FrBMemory()
 {
@@ -71,7 +68,7 @@ void FrBMemory::addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj)
 
 
 
-size_t FrBMemory::collect(int pass)
+size_t FrBMemory::collect(FrBExecutionEnvironment& e, int pass)
 {
     size_t ret = 0;
     
@@ -102,8 +99,8 @@ std::ostream& FrBMemory::print(int cols, std::ostream& out) const
     
     for(Storage::const_iterator it = _data.begin(); it != _data.end(); ++it)
     {
-        out << '[' <<  it->first << '@' << reinterpret_cast<void*>(it->second.value)
-                         << ':' << it->second.links << "]\t";
+        out << "[@" << reinterpret_cast<void*>(it->value)
+                         << ':' << it->links << "]\t";
         nb++;
         
         if(nb % cols == 0) out << '\n';

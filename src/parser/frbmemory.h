@@ -21,6 +21,7 @@
 #define FRBMEMORY_H
 
 #include "frbbaseobject.h"
+#include "../common/assert.h"
 #include <iostream>
 
 //TODO au sujet de const
@@ -31,7 +32,7 @@
 // mais pour ca ilfaut generaliser un peu, FrBClass aura quaisment tout
 // en pure virtuel et introduire une FrBImplClass et une FrBConstClass
 
-
+class FrBExecutionEnvironment;
 
 
 class FrBMemory
@@ -43,7 +44,7 @@ public:
         FrBBaseObject *  value;
         int              links;
     
-        FrBVar(FrBBaseObject * v = 0)
+        Block(FrBBaseObject * v = 0)
         : value(v), links(-1) {}
     };
 
@@ -73,7 +74,7 @@ protected:
     size_t _unavailable;
     
     /** next available block */
-    size_t _next_available
+    size_t _next_available;
     
     void needMoreMemory();
     void findNextAvailable();
@@ -196,8 +197,8 @@ inline size_t FrBMemory::bsize() const
     
 inline FrBBaseObject* FrBMemory::getObject(int addr)
 {
-    frb_assert(addr >= 0 && addr < _data.size());
-    return _data[addr];
+    frb_assert(addr >= 0 && addr < (int)_data.size());
+    return _data[addr].value;
 }
 
 inline void FrBMemory::addLink(FrBBaseObject* obj)

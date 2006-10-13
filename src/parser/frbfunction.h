@@ -288,7 +288,7 @@ inline FrBCodeFunction::VarID FrBCodeFunction::findLocalVar(String name) const
 
 inline const FrBClass * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) const
 {
-    frb_assert(id >= 0 && id < _var.size());
+    frb_assert(id >= 0 && id < (int)_var.size());
     return _var[id];
 }
 

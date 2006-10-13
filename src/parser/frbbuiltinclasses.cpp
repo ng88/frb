@@ -20,7 +20,7 @@
 #include "../common/assert.h"
 
 #include "frbkeywords.h"
-
+#include "frbclass.h"
 #include <iostream>
 
 template<class primitive_t> FrBCppClass * FrBPrimitive<primitive_t>::_cpp_class = NULL;

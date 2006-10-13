@@ -82,7 +82,7 @@ protected:
 
     /** Free instance without call the destructor for object that are not managed by the GC */
     virtual void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
-        throw (FrBAllocationException);
+        throw (FrBAllocationException) = 0;
     
 public:
 
