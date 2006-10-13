@@ -46,6 +46,11 @@ public:
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat);
 
+/*
+    delete stat
+            rule : delete local_var
+            exe : FrBClass::destroyInstance()
+*/
 
 class FrBDeclareStatement : public FrBStatement
 {

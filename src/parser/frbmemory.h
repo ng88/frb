@@ -44,7 +44,7 @@ public:
         int              links;
     
         FrBVar(FrBBaseObject * v = 0)
-        : value(v), links(0) {}
+        : value(v), links(-1) {}
     };
 
     static const size_t B = 1;
@@ -75,8 +75,8 @@ protected:
     /** next available block */
     size_t _next_available
     
-    /** Destroy the object id */
-    void destroyObject(int id);
+    void needMoreMemory();
+    void findNextAvailable();
     
 public:
    
@@ -90,12 +90,12 @@ public:
 
 
     /** add the object to the memory */
-    FrBBaseObject* addObject(const String& name, FrBBaseObject* obj);
+    void addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj);
     
-    /** mark the object to be deleted */
-    void deleteObject(FrBBaseObject* obj);
+    /** juste remove the object, don't destroy it */
+    inline void removeObjectFromGC(FrBBaseObject* obj);
     
-    size_t collect(int pass = 1);
+    size_t collect(FrBExecutionEnvironment& e, int pass = 1);
     
     
     /** collect_threshold in byte */
@@ -108,6 +108,9 @@ public:
     inline size_t bsize() const;
         
     inline FrBBaseObject* getObject(int addr);
+    
+    inline void addLink(FrBBaseObject* obj);
+    inline void delLink(FrBBaseObject* obj);
     
     
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
@@ -195,6 +198,24 @@ inline FrBBaseObject* FrBMemory::getObject(int addr)
 {
     frb_assert(addr >= 0 && addr < _data.size());
     return _data[addr];
+}
+
+inline void FrBMemory::addLink(FrBBaseObject* obj)
+{
+    frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
+    _data[obj->memPos()].links++;
+}
+
+inline void FrBMemory::delLink(FrBBaseObject* obj)
+{
+    frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
+    _data[obj->memPos()].links--;
+}
+
+inline void FrBMemory::removeObjectFromGC(FrBBaseObject* obj)
+{
+    frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
+    _data[obj->memPos()].links = -1;
 }
 
 

@@ -31,10 +31,11 @@ class FrBBaseObject
 protected:
 
     bool     _const;
+    int      _mem_pos;
     
     
 public:
-    inline FrBBaseObject() : _const(false) { }
+    inline FrBBaseObject() : _const(false),_mem_pos(-2) { }
     inline FrBBaseObject(bool v) : _const(v) { }
     
     virtual ~FrBBaseObject() { }
@@ -42,6 +43,11 @@ public:
     
     //inline void setConst(bool v) { _const = v; }
     inline bool isConst() { return _const; }
+    
+    inline void setMemPos(const int &v) { _mem_pos = v; }
+    inline int memPos() const { return _mem_pos; }
+    inline bool isManaged() const { return _mem_pos != -2; }
+
 
 };
 

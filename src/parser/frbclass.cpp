@@ -73,10 +73,15 @@ FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBa
     return o;
 }
 
-void FrBClass::destroyInstance(FrBExecutionEnvironment&e, FrBBaseObject * o) const throw (FrBExecutionException)
+void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException)
 {
+    /** if o is managed by the GC */
+    if(o->isManaged())
+        e.memory()->removeObjectFromGC(o);
+
     executeDestructor(e, o);
     freeInstance(e, o);
+
 }
 
 

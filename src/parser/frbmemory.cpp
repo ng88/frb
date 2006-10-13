@@ -31,21 +31,42 @@ FrBMemory::~FrBMemory()
     frb_warning2(false, "memory not disposed");
 }
 
-
-FrBBaseObject* FrBMemory::addObject(const String& name, FrBBaseObject* obj)
+void FrBMemory::needMoreMemory()
 {
-    /* en cas de succès */
-    
-    if(_data.size() >= _collect_threshold)
-        collect();
-    
-    _data[name] = FrBVar(obj);
-    return obj;
 }
 
-void FrBMemory::deleteObject(FrBBaseObject* obj)
+void FrBMemory::findNextAvailable()
 {
-    delete obj;
+    if(_next_available + 1 < _data.size() && _data[_next_available + 1].links == -1)
+        _next_available++;
+    else
+    {
+        for(unsigned int i = 0; i < _data.size(); ++i)
+            if( _data[i].links == -1 )
+            {
+                _next_available = i;
+                break;
+            }
+    }    
+}
+
+void FrBMemory::addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj)
+{
+
+    if(_unavailable >= _collect_threshold)
+        collect(e);
+        
+    if(_unavailable + 2 >= _data.size() - 1)
+        needMoreMemory();
+    
+    _data[_next_available].value = obj;
+    _data[_next_available].links = 1;
+    
+    obj->setMemPos(_next_available);
+    
+    _unavailable++;
+    
+    findNextAvailable();
 }
 
 
@@ -58,13 +79,15 @@ size_t FrBMemory::collect(int pass)
     {
         for(Storage::iterator it = _data.begin(); it != _data.end(); ++it)
         {
-            if( it->second.links == 0 )
+            if( it->links == 0 )
             {
-                //on delete
+                it->value->getClass()->destroyInstance(e, it->value);
                 ret++;
             }
         }
     }
+    
+    _unavailable -= ret;
     
     return ret * BLOCK_SIZE;
 }

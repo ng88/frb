@@ -25,7 +25,7 @@ ifdef DEBUG
     DEBUGFLAGS=-g -dH -D_FRB_DEBUG_=1 -DDEBUG_ASSERT=1
     STRIP=echo '*** No strip in debug mode *** '
 else
-    DEBUGFLAGS=
+    DEBUGFLAGS=-DDEBUG_ASSERT=1
     STRIP=strip
 endif
 

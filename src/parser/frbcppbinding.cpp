@@ -35,7 +35,7 @@ FrBBaseObject * FrBCppClass::allocateInstance(FrBExecutionEnvironment& e) const 
 void FrBCppClass::freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
                 throw (FrBAllocationException)
 {
-    e.addGarbagedObject(o);
+    delete o;
 }
 
 

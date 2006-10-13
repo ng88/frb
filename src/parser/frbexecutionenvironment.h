@@ -53,14 +53,10 @@ public:
     /** Add the object to the FrBMemory so that it can be garbage-collected */
     inline void addGarbagedObject(FrBBaseObject * o)
     {
-        //TODO
+        _mem->deleteObject(o);
     }
+
     
-    /** Del the object to the FrBMemory (will be collected as soon as possible)*/
-    inline void delGarbagedObject(FrBBaseObject * o)
-    {
-        //TODO
-    }
     
     
 

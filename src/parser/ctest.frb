@@ -5,11 +5,15 @@ Public Class Main
 
     
     Public Shared Sub main()
-        Dim hello, hello1 As Int
-        Dim aaaa As Int := 5
+        Dim a, b As Int
+        Dim c As Int := 5
         
         Dim dbg As Debug
 
+        a
+        b
+        c
+        
         
     End Sub
 

@@ -73,12 +73,16 @@ protected:
     FrBFunction * _defaultCtor;
     FrBFunction * _dtor;
     
-    /** Create a new non-initialized instance */
+    /** Create a new non-initialized instance
+      * when redefining allocateInstance() you can choose to use the GC or not
+      * in the both case you MUST redefine freeInstance()
+      * Note: call e.addGarbagedObject(your_object) to use the GC
+      */
     virtual FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException) = 0;
 
-    /** Free instance without call the destructor */
+    /** Free instance without call the destructor for object that are not managed by the GC */
     virtual void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
-        throw (FrBAllocationException) = 0;
+        throw (FrBAllocationException);
     
 public:
 
@@ -229,7 +233,7 @@ public:
     FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
     
-    /** call the destructor and free instance */
+    /** call the destructor and free instance (call freeInstance to free the object)*/
     void destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException);
     
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -262,16 +266,14 @@ protected:
 
     FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException)
     {
-        //TODO
         FrBObject * o = new FrBObject(this, 0 /*nb membre */);
         e.addGarbagedObject(o);
-        /* pr chaque membre on construit */
         return o;
     }
     
-    void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBAllocationException)
+    void freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) const throw (FrBAllocationException)
     {
-        e.delGarbagedObject(o);
+        delete o;
     }
 
 public:
