@@ -33,8 +33,19 @@ do
           ((nb_tot_todo+=nb_todo))
           echo "$i ($nb_todo): "
           grep -n  '//TODO' $i | sed 's/\([0-9]\+\).*\/\/TODO/    *> l\1: /g'
+          
+          nb_todo=$(grep -c  '//TODONEXT' $i)
+          if [ $? -eq 0 ]
+          then
+              todo_next_file="$i"
+              todo_next=$(grep -n  '//TODONEXT' $i | sed 's/\([0-9]\+\).*\/\/TODO/    *> l\1: /g')
+          fi
       fi
 done
 
 echo '**' "$nb_tot_todo TODOs in $nb_todo_fichier files ($nb_fichier files examinated)" '**'
 
+echo
+
+echo "TODO NEXT is in $todo_next_file:"
+echo "$todo_next"

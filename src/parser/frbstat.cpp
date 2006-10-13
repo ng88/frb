@@ -43,7 +43,6 @@ void FrBDeclareStatement::resolveAndCheck() throw (FrBResolveException)
         _init->resolveAndCheck();
         if(!FrBClass::areCompatibles(_init->getClass(), _type))
             throw FrBIncompatibleClassException(_init->getClass(), _type);
-            //TODO faire pour tout le monde en fait...
     }
 }
 

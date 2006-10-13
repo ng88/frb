@@ -70,6 +70,7 @@ void FrBParser::resolveAndCheckTree() throw (FrBResolveException)
     {
         FrBCodeClass* c = dynamic_cast<FrBCodeClass*>(it->second);
         if(c) c->resolveAndCheck();
+                    //TODONEXT faire pour tout le monde en fait...
     }
             
 }
