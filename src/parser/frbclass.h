@@ -104,7 +104,9 @@ public:
              
              virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
              */
-             
+    /** Used in type resolution */
+    void resolveAndCheck() throw (FrBResolveException);
+    
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
           throw (FrBFunctionNotFoundException)

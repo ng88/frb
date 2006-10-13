@@ -21,6 +21,7 @@
 #include "frbparser.h"
 #include <iostream>
 #include <sstream>
+#include "../common/assert.h"
 
 using namespace std;
 
@@ -68,11 +69,9 @@ void FrBParser::resolveAndCheckTree() throw (FrBResolveException)
 { 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
-        FrBCodeClass* c = dynamic_cast<FrBCodeClass*>(it->second);
-        if(c) c->resolveAndCheck();
-                    //TODONEXT faire pour tout le monde en fait...
+        frb_assert(it->second);
+        it->second->resolveAndCheck();  
     }
-            
 }
 
 void FrBParser::dispose()

@@ -143,6 +143,9 @@ public:
             
         return bestMatch;
     }
+    
+    /** Used in type resolution */
+    virtual void resolveAndCheck() throw (FrBResolveException) {};
         
 };
 
@@ -220,6 +223,8 @@ public:
     inline const FrBClass * getLocalVar(VarID id) const;
     
     inline int localVarCount() const;
+    
+    void resolveAndCheck() throw (FrBResolveException);
     
 };
 

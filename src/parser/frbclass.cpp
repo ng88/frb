@@ -19,6 +19,7 @@
 #include "frbclass.h"
 #include "frbmemory.h"
 #include "frbkeywords.h"
+#include "../common/assert.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 {
@@ -28,6 +29,36 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 /*        FrBClass            */
 
 FrBClassMap * FrBClass::root = 0;
+
+void FrBClass::resolveAndCheck() throw (FrBResolveException)
+{
+    
+    for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
+    {
+        frb_assert((*it));
+        (*it)->resolveAndCheck();
+    }
+    
+    if(_dtor) _dtor->resolveAndCheck();
+
+    for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
+    {
+        frb_assert(itf->second);
+        itf->second->resolveAndCheck();
+    }
+    
+    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf)
+    {
+        frb_assert(itf->second);
+        itf->second->resolveAndCheck();
+    }
+    
+    for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolveAndCheck();
+    }
+}
 
 FrBClass * FrBClass::getClassFromString(const String& name) throw (FrBClassNotFoundException)
 {

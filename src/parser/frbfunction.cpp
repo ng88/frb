@@ -232,6 +232,15 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     
 }
 
+void FrBCodeFunction::resolveAndCheck() throw (FrBResolveException)
+{
+    for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
+    {
+        frb_assert((*it));
+        (*it)->resolveAndCheck();
+    }
+}
+
 std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 {
     using namespace std;
