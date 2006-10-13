@@ -237,6 +237,21 @@ typedef std::stack<FrBCodeFunction*> FrBCodeFunctionStack;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Inlined */
 
 inline void FrBCodeFunction::addStat(FrBStatement* v)
