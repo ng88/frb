@@ -30,6 +30,7 @@ FrBMemory::~FrBMemory()
 
 void FrBMemory::needMoreMemory()
 {
+    //TODO
 }
 
 void FrBMemory::findNextAvailable()
@@ -99,8 +100,8 @@ std::ostream& FrBMemory::print(int cols, std::ostream& out) const
     
     for(Storage::const_iterator it = _data.begin(); it != _data.end(); ++it)
     {
-        out << "[@" << reinterpret_cast<void*>(it->value)
-                         << ':' << it->links << "]\t";
+        out << "[@" << (nb - 1) << ":" << reinterpret_cast<void*>(it->value)
+                         << ',' << it->links << "]\t";
         nb++;
         
         if(nb % cols == 0) out << '\n';
@@ -118,7 +119,7 @@ FrBMemStack::FrBMemStack(int res)
 {
     _res_step = res;
     _stack_ptr = -1;
-    _mem.reserve(_res_step);
+    _mem.resize(_res_step);
 
 #ifdef _FRB_DEBUG_
     for(unsigned int i = 0; i < _mem.size(); ++i)
@@ -130,7 +131,7 @@ FrBMemStack::FrBMemStack(int res)
 void FrBMemStack::check_space(int nb)
 {
     if(_stack_ptr + nb > (int)_mem.size() - 1)
-        _mem.reserve(_stack_ptr + nb + 1 + _res_step);
+        _mem.resize(_stack_ptr + nb + 1 + _res_step);
         
 #ifdef _FRB_DEBUG_
     for(unsigned int i = _stack_ptr + 1; i < _mem.size(); ++i)
@@ -149,9 +150,9 @@ void FrBMemStack::push(const FrBBaseObjectList& lo)
 
 std::ostream& FrBMemStack::print(std::ostream& stream) const
 {
-    stream << "Stack:" << std::endl;
+    stream << "Stack: " << (int)_mem.size() << std::endl;
 
-    for(int i = _mem.size() - 1; i > -1; --i)
+    for(int i = (int)_mem.size() - 1; i >= 0; --i)
     {
         if(i == _stack_ptr)
             stream << " --> ";

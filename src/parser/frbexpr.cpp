@@ -28,46 +28,6 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 }
 
 
-
-/*        FrBIdExpr            */
-
-
-FrBIdExpr::~FrBIdExpr()
-{
-}
-
-
-std::ostream& FrBIdExpr::put(std::ostream& stream) const
-{
-    return stream << "<identifier>";
-}
-/*        FrBObjectIdExpr            */
-
-FrBObjectIdExpr::FrBObjectIdExpr(FrBBaseObject* o)
- : _object(o)
-{
-    frb_assert2(o, "FrBObjectIdExpr::FrBObjectIdExpr(FrBBaseObject*o) - o is a null pointer");
-}
-
-FrBObjectIdExpr::~FrBObjectIdExpr()
-{
-}
-
-FrBBaseObject* FrBObjectIdExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
-{
-    return _object;
-}
-
-const FrBClass* FrBObjectIdExpr::getClass() const
-{
-    return _object->getClass();
-}
-
-std::ostream& FrBObjectIdExpr::put(std::ostream& stream) const
-{
-    return stream << "<static_identifier>";
-}
-
 /*         FrBLocalVarExpr        */
 
 FrBLocalVarExpr::FrBLocalVarExpr(const FrBClass * t, int varid)
@@ -98,7 +58,7 @@ std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
 
 /*     FrBMemberOpExpr      */
 
-FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBIdExpr* rhs)
+FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBExpr* rhs)
  : _lhs(lhs), _rhs(rhs)
 {
 }
@@ -107,6 +67,10 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
 {
     delete _lhs;
     delete _rhs;
+}
+
+void FrBMemberOpExpr::resolveAndCheck() throw (FrBResolveException)
+{
 }
 
 FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
@@ -133,9 +97,22 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctio
     : _rhs(rhs), _lhs(lhs), _op(op)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
+
+}
+FrBBinOpExpr::~FrBBinOpExpr()
+{
+    delete _rhs;
+    delete _lhs;
+}
+
+void FrBBinOpExpr::resolveAndCheck() throw (FrBResolveException)
+{
+   
+    _lhs->resolveAndCheck();
+    _rhs->resolveAndCheck();
     
-    const FrBClass * cl = lhs->getClass();
-    const FrBClass * cr = rhs->getClass();
+    const FrBClass * cl = _lhs->getClass();
+    const FrBClass * cr = _rhs->getClass();
     
     FrBConstClassList args;
     args.push_back(cl);
@@ -144,14 +121,14 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctio
     
     try
     {
-        _fn = cl->findOperator(op, args);
+        _fn = cl->findOperator(_op, args);
         if(!_fn->shared()) throw FrBFunctionNotFoundException("");
     }
     catch(FrBFunctionNotFoundException)
     {
         try
         {
-            _fn = cr->findOperator(op, args);
+            _fn = cr->findOperator(_op, args);
             if(!_fn->shared()) throw FrBFunctionNotFoundException("");
         }
         catch(FrBFunctionNotFoundException)
@@ -160,7 +137,7 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctio
             {
                 args.clear();
                 args.push_back(cr);
-                _fn = cl->findOperator(op, args);
+                _fn = cl->findOperator(_op, args);
                 if(_fn->shared()) throw FrBFunctionNotFoundException("");
             }
             catch(FrBFunctionNotFoundException)
@@ -186,11 +163,6 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctio
         }
     }
 }
-FrBBinOpExpr::~FrBBinOpExpr()
-{
-    delete _rhs;
-    delete _lhs;
-}
 
 FrBBaseObject* FrBBinOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
@@ -214,7 +186,8 @@ FrBBaseObject* FrBBinOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEv
 
 const FrBClass* FrBBinOpExpr::getClass() const
 {
-    frb_assert2(_fn, "frbexpr.cpp::FrBOpExpr::getClass() - _fn is a null pointer");
+    frb_assert2(_fn, "frbexpr.cpp::FrBOpExpr::getClass() - _fn is a null pointer"
+                     " - FrBBinOpExpr::resolveAndCheck() probably not called");
     return _fn->returnType();
 }
 

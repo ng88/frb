@@ -197,4 +197,10 @@ const char* FrBCodeClass::specString() const
     return "frb interpreted class";
 }
 
+void FrBCodeClass::resolveAndCheck() throw (FrBResolveException)
+{
+}
+
+
+
 

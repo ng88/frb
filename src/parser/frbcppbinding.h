@@ -83,7 +83,7 @@ class FrBNoParamCppFunction : public FrBCppFunction
 {
 public:
 
-    typedef FrBBaseObject * (*NoParamFunction)(FrBBaseObject *);
+    typedef FrBBaseObject * (*NoParamFunction)(FrBExecutionEnvironment&, FrBBaseObject *);
     
 private:
 
@@ -108,7 +108,7 @@ class FrBUnaryCppFunction : public FrBCppFunction
     
 public:
 
-    typedef FrBBaseObject * (*UnaryFunction)(FrBBaseObject *, FrBBaseObject *);
+    typedef FrBBaseObject * (*UnaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, FrBBaseObject *);
     
 private:
 

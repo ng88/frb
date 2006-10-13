@@ -73,11 +73,14 @@ int main(int argc, char ** argv)
 
         if(args_switch[SHOW_TREE])
             parser.printTree();
-    
+            
+        /******** Amélioration de l'arbre ********/
+        
+        parser.resolveAndCheckTree();
             
         /******** Interprétation/exécution ********/
             
-        FrBMemory memory;
+        FrBMemory memory(100 * FrBMemory::B, 10 * FrBMemory::B, 2, 0);
         FrBExecutionEnvironment env(&memory);
         
         

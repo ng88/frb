@@ -3,6 +3,9 @@ DefLang EN
 
 Public Class Main
 
+    Public Shared Sub main2()
+        Dim dbg As Debug
+    End Sub
     
     Public Shared Sub main()
         Dim a, b As Int
@@ -14,8 +17,13 @@ Public Class Main
         b
         c
         
+        main2()
+        
+        Me
         
     End Sub
+    
+
 
 End Class
 

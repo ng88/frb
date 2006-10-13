@@ -174,7 +174,7 @@ inline FrBMemory::FrBMemory(size_t init_size, size_t collect_threshold, size_t g
    _unavailable(0),
    _next_available(0)
 {
-    _data.resize(init_size);
+    _data.resize(init_size / FrBMemory::BLOCK_SIZE + 1);
 }
 
 

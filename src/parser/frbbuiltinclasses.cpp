@@ -27,17 +27,17 @@ template<class primitive_t> FrBCppClass * FrBPrimitive<primitive_t>::_cpp_class 
 
 /*            FrBInt            */
 
-FrBBaseObject * operator_add_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     return new FrBInt((static_cast<FrBInt*>(me))->value() + (static_cast<FrBInt*>(arg0))->value());
 }
 
-FrBBaseObject * operator_mul_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_mul_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     return new FrBInt((static_cast<FrBInt*>(me))->value() * (static_cast<FrBInt*>(arg0))->value());
 }
 
-FrBBaseObject * operator_affect_FrBInt(FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     (static_cast<FrBInt*>(me))->setValue( (static_cast<FrBInt*>(arg0))->value() );
     return me;
@@ -86,10 +86,11 @@ FrBCppClass * FrBInt::initClass()
 
 /*            FrBString            */
 
-FrBBaseObject * operator_add_FrBString(FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_add_FrBString(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
 }
+
 
 
 FrBCppClass * FrBString::initClass()
@@ -151,16 +152,9 @@ FrBCppClass * FrBFunctionWrapper::initClass()
 FrBCppClass * FrBDebug::_cpp_class = NULL;
 
 
-FrBBaseObject * constructor1(FrBBaseObject * me)
-{
-
-    std::cout << "Debug.Initialize() called\n";
-
-    return 0;
-}
 
 template<class T>
-FrBBaseObject * print_FrBObject(FrBBaseObject*, FrBBaseObject * arg0)
+FrBBaseObject * print_FrBObject(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject * arg0)
 {
 
     std::cout << (static_cast<T*>(arg0))->value();
@@ -168,7 +162,19 @@ FrBBaseObject * print_FrBObject(FrBBaseObject*, FrBBaseObject * arg0)
     return 0;
 }
 
+FrBBaseObject * constructor1(FrBExecutionEnvironment&, FrBBaseObject * me)
+{
 
+    std::cout << "Debug.Initialize() called\n";
+
+    return 0;
+}
+
+FrBBaseObject * show_stack(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    e.stack().print();
+    return 0;
+}
 
 
 FrBCppClass * FrBDebug::initClass()
@@ -201,6 +207,15 @@ FrBCppClass * FrBDebug::initClass()
     f->setSub(true);
     f->setShared(true);
     f->setConst(true);
+    
+    _cpp_class->addFunction(f);
+    
+    f = new FrBNoParamCppFunction(show_stack);
+    f->setName("showStack");
+    f->setConst(true);
+    f->setSub(true);
+    f->setShared(true);
+    f->setScope(SC_PUBLIC);
     
     _cpp_class->addFunction(f);
     

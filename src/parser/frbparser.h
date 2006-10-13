@@ -86,6 +86,8 @@ public:
     bool parse(const String& in);
     bool parse(std::istream& in_stream = std::cin);
     
+    void resolveAndCheckTree() throw (FrBResolveException);
+    
     std::ostream& printTree(std::ostream& out = std::cout) const;
 
 };

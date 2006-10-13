@@ -80,7 +80,6 @@ struct FnAttr
     char *                     str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
-    FrBIdExpr *                exprid;
     FrBClass *                 vtype;
     FrBStatement *             stat;
     FrBExprList*               exprs;
@@ -838,6 +837,8 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
+    | FRB_KW_TOKEN_NULL
+    | FRB_KW_TOKEN_ME { $<expr>$ = new FrBLocalVarExpr(current_class(), current_fn()->localVarCount() + 1); }
     | FRB_IDENTIFIER                  
       {
       
@@ -864,7 +865,7 @@ literal_expr:
             */
             
             //TODO pr les params et les local var et this : meme Expr qui contient leur numéro de var
-            
+            //TODO ici on resoud que les var local(param, this, var) pas le reste (post traitement)
             
             /* 1. local var */
            
@@ -893,57 +894,57 @@ literal_expr:
                 break;
             }
             
-            /* 4. local class function/sub */
-            FrBClass::FnPairIt pit = cc->findFunctions(name);
-            
-            if(pit.first != pit.second)
-            {
-                /* ambiguity */
-                
-                puts("ID AMBIGUITY -- /* 4. local class function/sub */\n");
-                exit(0);
-                
-                break;
-            }
-            else if(pit.first != cc->functionList()->end())
-            {
-                /* found */
-                
-                $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
-                
-                puts("ID FOUND -- /* 4. local class function/sub */\n");
-                
-                break;
-            }
-            
-            /* 6. class names of the inners classes */
-            FrBClass::ClassContainer::const_iterator iit = cc->innerClassList()->find(name);
-            
-            if(iit != cc->innerClassList()->end())
-            {
-                /* found */
-                
-                $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper( iit->second ));
-                
-                puts("ID FOUND --  /* 6. class names of the inners classes */\n");
-
-                break;
-            }
-            
-            
-            /* 8. imported class name */
-            const FrBClass * c = FrBClass::getClassFromString(name);
-            
-            if(c)
-            {
-                /* found */
-                
-                $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper(c));
-                
-                puts("ID FOUND --  /* 8. imported class name */\n");
-                
-                break;
-            }
+//             /* 4. local class function/sub */
+//             FrBClass::FnPairIt pit = cc->findFunctions(name);
+//             
+//             if(pit.second->second)
+//             {
+//                 /* ambiguity */
+// 
+//                 puts("ID AMBIGUITY -- /* 4. local class function/sub */\n");
+//                 exit(0);
+//                 
+//                 break;
+//             }
+//             else if(pit.first != cc->functionList()->end())
+//             {
+//                 /* found */
+//                 
+//                 $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
+//                 
+//                 puts("ID FOUND -- /* 4. local class function/sub */\n");
+//                 
+//                 break;
+//             }
+//             
+//             /* 6. class names of the inners classes */
+//             FrBClass::ClassContainer::const_iterator iit = cc->innerClassList()->find(name);
+//             
+//             if(iit != cc->innerClassList()->end())
+//             {
+//                 /* found */
+//                 
+//                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper( iit->second ));
+//                 
+//                 puts("ID FOUND --  /* 6. class names of the inners classes */\n");
+// 
+//                 break;
+//             }
+//             
+//             
+//             /* 8. imported class name */
+//             const FrBClass * c = FrBClass::getClassFromString(name);
+//             
+//             if(c)
+//             {
+//                 /* found */
+//                 
+//                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper(c));
+//                 
+//                 puts("ID FOUND --  /* 8. imported class name */\n");
+//                 
+//                 break;
+//             }
           
       }
     | FRB_KW_TOKEN_NOTHING

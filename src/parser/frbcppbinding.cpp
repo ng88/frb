@@ -69,10 +69,10 @@ int FrBNoParamCppFunction::parameterCount() const
 }
 
 
-FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me) const
+FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me) const
         throw (FrBExecutionException)
 {
-    return _fn(me);
+    return _fn(e, me);
 }
 
 FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
@@ -104,18 +104,19 @@ int FrBUnaryCppFunction::parameterCount() const
 }
 
 
-FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0) const
+FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                FrBBaseObject * arg0) const
      throw (FrBExecutionException)
 {
-    return _fn(me, arg0);
+    return _fn(e, me, arg0);
 }
 
 
-FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment&, FrBBaseObject * me,
+FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
                                                 const FrBBaseObjectList& args) const
      throw (FrBExecutionException)
 {
-    return _fn(me, args[0]);
+    return _fn(e, me, args[0]);
     //execute(me, args[0]);
 }
 

@@ -41,6 +41,10 @@ class FrBExecutionException : public FrBException
 public:
 };
 
+class FrBResolveException : public FrBException
+{
+public:
+};
 
 
 
@@ -72,7 +76,7 @@ public:
 
 
 //TODO prendre en charge les candidate
-class FrBFunctionNotFoundException : public FrBExecutionException
+class FrBFunctionNotFoundException : public FrBExecutionException, public FrBResolveException
 {
 protected:
     String _name;
@@ -105,7 +109,7 @@ public:
 };
 
 
-class FrBClassNotFoundException : public FrBExecutionException
+class FrBClassNotFoundException : public FrBExecutionException, public FrBResolveException
 {
 protected:
     String _name;
@@ -118,7 +122,7 @@ public:
 };
 
 
-class FrBIncompatibleClassException : public FrBExecutionException
+class FrBIncompatibleClassException : public FrBExecutionException, public FrBResolveException
 {
 private:
     const FrBClass * _provided;

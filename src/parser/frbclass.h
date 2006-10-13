@@ -283,6 +283,7 @@ public:
 
     
     virtual const char* specString() const;
+    void resolveAndCheck() throw (FrBResolveException);
    
 };
 

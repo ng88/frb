@@ -64,6 +64,16 @@ bool FrBParser::parse(const String& str)
     return parse(in);
 }
 
+void FrBParser::resolveAndCheckTree() throw (FrBResolveException)
+{ 
+    for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
+    {
+        FrBCodeClass* c = dynamic_cast<FrBCodeClass*>(it->second);
+        if(c) c->resolveAndCheck();
+    }
+            
+}
+
 void FrBParser::dispose()
 {
     if(_disposed)

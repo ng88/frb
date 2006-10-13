@@ -40,6 +40,7 @@ class FrBStatement
 {
 public:
     virtual ~FrBStatement() {}
+    virtual void resolveAndCheck() throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
     virtual std::ostream& put(std::ostream& stream) const = 0;
 };
@@ -61,6 +62,8 @@ private:
     
 public:
     FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr * init_val = 0);
+    
+    void resolveAndCheck() throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream) const;
     
@@ -75,7 +78,10 @@ private:
     
     
 public:
+
     FrBExprStatement(FrBExpr* expr);
+    
+    void resolveAndCheck() throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream) const;
     
