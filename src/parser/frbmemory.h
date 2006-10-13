@@ -32,101 +32,82 @@
 // en pure virtuel et introduire une FrBImplClass et une FrBConstClass
 
 
-struct FrBVar
-{
-    FrBBaseObject *  value;
-    int              links;
 
-    FrBVar(FrBBaseObject * v = 0)
-     : value(v), links(0) {}
-};
 
 class FrBMemory
 {
 public:
+
+    struct Block
+    {
+        FrBBaseObject *  value;
+        int              links;
+    
+        FrBVar(FrBBaseObject * v = 0)
+        : value(v), links(0) {}
+    };
+
     static const size_t B = 1;
     static const size_t KB = 1024 * B;
     static const size_t MB = 1024 * KB;
 
-    static const size_t BLOCK_SIZE = sizeof (FrBVar);
+    static const size_t BLOCK_SIZE = sizeof(Block);
     
-private:
-    static FrBMemory * _mem;
-    
+protected:
 
-    
-    
-    //typedef FrBBaseObjectMap Storage;
-    typedef std::map<const String, FrBVar> Storage;
+    typedef std::vector<Block> Storage;
     
     /** Contient des instances */
     Storage _data;
-
     
-    /** _collect_threshold est un nombre de FrBVar */ 
+    /** _collect_threshold is a number of block */ 
     size_t _collect_threshold;
+    
+    /** When the memory is full, it'll be increased of mem_size * _geo_step - mem_size */
+    size_t _geo_step;
+    
+    /** When the memory is full, it'll be increased of _arith_step */
+    size_t _arith_step;
+    
+    /** Mem unavailable in block */
+    size_t _unavailable;
+    
+    /** next available block */
+    size_t _next_available
+    
+    /** Destroy the object id */
+    void destroyObject(int id);
     
 public:
    
-    inline FrBMemory() : _collect_threshold(1 * MB / BLOCK_SIZE) {};
+    /** all in byte expect geo_step */
+    inline FrBMemory::FrBMemory(size_t init_size = MB,
+                                size_t collect_threshold = MB,
+                                size_t geo_step = 1,
+                                size_t arith_step = MB);
     
     ~FrBMemory();
-    
-public:
 
 
-    /** collect_threshold est en octet */
-    inline void setCollectThreshold(size_t s) { _collect_threshold = s / BLOCK_SIZE + 1; }
+    /** add the object to the memory */
+    FrBBaseObject* addObject(const String& name, FrBBaseObject* obj);
     
-    //TODO verifier l'existance
-    FrBBaseObject* addObject(const String& name, FrBBaseObject* obj)
-    {
-        /* en cas de succès */
-        
-        if(_data.size() >= _collect_threshold)
-            collect();
-        
-        _data[name] = FrBVar(obj);
-        return obj;
-    }
+    /** mark the object to be deleted */
+    void deleteObject(FrBBaseObject* obj);
     
-    //TODO void deleteObject(FrBBaseObject)
-    void deleteObject(FrBBaseObject* obj)
-    {
-        /* en cas de succès */
-    }
+    size_t collect(int pass = 1);
     
-    size_t collect(int pass = 1)
-    {
-        size_t ret = 0;
-        
-        while(pass--)
-        {
-            for(Storage::iterator it = _data.begin(); it != _data.end(); ++it)
-            {
-                if( it->second.links == 0 )
-                {
-                    //on delete
-                    ret++;
-                }
-            }
-        }
-        
-        return ret * BLOCK_SIZE;
-    }
     
-    /** taille en octet */
-    inline size_t size() const { return _data.size() * BLOCK_SIZE; }
+    /** collect_threshold in byte */
+    inline void setCollectThreshold(size_t s);
+    
+    /** size in byte */
+    inline size_t size() const;
 
-    /** taille en block */
-    inline size_t bsize() const { return _data.size(); }
+    /** size in block */
+    inline size_t bsize() const;
         
-    inline FrBBaseObject* getObject(const String& name)
-    {
-        Storage::iterator it = _data.find(name);
-        
-        return (it == _data.end()) ? 0 : it->second.value;
-    }
+    inline FrBBaseObject* getObject(int addr);
     
     
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
@@ -148,24 +129,129 @@ public:
     FrBMemStack(int res_step = 10);
     
     /** addr is the address from top */
-    FrBBaseObject* getTopValue(int addr);
-    void setTopValue(int addr, FrBBaseObject* v);
+    inline FrBBaseObject* getTopValue(int addr);
+    inline void setTopValue(int addr, FrBBaseObject* v);
     
-    FrBBaseObject* top();
-    FrBBaseObject* pop();
-    void pop(int nb = 0);
-    void push_empty(int nb);
-    void push(FrBBaseObject* o);
+    inline FrBBaseObject* top();
+    inline FrBBaseObject* pop();
+    inline void pop(int nb = 0);
+    inline void push_empty(int nb);
+    inline void push(FrBBaseObject* o);
     void push(const FrBBaseObjectList& lo);
     
-    void reserve(int nb);
+    inline void reserve(int nb);
     
-    inline int pointer() { return _stack_ptr; }
+    inline int pointer();
     
     std::ostream& print(std::ostream& stream = std::cout) const;
     
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+/** inlined **/
+
+/**** FrBMemory *****/
+
+inline FrBMemory::FrBMemory(size_t init_size, size_t collect_threshold, size_t geo_step, size_t arith_step)
+ : _collect_threshold(collect_threshold / FrBMemory::BLOCK_SIZE + 1),
+   _geo_step(geo_step),
+   _arith_step(arith_step / FrBMemory::BLOCK_SIZE + 1),
+   _unavailable(0),
+   _next_available(0)
+{
+    _data.resize(init_size);
+}
+
+
+inline void FrBMemory::setCollectThreshold(size_t s)
+{
+    _collect_threshold = s / BLOCK_SIZE + 1;
+}
+
+
+inline size_t FrBMemory::size() const
+{
+    return _data.size() * BLOCK_SIZE;
+}
+
+
+inline size_t FrBMemory::bsize() const
+{
+    return _data.size();
+}
+    
+inline FrBBaseObject* FrBMemory::getObject(int addr)
+{
+    frb_assert(addr >= 0 && addr < _data.size());
+    return _data[addr];
+}
+
+
+
+/***** FrBMemStack *****/
+
+inline FrBBaseObject* FrBMemStack::getTopValue(int addr)
+{
+    frb_assert(addr >= 0 && addr <= _stack_ptr);
+    return _mem[_stack_ptr - addr];
+}
+
+inline void FrBMemStack::setTopValue(int addr, FrBBaseObject* v)
+{
+    frb_assert(addr >= 0 && addr <= _stack_ptr);
+    _mem[_stack_ptr - addr] = v;
+}
+
+inline FrBBaseObject* FrBMemStack::top()
+{
+    frb_assert(_stack_ptr > -1 && _stack_ptr < (int)_mem.size());
+    return _mem[_stack_ptr];
+}
+
+inline FrBBaseObject* FrBMemStack::pop()
+{
+    frb_assert(_stack_ptr >= 0);
+    return _mem[_stack_ptr--];
+}
+
+inline void FrBMemStack::pop(int n)
+{
+    frb_assert(_stack_ptr - n >= -1);
+    _stack_ptr -= n;
+}
+
+inline void FrBMemStack::reserve(int nb)
+{
+    check_space(nb);
+}
+
+inline void FrBMemStack::push_empty(int nb)
+{
+    check_space(nb);
+    _stack_ptr += nb;
+}
+
+inline void FrBMemStack::push(FrBBaseObject* o)
+{
+    check_space(1);
+    _mem[++_stack_ptr] = o;
+}
+
+inline int FrBMemStack::pointer()
+{
+    return _stack_ptr;
+}
 
 
 #endif

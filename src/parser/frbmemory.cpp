@@ -26,9 +26,47 @@ FrBMemory::~FrBMemory()
 {
 
     for(Storage::iterator it = _data.begin(); it != _data.end(); ++it)
-        ;//delete it->second.value;
+        ;//delete *it;
         
     frb_warning2(false, "memory not disposed");
+}
+
+
+FrBBaseObject* FrBMemory::addObject(const String& name, FrBBaseObject* obj)
+{
+    /* en cas de succès */
+    
+    if(_data.size() >= _collect_threshold)
+        collect();
+    
+    _data[name] = FrBVar(obj);
+    return obj;
+}
+
+void FrBMemory::deleteObject(FrBBaseObject* obj)
+{
+    delete obj;
+}
+
+
+
+size_t FrBMemory::collect(int pass)
+{
+    size_t ret = 0;
+    
+    while(pass--)
+    {
+        for(Storage::iterator it = _data.begin(); it != _data.end(); ++it)
+        {
+            if( it->second.links == 0 )
+            {
+                //on delete
+                ret++;
+            }
+        }
+    }
+    
+    return ret * BLOCK_SIZE;
 }
 
 
@@ -60,7 +98,7 @@ FrBMemStack::FrBMemStack(int res)
 {
     _res_step = res;
     _stack_ptr = -1;
-    _mem.resize(_res_step);
+    _mem.reserve(_res_step);
 
 #ifdef _FRB_DEBUG_
     for(unsigned int i = 0; i < _mem.size(); ++i)
@@ -72,60 +110,13 @@ FrBMemStack::FrBMemStack(int res)
 void FrBMemStack::check_space(int nb)
 {
     if(_stack_ptr + nb > (int)_mem.size() - 1)
-        _mem.resize(_stack_ptr + nb + 1 + _res_step);
+        _mem.reserve(_stack_ptr + nb + 1 + _res_step);
         
 #ifdef _FRB_DEBUG_
     for(unsigned int i = _stack_ptr + 1; i < _mem.size(); ++i)
         _mem[i] = 0;
 #endif
         
-}
-
-FrBBaseObject* FrBMemStack::getTopValue(int addr)
-{
-    frb_assert(addr >= 0 && addr <= _stack_ptr);
-    return _mem[_stack_ptr - addr];
-}
-
-void FrBMemStack::setTopValue(int addr, FrBBaseObject* v)
-{
-    frb_assert(addr >= 0 && addr <= _stack_ptr);
-    _mem[_stack_ptr - addr] = v;
-}
-
-FrBBaseObject* FrBMemStack::top()
-{
-    frb_assert(_stack_ptr > -1 && _stack_ptr < (int)_mem.size());
-    return _mem[_stack_ptr];
-}
-
-FrBBaseObject* FrBMemStack::pop()
-{
-    frb_assert(_stack_ptr >= 0);
-    return _mem[_stack_ptr--];
-}
-
-void FrBMemStack::pop(int n)
-{
-    frb_assert(_stack_ptr - n >= -1);
-    _stack_ptr -= n;
-}
-
-void FrBMemStack::reserve(int nb)
-{
-    check_space(nb);
-}
-
-void FrBMemStack::push_empty(int nb)
-{
-    check_space(nb);
-    _stack_ptr += nb;
-}
-
-void FrBMemStack::push(FrBBaseObject* o)
-{
-    check_space(1);
-    _mem[++_stack_ptr] = o;
 }
 
 void FrBMemStack::push(const FrBBaseObjectList& lo)
