@@ -21,6 +21,7 @@
 
 #include "frbstat.h"
 #include "frbexceptions.h"
+#include "../common/assert.h"
 
 typedef int scope_t;
 
@@ -191,21 +192,12 @@ public:
     FrBCodeFunction();
     ~FrBCodeFunction();
     
-    inline void addStat(FrBStatement* v) { _stats.push_back(v); }
+    inline void addStat(FrBStatement* v);
     //TODO verif nom des params (doublons)
-    inline void addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init = 0)
-    {
-        _paramName[name] = _param.size();
-        _param.push_back(Param(v, byval, init));
-    }
+    inline void addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init = 0);
     
     /** Return a pointer to a Param struct if found or 0 if not found */
-    inline const Param * getParam(const String& name) const
-    {
-        NameParamList::const_iterator it = _paramName.find(name);
-        
-        return (it == _paramName.end()) ? 0 : &_param[it->second];
-    }
+    inline const Param * getParam(const String& name) const;
     
     /** Display on stream a string representation of this */
     std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -220,23 +212,14 @@ public:
     /* local var handling functions */
     
     /** add a local var */
-    inline void addLocalVar(String name, const FrBClass * type)
-    {
-        _varName[name] = _var.size();
-        _var.push_back(type);
-    }
+    inline void addLocalVar(String name, const FrBClass * type);
     
     /** Return a pointer to a Param struct if found or 0 if not found */
-    inline VarID findLocalVar(String name) const
-    {
-        NameVarList::const_iterator it = _varName.find(name);
-        
-        return (it == _varName.end()) ? -1 : it->second;
-    }
+    inline VarID findLocalVar(String name) const;
     
-    inline const FrBClass * getLocalVar(VarID id) const { return _var[id]; }
+    inline const FrBClass * getLocalVar(VarID id) const;
     
-    inline int localVarCount() const { return _varName.size(); }
+    inline int localVarCount() const;
     
 };
 
@@ -251,6 +234,53 @@ private:
 
 typedef std::vector<FrBCodeFunction*> FrBCodeFnList;
 typedef std::stack<FrBCodeFunction*> FrBCodeFunctionStack;
+
+
+
+/* Inlined */
+
+inline void FrBCodeFunction::addStat(FrBStatement* v)
+{
+    _stats.push_back(v);
+}
+
+inline void FrBCodeFunction::addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init)
+{
+    _paramName[name] = _param.size();
+    _param.push_back(Param(v, byval, init));
+}
+
+inline const FrBCodeFunction::Param * FrBCodeFunction::getParam(const String& name) const
+{
+    NameParamList::const_iterator it = _paramName.find(name);
+    
+    return (it == _paramName.end()) ? 0 : &_param[it->second];
+}
+
+inline void FrBCodeFunction::addLocalVar(String name, const FrBClass * type)
+{
+    _varName[name] = _var.size();
+    _var.push_back(type);
+}
+
+
+inline FrBCodeFunction::VarID FrBCodeFunction::findLocalVar(String name) const
+{
+    NameVarList::const_iterator it = _varName.find(name);
+    
+    return (it == _varName.end()) ? -1 : it->second;
+}
+
+inline const FrBClass * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) const
+{
+    frb_assert(id >= 0 && id < _var.size());
+    return _var[id];
+}
+
+inline int FrBCodeFunction::localVarCount() const
+{
+    return _varName.size();
+}
 
 #endif
 

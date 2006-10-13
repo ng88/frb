@@ -189,7 +189,7 @@ FrBCodeClass::~FrBCodeClass()
 
 const char* FrBCodeClass::specString() const
 {
-    return "user code class";
+    return "frb interpreted class";
 }
 
 

@@ -67,15 +67,15 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
-/** Local var */
+/** Local var (for localvar, parameters & me) */
 class FrBLocalVarExpr : public FrBExpr
 {
 private:
-    const FrBCodeFunction * _fn;
+    const FrBClass *   _type;
     int               _varid;
     
 public:
-    FrBLocalVarExpr(const FrBCodeFunction * fn, int varid);
+    FrBLocalVarExpr(const FrBClass * t, int varid);
     ~FrBLocalVarExpr();
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);

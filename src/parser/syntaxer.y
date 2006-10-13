@@ -873,7 +873,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf, idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf->getLocalVar(idvar), idvar);
                 
                 puts("ID FOUND -- /* 1. local var */\n");
                 

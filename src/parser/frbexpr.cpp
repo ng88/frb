@@ -70,8 +70,8 @@ std::ostream& FrBObjectIdExpr::put(std::ostream& stream) const
 
 /*         FrBLocalVarExpr        */
 
-FrBLocalVarExpr::FrBLocalVarExpr(const FrBCodeFunction * fn, int varid)
- : _fn(fn), _varid(varid)
+FrBLocalVarExpr::FrBLocalVarExpr(const FrBClass * t, int varid)
+ : _type(t), _varid(varid)
 {
 }
 
@@ -79,15 +79,14 @@ FrBLocalVarExpr::~FrBLocalVarExpr()
 {
 }
 
-FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
+FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    //TODO recup dans la pile...
-    return 0;
+    return e.stack().getTopValue(_varid);
 }
 
 const FrBClass* FrBLocalVarExpr::getClass() const
 {
-    return _fn->getLocalVar(_varid);
+    return _type;
 }
 
 std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
