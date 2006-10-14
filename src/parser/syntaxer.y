@@ -894,6 +894,8 @@ literal_expr:
                 break;
             }
             
+            frb_assert2(false, "TODO: add a resolver expr to care about function & class");
+            
 //             /* 4. local class function/sub */
 //             FrBClass::FnPairIt pit = cc->findFunctions(name);
 //             

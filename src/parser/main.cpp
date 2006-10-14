@@ -39,6 +39,7 @@ int main(int argc, char ** argv)
     
     char * arg_main_class = "Main";
     char * arg_main_function = "main";
+    int    arg_int_param = -1;
     
     for(int i = 0; i < argc; ++i)
     {
@@ -53,7 +54,9 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--main-class") && i + 1 < argc)
             arg_main_class = argv[++i];
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
-            arg_main_function = argv[++i];  
+            arg_main_function = argv[++i];
+        else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)
+            arg_int_param = atoi(argv[++i]); 
     }
     
     /******** Parsage ********/
@@ -80,8 +83,7 @@ int main(int argc, char ** argv)
         /******** Amélioration de l'arbre ********/
 
         parser.resolveAndCheckTree();
-        //TODONEXT chercher l'origine du seg fault, ca doit venir de plus haut (stat, expr)
-
+        
         /******** Interprétation/exécution ********/
             
         FrBMemory memory(100 * FrBMemory::B, 10 * FrBMemory::B, 2, 0);
@@ -93,21 +95,30 @@ int main(int argc, char ** argv)
         if(args_switch[EXEC])
         {
     
-            cout << "Call to " << arg_main_class << "::" << arg_main_function << "()...\n";
+            cout << "Call to " << arg_main_class << "::" << arg_main_function;
+            
+            if(arg_int_param > -1) 
+                cout << "(FrBInt = " << arg_int_param << ")...\n";
+            else
+                cout << "()...\n";
 
             FrBBaseObjectList args;
+            
+            FrBInt param0(arg_int_param);
+            
+            if(arg_int_param > -1)
+                args.push_back(&param0);
+            
             main->executeFunction(env, arg_main_function, 0, args);
 
             if(args_switch[SHOW_MEM])
             {
-                cout << "Mem after " << arg_main_class << "::" << arg_main_function << "() call:\n";
+                cout << "Mem after call:\n";
                 memory.print(1);
             }
             
             if(args_switch[SHOW_STACK])
-            {
                 env.stack().print();
-            }
         }
         
     }

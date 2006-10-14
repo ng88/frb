@@ -17,9 +17,13 @@ Public Class Main
         b
         c
         
-        main2()
-        
         Me
+        
+    End Sub
+    
+    Public Shared Sub main(a As Int)
+        Dim a, b As Int
+
         
     End Sub
     
