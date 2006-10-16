@@ -24,17 +24,9 @@ using namespace std;
 
 inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] = c; }
 
-int atois(char * str)
-{
-    if(str[0] == '-')
-        return -atoi(str + 1);
-    else
-        return atoi(str);
-}
 
 int main(int argc, char ** argv)
 {
-
     /******** Anaylse des paramètres ********/
 
     enum { SHOW_TREE = 0, SHOW_MEM, SHOW_STACK, EXEC, SWITCH_COUNT };
