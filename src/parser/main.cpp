@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include "frbparser.h"
+#include "frbresolveenvironment.h"
 
 using namespace std;
 
@@ -56,13 +57,15 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
             arg_main_function = argv[++i];
         else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)
-            arg_int_param = atois(argv[++i]); 
+            arg_int_param = atoi(argv[++i]); 
     }
     
     /******** Parsage ********/
 
     FrBParser parser;
     FrBParser::Tree * tree = parser.classList();
+    
+    FrBResolveEnvironment renv(tree);
     
     
     try
@@ -82,15 +85,15 @@ int main(int argc, char ** argv)
             
         /******** Amélioration de l'arbre ********/
 
-        parser.resolveAndCheckTree();
+        parser.resolveAndCheckTree(renv);
         
         /******** Interprétation/exécution ********/
             
         FrBMemory memory(100 * FrBMemory::B, 10 * FrBMemory::B, 2, 0);
-        FrBExecutionEnvironment env(&memory);
+        FrBExecutionEnvironment env(&memory, &renv);
 
         
-        FrBClass * main = FrBClass::getClassFromString(arg_main_class);
+        FrBClass * main = renv.getClassFromPath(arg_main_class);
         
         if(args_switch[EXEC])
         {

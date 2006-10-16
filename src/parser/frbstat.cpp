@@ -36,11 +36,11 @@ FrBDeclareStatement::FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr 
 
 }
 
-void FrBDeclareStatement::resolveAndCheck() throw (FrBResolveException)
+void FrBDeclareStatement::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     if(_init)
     {
-        _init->resolveAndCheck();
+        _init->resolveAndCheck(e);
         if(!FrBClass::areCompatibles(_init->getClass(), _type))
             throw FrBIncompatibleClassException(_init->getClass(), _type);
     }
@@ -73,9 +73,9 @@ FrBExprStatement::FrBExprStatement(FrBExpr* expr)
     frb_assert2(expr, "frbparsingtree.h::FrBExprStatement::FrBExprStatement()");
 }
 
-void FrBExprStatement::resolveAndCheck() throw (FrBResolveException)
+void FrBExprStatement::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _expr->resolveAndCheck();
+    _expr->resolveAndCheck(e);
 }
 
 void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)

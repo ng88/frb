@@ -22,9 +22,7 @@
 #include "frbbaseobject.h"
 #include "frbmemory.h"
 
-
-    //TODO fournit ici la liste des classes, valables aussi pr les autres sous classes
-
+class FrBResolveEnvironment;
 
 /** This class contains the execution environment (heap & stack...) */
 class FrBExecutionEnvironment
@@ -33,6 +31,7 @@ private:
 
     FrBMemStack  _stack;
     FrBMemory * _mem;
+    FrBResolveEnvironment * _resolveEnv;
     
     FrBExecutionEnvironment(const FrBExecutionEnvironment&) {}
     
@@ -40,15 +39,18 @@ public:
 
     /**
       * @param mem Heap memory
+      * @param renv Resolve env.
       */
-    FrBExecutionEnvironment(FrBMemory *mem)
-     : _mem(mem)
+    FrBExecutionEnvironment(FrBMemory *mem, FrBResolveEnvironment *renv)
+     : _mem(mem), _resolveEnv(renv)
     {
     }
-    
+
+    inline FrBResolveEnvironment * resolveEnv() { return _resolveEnv; }
     
     inline FrBMemStack& stack() { return _stack; }
     inline FrBMemory * memory() { return _mem; }
+    
     
     /** Add the object to the FrBMemory so that it can be garbage-collected */
     inline void addGarbagedObject(FrBBaseObject * o)

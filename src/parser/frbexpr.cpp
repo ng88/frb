@@ -54,11 +54,49 @@ std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
     return stream << "<local_var:" << _varid << ">";
 }
 
+/*     FrBUnresolvedIdExpr      */
+
+
+FrBUnresolvedIdExpr::FrBUnresolvedIdExpr(const String& name)
+ : _name(name), _o(0)
+{
+}
+
+FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
+{
+}
+
+void FrBUnresolvedIdExpr::resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException)
+{
+    //FrBClass::getClassFromString(name)
+}
+
+FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    frb_assert2(_o, "_o is a null pointer"
+                     " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
+    return _o;
+}
+
+const FrBClass* FrBUnresolvedIdExpr::getClass() const
+{
+    frb_assert2(_o, "_o is a null pointer"
+                     " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
+    return _o->getClass();
+}
+
+std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
+{
+    return stream << "<unresolved:" << _name << ">";
+}
+
+
+
 
 
 /*     FrBMemberOpExpr      */
 
-FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBExpr* rhs)
+FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs)
  : _lhs(lhs), _rhs(rhs)
 {
 }
@@ -69,7 +107,7 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
     delete _rhs;
 }
 
-void FrBMemberOpExpr::resolveAndCheck() throw (FrBResolveException)
+void FrBMemberOpExpr::resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException)
 {
 }
 
@@ -94,7 +132,7 @@ std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
 
 /*        FrBBinOpExpr            */
 FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException)
-    : _rhs(rhs), _lhs(lhs), _op(op)
+    : _rhs(rhs), _lhs(lhs), _op(op), _fn(0)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
 
@@ -105,11 +143,11 @@ FrBBinOpExpr::~FrBBinOpExpr()
     delete _lhs;
 }
 
-void FrBBinOpExpr::resolveAndCheck() throw (FrBResolveException)
+void FrBBinOpExpr::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
    
-    _lhs->resolveAndCheck();
-    _rhs->resolveAndCheck();
+    _lhs->resolveAndCheck(e);
+    _rhs->resolveAndCheck(e);
     
     const FrBClass * cl = _lhs->getClass();
     const FrBClass * cr = _rhs->getClass();

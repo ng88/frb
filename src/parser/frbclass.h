@@ -105,7 +105,7 @@ public:
              virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
              */
     /** Used in type resolution */
-    void resolveAndCheck() throw (FrBResolveException);
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
@@ -242,10 +242,6 @@ public:
     
     /** String describing this overload of class */
     virtual const char* specString() const = 0;
-    
-    
-    static FrBClassMap * root;
-    static FrBClass * getClassFromString(const String& name) throw (FrBClassNotFoundException);
     
     /** Check if from and to are compatibles and convert from to to */
     static FrBBaseObject* convert(FrBBaseObject * from, const FrBClass * to)throw (FrBIncompatibleClassException);

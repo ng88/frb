@@ -145,14 +145,12 @@ public:
     }
     
     /** Used in type resolution */
-    virtual void resolveAndCheck() throw (FrBResolveException) {};
+    virtual void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException) {};
         
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn);
 
-//TODO il faut resoudre les types directement
-//TODO rendre l'interpreteur thread safe (gestion de la mémoire, du GC, des local var ds les codefunctions)
 
 class FrBCodeFunction : public FrBFunction
 {
@@ -199,8 +197,8 @@ public:
     //TODO verif nom des params (doublons)
     inline void addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init = 0);
     
-    /** Return a pointer to a Param struct if found or 0 if not found */
-    inline const Param * getParam(const String& name) const;
+    /** Return the param index if found or -1 if not found */
+    inline int getParam(const String& name) const;
     
     /** Display on stream a string representation of this */
     std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -224,7 +222,7 @@ public:
     
     inline int localVarCount() const;
     
-    void resolveAndCheck() throw (FrBResolveException);
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     
 };
 
@@ -270,11 +268,11 @@ inline void FrBCodeFunction::addParam(const String& name, FrBClass* v, bool byva
     _param.push_back(Param(v, byval, init));
 }
 
-inline const FrBCodeFunction::Param * FrBCodeFunction::getParam(const String& name) const
+inline int FrBCodeFunction::getParam(const String& name) const
 {
     NameParamList::const_iterator it = _paramName.find(name);
     
-    return (it == _paramName.end()) ? 0 : &_param[it->second];
+    return (it == _paramName.end()) ? -1 : it->second;
 }
 
 inline void FrBCodeFunction::addLocalVar(String name, const FrBClass * type)

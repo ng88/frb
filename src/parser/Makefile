@@ -67,8 +67,9 @@ frbbaseobject.o: frbbaseobject.h frbbaseobject.cpp
 frbmemory.o: frbmemory.h frbmemory.cpp
 frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcppbinding.o
 frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h frbbaseobject.o
-frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o
- 
+frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o frbresolveenvironment.o
+frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
+
 .PHONY: exe clean install touchall force doc cleandoc
 
 doc:

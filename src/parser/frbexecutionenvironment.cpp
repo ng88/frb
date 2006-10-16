@@ -17,3 +17,6 @@
 
 
 #include "frbexecutionenvironment.h"
+#include "frbresolveenvironment.h"
+
+

@@ -37,8 +37,6 @@ FrBParser::FrBParser()
     
     _lexer->frb_syntaxer = _syntaxer;
     _lexer->frb_error = &_errors;
-    
-    FrBClass::root = &_classes;
 
 }
 
@@ -65,12 +63,12 @@ bool FrBParser::parse(const String& str)
     return parse(in);
 }
 
-void FrBParser::resolveAndCheckTree() throw (FrBResolveException)
+void FrBParser::resolveAndCheckTree(const FrBResolveEnvironment& e) throw (FrBResolveException)
 { 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
         frb_assert(it->second);
-        it->second->resolveAndCheck();  
+        it->second->resolveAndCheck(e);  
     }
 }
 

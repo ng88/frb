@@ -232,12 +232,12 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     
 }
 
-void FrBCodeFunction::resolveAndCheck() throw (FrBResolveException)
+void FrBCodeFunction::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
         frb_assert((*it));
-        (*it)->resolveAndCheck();
+        (*it)->resolveAndCheck(e);
     }
 }
 

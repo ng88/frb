@@ -701,7 +701,8 @@ type: /* "single" type, no array */
       }
     | FRB_IDENTIFIER /* String, Int... */
       {
-          $<vtype>$ = FrBClass::getClassFromString($<str>1);
+          //TODONEXT trouver une soluce pour ca 
+          $<vtype>$ = 0;//FrBClass::getClassFromString($<str>1);
           free($<str>1);
       }
     ;
@@ -849,6 +850,7 @@ literal_expr:
             const FrBClass * cc = current_class();
             const FrBCodeFunction * cf = current_fn();
             
+            (void)cc;
             
             
             /*
@@ -856,6 +858,7 @@ literal_expr:
                   X 1. local var
                   X 2. function parameter
                     3. local class member
+                 ---
                   X 4. local class function/sub
                     5. local class property
                   X 6. class names of the inners classes
@@ -864,7 +867,6 @@ literal_expr:
             
             */
             
-            //TODO pr les params et les local var et this : meme Expr qui contient leur numéro de var
             //TODO ici on resoud que les var local(param, this, var) pas le reste (post traitement)
             
             /* 1. local var */
@@ -882,19 +884,21 @@ literal_expr:
             }
             
             /* 2. function parameter */
-            const FrBCodeFunction::Param * param = cf->getParam(name);
+            idvar = cf->getParam(name);
             
-            if(param)
+            if(idvar > -1)
             {
                 /* found */
                 
-                //$<expr>$ = 
+                $<expr>$ = new FrBLocalVarExpr(cf->parameterType(idvar),  cf->localVarCount() + 1 + idvar);
                 
                 puts("ID FOUND -- /* 2. function parameter */\n");
                 break;
             }
             
-            frb_assert2(false, "TODO: add a resolver expr to care about function & class");
+            puts("ID UNRESOLVED\n");
+            
+            $<expr>$ = new FrBUnresolvedIdExpr(name);
             
 //             /* 4. local class function/sub */
 //             FrBClass::FnPairIt pit = cc->findFunctions(name);

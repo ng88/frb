@@ -28,46 +28,34 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 /*        FrBClass            */
 
-FrBClassMap * FrBClass::root = 0;
-
-void FrBClass::resolveAndCheck() throw (FrBResolveException)
+void FrBClass::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
     {
         frb_assert((*it));
-        (*it)->resolveAndCheck();
+        (*it)->resolveAndCheck(e);
     }
     
-    if(_dtor) _dtor->resolveAndCheck();
+    if(_dtor) _dtor->resolveAndCheck(e);
 
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
     {
         frb_assert(itf->second);
-        itf->second->resolveAndCheck();
+        itf->second->resolveAndCheck(e);
     }
     
     for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf)
     {
         frb_assert(itf->second);
-        itf->second->resolveAndCheck();
+        itf->second->resolveAndCheck(e);
     }
     
     for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it)
     {
         frb_assert(it->second);
-        it->second->resolveAndCheck();
+        it->second->resolveAndCheck(e);
     }
-}
-
-FrBClass * FrBClass::getClassFromString(const String& name) throw (FrBClassNotFoundException)
-{
-    FrBClassMap::iterator f = root->find(name);
-    
-    if(f == root->end())
-        throw FrBClassNotFoundException(name);
-    else
-        return f->second;
 }
 
 void FrBClass::executeDefaultConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const throw (FrBExecutionException)

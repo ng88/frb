@@ -33,7 +33,7 @@ public:
     virtual ~FrBExpr() {}
     
     /** Resolve unresolved identifier (class, function) and check type compatibility */
-    virtual void resolveAndCheck() throw (FrBResolveException) {}
+    virtual void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException) {}
     
     /** Get type of expression (can be called ONLY IF resolve() was called before) */
     virtual const FrBClass* getClass() const = 0;
@@ -66,17 +66,36 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
+/** Identifier not yet resolved (ie class name, function...) */
+class FrBUnresolvedIdExpr : public FrBExpr
+{
+private:
+    String          _name;
+    FrBBaseObject * _o;
+    
+public:
+    FrBUnresolvedIdExpr(const String& name);
+    ~FrBUnresolvedIdExpr();
+    
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline const String& name() const { return _name; }
+};
+
 /** Member operator (.) */
 class FrBMemberOpExpr : public FrBExpr
 {
-    FrBExpr     *_lhs;
-    FrBExpr   *_rhs;
+    FrBExpr               *_lhs;
+    FrBUnresolvedIdExpr   *_rhs;
     
 public:
-    FrBMemberOpExpr(FrBExpr* lhs, FrBExpr* rhs);
+    FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs);
     ~FrBMemberOpExpr();
     
-    void resolveAndCheck() throw (FrBResolveException);
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
@@ -94,14 +113,11 @@ public:
     FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException);
     ~FrBBinOpExpr();
     
-    void resolveAndCheck() throw (FrBResolveException);
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
-
-//TODO recuperer le typ des expr afin de pouvoir resoudre la bonne surcharge lors de la construction de l'arbre
-//TODO afin d'ajouter/enlever les operation de conversion
 
 /*class FrBNewExpr : public FrBExpr
 {
