@@ -66,8 +66,15 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
+
+/** Used in syntaxer for type */
+class FrBTypeExpr : public FrBExpr
+{
+};
+
+
 /** Identifier not yet resolved (ie class name, function...) */
-class FrBUnresolvedIdExpr : public FrBExpr
+class FrBUnresolvedIdExpr : public FrBTypeExpr
 {
 private:
     String          _name;
@@ -86,7 +93,7 @@ public:
 };
 
 /** Member operator (.) */
-class FrBMemberOpExpr : public FrBExpr
+class FrBMemberOpExpr : public FrBTypeExpr
 {
     FrBExpr               *_lhs;
     FrBUnresolvedIdExpr   *_rhs;

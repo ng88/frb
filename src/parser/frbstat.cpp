@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 
 /*                 FrBDeclareStatement              */
 
-FrBDeclareStatement::FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr * init_val)
+FrBDeclareStatement::FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val)
     : _varid(varid), _type(t), _init(init_val)
 {
 
@@ -38,23 +38,27 @@ FrBDeclareStatement::FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr 
 
 void FrBDeclareStatement::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    _type->resolveAndCheck(e);
+    
     if(_init)
     {
         _init->resolveAndCheck(e);
-        if(!FrBClass::areCompatibles(_init->getClass(), _type))
-            throw FrBIncompatibleClassException(_init->getClass(), _type);
+        if(!FrBClass::areCompatibles(_init->getClass(), _type->getClass()))
+            throw FrBIncompatibleClassException(_init->getClass(), _type->getClass());
     }
 }
 
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
+
     e.stack().setTopValue(_varid,
-        ( (_init == 0) ? _type->createInstance(e) : FrBClass::forceConvert(_init->eval(e), _type) ));
+                  ((_init == 0) ? _type->getClass()->createInstance(e) :
+                                  FrBClass::forceConvert(_init->eval(e), _type->getClass())));
 }
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
 {
-    stream << "declare <local_var:" << _varid << "> (" << _type->name() << ')';
+    stream << "declare <local_var:" << _varid << "> (" << *_type << ')';
     
     if(_init)
         stream << " with init value " << *_init;
@@ -65,6 +69,8 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
 FrBDeclareStatement::~FrBDeclareStatement()
 {
 }
+
+
 
 /*                 FrBExprStatement                */
 FrBExprStatement::FrBExprStatement(FrBExpr* expr)

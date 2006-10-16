@@ -28,6 +28,7 @@
 #include "frbexceptions.h"
 
 class FrBExpr;
+class FrBTypeExpr;
 class FrBClass;
 class FrBCodeFunction;
 
@@ -57,11 +58,11 @@ class FrBDeclareStatement : public FrBStatement
 {
 private:
     int                _varid;
-    const FrBClass *   _type;
+    FrBTypeExpr *      _type;
     FrBExpr *          _init;
     
 public:
-    FrBDeclareStatement(int varid, const FrBClass * t, FrBExpr * init_val = 0);
+    FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val = 0);
     
     void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);

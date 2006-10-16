@@ -80,7 +80,7 @@ struct FnAttr
     char *                     str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
-    FrBClass *                 vtype;
+    FrBTypeExpr *              vtype;
     FrBStatement *             stat;
     FrBExprList*               exprs;
     int                        vint;
@@ -432,12 +432,6 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-
-                if($<expr>5 != 0 && !FrBClass::areCompatibles($<vtype>4, $<expr>5->getClass()))
-                    frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
-                    FrBErrors::FRB_ERR_SEMANTIC,
-                    frb_lexer->lineno(), "", "", "",
-                    String(*it));
                 
                 fn->addStat( new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5) );
                 fn->addLocalVar((*it), $<vtype>4);
@@ -458,12 +452,6 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-
-                if($<expr>3 != 0 && !FrBClass::areCompatibles($<vtype>2, $<expr>3->getClass()))
-                    frb_error->error(FrBErrors::FRB_ERR_TYPE_MISMATCH,
-                    FrBErrors::FRB_ERR_SEMANTIC,
-                    frb_lexer->lineno(), "", "", "",
-                    String(*it));
                 
                 fn->addStat( new FrBDeclareStatement(var_count, $<vtype>2, $<expr>3) );
                 fn->addLocalVar((*it), $<vtype>2);
@@ -530,10 +518,10 @@ operator_overloadable:
     | FRB_KW_TOKEN_OP_BITW_LSHIFT
     | FRB_KW_TOKEN_OP_BITW_RSHIFT
     | FRB_KW_TOKEN_OP_MOD
-    | FRB_KW_TOKEN_OP_LOG_AND
-    | FRB_KW_TOKEN_OP_LOG_OR
-    | FRB_KW_TOKEN_OP_LOG_XOR
-    | FRB_KW_TOKEN_OP_LOG_NOT
+   /* | FRB_KW_TOKEN_OP_LOG_AND     pas surchargeable
+    | FRB_KW_TOKEN_OP_LOG_OR        pour activer l'évaluation 
+    | FRB_KW_TOKEN_OP_LOG_XOR       paresseuse
+    | FRB_KW_TOKEN_OP_LOG_NOT*/
     ;
 
 fn_arg_list: /* ( [arg list] )  */
@@ -691,44 +679,49 @@ as_type:
 //     | FRB_KW_TOKEN_OP_NEW type_new_array /* New Type[expr] */
 //     ;
 
-type: /* "single" type, no array */
-      FRB_KW_TOKEN_CONST FRB_IDENTIFIER /* Const String, Int... */
-      {
-          free($<str>1);
-          frb_assert2(false, "not yet implemented : const T");
-          //$<vtype>$ = new FrBStaticType($<str>2, true);
-          
-      }
-    | FRB_IDENTIFIER /* String, Int... */
-      {
-          //TODONEXT trouver une soluce pour ca 
-          //mettre des expr.expr ) la place des types
-          //on resoud tout apres le parsage terminé
-          $<vtype>$ = 0;//FrBClass::getClassFromString($<str>1);
-          free($<str>1);
-      }
-    ;
-    
-new_expr:
-      FRB_KW_TOKEN_OP_NEW type parent_expr_list /* New type(arg, arg, ...) */
-      { /*$<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3);*/ }
+// type: /* "single" type, no array */
+//       FRB_KW_TOKEN_CONST FRB_IDENTIFIER /* Const String, Int... */
+//       {
+//           free($<str>1);
+//           frb_assert2(false, "not yet implemented : const T");
+//           //$<vtype>$ = new FrBStaticType($<str>2, true);
+//           
+//       }
+//     | FRB_IDENTIFIER /* String, Int... */
+//       {
+//           //TODONEXT trouver une soluce pour ca 
+//           //mettre des expr.expr ) la place des types
+//           //on resoud tout apres le parsage terminé
+//           $<vtype>$ = 0;//FrBClass::getClassFromString($<str>1);
+//           free($<str>1);
+//       }
+//     ;
+
+
+type: 
+      name_expr { $<vtype>$ = $<vtype>1; }
+    | FRB_KW_TOKEN_CONST name_expr {  frb_assert2(false, "not yet implemented : const T"); }
     ;
 
  /* name expr, eg: Class1, String, Module1.Class1, ... */
 name_expr:
       name_expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
       {
-          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          $<vtype>$ = new FrBMemberOpExpr($<vtype>1, new FrBUnresolvedIdExpr($<str>3));
           free($<str>3);
       }
     | FRB_IDENTIFIER
       {
-          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
-          free($<str>1);
+          $<vtype>$ = new FrBUnresolvedIdExpr($<str>3);
+          free($<str>3);
       }
     ;
     
-
+    
+new_expr:
+      FRB_KW_TOKEN_OP_NEW type parent_expr_list /* New type(arg, arg, ...) */
+      { /*$<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3);*/ }
+    ;
 
 expr:
       FRB_KW_TOKEN_OP_O_BRACKET expr FRB_KW_TOKEN_OP_C_BRACKET             /* ( expr ) */
