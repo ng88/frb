@@ -24,6 +24,14 @@ using namespace std;
 
 inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] = c; }
 
+int atois(char * str)
+{
+    if(str[0] == '-')
+        return -atoi(str + 1);
+    else
+        return atoi(str);
+}
+
 int main(int argc, char ** argv)
 {
 
@@ -56,7 +64,7 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
             arg_main_function = argv[++i];
         else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)
-            arg_int_param = atoi(argv[++i]); 
+            arg_int_param = atois(argv[++i]); 
     }
     
     /******** Parsage ********/
