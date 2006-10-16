@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 
 /*         FrBLocalVarExpr        */
 
-FrBLocalVarExpr::FrBLocalVarExpr(const FrBClass * t, int varid)
+FrBLocalVarExpr::FrBLocalVarExpr(FrBTypeExpr * t, int varid)
  : _type(t), _varid(varid)
 {
 }
@@ -44,9 +44,14 @@ FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
     return e.stack().getTopValue(_varid);
 }
 
+void FrBLocalVarExpr::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    _type->resolveAndCheck(e);
+}
+
 const FrBClass* FrBLocalVarExpr::getClass() const
 {
-    return _type;
+    return _type->getClass();
 }
 
 std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const

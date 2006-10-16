@@ -49,24 +49,6 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
 
 typedef std::vector<FrBExpr*> FrBExprList;
 
-
-/** Local var (for localvar, parameters & me) */
-class FrBLocalVarExpr : public FrBExpr
-{
-private:
-    const FrBClass *   _type;
-    int               _varid;
-    
-public:
-    FrBLocalVarExpr(const FrBClass * t, int varid);
-    ~FrBLocalVarExpr();
-    
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
-    const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const;
-};
-
-
 /** Used in syntaxer for type */
 class FrBTypeExpr : public FrBExpr
 {
@@ -107,6 +89,25 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
 };
+
+
+/** Local var (for localvar, parameters & me) */
+class FrBLocalVarExpr : public FrBExpr
+{
+private:
+    FrBTypeExpr *     _type;
+    int               _varid;
+    
+public:
+    FrBLocalVarExpr(FrBTypeExpr * t, int varid);
+    ~FrBLocalVarExpr();
+    
+    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+};
+
 
 class FrBBinOpExpr : public FrBExpr
 {

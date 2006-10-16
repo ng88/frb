@@ -15,7 +15,7 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-
+#include "frbexpr.h"
 #include "frbfunction.h"
 #include "frbclass.h"
 #include "../common/assert.h"
@@ -176,6 +176,7 @@ FrBCodeFunction::FrBCodeFunction()
     _sub = false;
     _shared = false;
     _const = false;
+    _unresolvedRetType = 0;
 }
 
 
@@ -188,7 +189,8 @@ FrBCodeFunction::~FrBCodeFunction()
 const FrBClass * FrBCodeFunction::parameterType(int index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::parameterType(int) / index out of bounds");
-    return _param[index].type;
+
+    return _param[index].type->getClass();
 }
 
 int FrBCodeFunction::parameterCount() const
@@ -233,7 +235,18 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
 }
 
 void FrBCodeFunction::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
-{
+{                    
+    _unresolvedRetType->resolveAndCheck(e);
+    setReturnType(_unresolvedRetType->getClass());
+    
+    for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
+        it->type->resolveAndCheck(e);
+    
+        //TODO ca fait doublon car deja fais par declare stat
+        //doit on garder ca ?
+    /*for(VarList::iterator it = _var.begin(); it != _var.end(); ++it)
+        it->resolveAndCheck(e);*/
+    
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
         frb_assert((*it));
@@ -253,7 +266,7 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     
     for(int i = 0; i < localVarCount(); ++i)
     {
-        stream << str_indent << "\t\t\t* " << i << " (" << getLocalVar(i)->name() << ")" << endl;
+        stream << str_indent << "\t\t\t* " << i << " (" << *getLocalVar(i) << ")" << endl;
     }
             
     stream  << str_indent << "\t\t- Statements:" << endl;

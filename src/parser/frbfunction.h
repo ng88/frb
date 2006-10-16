@@ -48,7 +48,7 @@ protected:
     String _name;
     
     //FrBClassList _argsType;
-    FrBClass * _returnType;
+    const FrBClass * _returnType;
     
     /* the first parameter that is optional */
     int _firstOptional;
@@ -99,7 +99,7 @@ public:
     virtual bool parameterByVal(int index) const = 0;
     virtual int parameterCount() const = 0;
     
-    inline void setReturnType(FrBClass * t) { _returnType = t; }
+    inline void setReturnType(const FrBClass * t) { _returnType = t; }
     inline const FrBClass * returnType() const { return _returnType; }
     
     inline void setName(const String& n) { _name = n; }
@@ -158,14 +158,14 @@ public:
 
     struct Param
     {
-        FrBClass * type;
+        FrBTypeExpr * type;
         bool byval;
         FrBExpr * init;
         
         Param()
         : type(0), byval(false), init(0) {}
         
-        Param(FrBClass * t, bool b, FrBExpr * i)
+        Param(FrBTypeExpr * t, bool b, FrBExpr * i)
          : type(t), byval(b), init(i) {}
         
     };
@@ -176,7 +176,7 @@ public:
     typedef int VarID;
     
     typedef std::map<const String, VarID> NameVarList;
-    typedef std::vector<const FrBClass*> VarList;
+    typedef std::vector<FrBTypeExpr*> VarList;
     
 protected:
     
@@ -187,6 +187,7 @@ protected:
     NameVarList          _varName;
     VarList              _var;
     
+    FrBTypeExpr*         _unresolvedRetType;
 
     
 public:
@@ -195,7 +196,7 @@ public:
     
     inline void addStat(FrBStatement* v);
     //TODO verif nom des params (doublons)
-    inline void addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init = 0);
+    inline void addParam(const String& name, FrBTypeExpr* v, bool byval, FrBExpr * init = 0);
     
     /** Return the param index if found or -1 if not found */
     inline int getParam(const String& name) const;
@@ -213,14 +214,20 @@ public:
     /* local var handling functions */
     
     /** add a local var */
-    inline void addLocalVar(String name, const FrBClass * type);
+    inline void addLocalVar(String name, FrBTypeExpr* type);
     
     /** Return a pointer to a Param struct if found or 0 if not found */
     inline VarID findLocalVar(String name) const;
     
-    inline const FrBClass * getLocalVar(VarID id) const;
+    inline FrBTypeExpr * getLocalVar(VarID id) const;
     
     inline int localVarCount() const;
+    
+    /** Set unresolved return type */
+    inline void setURReturnType(FrBTypeExpr*);
+    
+    /** Get unresolved param */
+    inline FrBTypeExpr * getURParam(int index) const;
     
     void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
     
@@ -262,7 +269,7 @@ inline void FrBCodeFunction::addStat(FrBStatement* v)
     _stats.push_back(v);
 }
 
-inline void FrBCodeFunction::addParam(const String& name, FrBClass* v, bool byval, FrBExpr * init)
+inline void FrBCodeFunction::addParam(const String& name, FrBTypeExpr* v, bool byval, FrBExpr * init)
 {
     _paramName[name] = _param.size();
     _param.push_back(Param(v, byval, init));
@@ -275,7 +282,7 @@ inline int FrBCodeFunction::getParam(const String& name) const
     return (it == _paramName.end()) ? -1 : it->second;
 }
 
-inline void FrBCodeFunction::addLocalVar(String name, const FrBClass * type)
+inline void FrBCodeFunction::addLocalVar(String name, FrBTypeExpr * type)
 {
     _varName[name] = _var.size();
     _var.push_back(type);
@@ -289,7 +296,7 @@ inline FrBCodeFunction::VarID FrBCodeFunction::findLocalVar(String name) const
     return (it == _varName.end()) ? -1 : it->second;
 }
 
-inline const FrBClass * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) const
+inline FrBTypeExpr * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) const
 {
     frb_assert(id >= 0 && id < (int)_var.size());
     return _var[id];
@@ -298,6 +305,18 @@ inline const FrBClass * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) 
 inline int FrBCodeFunction::localVarCount() const
 {
     return _varName.size();
+}
+
+inline void FrBCodeFunction::setURReturnType(FrBTypeExpr* t)
+{
+    _unresolvedRetType = t;
+}
+
+inline FrBTypeExpr * FrBCodeFunction::getURParam(int index) const
+{
+    frb_assert2(index < parameterCount(), "FrBCodeFunction::getURParam(int) / index out of bounds");
+
+    return _param[index].type;
 }
 
 #endif

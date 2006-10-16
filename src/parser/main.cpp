@@ -44,20 +44,13 @@ int main(int argc, char ** argv)
     
     for(int i = 0; i < argc; ++i)
     {
-        if(!strcmp(argv[i], "--no-tree"))
-            args_switch[SHOW_TREE] = false;
-        else if(!strcmp(argv[i], "--no-mem"))
-            args_switch[SHOW_MEM] = false;
-        else if(!strcmp(argv[i], "--no-stack"))
-            args_switch[SHOW_STACK] = false;
-        else if(!strcmp(argv[i], "--no-exec"))
-            args_switch[EXEC] = false;
-        else if(!strcmp(argv[i], "--main-class") && i + 1 < argc)
-            arg_main_class = argv[++i];
-        else if(!strcmp(argv[i], "--main-function") && i + 1 < argc)
-            arg_main_function = argv[++i];
-        else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)
-            arg_int_param = atoi(argv[++i]); 
+        if(!strcmp(argv[i], "--no-tree")) args_switch[SHOW_TREE] = false;
+        else if(!strcmp(argv[i], "--no-mem")) args_switch[SHOW_MEM] = false;
+        else if(!strcmp(argv[i], "--no-stack")) args_switch[SHOW_STACK] = false;
+        else if(!strcmp(argv[i], "--no-exec")) args_switch[EXEC] = false;
+        else if(!strcmp(argv[i], "--main-class") && i + 1 < argc) arg_main_class = argv[++i];
+        else if(!strcmp(argv[i], "--main-function") && i + 1 < argc) arg_main_function = argv[++i];
+        else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)  arg_int_param = atoi(argv[++i]); 
     }
     
     /******** Parsage ********/
@@ -79,13 +72,13 @@ int main(int argc, char ** argv)
         
         if(!parser.parse())
             return 1;
-
-        if(args_switch[SHOW_TREE])
-            parser.printTree();
             
         /******** Amélioration de l'arbre ********/
 
         parser.resolveAndCheckTree(renv);
+        
+        if(args_switch[SHOW_TREE])
+            parser.printTree();
         
         /******** Interprétation/exécution ********/
             

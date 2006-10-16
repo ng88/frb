@@ -59,7 +59,7 @@
 
 struct FnCParam
 {
-    FrBClass * type;
+    FrBTypeExpr * type;
     char *     str;
 };
 
@@ -360,7 +360,7 @@ function:
                     frb_lexer->lineno(), "", "", "",
                     String(frb_lexer->YYText()));
                     
-            current_fn()->setReturnType($<vtype>6);        
+            current_fn()->setURReturnType($<vtype>6);        
            
       }
       function_content_list /*8*/
@@ -849,7 +849,14 @@ literal_expr:
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
     | FRB_KW_TOKEN_NULL
-    | FRB_KW_TOKEN_ME { $<expr>$ = new FrBLocalVarExpr(current_class(), current_fn()->localVarCount() + 1); }
+      {
+          frb_assert2(false, "Null not yet implemented");
+      }
+    | FRB_KW_TOKEN_ME
+      {
+          /*$<expr>$ = new FrBLocalVarExpr(current_class(), current_fn()->localVarCount() + 1);*/
+          frb_assert2(false, "Me not yet implemented");
+      }
     | FRB_IDENTIFIER                  
       {
       
@@ -900,7 +907,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf->parameterType(idvar),  cf->localVarCount() + 1 + idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 1 + idvar);
                 
                 puts("ID FOUND -- /* 2. function parameter */\n");
                 break;
