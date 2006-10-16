@@ -702,6 +702,8 @@ type: /* "single" type, no array */
     | FRB_IDENTIFIER /* String, Int... */
       {
           //TODONEXT trouver une soluce pour ca 
+          //mettre des expr.expr ) la place des types
+          //on resoud tout apres le parsage terminé
           $<vtype>$ = 0;//FrBClass::getClassFromString($<str>1);
           free($<str>1);
       }
@@ -711,6 +713,21 @@ new_expr:
       FRB_KW_TOKEN_OP_NEW type parent_expr_list /* New type(arg, arg, ...) */
       { /*$<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3);*/ }
     ;
+
+ /* name expr, eg: Class1, String, Module1.Class1, ... */
+name_expr:
+      name_expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
+      {
+          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          free($<str>3);
+      }
+    | FRB_IDENTIFIER
+      {
+          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          free($<str>1);
+      }
+    ;
+    
 
 
 expr:
@@ -808,17 +825,17 @@ expr:
     
     | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
     
-    | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
-      {
-          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
-          free($<str>3);
-      }
     | expr FRB_KW_TOKEN_OP_MEMBER FRB_KW_TOKEN_OPERATOR operator_overloadable 
       {
 
       }
       
     | new_expr                            /* New */
+    | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
+      {
+          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          free($<str>3);
+      }
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
       {
           //$<expr>1
