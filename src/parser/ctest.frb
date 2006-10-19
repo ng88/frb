@@ -4,6 +4,12 @@ DefLang EN
 Public Class Main
 
 
+    Public Shared Sub main()
+        Dim a As Main := Me
+
+        a.main(128)
+        
+    End Sub
 
     Public Shared Sub main(i As Int)
         Dim a, b As Integer
@@ -13,9 +19,8 @@ Public Class Main
 
         dbg.showStack()
         
-        dbg.showMem()
+        dbg.print(c+5+i)
         
-        dbg.print(5+6+6+6+8888+6+6)
 
    
     End Sub

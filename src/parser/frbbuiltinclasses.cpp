@@ -57,17 +57,21 @@ template<class primitive_t> FrBCppClass * FrBPrimitive<primitive_t>::_cpp_class 
 
 /*            FrBInt            */
 
-FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    return new FrBInt((static_cast<FrBInt*>(me))->value() + (static_cast<FrBInt*>(arg0))->value());
+    FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() + (static_cast<FrBInt*>(arg0))->value());
+    e.addGarbagedObject(r);
+    return r;
 }
 
-FrBBaseObject * operator_mul_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_mul_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    return new FrBInt((static_cast<FrBInt*>(me))->value() * (static_cast<FrBInt*>(arg0))->value());
+    FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() * (static_cast<FrBInt*>(arg0))->value());
+    e.addGarbagedObject(r);
+    return r;
 }
 
-FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     (static_cast<FrBInt*>(me))->setValue( (static_cast<FrBInt*>(arg0))->value() );
     return me;
@@ -116,9 +120,12 @@ FrBCppClass * FrBInt::initClass()
 
 /*            FrBString            */
 
-FrBBaseObject * operator_add_FrBString(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0)
+FrBBaseObject * operator_add_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    return new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
+    FrBString * r =
+        new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
+    e.addGarbagedObject(r);
+    return r;
 }
 
 

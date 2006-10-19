@@ -906,7 +906,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 1 + idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 2 + idvar);
                 
                 puts("ID FOUND -- /* 2. function parameter */\n");
                 break;

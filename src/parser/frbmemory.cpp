@@ -30,7 +30,8 @@ FrBMemory::~FrBMemory()
 
 void FrBMemory::needMoreMemory()
 {
-    //TODO
+    //TODO to check
+    _data.resize(_data.size() * _geo_step + _arith_step);
 }
 
 void FrBMemory::findNextAvailable()
