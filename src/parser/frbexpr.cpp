@@ -267,12 +267,12 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
     frb_assert2(_fn, "frbexpr.cpp::FrBFunctionCallExpr::val() - _fn is a null pointer");
     
     
-    FrBBaseObjectList rval(_rhs->size());
-    
-    
+    FrBBaseObjectList rval;
+    rval.reserve(_rhs->size());
+
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
         rval.push_back((*it)->eval(e));
-        
+
     FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
     
     if(mo && !mo->resolved()) /* case of a real function call */

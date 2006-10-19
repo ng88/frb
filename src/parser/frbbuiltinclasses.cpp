@@ -229,6 +229,12 @@ FrBBaseObject * show_stack(FrBExecutionEnvironment& e, FrBBaseObject * me)
     return 0;
 }
 
+FrBBaseObject * show_mem(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    e.memory()->print(1);
+    return 0;
+}
+
 
 FrBCppClass * FrBDebug::initClass()
 {
@@ -272,7 +278,14 @@ FrBCppClass * FrBDebug::initClass()
     
     _cpp_class->addFunction(f);
     
-
+    f = new FrBNoParamCppFunction(show_mem);
+    f->setName("showMem");
+    f->setConst(true);
+    f->setSub(true);
+    f->setShared(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addFunction(f);
     
     return _cpp_class;
 }

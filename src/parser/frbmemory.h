@@ -138,7 +138,7 @@ public:
     
     inline FrBBaseObject* top();
     inline FrBBaseObject* pop();
-    inline void pop(int nb = 0);
+    inline void pop(int nb);
     inline void push_empty(int nb);
     inline void push(FrBBaseObject* o);
     void push(const FrBBaseObjectList& lo);

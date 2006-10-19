@@ -17,6 +17,7 @@
 
 
 #include "frbcppbinding.h"
+#include "../common/assert.h"
 
 /*       FrBCppClass          */
 
@@ -116,8 +117,12 @@ FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBase
                                                 const FrBBaseObjectList& args) const
      throw (FrBExecutionException)
 {
+    frb_assert(args.size() == 1);
+    printf("args.size() %d\n", args.size());
+    printf("args[0] %d\n", args[0]);
+    printf("args[1] %d\n", args[1]);
     return _fn(e, me, args[0]);
-    //execute(me, args[0]);
+
 }
 
 

@@ -218,7 +218,7 @@ public:
     std::ostream& put(std::ostream& stream) const
     {
         //return stream << "<val=" << _value << ">";
-        return stream << "<literal_val>" << ((FrBPrimitive<literal_type>*)eval(0))->value();
+        return stream << "<literal_val>";
     }
 };
 

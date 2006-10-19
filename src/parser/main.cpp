@@ -22,6 +22,8 @@
 #include "frbparser.h"
 #include "frbresolveenvironment.h"
 
+#include "frbmemory.h"
+
 using namespace std;
 
 inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] = c; }
@@ -50,7 +52,7 @@ void usage(char * exe)
 
 int main(int argc, char ** argv)
 {
-
+    
 #ifdef _FRB_DEBUG_
     if(argc == 1)
     {
