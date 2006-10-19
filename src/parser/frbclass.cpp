@@ -28,7 +28,7 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 /*        FrBClass            */
 
-void FrBClass::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)

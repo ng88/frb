@@ -16,9 +16,7 @@ Public Class Main
         a
         b
         c
-        
-        Me
-        
+   
     End Sub
     
     Public Shared Sub main(a As Int)
@@ -27,7 +25,8 @@ Public Class Main
         
     End Sub
     
-
+Public Shared Function main3(a As Int) As String
+End Function
 
 End Class
 

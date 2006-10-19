@@ -234,10 +234,14 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     
 }
 
-void FrBCodeFunction::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
-{                    
-    _unresolvedRetType->resolveAndCheck(e);
-    setReturnType(_unresolvedRetType->getClass());
+void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    if(!sub())
+    {
+        frb_assert(_unresolvedRetType);
+        _unresolvedRetType->resolveAndCheck(e);
+        setReturnType(_unresolvedRetType->getClass());
+    }
     
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
         it->type->resolveAndCheck(e);
@@ -260,7 +264,33 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     
     String str_indent(indent, '\t');
 
-    FrBFunction::put(stream, indent);
+
+    stream  << str_indent << "\t    Function " << name() << endl
+            << str_indent << "\t\t- Scope=" << scope() << endl
+            << str_indent << "\t\t- Shared=" << shared() << endl
+            << str_indent << "\t\t- Sub=" << sub() << endl
+            << str_indent << "\t\t- Const=" << isConst() << endl
+            << str_indent << "\t\t- Abstract=" << abstract() << endl
+            << str_indent << "\t\t- Parameters:" << endl;
+            
+    for(int i = 0; i < parameterCount(); ++i)
+    {
+        stream << str_indent << "\t\t\t* " << (parameterByVal(i) ? "byval " : "byref ")
+                                           << *getURParam(i);
+        
+        if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
+            stream << " (optional)";
+            
+        if(paramArrayUsed() && i == parameterCount() - 1)
+            stream << " (param_array)";
+            
+        stream << endl;
+    }
+            
+    if(!sub())        
+        stream  << str_indent << "\t\t- Return type=" << *_unresolvedRetType << endl;
+    
+
     
     stream  << str_indent << "\t\t- Local vars:" << endl;
     

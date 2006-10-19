@@ -63,7 +63,7 @@ bool FrBParser::parse(const String& str)
     return parse(in);
 }
 
-void FrBParser::resolveAndCheckTree(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveException)
 { 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
@@ -89,11 +89,22 @@ void FrBParser::dispose()
     
 }
 
-std::ostream& FrBParser::printTree(std::ostream& sout) const
+std::ostream& FrBParser::printTree(std::ostream& sout, bool user_class_only) const
 {
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
-        sout << *(it->second);
+    {
+        FrBClass * c = it->second;
+        
+        if(user_class_only)
+        {
+            if(dynamic_cast<FrBCodeClass*>(c))
+                sout << *c;
+        }
+        else
+            sout << *c;
+        
+    }
 
     return sout;
 }

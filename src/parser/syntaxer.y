@@ -689,7 +689,6 @@ as_type:
 //       }
 //     | FRB_IDENTIFIER /* String, Int... */
 //       {
-//           //TODONEXT trouver une soluce pour ca 
 //           //mettre des expr.expr ) la place des types
 //           //on resoud tout apres le parsage terminé
 //           $<vtype>$ = 0;//FrBClass::getClassFromString($<str>1);
@@ -712,8 +711,8 @@ name_expr:
       }
     | FRB_IDENTIFIER
       {
-          $<vtype>$ = new FrBUnresolvedIdExpr($<str>3);
-          free($<str>3);
+          $<vtype>$ = new FrBUnresolvedIdExpr($<str>1);
+          free($<str>1);
       }
     ;
     

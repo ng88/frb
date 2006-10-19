@@ -33,7 +33,7 @@ public:
     virtual ~FrBExpr() {}
     
     /** Resolve unresolved identifier (class, function) and check type compatibility */
-    virtual void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException) {}
+    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     
     /** Get type of expression (can be called ONLY IF resolve() was called before) */
     virtual const FrBClass* getClass() const = 0;
@@ -60,13 +60,13 @@ class FrBUnresolvedIdExpr : public FrBTypeExpr
 {
 private:
     String          _name;
-    FrBBaseObject * _o;
+    FrBClass * _type;
     
 public:
     FrBUnresolvedIdExpr(const String& name);
     ~FrBUnresolvedIdExpr();
     
-    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
@@ -84,7 +84,7 @@ public:
     FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs);
     ~FrBMemberOpExpr();
     
-    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
@@ -102,7 +102,7 @@ public:
     FrBLocalVarExpr(FrBTypeExpr * t, int varid);
     ~FrBLocalVarExpr();
     
-    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
@@ -121,7 +121,7 @@ public:
     FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException);
     ~FrBBinOpExpr();
     
-    void resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    

@@ -20,6 +20,7 @@
 #include "../common/assert.h"
 #include "frbkeywords.h"
 #include "frbfunction.h"
+#include "frbresolveenvironment.h"
 
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
@@ -44,7 +45,7 @@ FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
     return e.stack().getTopValue(_varid);
 }
 
-void FrBLocalVarExpr::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _type->resolveAndCheck(e);
 }
@@ -63,7 +64,7 @@ std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
 
 
 FrBUnresolvedIdExpr::FrBUnresolvedIdExpr(const String& name)
- : _name(name), _o(0)
+ : _name(name), _type(0)
 {
 }
 
@@ -71,28 +72,31 @@ FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
 {
 }
 
-void FrBUnresolvedIdExpr::resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException)
+void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    //FrBClass::getClassFromString(name)
+    _type = e.getClassFromName(_name);
 }
 
 FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    frb_assert2(_o, "_o is a null pointer"
+    frb_assert2(_type, "_type is a null pointer"
                      " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
-    return _o;
+    return 0;
 }
 
 const FrBClass* FrBUnresolvedIdExpr::getClass() const
 {
-    frb_assert2(_o, "_o is a null pointer"
+    frb_assert2(_type, "_type is a null pointer"
                      " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
-    return _o->getClass();
+    return _type;
 }
 
 std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
 {
-    return stream << "<unresolved:" << _name << ">";
+    if(_type)
+        return stream << "<" << _type->name() << ">";
+    else
+        return stream << "<unresolved:" << _name << "?>";
 }
 
 
@@ -112,7 +116,7 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
     delete _rhs;
 }
 
-void FrBMemberOpExpr::resolveAndCheck(const FrBResolveEnvironment&) throw (FrBResolveException)
+void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
 {
 }
 
@@ -148,7 +152,7 @@ FrBBinOpExpr::~FrBBinOpExpr()
     delete _lhs;
 }
 
-void FrBBinOpExpr::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
    
     _lhs->resolveAndCheck(e);

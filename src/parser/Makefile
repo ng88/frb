@@ -22,7 +22,7 @@ ifndef TRAD_LANG
 endif
 
 ifdef DEBUG
-    DEBUGFLAGS=-g -dH -D_FRB_DEBUG_=1 -DDEBUG_ASSERT=1
+    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 -DDEBUG_ASSERT=1
     STRIP=echo '*** No strip in debug mode *** '
 else
     DEBUGFLAGS=-DDEBUG_ASSERT=1

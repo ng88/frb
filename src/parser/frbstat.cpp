@@ -36,7 +36,7 @@ FrBDeclareStatement::FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * i
 
 }
 
-void FrBDeclareStatement::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _type->resolveAndCheck(e);
     
@@ -79,7 +79,7 @@ FrBExprStatement::FrBExprStatement(FrBExpr* expr)
     frb_assert2(expr, "frbparsingtree.h::FrBExprStatement::FrBExprStatement()");
 }
 
-void FrBExprStatement::resolveAndCheck(const FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBExprStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _expr->resolveAndCheck(e);
 }
