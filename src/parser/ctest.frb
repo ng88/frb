@@ -11,9 +11,11 @@ Public Class Main
 
         a
         b
+
+        
         c + 5 + c + 45 + 6
         
-        dbg.print.int
+        dbg.print
    
     End Sub
 

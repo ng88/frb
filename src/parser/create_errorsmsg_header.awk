@@ -22,6 +22,7 @@ BEGIN {
     print "#define FRBERRORS_H"
     print "#include <sstream>"
     print "#include \"../common/assert.h\"\n"
+    print "#include \"../common/string.h\"\n"
     
     print "class FrBErrors {\npublic:"
     print "    enum { "
@@ -50,7 +51,15 @@ END {
     print "    static char* key[FRB_ERR__COUNT];"
     print "    inline static char* getMsg(int index) {"
     print "        frb_assert2(index >= 0 && index < FRB_ERR__COUNT, \"frberrors.h::FrBErrors::getMsg(int)\");"
-    print "        return key[index]; }"
+    print "        return key[index]; }\n"
+    
+    print "    inline static std::ostream& putMsg(std::ostream& s, int index) {"
+    print "        return s << getMsg(index); }\n"
+    
+    print "    static std::ostream& putMsg(std::ostream&, int index, const StringList& l);"
+    print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1);"
+    print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1, const String& s2);"
+    print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1, const String& s2, const String& s3);"
     print "    };"
     
     print "#endif\n\n"

@@ -133,4 +133,18 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
+class FrBMemberNotFoundException : public FrBResolveException
+{
+protected:
+    const FrBClass * _class;
+    String _name;
+
+public:
+    FrBMemberNotFoundException(const FrBClass * c, const String& name);
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline const String& member() { return _name; }
+    inline const FrBClass * getClass() { return _class; }
+};
+
 #endif

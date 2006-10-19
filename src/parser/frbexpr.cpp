@@ -117,9 +117,38 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
     delete _rhs;
 }
 
-void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    //_lhs->resolveAndCheck();
+    _lhs->resolveAndCheck(e);
+    
+    const FrBClass* cc  = _lhs->getClass();
+    const String & name =  _rhs->name();
+    
+    throw FrBMemberNotFoundException(cc, name);
+    
+//     /*  function/sub */
+//     FrBClass::FnPairIt pit = cc->findFunctions(name);
+//     
+//     if(pit.second->second)
+//     {
+//         /* ambiguity */
+//     
+//         puts("ID AMBIGUITY -- /* 4. local class function/sub */\n");
+//         exit(0);
+//         
+//         break;
+//     }
+//     else if(pit.first != cc->functionList()->end())
+//     {
+//         /* found */
+//         
+//         $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
+//         
+//         puts("ID FOUND -- /* 4. local class function/sub */\n");
+//         
+//         break;
+//}
+    
 }
 
 FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
@@ -136,7 +165,7 @@ std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
 {
     return stream << '(' << *_lhs << ' '
         << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
-        << ' ' << *_rhs << ')';
+        << ' ' << _rhs->name() << ')';
 }
   
 
@@ -242,7 +271,11 @@ const FrBClass* FrBBinOpExpr::getClass() const
 
 std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 {
-    return stream << '(' << *_lhs << ' ' << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_rhs << ')';
+    if(_fn)
+        return stream << _fn->name() << '(' << *_lhs << ", " << *_rhs << ')';
+    else
+        return stream << '(' << *_lhs << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op)
+                << "> " << *_rhs << ')';
 }
 
 

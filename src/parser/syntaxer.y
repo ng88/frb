@@ -918,28 +918,7 @@ literal_expr:
             
             $<expr>$ = new FrBUnresolvedIdExpr(name);
             
-//             /* 4. local class function/sub */
-//             FrBClass::FnPairIt pit = cc->findFunctions(name);
-//             
-//             if(pit.second->second)
-//             {
-//                 /* ambiguity */
-// 
-//                 puts("ID AMBIGUITY -- /* 4. local class function/sub */\n");
-//                 exit(0);
-//                 
-//                 break;
-//             }
-//             else if(pit.first != cc->functionList()->end())
-//             {
-//                 /* found */
-//                 
-//                 $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
-//                 
-//                 puts("ID FOUND -- /* 4. local class function/sub */\n");
-//                 
-//                 break;
-//             }
+
 //             
 //             /* 6. class names of the inners classes */
 //             FrBClass::ClassContainer::const_iterator iit = cc->innerClassList()->find(name);

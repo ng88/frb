@@ -131,8 +131,8 @@ int main(int argc, char ** argv)
     FrBResolveEnvironment renv(tree);
     
     
-    /*try
-    {*/
+    try
+    {
         addClass(tree, FrBInt::initClass());
         addClass(tree, FrBString::initClass());
         addClass(tree, FrBClassWrapper::initClass());
@@ -202,12 +202,12 @@ int main(int argc, char ** argv)
                 env.stack().print();
         }
         
-    /*}
-    catch(const FrBExecutionException &e)
+    }
+    catch(const FrBException &e)
     {
         cerr << '`' << typeid(e).name() <<  "' throwed\n";
         cerr << '\t' << e << '\n';
-    }*/
+    }
     
       
     return 0;

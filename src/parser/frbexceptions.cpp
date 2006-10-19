@@ -20,6 +20,7 @@
 #include "frbkeywords.h"
 #include "frberrors.h"
 #include "frbbaseobject.h"
+#include "frbclass.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBException& c)
 {
@@ -109,4 +110,20 @@ std::ostream& FrBIncompatibleClassException::put(std::ostream& stream) const
 {
     return stream;
 }
+
+
+/*        FrBMemberNotFoundException           */
+
+
+FrBMemberNotFoundException::FrBMemberNotFoundException(const FrBClass * c, const String& name)
+ : _class(c), _name(name)
+{
+}
+
+
+std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_MB_NOT_FOUND, _name, _class->name());
+}
+
 
