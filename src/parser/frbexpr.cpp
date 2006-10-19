@@ -108,6 +108,7 @@ std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
 FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs)
  : _lhs(lhs), _rhs(rhs)
 {
+    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBMemberOpExpr::FrBMemberOpExpr()");
 }
 
 FrBMemberOpExpr::~FrBMemberOpExpr()
@@ -118,6 +119,7 @@ FrBMemberOpExpr::~FrBMemberOpExpr()
 
 void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
 {
+    //_lhs->resolveAndCheck();
 }
 
 FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
@@ -132,9 +134,9 @@ const FrBClass* FrBMemberOpExpr::getClass() const
 
 std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
 {
-    return stream << '(' << *_rhs << ' '
+    return stream << '(' << *_lhs << ' '
         << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
-        << ' ' << *_lhs << ')';
+        << ' ' << *_rhs << ')';
 }
   
 
@@ -240,7 +242,7 @@ const FrBClass* FrBBinOpExpr::getClass() const
 
 std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 {
-    return stream << '(' << *_rhs << ' ' << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_lhs << ')';
+    return stream << '(' << *_lhs << ' ' << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_rhs << ')';
 }
 
 

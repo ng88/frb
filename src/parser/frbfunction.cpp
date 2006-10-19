@@ -251,6 +251,8 @@ void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
     /*for(VarList::iterator it = _var.begin(); it != _var.end(); ++it)
         it->resolveAndCheck(e);*/
     
+        //TODO copie de e avec des infos qui vont bien (fonction, classe, outer classe)
+        
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
         frb_assert((*it));

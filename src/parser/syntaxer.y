@@ -825,7 +825,7 @@ expr:
     | new_expr                            /* New */
     | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
       {
-          //$<expr>$ = new FrBMemberOpExpr($<expr>1, String($<str>3));
+          $<expr>$ = new FrBMemberOpExpr($<expr>1,  new FrBUnresolvedIdExpr($<str>3));
           free($<str>3);
       }
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
@@ -878,8 +878,10 @@ literal_expr:
                   X 4. local class function/sub
                     5. local class property
                   X 6. class names of the inners classes
-                    7. class names of the outer class
+                    7. class au même niveau ie ds le mm module
                   X 8. imported class name
+                  Parent pout accéder a l'outer class
+                  Base.<nom> pour une super classe
             
             */
             

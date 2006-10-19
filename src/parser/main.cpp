@@ -25,6 +25,7 @@
 using namespace std;
 
 inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] = c; }
+inline void addClassAlias(FrBParser::Tree * tree, FrBClass * c, String name)  { (*tree)[name] = c; }
 
 
 void usage(char * exe)
@@ -55,11 +56,12 @@ int main(int argc, char ** argv)
     {
         char * debug_argv[] =
             {
+                argv[0],
                 "--file",
                 "ctest.frb",
             };
         argv = debug_argv;
-        argc = 2;
+        argc = 3;
     }
 #endif
 
@@ -136,6 +138,10 @@ int main(int argc, char ** argv)
         addClass(tree, FrBClassWrapper::initClass());
         addClass(tree, FrBFunctionWrapper::initClass());
         addClass(tree, FrBDebug::initClass());
+        
+        addClassAlias(tree, FrBInt::getCppClass(), "Integer");
+        addClassAlias(tree, FrBInt::getCppClass(), "Entier");
+        addClassAlias(tree, FrBString::getCppClass(), "Chaine");
         
         
         bool success = parser.parse(*arg_in);
