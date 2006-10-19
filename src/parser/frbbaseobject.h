@@ -54,21 +54,22 @@ public:
 typedef std::vector<FrBBaseObject*> FrBBaseObjectList;
 typedef std::map<String,FrBBaseObject*> FrBBaseObjectMap;
 
-/* Un objet FrB utilisateur */
-class FrBObject : public FrBBaseObject
+
+/** user instance */
+class FrBUserObject : public FrBBaseObject
 {
-     //FRB_OBJECT("Object");
-     
-    /** Object data*/
-    FrBBaseObjectList _data; //a-t-on besoin des noms (map) ? a priori non
-    const FrBClass * _class;
-    
+
+protected:
+
+    const FrBClass * _type;
+
 public:
-    inline FrBObject(const FrBClass * c, int size)
-     : _data(size), _class(c) {}
+    
+    FrBUserObject(const FrBClass * type) : _type(type) {}
+    
+    const FrBClass * getClass() { return _type; }
      
-    virtual ~FrBObject();
-    const FrBClass * getClass();
+    virtual ~FrBUserObject() {}
 
 };
 

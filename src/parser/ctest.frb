@@ -3,7 +3,7 @@ DefLang EN
 
 Public Class Main
 
-    Public Shared Sub main()
+    Public Shared Sub main(Optional arg As Integer = 12)
         Dim a, b As Integer
         Dim c As Integer := 5
         
@@ -15,13 +15,11 @@ Public Class Main
         
         c + 5 + c + 45 + 6
         
-        dbg.print
+        dbg.print(5)
    
     End Sub
 
-    
-Public Shared Function main3(a As Int) As String
-End Function
+
 
 End Class
 

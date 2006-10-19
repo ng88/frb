@@ -133,6 +133,13 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBBaseObjectList& args)
 }
 
 
+FrBFunction::match_t FrBFunction::matchParameters(const FrBExprList& args)
+{
+    COMMON_MATCH_PARAM_BODY((args[i]->getClass()));
+}
+
+
+
 std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 {
     using namespace std;

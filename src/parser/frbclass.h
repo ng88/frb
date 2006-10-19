@@ -264,7 +264,7 @@ protected:
 
     FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException)
     {
-        FrBObject * o = new FrBObject(this, 0 /*nb membre */);
+        FrBBaseObject * o = new FrBUserObject(this);
         e.addGarbagedObject(o);
         return o;
     }

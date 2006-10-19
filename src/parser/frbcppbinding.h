@@ -79,6 +79,7 @@ private:
 public:
 };
 
+/** fn() */
 class FrBNoParamCppFunction : public FrBCppFunction
 {
 public:
@@ -103,6 +104,7 @@ public:
         throw (FrBExecutionException);
 };
 
+/** fn( ByVal/ByRef a1 As T) */
 class FrBUnaryCppFunction : public FrBCppFunction
 {
     
@@ -127,6 +129,32 @@ public:
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0) const
         throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
+};
+
+/** fn(ParamArray a As T) */
+class FrBUnaryParamArrayCppFunction : public FrBCppFunction
+{
+    
+public:
+
+    typedef FrBBaseObject * (*UnaryParamArray)(FrBExecutionEnvironment&, FrBBaseObject*, const FrBBaseObjectList &);
+    
+private:
+
+    UnaryParamArray _fn;
+    FrBClass * _arg0;
+    
+public:
+
+    FrBUnaryParamArrayCppFunction(UnaryParamArray fn, FrBClass *  arg0)
+        : _fn(fn), _arg0(arg0) { setParamArrayUsed(true); }
+
+    const FrBClass * parameterType(int index) const;
+    bool parameterByVal(int index) const;
+    int parameterCount() const;
+    
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 };

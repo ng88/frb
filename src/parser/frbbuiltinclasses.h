@@ -23,6 +23,37 @@
 #include "frbcppbinding.h"
 #include "frbmemory.h"
 
+class FrBObject : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    static FrBCppClass * initClass();
+    
+    inline FrBObject()  {};
+    
+
+    virtual ~FrBObject();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != NULL, "FrBObject::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrBObject(); }
+    };
+        
+    
+};
+
 template<class primitive_t>
 class FrBPrimitive : public FrBCppObject
 {

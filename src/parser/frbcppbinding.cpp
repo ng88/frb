@@ -121,4 +121,31 @@ FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBase
 }
 
 
+/*          FrBUnaryParamArrayCppFunction          */
+
+
+const FrBClass * FrBUnaryParamArrayCppFunction::parameterType(int index) const
+{
+    return _arg0;
+}
+
+bool FrBUnaryParamArrayCppFunction::parameterByVal(int index) const
+{
+    return false;
+}
+
+int FrBUnaryParamArrayCppFunction::parameterCount() const
+{
+    return 1;
+}
+
+
+FrBBaseObject * FrBUnaryParamArrayCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
+     throw (FrBExecutionException)
+{
+    return _fn(e, me, args);
+}
+
+
 

@@ -22,6 +22,7 @@
 #include "frbbuiltinclasses.h"
 #include "frbexceptions.h"
 #include "frbexecutionenvironment.h"
+#include "frbexprlist.h"
 
 class FrBCodeFunction;
 
@@ -46,8 +47,6 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
-
-typedef std::vector<FrBExpr*> FrBExprList;
 
 /** Used in syntaxer for type */
 class FrBTypeExpr : public FrBExpr
@@ -79,10 +78,33 @@ class FrBMemberOpExpr : public FrBTypeExpr
 {
     FrBExpr               *_lhs;
     FrBUnresolvedIdExpr   *_rhs;
+    bool                   _resolved;
     
 public:
     FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs);
     ~FrBMemberOpExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline bool resolved() { return _resolved; }
+    inline FrBUnresolvedIdExpr* rhs() { return _rhs; }
+    inline FrBExpr * lhs() { return _lhs; }
+};
+
+/** Function all operator ie expr(expr, expr, ...) */
+class FrBFunctionCallExpr : public FrBExpr
+{
+    FrBExpr               *_lhs;
+    FrBExprList           *_rhs;
+    FrBFunction           *_fn;
+
+    
+public:
+    FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs);
+    ~FrBFunctionCallExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);

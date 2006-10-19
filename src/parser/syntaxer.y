@@ -830,8 +830,7 @@ expr:
       }
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
       {
-          //$<expr>1
-          //$<exprs>2
+          $<expr>$ = new FrBFunctionCallExpr($<expr>1, $<exprs>2);
       }
       
     | expr array_expr_list                /* array sub expr[expr, expr...] */

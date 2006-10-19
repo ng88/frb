@@ -23,6 +23,36 @@
 #include "frbclass.h"
 #include <iostream>
 
+
+/*                   FrBDebug                       */
+FrBCppClass * FrBObject::_cpp_class = NULL;
+
+
+FrBCppClass * FrBObject::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBObject::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBObject::Allocator());
+    _cpp_class->setName("Object");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+
+    return _cpp_class;
+}
+
+FrBClass * FrBObject::getClass()
+{
+    frb_assert2(_cpp_class != NULL, "FrBObject::getClass(), call initClass() first");
+    return _cpp_class;
+}
+
+FrBObject::~FrBObject()
+{
+}
+
+
+/****************/
+
 template<class primitive_t> FrBCppClass * FrBPrimitive<primitive_t>::_cpp_class = NULL;
 
 /*            FrBInt            */
@@ -134,6 +164,19 @@ FrBCppClass * FrBClassWrapper::initClass()
 
 /*            FrBFunctionWrapper            */
 
+FrBBaseObject * function_call(FrBExecutionEnvironment& e, FrBBaseObject * me, const FrBBaseObjectList& p)
+    throw (FrBExecutionException)
+{
+    
+    FrBFunctionWrapper * fw = dynamic_cast<FrBFunctionWrapper*>(me);
+    frb_assert(fw);
+    
+    const FrBFunction * f = fw->value();
+    frb_assert(f);
+
+    return f->execute(e, me, p);
+}
+
 FrBCppClass * FrBFunctionWrapper::initClass()
 {
     frb_assert2(_cpp_class == NULL, "FrBFunctionWrapper::initClass(), already initialized");
@@ -142,6 +185,14 @@ FrBCppClass * FrBFunctionWrapper::initClass()
     _cpp_class->setName("Function");
     _cpp_class->setSealed(true);
     _cpp_class->setScope(SC_PUBLIC);
+    
+    FrBFunction * f = new FrBUnaryParamArrayCppFunction(function_call, FrBObject::getCppClass());
+    f->setReturnType(FrBObject::getCppClass());
+    f->setName("operator()");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_O_BRACKET, f);
 
     return _cpp_class;
 }

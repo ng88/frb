@@ -23,6 +23,8 @@
 #include "frbexceptions.h"
 #include "../common/assert.h"
 
+#include "frbexprlist.h"
+
 typedef int scope_t;
 
 /* les defauts doivent etre à 0 */
@@ -116,8 +118,9 @@ public:
                         const FrBBaseObjectList& args) const
         throw (FrBExecutionException) = 0;
     
-    /*virtual*/ match_t matchParameters(const FrBBaseObjectList& args);
-    /*virtual*/ match_t matchParameters(const FrBConstClassList& args);
+    match_t matchParameters(const FrBBaseObjectList& args);
+    match_t matchParameters(const FrBConstClassList& args);
+    match_t matchParameters(const FrBExprList& args);
     
 
     template<class It, class ArgContainer>    

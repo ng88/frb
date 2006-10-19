@@ -21,6 +21,7 @@
 #include "frberrors.h"
 #include "frbbaseobject.h"
 #include "frbclass.h"
+#include "frbexpr.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBException& c)
 {
@@ -56,6 +57,12 @@ FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, c
     : _name(name)
 {
     for(std::vector<FrBBaseObject*>::const_iterator it = args.begin(); it != args.end(); ++it)
+        _args.push_back( (*it)->getClass() );
+}
+
+FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, const FrBExprList& args)
+{
+    for(FrBExprList::const_iterator it = args.begin(); it != args.end(); ++it)
         _args.push_back( (*it)->getClass() );
 }
 

@@ -22,6 +22,8 @@
 #include "../common/string.h"
 #include <vector>
 
+#include "frbexprlist.h"
+
 class FrBClass;
 class FrBBaseObject;
 class FrBFunction;
@@ -86,6 +88,7 @@ protected:
 public:
     FrBFunctionNotFoundException(const String& name, const std::vector<const FrBClass*>& args);
     FrBFunctionNotFoundException(const String& name, const std::vector<FrBBaseObject*>& args);
+    FrBFunctionNotFoundException(const String& name, const FrBExprList& args);
     FrBFunctionNotFoundException(const String& name);
     
     std::ostream& put(std::ostream& stream) const;
