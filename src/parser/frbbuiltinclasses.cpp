@@ -208,6 +208,8 @@ template<class T>
 FrBBaseObject * print_FrBObject(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject * arg0)
 {
 
+    frb_assert2(arg0, "null pointer passed to Debug::print()");
+    
     std::cout << (static_cast<T*>(arg0))->value();
 
     return 0;

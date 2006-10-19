@@ -261,6 +261,7 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
     }
 }
 
+
 FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     frb_assert2(_fn, "frbexpr.cpp::FrBFunctionCallExpr::val() - _fn is a null pointer");
@@ -305,6 +306,31 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
  
+/*        FrBMeExpr                */
+
+FrBMeExpr::FrBMeExpr(FrBClass * t, int varid)
+ : _type(t), _varid(varid)
+{
+}
+
+FrBMeExpr::~FrBMeExpr()
+{
+}
+
+FrBBaseObject* FrBMeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return e.stack().getTopValue(_varid);
+}
+
+const FrBClass* FrBMeExpr::getClass() const
+{
+    return _type;
+}
+
+std::ostream& FrBMeExpr::put(std::ostream& stream) const
+{
+    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
+}
 
 
   

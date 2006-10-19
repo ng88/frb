@@ -113,7 +113,7 @@ public:
 };
 
 
-/** Local var (for localvar, parameters & me) */
+/** Local var (for localvar, parameters) */
 class FrBLocalVarExpr : public FrBExpr
 {
 private:
@@ -128,6 +128,22 @@ public:
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
+};
+
+/* Me expr */
+class FrBMeExpr : public FrBExpr
+{
+private:
+    FrBClass     *_type;
+    int           _varid;
+    
+public:
+    FrBMeExpr(FrBClass * t, int varid);
+    ~FrBMeExpr();
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;    
 };
 
 
@@ -183,12 +199,12 @@ public:
         //on ne delete pas _pvalue
         //on devrait pourtant, enfin on vera ca plus tard
     }
-
+ 
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
         FrBCppObject* o = new FrBPrimitive<literal_type>(_value);
-        
+
         e.addGarbagedObject(o);
         
         return o;
@@ -202,7 +218,7 @@ public:
     std::ostream& put(std::ostream& stream) const
     {
         //return stream << "<val=" << _value << ">";
-        return stream << "<literal_val>";
+        return stream << "<literal_val>" << ((FrBPrimitive<literal_type>*)eval(0))->value();
     }
 };
 

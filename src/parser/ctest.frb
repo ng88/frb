@@ -3,36 +3,22 @@ DefLang EN
 
 Public Class Main
 
-    Public Shared Sub main(Optional arg As Integer = 12)
+
+
+    Public Shared Sub main()
         Dim a, b As Integer
         Dim c As Integer := 5
         
         Dim dbg As Debug
 
-        a
-        b
-
         
-        c + 5 + c + 45 + 6
-        
-        dbg.print(5)
+        dbg.print(12)
+      
    
     End Sub
 
 
+    
 
-End Class
-
-
-Public Class A
-    Public Sub sub()
-        Dim a As B
-    End Sub
-End Class
-
-Public Class B
-    Public Sub sub()
-        Dim a As A
-    End Sub
 End Class
 

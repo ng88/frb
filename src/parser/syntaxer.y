@@ -852,8 +852,7 @@ literal_expr:
       }
     | FRB_KW_TOKEN_ME
       {
-          /*$<expr>$ = new FrBLocalVarExpr(current_class(), current_fn()->localVarCount() + 1);*/
-          frb_assert2(false, "Me not yet implemented");
+          $<expr>$ = new FrBMeExpr(current_class(), current_fn()->localVarCount() + 1);
       }
     | FRB_IDENTIFIER                  
       {
