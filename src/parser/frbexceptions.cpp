@@ -40,6 +40,13 @@ std::ostream& FrBUndeclaredIdentifierException::put(std::ostream& stream) const
     return stream << _name << ": " << FrBErrors::getMsg(FrBErrors::FRB_ERR_UNDECL_ID);
 }
 
+/*                FrBStackOverflowException                      */
+
+std::ostream& FrBStackOverflowException::put(std::ostream& stream) const
+{
+    return stream;
+}
+
 /*             FrBFunctionNotFoundException                */
 
 

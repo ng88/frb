@@ -217,6 +217,8 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     throw (FrBExecutionException)
 {
 
+    if(e.stack().overflow())
+        throw FrBStackOverflowException();
     
     int var_count = args.size() + localVarCount() + 2;
      

@@ -5,28 +5,14 @@ Public Class Main
 
 
     Public Shared Sub main()
-        Dim a As Main := Me
-
-        a.main(128)
-        
+        Me.main(5)
     End Sub
 
     Public Shared Sub main(i As Int)
-        Dim a, b As Integer
-        Dim c As Integer := 5
-        
-        Dim dbg As Debug
-
-        dbg.showStack()
-        
-        dbg.print(c+5+i)
-        
-
-   
+        Debug.print("eeee")
     End Sub
 
 
-    
 
 End Class
 

@@ -62,6 +62,15 @@ class FrBAllocationException : public FrBExecutionException
 };
 
 
+class FrBStackOverflowException : public FrBExecutionException
+{
+public:
+
+    std::ostream& put(std::ostream& stream) const;
+
+};
+
+
 class FrBUndeclaredIdentifierException : public FrBExecutionException
 {
 protected:

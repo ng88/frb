@@ -133,10 +133,10 @@ public:
     FrBMemStack(int res_step = 10);
     
     /** addr is the address from top */
-    inline FrBBaseObject* getTopValue(int addr);
+    inline FrBBaseObject* getTopValue(int addr) const;
     inline void setTopValue(int addr, FrBBaseObject* v);
     
-    inline FrBBaseObject* top();
+    inline FrBBaseObject* top() const;
     inline FrBBaseObject* pop();
     inline void pop(int nb);
     inline void push_empty(int nb);
@@ -145,9 +145,11 @@ public:
     
     inline void reserve(int nb);
     
-    inline int pointer();
+    inline int pointer() const;
     
     std::ostream& print(std::ostream& stream = std::cout) const;
+    
+    inline bool overflow() const;
     
 
 };
@@ -223,7 +225,7 @@ inline void FrBMemory::removeObjectFromGC(FrBBaseObject* obj)
 
 /***** FrBMemStack *****/
 
-inline FrBBaseObject* FrBMemStack::getTopValue(int addr)
+inline FrBBaseObject* FrBMemStack::getTopValue(int addr) const
 {
     frb_assert(addr >= 0 && addr <= _stack_ptr);
     return _mem[_stack_ptr - addr];
@@ -235,7 +237,7 @@ inline void FrBMemStack::setTopValue(int addr, FrBBaseObject* v)
     _mem[_stack_ptr - addr] = v;
 }
 
-inline FrBBaseObject* FrBMemStack::top()
+inline FrBBaseObject* FrBMemStack::top() const
 {
     frb_assert(_stack_ptr > -1 && _stack_ptr < (int)_mem.size());
     return _mem[_stack_ptr];
@@ -270,9 +272,14 @@ inline void FrBMemStack::push(FrBBaseObject* o)
     _mem[++_stack_ptr] = o;
 }
 
-inline int FrBMemStack::pointer()
+inline int FrBMemStack::pointer() const
 {
     return _stack_ptr;
+}
+
+inline bool FrBMemStack::overflow() const
+{
+    return _stack_ptr > 5000;
 }
 
 
