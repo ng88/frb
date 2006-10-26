@@ -28,6 +28,35 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 /*        FrBClass            */
 
+void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
+    {
+        frb_assert((*it));
+        (*it)->resolvePrototype(e);
+    }
+    
+    if(_dtor) _dtor->resolvePrototype(e);
+
+    for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
+    {
+        frb_assert(itf->second);
+        itf->second->resolvePrototype(e);
+    }
+    
+    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf)
+    {
+        frb_assert(itf->second);
+        itf->second->resolvePrototype(e);
+    }
+    
+    for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolvePrototype(e);
+    }
+}
+
 void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     
@@ -174,6 +203,7 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 
 bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
 {
+    frb_assert(from && to);
     return from == to;
 }
 
@@ -213,9 +243,9 @@ const char* FrBCodeClass::specString() const
     return "frb interpreted class";
 }
 
-void FrBCodeClass::resolveAndCheck() throw (FrBResolveException)
+/*void FrBCodeClass::resolveAndCheck() throw (FrBResolveException)
 {
-}
+}*/
 
 
 

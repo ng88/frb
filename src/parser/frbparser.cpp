@@ -65,6 +65,13 @@ bool FrBParser::parse(const String& str)
 
 void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveException)
 { 
+
+    for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolvePrototype(e);  
+    }
+
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
         frb_assert(it->second);

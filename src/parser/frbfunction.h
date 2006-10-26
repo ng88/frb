@@ -149,6 +149,7 @@ public:
     
     /** Used in type resolution */
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {};
+    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {};
         
 };
 
@@ -233,6 +234,7 @@ public:
     inline FrBTypeExpr * getURParam(int index) const;
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
 };
 

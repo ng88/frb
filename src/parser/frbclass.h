@@ -105,7 +105,8 @@ public:
              virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
              */
     /** Used in type resolution */
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
@@ -281,7 +282,7 @@ public:
 
     
     virtual const char* specString() const;
-    void resolveAndCheck() throw (FrBResolveException);
+    //void resolveAndCheck() throw (FrBResolveException);
    
 };
 

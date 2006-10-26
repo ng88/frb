@@ -129,7 +129,7 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT faire marcher ce Me !
+//TODONEXT cf log rev 83
 /* Me expr */
 class FrBMeExpr : public FrBExpr
 {

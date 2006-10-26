@@ -1,18 +1,18 @@
 
+
 DefLang EN
 
 Public Class Main
-
 
     Public Shared Sub main()
         Me.main(5)
     End Sub
 
     Public Shared Sub main(i As Int)
-        Debug.print("eeee")
+        Debug.print("param is ")
+        Debug.print(i)
     End Sub
 
-
-
 End Class
+
 
