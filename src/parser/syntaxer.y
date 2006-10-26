@@ -401,12 +401,18 @@ fn_stat:
           current_fn()->addStat(new FrBExprStatement($<expr>1));
       }
     | dim_stat new_line /* déclaration */
+    | if_stat new_line /* déclaration */
     | delete_stat new_line /* destruction */
     | return_stat new_line /* return  */
     | typedef_stat /* typedef */
     ;
     
-
+    //TODO a finir
+if_stat:
+      FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
+      function_content_list
+      FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
+    
 dim_stat: /* Dim nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As type [= init], ... */
       FRB_KW_TOKEN_DECLARE declare_list
     ;
@@ -963,6 +969,7 @@ array_elt_list:
     | expr
     ;
 
+    
 
     //TODO : pour le for avec déclaration (ie <=> for(int i = 0; ....)) faire une
     //       forme sépciale qui déclare directement For i As Int = 0

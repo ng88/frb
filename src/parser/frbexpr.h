@@ -129,7 +129,9 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83
+//TODONEXT cf log rev 83 + finir le si ds syntaxer.y
+//TODO pr les operateur de conversion : utiliser des interfaces
+
 /* Me expr */
 class FrBMeExpr : public FrBExpr
 {
