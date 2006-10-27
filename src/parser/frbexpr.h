@@ -40,7 +40,7 @@ public:
     virtual const FrBClass* getClass() const = 0;
     
     /** Evaluate expression (can be called ONLY IF resolve() was called before) */
-    virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
+    virtual FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
     
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
@@ -66,7 +66,7 @@ public:
     ~FrBUnresolvedIdExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
     
@@ -85,7 +85,7 @@ public:
     ~FrBMemberOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
     
@@ -107,7 +107,7 @@ public:
     ~FrBFunctionCallExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
 };
@@ -125,11 +125,11 @@ public:
     ~FrBLocalVarExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + finir le si ds syntaxer.y finir si + expr affect
+//TODONEXT cf log rev 83 + finir le si ds syntaxer.y finir si + expr affect no working code big prob with :=
 //TODO pr les operateur de conversion : utiliser des interfaces
 
 /* Me expr */
@@ -143,7 +143,7 @@ public:
     FrBMeExpr(FrBClass * t, int varid);
     ~FrBMeExpr();
     
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -160,7 +160,7 @@ public:
     ~FrBRefAssignExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -179,7 +179,7 @@ public:
     ~FrBBinOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -220,13 +220,9 @@ public:
     }
  
     
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
-        FrBCppObject* o = new FrBPrimitive<literal_type>(_value);
-
-        e.addGarbagedObject(o);
-        
-        return o;
+        return e.addGarbagedObject(new FrBPrimitive<literal_type>(_value));
     }
     
     const FrBClass* getClass() const

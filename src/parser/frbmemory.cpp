@@ -49,7 +49,7 @@ void FrBMemory::findNextAvailable()
     }    
 }
 
-void FrBMemory::addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj)
+FrBBaseObject*& FrBMemory::addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj)
 {
 
     if(_unavailable >= _collect_threshold)
@@ -58,14 +58,18 @@ void FrBMemory::addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj)
     if(_unavailable + 2 >= _data.size() - 1)
         needMoreMemory();
     
-    _data[_next_available].value = obj;
-    _data[_next_available].links = 1;
+    int next = _next_available;
+    
+    _data[next].value = obj;
+    _data[next].links = 1;
     
     obj->setMemPos(_next_available);
     
     _unavailable++;
     
     findNextAvailable();
+    
+    return _data[next].value;
 }
 
 

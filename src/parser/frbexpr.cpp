@@ -42,7 +42,7 @@ FrBLocalVarExpr::~FrBLocalVarExpr()
 
 FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return e.stack().getTopValue(_varid);
+    return e.stack().getTopRef(_varid);
 }
 
 void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
