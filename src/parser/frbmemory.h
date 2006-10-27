@@ -113,7 +113,6 @@ public:
     inline void addLink(FrBBaseObject* obj);
     inline void delLink(FrBBaseObject* obj);
     
-    
     std::ostream& print(int cols = 5, std::ostream& out = std::cout) const;
 };
 
@@ -205,12 +204,14 @@ inline FrBBaseObject* FrBMemory::getObject(int addr)
 
 inline void FrBMemory::addLink(FrBBaseObject* obj)
 {
+    frb_assert2(obj, "obj is a null pointer");
     frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
     _data[obj->memPos()].links++;
 }
 
 inline void FrBMemory::delLink(FrBBaseObject* obj)
 {
+    frb_assert2(obj, "obj is a null pointer");
     frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
     _data[obj->memPos()].links--;
 }
@@ -220,6 +221,7 @@ inline void FrBMemory::removeObjectFromGC(FrBBaseObject* obj)
     frb_assert2(obj->isManaged(), "obj MUST BE a managed object");
     _data[obj->memPos()].links = -1;
 }
+
 
 
 

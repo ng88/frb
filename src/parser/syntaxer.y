@@ -407,11 +407,13 @@ fn_stat:
     | typedef_stat /* typedef */
     ;
     
-    //TODO a finir
+
 if_stat:
       FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
       function_content_list
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
+    ;
+    
     
 dim_stat: /* Dim nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As type [= init], ... */
       FRB_KW_TOKEN_DECLARE declare_list

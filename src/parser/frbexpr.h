@@ -129,7 +129,7 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + finir le si ds syntaxer.y
+//TODONEXT cf log rev 83 + finir le si ds syntaxer.y finir si + expr affect
 //TODO pr les operateur de conversion : utiliser des interfaces
 
 /* Me expr */
@@ -148,6 +148,23 @@ public:
     std::ostream& put(std::ostream& stream) const;    
 };
 
+/** Ref assignment <expr> := <expr> */
+class FrBRefAssignExpr : public FrBExpr
+{
+private:
+    FrBExpr     *_rhs;
+    FrBExpr     *_lhs;
+    
+public:
+    FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException);
+    ~FrBRefAssignExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;    
+};
+
 
 class FrBBinOpExpr : public FrBExpr
 {
@@ -158,7 +175,7 @@ private:
     FrBFunction *_fn;
     
 public:
-    FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException);
+    FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op);
     ~FrBBinOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);

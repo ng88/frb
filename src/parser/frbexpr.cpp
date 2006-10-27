@@ -124,7 +124,7 @@ void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
     const FrBClass* cc  = _lhs->getClass();
     const String & name =  _rhs->name();
     
-    
+    //TODO a completer
     /* _rhs est soit une inner classe soit un membre soit tout ce qui est function */
     
 //     /*  function/sub */
@@ -333,11 +333,57 @@ std::ostream& FrBMeExpr::put(std::ostream& stream) const
 }
 
 
+/*           FrBRefAssignExpr                    */
+
+
+FrBRefAssignExpr::FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException)
+ : _lhs(lhs), _rhs(rhs)
+{
+    frb_assert(_lhs && _rhs);
+}
+
+FrBRefAssignExpr::~FrBRefAssignExpr()
+{
+}
+
+
+void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+
+    _rhs->resolveAndCheck(e);
+    _lhs->resolveAndCheck(e);
+    
+    if(!FrBClass::areCompatibles(_rhs->getClass(), _rhs->getClass()))
+        throw FrBIncompatibleClassException(_in_rhs->getClass(), _rhs->getClass());
+}
+
+FrBBaseObject*& FrBRefAssignExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    FrBBaseObject * & r = _rhs->eval(e);
+    FrBBaseObject * & l = _lhs->eval(e);
+    
+    e.memory()->delLink(l);
+    e.memory()->addLink(r);
+    
+    return 0;
+    
+}
+
+const FrBClass* FrBRefAssignExpr::getClass() const
+{
+}
+
+std::ostream& FrBRefAssignExpr::put(std::ostream& stream) const
+{
+}
+
+
+
   
 
 
 /*        FrBBinOpExpr            */
-FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op) throw (FrBFunctionNotFoundException)
+FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
     : _rhs(rhs), _lhs(lhs), _op(op), _fn(0)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");

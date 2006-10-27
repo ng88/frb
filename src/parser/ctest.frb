@@ -9,6 +9,9 @@ Public Class Main
     End Sub
 
     Public Shared Sub main(i As Int)
+    
+        i := 15
+    
         Debug.print("param is ")
         Debug.print(i)
     End Sub
