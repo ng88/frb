@@ -152,8 +152,8 @@ public:
 class FrBRefAssignExpr : public FrBExpr
 {
 private:
-    FrBExpr     *_rhs;
     FrBExpr     *_lhs;
+    FrBExpr     *_rhs;
     
 public:
     FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException);

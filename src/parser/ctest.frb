@@ -4,16 +4,41 @@ DefLang EN
 
 Public Class Main
 
-    Public Shared Sub main()
-        Me.main(5)
-    End Sub
 
-    Public Shared Sub main(i As Int)
+    Public Shared Sub main()
     
-        i := 15
+        Dim j As Int := 5
+        Dim k As Int := j
     
-        Debug.print("param is ")
-        Debug.print(i)
+        Debug.print("   j= ")
+        Debug.print(j)
+        Debug.print("   ")
+        
+        Debug.print("   k= ")
+        Debug.print(k)
+        Debug.print("   ")
+    
+        j := 15
+        
+        Debug.print("   j= ")
+        Debug.print(j)
+        Debug.print("   ")
+        
+        Debug.print("   k= ")
+        Debug.print(k)
+        Debug.print("   ")
+        
+        k := 7
+        
+        Debug.print("   j= ")
+        Debug.print(j)
+        Debug.print("   ")
+        
+        Debug.print("   k= ")
+        Debug.print(k)
+        Debug.print("   ")
+    
+        
     End Sub
 
 End Class

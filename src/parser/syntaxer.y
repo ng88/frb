@@ -735,7 +735,7 @@ expr:
       { $<expr>$ = $<expr>2; }
       
     | expr FRB_KW_TOKEN_OP_ASSIGN_REF expr           /* expr := expr */
-      { $<expr>$ = $<expr>1 = $<expr>3; } //TODO je pense pas que ca marche comme ca 
+      { $<expr>$ = new FrBRefAssignExpr($<expr>1, $<expr>3); } 
       
     | expr FRB_KW_TOKEN_OP_ASSIGN_VAL expr           /* expr = expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ASSIGN_VAL); }

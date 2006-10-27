@@ -354,27 +354,31 @@ void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
     _lhs->resolveAndCheck(e);
     
     if(!FrBClass::areCompatibles(_rhs->getClass(), _rhs->getClass()))
-        throw FrBIncompatibleClassException(_in_rhs->getClass(), _rhs->getClass());
+        throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
 }
 
-FrBBaseObject*& FrBRefAssignExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+FrBBaseObject* FrBRefAssignExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    FrBBaseObject * & r = _rhs->eval(e);
-    FrBBaseObject * & l = _lhs->eval(e);
+    FrBBaseObject * r = _rhs->eval(e);
+    FrBBaseObject * l = _lhs->eval(e);
     
-    e.memory()->delLink(l);
+    //e.memory()->delLink(l);
     e.memory()->addLink(r);
     
-    return 0;
+    return r;
     
 }
 
 const FrBClass* FrBRefAssignExpr::getClass() const
 {
+    return _lhs->getClass();
 }
 
 std::ostream& FrBRefAssignExpr::put(std::ostream& stream) const
 {
+    return stream << '(' << *_lhs << ' '
+        << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_ASSIGN_REF)
+        << ' ' << *_rhs << ')';
 }
 
 

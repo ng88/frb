@@ -24,7 +24,7 @@
 #include <iostream>
 
 
-/*                   FrBDebug                       */
+/*                   FrBObject                       */
 FrBCppClass * FrBObject::_cpp_class = NULL;
 
 
@@ -222,6 +222,17 @@ FrBBaseObject * print_FrBObject(FrBExecutionEnvironment&, FrBBaseObject*, FrBBas
     return 0;
 }
 
+template<class T>
+FrBBaseObject * println_FrBObject(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject * arg0)
+{
+
+    frb_assert2(arg0, "null pointer passed to Debug::println()");
+    
+    std::cout << (static_cast<T*>(arg0))->value() << std::endl;
+
+    return 0;
+}
+
 FrBBaseObject * constructor1(FrBExecutionEnvironment&, FrBBaseObject * me)
 {
 
@@ -270,6 +281,22 @@ FrBCppClass * FrBDebug::initClass()
     
     f = new FrBUnaryCppFunction(print_FrBObject<FrBString>, FrBString::getCppClass(), false);
     f->setName("print");
+    f->setSub(true);
+    f->setShared(true);
+    f->setConst(true);
+    
+    _cpp_class->addFunction(f);
+    
+    f = new FrBUnaryCppFunction(println_FrBObject<FrBInt>, FrBInt::getCppClass(), false);
+    f->setName("println");
+    f->setSub(true);
+    f->setShared(true);
+    f->setConst(true);
+    
+    _cpp_class->addFunction(f);
+    
+    f = new FrBUnaryCppFunction(println_FrBObject<FrBString>, FrBString::getCppClass(), false);
+    f->setName("println");
     f->setSub(true);
     f->setShared(true);
     f->setConst(true);

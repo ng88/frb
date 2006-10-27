@@ -127,7 +127,7 @@ void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
     if(o->isManaged())
         e.memory()->removeObjectFromGC(o);
 
-    executeDestructor(e, o);
+     //TODO executeDestructor(e, o);
     freeInstance(e, o);
 
 }
