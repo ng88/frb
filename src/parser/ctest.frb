@@ -10,36 +10,24 @@ Public Class Main
         Dim j As Int := 5
         Dim k As Int := 18
     
-        Debug.print("j= ")
-        Debug.printwr(j)
-        
-        Debug.print("k= ")
-        Debug.printwr(k)
+        Debug.println("j= " & j)
+        Debug.println("k= " & k)
     
-        1+j := k
+        j := k
         
-        Debug.print("j= ")
-        Debug.printwr(j)
-        
-        Debug.print("k= ")
-        Debug.printwr(k)
+        Debug.println("j= " & j)
+        Debug.println("k= " & k)
         
         k := 7
         
-        Debug.print("j= ")
-        Debug.printwr(j)
-        
-        Debug.print("k= ")
-        Debug.printwr(k)
+        Debug.println("j= " & j)
+        Debug.println("k= " & k)
     
         
         k := j := 788
         
-        Debug.print("j= ")
-        Debug.printwr(j)
-        
-        Debug.print("k= ")
-        Debug.printwr(k)
+        Debug.println("j= " & j)
+        Debug.println("k= " & k)
         
         
     End Sub

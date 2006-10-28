@@ -23,7 +23,7 @@ FrBMemory::~FrBMemory()
 {
 
     for(Storage::iterator it = _data.begin(); it != _data.end(); ++it)
-        ;//delete *it;
+        ;//delete *it; il faut faire ca avec un while
         
     frb_warning2(false, "memory not disposed");
 }

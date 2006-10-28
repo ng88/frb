@@ -137,8 +137,8 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + finir le si ds syntaxer.y finir si + expr affect no working code big prob with :=
-//TODO pr les operateur de conversion : utiliser des interfaces
+//TODONEXT cf log rev 83 + finir le si ds syntaxer.y finir si
+//TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 
 /* Me expr */
 class FrBMeExpr : public FrBExpr

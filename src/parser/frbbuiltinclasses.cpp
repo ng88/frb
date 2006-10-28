@@ -120,7 +120,8 @@ FrBCppClass * FrBInt::initClass()
 
 /*            FrBString            */
 
-FrBBaseObject * operator_add_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+
+FrBBaseObject * operator_add_FrBString_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     FrBString * r =
         new FrBString((static_cast<FrBString*>(me))->value() + (static_cast<FrBString*>(arg0))->value());
@@ -128,6 +129,15 @@ FrBBaseObject * operator_add_FrBString(FrBExecutionEnvironment& e, FrBBaseObject
     return r;
 }
 
+
+FrBBaseObject * operator_add_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    FrBString * r =
+        new FrBString((static_cast<FrBString*>(me))->value() +
+                            StringEx::int2string( (static_cast<FrBInt*>(arg0))->value() ) );
+    e.addGarbagedObject(r);
+    return r;
+}
 
 
 FrBCppClass * FrBString::initClass()
@@ -139,9 +149,18 @@ FrBCppClass * FrBString::initClass()
     _cpp_class->setSealed(true);
     _cpp_class->setScope(SC_PUBLIC);
     
-    FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBString, _cpp_class, false);
+    FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBString_FrBString, _cpp_class, false);
     f->setReturnType(_cpp_class);
-    f->setName("operator+/&(FrBString)");
+    f->setName("operator+|&(String)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
+    
+    f = new FrBUnaryCppFunction(operator_add_FrBString_FrBInt,  FrBInt::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator+|&(Int)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
