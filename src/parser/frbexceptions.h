@@ -62,6 +62,7 @@ protected:
     
 public:
      FrBInvalidLValueException(const String& lvalue);
+     FrBInvalidLValueException(const FrBExpr* lvalue);
      std::ostream& put(std::ostream& stream) const;
 };
 

@@ -38,12 +38,8 @@ void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw 
 {
     //frb_assert(isAssignable());
     frb_assert(o);
-    
-    std::ostringstream sstr;
-    
-    put(sstr);
-    
-    throw FrBInvalidLValueException(sstr.str());
+
+    throw FrBInvalidLValueException(this);
 }
 
 

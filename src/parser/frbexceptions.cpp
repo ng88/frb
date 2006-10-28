@@ -35,6 +35,13 @@ FrBInvalidLValueException::FrBInvalidLValueException(const String& lvalue)
 {
 }
 
+FrBInvalidLValueException::FrBInvalidLValueException(const FrBExpr* lvalue)
+{
+    std::ostringstream sstr;
+    lvalue->put(sstr);
+    _lvalue = sstr.str();
+}
+
 std::ostream& FrBInvalidLValueException::put(std::ostream& stream) const
 {
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INVALID_LVALUE, _lvalue);

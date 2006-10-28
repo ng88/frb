@@ -16,7 +16,7 @@ Public Class Main
         Debug.print("k= ")
         Debug.printwr(k)
     
-        j := k
+        1+j := k
         
         Debug.print("j= ")
         Debug.printwr(j)

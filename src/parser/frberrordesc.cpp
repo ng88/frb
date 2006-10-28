@@ -93,9 +93,9 @@ void FrBErrorCollector::warning(int no1, int no2, int line, const String& file,
 
 void FrBErrorCollector::error(const FrBErrorDescriptor& error)
 {
-    //FrBErrorDescriptor err(error);
-    //fprintf(stderr, "%s", err.toString().c_str());
     std::cerr << error;
+    
+    if(error.critical()) abort();
 }
 
 

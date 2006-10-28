@@ -77,6 +77,7 @@ public:
 std::ostream& operator<<(std::ostream& s, const FrBErrorDescriptor& c);
 
 //TODO utiliser des FrBFunction/Class.. à la place des String
+// a refaire complétement ou presque...
 
 /*class FrWarningDescriptor : public FrBErrorDescriptor
 {
