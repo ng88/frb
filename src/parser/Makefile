@@ -36,6 +36,8 @@ CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_ $(DEBU
 
 SRC= $(wildcard *.cpp)
 OBJS= $(SRC:.cpp=.o)
+BUILTIN_DEF= $(wildcard builtin/*.def)
+BUILTIN_DEC= $(wildcard builtin/*.dec)
 
 EXE=parser_test
 TRAD_PATH=../trad/
@@ -70,6 +72,8 @@ frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h
 frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o frbresolveenvironment.o
 frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
 frbexceptions.o: frbexceptions.h frbexceptions.cpp
+frbbuiltinclasses.h: $(BUILTIN_DEC)
+frbbuiltinclasses.cpp: $(BUILTIN_DEF)
 
 .PHONY: exe clean install touchall force doc cleandoc
 

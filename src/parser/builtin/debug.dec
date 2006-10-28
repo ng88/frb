@@ -1,0 +1,31 @@
+
+class FrBDebug : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    static FrBCppClass * initClass();
+    
+    inline FrBDebug()  {};
+    
+
+    virtual ~FrBDebug();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != NULL, "FrBDebug::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrBDebug(); }
+    };
+        
+    
+};

@@ -18,4 +18,4 @@
 ###########################################################################
 
 
-exe kate  $(ls *.h *.cpp *.l *.y Makefile  *.awk *.frb | sort) 
+exe kate  $(ls *.h *.cpp *.l *.y Makefile  *.awk *.frb builtin/* | sort) 

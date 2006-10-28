@@ -1,0 +1,26 @@
+/*                   FrBObject                       */
+FrBCppClass * FrBObject::_cpp_class = NULL;
+
+
+FrBCppClass * FrBObject::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBObject::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBObject::Allocator());
+    _cpp_class->setName("Object");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+
+    return _cpp_class;
+}
+
+FrBClass * FrBObject::getClass()
+{
+    frb_assert2(_cpp_class != NULL, "FrBObject::getClass(), call initClass() first");
+    return _cpp_class;
+}
+
+FrBObject::~FrBObject()
+{
+}
+
