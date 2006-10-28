@@ -36,11 +36,17 @@ public:
     /** Resolve unresolved identifier (class, function) and check type compatibility */
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     
-    /** Get type of expression (can be called ONLY IF resolve() was called before) */
+    /** Get type of expression (can be called ONLY IF resolveAndCheck() was called before) */
     virtual const FrBClass* getClass() const = 0;
     
-    /** Evaluate expression (can be called ONLY IF resolve() was called before) */
-    virtual FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
+    /** Evaluate expression (can be called ONLY IF resolveAndCheck() was called before) */
+    virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
+    
+    /** Return true if expr can be assigned, ie if we can write <expr> := something */
+    virtual bool isAssignable() const;
+    
+    /** Do assignement */
+    virtual void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
     
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
@@ -66,7 +72,7 @@ public:
     ~FrBUnresolvedIdExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
     
@@ -85,7 +91,7 @@ public:
     ~FrBMemberOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
     
@@ -107,7 +113,7 @@ public:
     ~FrBFunctionCallExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;  
 };
@@ -124,8 +130,10 @@ public:
     FrBLocalVarExpr(FrBTypeExpr * t, int varid);
     ~FrBLocalVarExpr();
     
+    bool isAssignable() const;
+    void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
@@ -143,7 +151,7 @@ public:
     FrBMeExpr(FrBClass * t, int varid);
     ~FrBMeExpr();
     
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -159,8 +167,10 @@ public:
     FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException);
     ~FrBRefAssignExpr();
     
+    bool isAssignable() const;
+    void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -179,7 +189,7 @@ public:
     ~FrBBinOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
@@ -220,9 +230,14 @@ public:
     }
  
     
-    FrBBaseObject*& eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
-        return e.addGarbagedObject(new FrBPrimitive<literal_type>(_value));
+        FrBCppObject* o = new FrBPrimitive<literal_type>(_value);
+
+        e.addGarbagedObject(o);
+
+        return o;
+
     }
     
     const FrBClass* getClass() const

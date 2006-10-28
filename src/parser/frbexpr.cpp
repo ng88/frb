@@ -22,10 +22,28 @@
 #include "frbfunction.h"
 #include "frbresolveenvironment.h"
 
+/*          FrBExpr          */
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
 {
     return expr.put(s);
+}
+
+bool FrBExpr::isAssignable() const
+{
+    return false;
+}
+
+void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw (FrBEvaluationException)
+{
+    //frb_assert(isAssignable());
+    frb_assert(o);
+    
+    std::ostringstream sstr;
+    
+    put(sstr);
+    
+    throw FrBInvalidLValueException(sstr.str());
 }
 
 
@@ -40,9 +58,20 @@ FrBLocalVarExpr::~FrBLocalVarExpr()
 {
 }
 
+bool FrBLocalVarExpr::isAssignable() const
+{
+    return true;
+}
+
+void FrBLocalVarExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* o)
+    const throw (FrBEvaluationException)
+{
+     e.stack().setTopValue(_varid, o);
+}
+
 FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return e.stack().getTopRef(_varid);
+    return e.stack().getTopValue(_varid);
 }
 
 void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -123,6 +152,9 @@ void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
     
     const FrBClass* cc  = _lhs->getClass();
     const String & name =  _rhs->name();
+    
+    (void)cc;
+    (void)name;
     
     //TODO a completer
     /* _rhs est soit une inner classe soit un membre soit tout ce qui est function */
@@ -357,13 +389,25 @@ void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
         throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
 }
 
+bool FrBRefAssignExpr::isAssignable() const
+{
+    return _lhs->isAssignable() && _rhs->isAssignable();
+}
+
+void FrBRefAssignExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* o) const
+        throw (FrBEvaluationException)
+{
+    _rhs->refAssign(e, o);
+}
+
 FrBBaseObject* FrBRefAssignExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     FrBBaseObject * r = _rhs->eval(e);
-    FrBBaseObject * l = _lhs->eval(e);
     
-    //e.memory()->delLink(l);
+    e.memory()->delLink(_lhs->eval(e));
     e.memory()->addLink(r);
+    
+    _lhs->refAssign(e, r);
     
     return r;
     

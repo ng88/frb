@@ -55,6 +55,17 @@ class FrBEvaluationException : public FrBExecutionException
 };
 
 
+class FrBInvalidLValueException : public FrBExecutionException
+{
+protected:
+    String _lvalue;
+    
+public:
+     FrBInvalidLValueException(const String& lvalue);
+     std::ostream& put(std::ostream& stream) const;
+};
+
+
 
 
 class FrBAllocationException : public FrBExecutionException

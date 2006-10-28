@@ -53,9 +53,9 @@ public:
     
     
     /** Add the object to the FrBMemory so that it can be garbage-collected */
-    inline FrBBaseObject*& addGarbagedObject(FrBBaseObject * o)
+    inline void addGarbagedObject(FrBBaseObject * o)
     {
-        return _mem->addObject(*this, o);
+        _mem->addObject(*this, o);
     }
 
     

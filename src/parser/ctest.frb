@@ -8,36 +8,39 @@ Public Class Main
     Public Shared Sub main()
     
         Dim j As Int := 5
-        Dim k As Int := j
+        Dim k As Int := 18
     
-        Debug.print("   j= ")
-        Debug.print(j)
-        Debug.print("   ")
+        Debug.print("j= ")
+        Debug.printwr(j)
         
-        Debug.print("   k= ")
-        Debug.print(k)
-        Debug.print("   ")
+        Debug.print("k= ")
+        Debug.printwr(k)
     
-        j := 15
+        j := k
         
-        Debug.print("   j= ")
-        Debug.print(j)
-        Debug.print("   ")
+        Debug.print("j= ")
+        Debug.printwr(j)
         
-        Debug.print("   k= ")
-        Debug.print(k)
-        Debug.print("   ")
+        Debug.print("k= ")
+        Debug.printwr(k)
         
         k := 7
         
-        Debug.print("   j= ")
-        Debug.print(j)
-        Debug.print("   ")
+        Debug.print("j= ")
+        Debug.printwr(j)
         
-        Debug.print("   k= ")
-        Debug.print(k)
-        Debug.print("   ")
+        Debug.print("k= ")
+        Debug.printwr(k)
     
+        
+        k := j := 788
+        
+        Debug.print("j= ")
+        Debug.printwr(j)
+        
+        Debug.print("k= ")
+        Debug.printwr(k)
+        
         
     End Sub
 

@@ -440,8 +440,7 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                
-                //TODO verifier que ca marche bien ce :=
+
                 fn->addStat( new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5) );
                 fn->addLocalVar((*it), $<vtype>4);
                 

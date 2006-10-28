@@ -182,7 +182,7 @@ int main(int argc, char ** argv)
             cout << "Call to " << arg_main_class << "::" << arg_main_function;
             
             if(arg_int_param > -1) 
-                cout << "(FrBInt = " << arg_int_param << ")...\n";
+                cout << "(Int = " << arg_int_param << ")...\n";
             else
                 cout << "()...\n";
 
@@ -208,8 +208,12 @@ int main(int argc, char ** argv)
     }
     catch(const FrBException &e)
     {
-        cerr << '`' << typeid(e).name() <<  "' throwed\n";
-        cerr << '\t' << e << '\n';
+        cerr << '`' << typeid(e).name() <<  "' throwed" << endl;
+        cerr << '\t' << e << endl;
+    }
+    catch(...)
+    {
+        cerr << "unknown exception throwed" << endl;
     }
     
       

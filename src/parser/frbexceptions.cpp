@@ -28,6 +28,19 @@ std::ostream& operator<<(std::ostream& s, const FrBException& c)
     return c.put(s);
 }
 
+/*               FrBInvalidLValueException                          */
+
+FrBInvalidLValueException::FrBInvalidLValueException(const String& lvalue)
+ : _lvalue(lvalue)
+{
+}
+
+std::ostream& FrBInvalidLValueException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INVALID_LVALUE, _lvalue);
+}
+
+
 /*             FrBUndeclaredIdentifierException                */
 
 FrBUndeclaredIdentifierException::FrBUndeclaredIdentifierException(const String& name)

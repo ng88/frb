@@ -91,7 +91,7 @@ public:
 
 
     /** add the object to the memory */
-    FrBBaseObject*& addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj);
+    void addObject(FrBExecutionEnvironment& e, FrBBaseObject* obj);
     
     /** juste remove the object, don't destroy it */
     inline void removeObjectFromGC(FrBBaseObject* obj);
@@ -133,7 +133,6 @@ public:
     
     /** addr is the address from top */
     inline FrBBaseObject* getTopValue(int addr) const;
-    inline FrBBaseObject*& getTopRef(int addr);
     inline void setTopValue(int addr, FrBBaseObject* v);
     
     inline FrBBaseObject* top() const;
@@ -229,12 +228,6 @@ inline void FrBMemory::removeObjectFromGC(FrBBaseObject* obj)
 /***** FrBMemStack *****/
 
 inline FrBBaseObject* FrBMemStack::getTopValue(int addr) const
-{
-    frb_assert(addr >= 0 && addr <= _stack_ptr);
-    return _mem[_stack_ptr - addr];
-}
-
-inline FrBBaseObject*& FrBMemStack::getTopRef(int addr)
 {
     frb_assert(addr >= 0 && addr <= _stack_ptr);
     return _mem[_stack_ptr - addr];

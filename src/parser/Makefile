@@ -69,6 +69,7 @@ frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcp
 frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h frbbaseobject.o
 frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o frbresolveenvironment.o
 frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
+frbexceptions.o: frbexceptions.h frbexceptions.cpp
 
 .PHONY: exe clean install touchall force doc cleandoc
 
