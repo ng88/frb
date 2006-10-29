@@ -36,7 +36,6 @@ class FrBCodeFunction;
 // resolution des appeles de fonctions, précalculs d'expressions, résolution de classe
 // entete d'un fichier sérialisé : FRBS<DWORD:version qui a généré le fichier><DWORD:version minimum pour charger ce fichier>
 
-
 class FrBStatement
 {
 public:
@@ -46,7 +45,46 @@ public:
     virtual std::ostream& put(std::ostream& stream) const = 0;
 };
 
+typedef std::vector<FrBStatement*> FrBStatList;
+
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat);
+
+/** Simple conditional statement, ie if <expr> then <stats> */
+class FrBConditionalStatement : public FrBStatement
+//TODO implements Block, like FrBCodeFunction. Block defines addStat()
+{
+private:
+    FrBStatList        _stats;
+    FrBExpr *          _cond;
+    
+public:
+    FrBConditionalStatement(FrBExpr * cond);
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    std::ostream& put(std::ostream& stream) const;
+    
+    ~FrBConditionalStatement();
+};
+
+typedef std::vector<FrBConditionalStatement*> FrBCondList;
+
+/** Full conditional statement, ie with if, else if, else... */
+class FrBIfStatement : public FrBStatement
+{
+private:
+    FrBCondList _conds;
+    
+public:
+    FrBIfStatement();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    std::ostream& put(std::ostream& stream) const;
+    
+    ~FrBIfStatement();
+};
+
 
 /*
     delete stat

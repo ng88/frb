@@ -399,6 +399,7 @@ void FrBRefAssignExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* o) c
 
 FrBBaseObject* FrBRefAssignExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
+  //TODO foreConvert() a mettre qqpart
     FrBBaseObject * r = _rhs->eval(e);
     
     e.memory()->delLink(_lhs->eval(e));

@@ -21,12 +21,74 @@
 #include "frbclass.h"
 #include "../common/assert.h"
 #include "frbmemory.h"
+#include "frbbuiltinclasses.h"
+
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 {
     return stat.put(s);
 }
 
+/*                    FrBConditionalStatement                  */
+
+
+
+FrBConditionalStatement::FrBConditionalStatement(FrBExpr * cond)
+  : _cond(cond)
+{
+  frb_assert(cond);
+}
+    
+void  FrBConditionalStatement::resolveAndCheck(FrBResolveEnvironment& e)
+  throw (FrBResolveException)
+{
+  _cond->resolveAndCheck(e);
+  if(!FrBClass::areCompatibles(_cond->getClass(), FrBBool::getCppClass()))
+    throw FrBIncompatibleClassException(_cond->getClass(), FrBBool::getCppClass());
+
+  for(FrBStatList::iterator it = _stats.begin(); it != stats.end(); ++it)
+    (*it)->resolveAndCheck(e);
+}
+
+void  FrBConditionalStatement::execute(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+  FrBBaseObject * o = FrBClass::forceConvert(_cond->eval(e), FrBBool::getCppClass());
+
+  if( (static_cast<FrBBool*>(o))->value() )
+    for(FrBStatList::const_iterator it = _stats.begin(); it != stats.end(); ++it)
+      (*it)->execute(e);
+}
+
+std::ostream&  FrBConditionalStatement::put(std::ostream& stream) const
+{
+}
+    
+FrBConditionalStatement::~FrBConditionalStatement()
+{
+}
+
+/*       FrBIfStatement                   */
+
+FrBIfStatement::FrBIfStatement()
+{
+}
+    
+void  FrBIfStatement::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+
+void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+{
+}
+
+std::ostream&  FrBIfStatement::put(std::ostream& stream) const
+{
+}
+    
+FrBIfStatement::~FrBIfStatement()
+{
+}
 
 /*                 FrBDeclareStatement              */
 
