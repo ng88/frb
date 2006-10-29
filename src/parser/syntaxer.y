@@ -398,20 +398,43 @@ function_content_list:
 fn_stat:
       expr new_line /* expression */
       {
+	//TODO warning if $<expr>1->getClass() != 0 'result lost'
           current_fn()->addStat(new FrBExprStatement($<expr>1));
       }
     | dim_stat new_line /* déclaration */
-    | if_stat new_line /* déclaration */
+    | if_stat new_line /* if */
     | delete_stat new_line /* destruction */
     | return_stat new_line /* return  */
     | typedef_stat /* typedef */
     ;
     
-
-if_stat:
+if_def: /* if <expr> then <lf> stats */
       FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
       function_content_list
+    ;
+
+elseif_def: /* else if <expr> then <lf> stats */
+      FRB_KW_TOKEN_ELSE if_def
+    ;
+
+else_def: /* else <lf> stats or nothing */
+      FRB_KW_TOKEN_ELSE new_line
+      function_content_list
+    | /* empty */
+    ;
+
+elseif_list:
+      elseif_list elseif_def
+    | /* empty */
+    ;
+
+if_stat:
+      if_def
+      elseif_list
+      else_def
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
+    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat
+      /*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat FRB_KW_TOKEN_ELSE fn_stat */
     ;
     
     
@@ -853,6 +876,10 @@ expr:
     | literal_expr
     ;
 
+literal_bool:
+      FRB_KW_TOKEN_TRUE { $<expr>$ = new FrBBoolExpr(true); }
+    | FRB_KW_TOKEN_FALSE { $<expr>$ = new FrBBoolExpr(false); }
+    ;
 
 literal_expr:
       FRB_TYPE_LITERAL_DOUBLE
@@ -862,6 +889,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_SHORTINT
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
+    | literal_bool { $<expr>$ = $<expr>1; }
     | FRB_KW_TOKEN_NULL
       {
           frb_assert2(false, "Null not yet implemented");

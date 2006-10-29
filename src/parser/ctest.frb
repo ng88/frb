@@ -6,51 +6,46 @@ Public Class Main
 
 
     Public Shared Sub main()
-    
-        Dim j As Int := 5
-        Dim k As Int := 18
+	   
+	Dim a As Boolean := True
 
-	Debug.println("j:= " & j & " at " & Debug.addressof(j))
-	Debug.println("k:= " & k & " at " & Debug.addressof(k))
-    
-        j := k
-        
-	Debug.println("j:= " & j & " at " & Debug.addressof(j))
-	Debug.println("k:= " & k & " at " & Debug.addressof(k))
-        
-        k = 7
-    
-	Debug.println("j= " & j & " at " & Debug.addressof(j))
-	Debug.println("k= " & k & " at " & Debug.addressof(k))
-        
-        k := j := 788
-        
-	Debug.println("j:= " & j & " at " & Debug.addressof(j))
-	Debug.println("k:= " & k & " at " & Debug.addressof(k))
-    
-        j := 5
-	k := 18
-    
-	Debug.println("j:= " & j & " at " & Debug.addressof(j))
-	Debug.println("k:= " & k & " at " & Debug.addressof(k))
-    
-        j = k
-        
-	Debug.println("j= " & j & " at " & Debug.addressof(j))
-	Debug.println("k= " & k & " at " & Debug.addressof(k))
-        
-        k = 7
-        
-	Debug.println("j= " & j & " at " & Debug.addressof(j))
-	Debug.println("k= " & k & " at " & Debug.addressof(k))
-    
-        
-        k = j = 788
-        
-	Debug.println("j= " & j & " at " & Debug.addressof(j))
-	Debug.println("k= " & k & " at " & Debug.addressof(k))
-        
-        
+	'inline if
+	If a Then Debug.println("a vrai")
+	
+
+	'multiline if
+
+	If a Then
+	   Debug.println("1")
+	Else If a Then
+	   Debug.println("2")
+	Else If a Then
+	   Debug.println("3")
+	Else
+	   Debug.println("sinon")
+	End If
+
+
+	If a Then
+	   Debug.println("1")
+	Else If a Then
+	   Debug.println("sinon")
+	End If
+
+
+	If a Then
+	   Debug.println("1")
+	Else
+	   Debug.println("sinon")
+	End If
+
+	If a Then
+	   Debug.println("1")
+	   Debug.println("2")
+	   Debug.println("3")
+	End If
+
+
     End Sub
 
 End Class
