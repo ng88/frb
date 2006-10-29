@@ -205,10 +205,9 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 
 bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
 {
-    frb_assert(from && to);
-    std::cout << "from " << from->name() << " to " << to->name() << ":" <<
-      (to == FrBObject::getCppClass() || from == to) << std::endl;
-    std::cout << to << " " <<  FrBObject::getCppClass() << std::endl;
+    //from or to can be null (sub return type)
+    if(from == 0 || to == 0)
+      return false;
 
     return to == FrBObject::getCppClass() || from == to;
 }

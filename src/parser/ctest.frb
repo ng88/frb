@@ -9,46 +9,46 @@ Public Class Main
     
         Dim j As Int := 5
         Dim k As Int := 18
-    
-        Debug.print("j:= " & Debug.addressof(j))
-        Debug.print("k:= ") : Debug.printwr(k)
+
+	Debug.println("j:= " & j & " at " & Debug.addressof(j))
+	Debug.println("k:= " & k & " at " & Debug.addressof(k))
     
         j := k
         
-        Debug.print("j:= ") : Debug.printwr(j)
-        Debug.print("k:= ") : Debug.printwr(k)
+	Debug.println("j:= " & j & " at " & Debug.addressof(j))
+	Debug.println("k:= " & k & " at " & Debug.addressof(k))
         
         k = 7
     
-        Debug.print("j= ") : Debug.printwr(j)
-        Debug.print("k= ") : Debug.printwr(k)
+	Debug.println("j= " & j & " at " & Debug.addressof(j))
+	Debug.println("k= " & k & " at " & Debug.addressof(k))
         
         k := j := 788
         
-        Debug.print("j:= ") : Debug.printwr(j)
-        Debug.print("k:= ") : Debug.printwr(k)
+	Debug.println("j:= " & j & " at " & Debug.addressof(j))
+	Debug.println("k:= " & k & " at " & Debug.addressof(k))
     
         j := 5
 	k := 18
     
-        Debug.print("j:= ") : Debug.printwr(j)
-        Debug.print("k:= ") : Debug.printwr(k)
+	Debug.println("j:= " & j & " at " & Debug.addressof(j))
+	Debug.println("k:= " & k & " at " & Debug.addressof(k))
     
         j = k
         
-        Debug.print("j= ") : Debug.printwr(j)
-        Debug.print("k= ") : Debug.printwr(k)
+	Debug.println("j= " & j & " at " & Debug.addressof(j))
+	Debug.println("k= " & k & " at " & Debug.addressof(k))
         
         k = 7
         
-        Debug.print("j= ") : Debug.printwr(j)
-        Debug.print("k= ") : Debug.printwr(k)
+	Debug.println("j= " & j & " at " & Debug.addressof(j))
+	Debug.println("k= " & k & " at " & Debug.addressof(k))
     
         
         k = j = 788
         
-        Debug.print("j= ") : Debug.printwr(j)
-        Debug.print("k= ") : Debug.printwr(k)
+	Debug.println("j= " & j & " at " & Debug.addressof(j))
+	Debug.println("k= " & k & " at " & Debug.addressof(k))
         
         
     End Sub

@@ -320,7 +320,8 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 
 const FrBClass* FrBFunctionCallExpr::getClass() const
 {
-    return _lhs->getClass();
+    frb_assert(_fn);
+    return _fn->returnType();
 }
 
 std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const

@@ -131,7 +131,7 @@ public:
                 const_map_snd_iterator<FunctionContainer>(seq.second),
                 args);
     }
-    
+
     template<class ArgContainer>
     inline FrBFunction * findOperator(int op, const ArgContainer& args) const
          throw (FrBFunctionNotFoundException)
