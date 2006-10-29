@@ -31,6 +31,22 @@ class FrBExpr;
 class FrBTypeExpr;
 class FrBClass;
 class FrBCodeFunction;
+class FrBStatement;
+
+typedef std::vector<FrBStatement*> FrBStatementlist;
+
+/** interface that represents a block of statements (function, if, ...) */
+class FrBStatementBlock
+{
+ protected:
+  FrBStatementlist _stats;
+
+ public:
+   /** add a statement in the block */
+   inline void addStat(FrBStatement * s) { _stats.push_back(s); }
+};
+
+typedef std::stack<FrBStatementBlock*> FrBBlockStack;
 
 //TODO optimisation de l'arbre avt serialisation
 // resolution des appeles de fonctions, précalculs d'expressions, résolution de classe
@@ -42,19 +58,15 @@ public:
     virtual ~FrBStatement() {}
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
-    virtual std::ostream& put(std::ostream& stream) const = 0;
+    virtual std::ostream& put(std::ostream& stream, int indent = 0) const = 0;
 };
-
-typedef std::vector<FrBStatement*> FrBStatList;
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat);
 
 /** Simple conditional statement, ie if <expr> then <stats> */
-class FrBConditionalStatement : public FrBStatement
-//TODO implements Block, like FrBCodeFunction. Block defines addStat()
+class FrBConditionalStatement : public FrBStatement, public FrBStatementBlock
 {
 private:
-    FrBStatList        _stats;
     FrBExpr *          _cond;
     
 public:
@@ -62,7 +74,11 @@ public:
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-    std::ostream& put(std::ostream& stream) const;
+    
+    /** return the value  of the evaluated condition */
+    bool executeCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     ~FrBConditionalStatement();
 };
@@ -80,7 +96,7 @@ public:
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-    std::ostream& put(std::ostream& stream) const;
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     ~FrBIfStatement();
 };
@@ -104,7 +120,7 @@ public:
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-    std::ostream& put(std::ostream& stream) const;
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     ~FrBDeclareStatement();
 };
@@ -122,12 +138,10 @@ public:
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-    std::ostream& put(std::ostream& stream) const;
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     ~FrBExprStatement();
 };
-
-typedef std::vector<FrBStatement*> FrBStatementlist;
 
 
 

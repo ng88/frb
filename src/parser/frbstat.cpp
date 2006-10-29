@@ -46,22 +46,45 @@ void  FrBConditionalStatement::resolveAndCheck(FrBResolveEnvironment& e)
   if(!FrBClass::areCompatibles(_cond->getClass(), FrBBool::getCppClass()))
     throw FrBIncompatibleClassException(_cond->getClass(), FrBBool::getCppClass());
 
-  for(FrBStatList::iterator it = _stats.begin(); it != stats.end(); ++it)
+  for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     (*it)->resolveAndCheck(e);
 }
 
 void  FrBConditionalStatement::execute(FrBExecutionEnvironment& e) const
   throw (FrBExecutionException)
 {
-  FrBBaseObject * o = FrBClass::forceConvert(_cond->eval(e), FrBBool::getCppClass());
-
-  if( (static_cast<FrBBool*>(o))->value() )
-    for(FrBStatList::const_iterator it = _stats.begin(); it != stats.end(); ++it)
-      (*it)->execute(e);
+  (void)executeCond(e);
 }
 
-std::ostream&  FrBConditionalStatement::put(std::ostream& stream) const
+bool FrBConditionalStatement::executeCond(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
 {
+  FrBBaseObject * o = FrBClass::forceConvert(_cond->eval(e), FrBBool::getCppClass());
+  bool cond = (static_cast<FrBBool*>(o))->value();
+
+  if(cond)
+    for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+      (*it)->execute(e);
+
+  return cond;
+}
+
+std::ostream&  FrBConditionalStatement::put(std::ostream& stream, int indent) const
+{
+  String str_indent(indent, '\t');
+
+  stream << "if (" << *_cond << ") execute:" << std::endl;
+
+  indent += 2;
+
+  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+  {
+    stream << str_indent << "\t*stat> ";
+    (*it)->put(stream, indent);
+    stream << std::endl;
+  }
+
+  return stream;
 }
     
 FrBConditionalStatement::~FrBConditionalStatement()
@@ -74,16 +97,40 @@ FrBIfStatement::FrBIfStatement()
 {
 }
     
-void  FrBIfStatement::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+void  FrBIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
+  throw (FrBResolveException)
 {
+  for(FrBCondList::iterator it = _conds.begin(); it != _conds.end(); ++it)
+    (*it)->resolveAndCheck(e);
 }
 
 void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
+  FrBCondList::const_iterator it = _conds.begin();
+  while( it != _conds.end() && (!((*it)->executeCond(e))) )
+    ++it;
 }
 
-std::ostream&  FrBIfStatement::put(std::ostream& stream) const
+std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 {
+  String str_indent(indent, '\t');
+
+  FrBCondList::const_iterator it = _conds.begin();
+
+  if(it != _conds.end())
+  {
+    (*it)->put(stream, indent);
+    ++it;
+  }
+
+  while(it != _conds.end())
+  {
+    stream << str_indent << "*stat> else ";
+    (*it)->put(stream, indent);
+    ++it;
+  }
+
+  return stream << str_indent << "end if";
 }
     
 FrBIfStatement::~FrBIfStatement()
@@ -118,7 +165,7 @@ void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
                                   FrBClass::forceConvert(_init->eval(e), _type->getClass())));
 }
 
-std::ostream& FrBDeclareStatement::put(std::ostream& stream) const
+std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 {
     stream << "declare <local_var:" << _varid << "> (" << *_type << ')';
     
@@ -151,7 +198,7 @@ void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecu
     _expr->eval(e);
 }
 
-std::ostream& FrBExprStatement::put(std::ostream& stream) const
+std::ostream& FrBExprStatement::put(std::ostream& stream, int) const
 {
     return stream << "Eval expression " << *_expr;
 }

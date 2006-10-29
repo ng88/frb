@@ -310,9 +310,15 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     }
             
     stream  << str_indent << "\t\t- Statements:" << endl;
-    
+
+    indent += 3;
+
     for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
-        stream << str_indent << "\t\t\t*stat> " << **it << endl;
+    {
+      stream << str_indent << "\t\t\t*stat> ";
+      (*it)->put(stream, indent);
+      stream << endl;
+    }
     
     return stream;
 }

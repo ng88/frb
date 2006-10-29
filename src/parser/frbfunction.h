@@ -156,7 +156,7 @@ public:
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn);
 
 
-class FrBCodeFunction : public FrBFunction
+class FrBCodeFunction : public FrBFunction, public FrBStatementBlock
 {
 public:
 
@@ -184,7 +184,6 @@ public:
     
 protected:
     
-    FrBStatementlist     _stats;
     NameParamList        _paramName;
     ParamList            _param;
     
@@ -198,7 +197,6 @@ public:
     FrBCodeFunction();
     ~FrBCodeFunction();
     
-    inline void addStat(FrBStatement* v);
     //TODO verif nom des params (doublons)
     inline void addParam(const String& name, FrBTypeExpr* v, bool byval, FrBExpr * init = 0);
     
@@ -268,11 +266,6 @@ typedef std::stack<FrBCodeFunction*> FrBCodeFunctionStack;
 
 
 /* Inlined */
-
-inline void FrBCodeFunction::addStat(FrBStatement* v)
-{
-    _stats.push_back(v);
-}
 
 inline void FrBCodeFunction::addParam(const String& name, FrBTypeExpr* v, bool byval, FrBExpr * init)
 {
