@@ -874,7 +874,7 @@ literal_expr:
       {
       
             String name($<str>1);
-            printf("ID NAME %s\n", $<str>1);
+            //printf("ID NAME %s\n", $<str>1);
             free($<str>1);
             
             const FrBClass * cc = current_class();
@@ -910,7 +910,7 @@ literal_expr:
                 
                 $<expr>$ = new FrBLocalVarExpr(cf->getLocalVar(idvar), idvar);
                 
-                puts("ID FOUND -- /* 1. local var */\n");
+                //puts("ID FOUND -- /* 1. local var */\n");
                 
                 break;
             }
@@ -924,11 +924,11 @@ literal_expr:
                 
                 $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 2 + idvar);
                 
-                puts("ID FOUND -- /* 2. function parameter */\n");
+                //puts("ID FOUND -- /* 2. function parameter */\n");
                 break;
             }
             
-            puts("ID UNRESOLVED\n");
+            //puts("ID UNRESOLVED\n");
             
             $<expr>$ = new FrBUnresolvedIdExpr(name);
             

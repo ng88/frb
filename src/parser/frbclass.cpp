@@ -20,6 +20,8 @@
 #include "frbmemory.h"
 #include "frbkeywords.h"
 #include "../common/assert.h"
+#include "frbbuiltinclasses.h"
+
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 {
@@ -204,7 +206,11 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
 {
     frb_assert(from && to);
-    return from == to;
+    std::cout << "from " << from->name() << " to " << to->name() << ":" <<
+      (to == FrBObject::getCppClass() || from == to) << std::endl;
+    std::cout << to << " " <<  FrBObject::getCppClass() << std::endl;
+
+    return to == FrBObject::getCppClass() || from == to;
 }
 
 

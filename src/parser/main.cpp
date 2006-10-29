@@ -47,7 +47,8 @@ void usage(char * exe)
          << "     --int-arg i         if defined, i will be passed as an Int parameter of " << endl
          << "                         the main function" << endl
          << "     --file f            f should be the path of the file to parse, if not" << endl
-         << "                         defined, the standard input will be used" << endl;
+         << "                         defined, the standard input will be used" << endl
+         << "     --                  explicit end of options" << endl;
 }
 
 int main(int argc, char ** argv)
@@ -67,7 +68,7 @@ int main(int argc, char ** argv)
     }
 #endif
 
-    /******** Anaylse des paramètres ********/
+    /******** Analyse des paramètres ********/
     
     char * exename = strrchr(argv[0], '/');
 
@@ -95,7 +96,8 @@ int main(int argc, char ** argv)
     
     for(int i = 1; i < argc; ++i)
     {
-             if(!strcmp(argv[i], "--parse-tree")) args_switch[SHOW_PARSE_TREE] = true;
+             if(!strcmp(argv[i], "--")) break; /* useless for the moment */
+        else if(!strcmp(argv[i], "--parse-tree")) args_switch[SHOW_PARSE_TREE] = true;
         else if(!strcmp(argv[i], "--improved-tree")) args_switch[SHOW_IMPROVED_TREE] = true;
         else if(!strcmp(argv[i], "--both-trees")) args_switch[SHOW_PARSE_TREE] = args_switch[SHOW_IMPROVED_TREE] = true;
         else if(!strcmp(argv[i], "--all-classes")) args_switch[SHOW_ALL_CLASSES] = true;
@@ -137,13 +139,19 @@ int main(int argc, char ** argv)
     {
         addClass(tree, FrBObject::initClass());
         addClass(tree, FrBInt::initClass());
+        addClass(tree, FrBBool::initClass());
         addClass(tree, FrBString::initClass());
         addClass(tree, FrBClassWrapper::initClass());
         addClass(tree, FrBFunctionWrapper::initClass());
         addClass(tree, FrBDebug::initClass());
         
+	/* Alias EN */
+        addClassAlias(tree, FrBBool::getCppClass(), "Boolean");
         addClassAlias(tree, FrBInt::getCppClass(), "Integer");
+
+	/* Alias FR */
         addClassAlias(tree, FrBInt::getCppClass(), "Entier");
+        addClassAlias(tree, FrBBool::getCppClass(), "Booleen");
         addClassAlias(tree, FrBString::getCppClass(), "Chaine");
         
         
@@ -206,9 +214,19 @@ int main(int argc, char ** argv)
         }
         
     }
+    catch(const FrBResolveException &e)
+    {
+        cerr << " resolve error: '" << typeid(e).name() <<  "' throwed" << endl;
+        cerr << '\t' << e << endl;
+    }
+    catch(const FrBExecutionException &e)
+    {
+        cerr << "execution error: '" << typeid(e).name() <<  "' throwed" << endl;
+        cerr << '\t' << e << endl;
+    }
     catch(const FrBException &e)
     {
-        cerr << '`' << typeid(e).name() <<  "' throwed" << endl;
+        cerr << "error: '" << typeid(e).name() <<  "' throwed" << endl;
         cerr << '\t' << e << endl;
     }
     catch(...)

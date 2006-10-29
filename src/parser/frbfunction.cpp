@@ -69,22 +69,22 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
         if(pcount < count - 1) \
             return NO_MATCH; \
              \
-        for(int i = 0; i < count - 1; ++i) /* fn pour ca */ \
+        for(int i = 0; i < count - 1; ++i)  \
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(a, b)) \
+                if(FrBClass::areCompatibles(b, a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \
             } \
         } \
          \
-        for(int i = count - 1; i < pcount; ++i)/* fn pour ca */ \
+        for(int i = count - 1; i < pcount; ++i) \
         { \
             if( (a = parameterType(count - 1)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(a, b)) \
+                if(FrBClass::areCompatibles(b, a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \
@@ -106,11 +106,11 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
         if(opt_match && pcount < _firstOptional ) \
             return NO_MATCH; \
           \
-        for(int i = 0; i < pcount; ++i)/* fn pour ca */ \
+        for(int i = 0; i < pcount; ++i) \
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(a, b)) \
+                if(FrBClass::areCompatibles(b, a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \

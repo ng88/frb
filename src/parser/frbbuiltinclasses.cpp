@@ -26,6 +26,7 @@
 
 #include "builtin/object.def"
 #include "builtin/primitive.def"
+#include "builtin/boolean.def"
 #include "builtin/int.def"
 #include "builtin/string.def"
 #include "builtin/class.def"

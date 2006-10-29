@@ -39,6 +39,7 @@ public:
 };
 
 typedef FrBPrimitive<int> FrBInt;
+typedef FrBPrimitive<bool> FrBBool;
 typedef FrBPrimitive<String> FrBString;
 
 typedef FrBPrimitive<const FrBClass*> FrBClassWrapper;

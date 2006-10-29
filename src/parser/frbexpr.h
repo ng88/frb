@@ -26,7 +26,6 @@
 
 class FrBCodeFunction;
 
-typedef std::map<const String, unsigned int> SymbolTable;
 
 class FrBExpr
 {
@@ -211,22 +210,16 @@ template<class literal_type>
 class FrBLiteralExpr : public FrBExpr
 {
 private:
-    //FrBCppObject* _pvalue;
     literal_type  _value;
     
 public:
     FrBLiteralExpr(const literal_type& v)
     {
-        //_pvalue = new FrBPrimitive<literal_type>(v);
         _value = v;
-        //TODO pvalue ne doit pas etre modifié, doit etre de type FrBConstInt
     }
     
     ~FrBLiteralExpr()
     {
-        //FrBBoxing::dispose_obj(_pvalue);
-        //on ne delete pas _pvalue
-        //on devrait pourtant, enfin on vera ca plus tard
     }
  
     
@@ -247,12 +240,12 @@ public:
     
     std::ostream& put(std::ostream& stream) const
     {
-        //return stream << "<val=" << _value << ">";
-        return stream << "<literal_val>";
+        return stream << "<literal_val:" << _value << ">";
     }
 };
 
-typedef FrBLiteralExpr<int>        FrBIntExpr;
+typedef FrBLiteralExpr<signed int>      FrBIntExpr;
+typedef FrBLiteralExpr<bool>            FrBBoolExpr;
 // typedef FrBLiteralExpr<double>          FrBDoubleExpr;
 // typedef FrBLiteralExpr<float>           FrBSingleExpr;
 // typedef FrBLiteralExpr<short int>       FrBShortIntExpr;

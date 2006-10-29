@@ -1,0 +1,17 @@
+/*            FrBBoolean            */
+
+
+FrBCppClass * FrBBool::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBBool::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
+    _cpp_class->setName("Bool");
+    //_cpp_class->setShared(false);
+    //_cpp_class->setAbstract(false);
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+    
+    
+    return _cpp_class;
+}
