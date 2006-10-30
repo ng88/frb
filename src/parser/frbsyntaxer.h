@@ -26,20 +26,10 @@
         FrBFlexLexerEx * frb_lexer; \
         FrBClassMap * frb_classes; \
         FrBErrorCollector * frb_error; \
-        inline String currentClassName() \
-        {  \
-            if(class_stack.empty()) \
-                return ""; \
-            else \
-                return class_stack.top()->name(); \
-        } \
-        inline String currentFnName() \
-        {  \
-                return ""; \
-        } \
      private: \
          FrBCodeClassStack class_stack; \
          FrBCodeFunctionStack fn_stack; \
+         FrBBlockStack block_stack; \
          CStringList id_list; \
          inline FrBCodeClass* current_class() \
          { \
@@ -50,6 +40,11 @@
          { \
              frb_assert2(!fn_stack.empty(), "frbsyntaxer.h::FrBSynater::current_fn()");  \
              return fn_stack.top(); \
+         } \
+         inline FrBStatementBlock* current_block() \
+         { \
+             frb_assert2(!block_stack.empty(), "frbsyntaxer.h::FrBSynater::current_block()");  \
+             return block_stack.top(); \
          } \
      public: \
         virtual ~FrBSyntaxicalParser() {} \

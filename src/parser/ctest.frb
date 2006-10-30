@@ -7,7 +7,11 @@ Public Class Main
 
     Public Shared Sub main()
 	   
-	Dim a As Boolean := True
+	DefLang FR
+	Soit b Comme Booleen := Faux
+	DefLang EN
+
+	Dim a As Boolean := b
 
 	'inline if
 	If a Then Debug.println("a vrai")

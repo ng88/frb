@@ -345,6 +345,7 @@ function:
            }
                
            fn_stack.push(nfn);
+	   block_stack.push(nfn);
            
       }
       fn_arg_list /*5*/ function_return_type /*6*/ /* sub/function */
@@ -373,6 +374,7 @@ function:
                     String(frb_lexer->YYText()));
            
           fn_stack.pop();
+	  block_stack.pop();
       }
       
     | fn_attr FRB_KW_TOKEN_OPERATOR operator_overloadable fn_arg_list as_type /* operator (function) */
@@ -398,8 +400,8 @@ function_content_list:
 fn_stat:
       expr new_line /* expression */
       {
-	//TODO warning if $<expr>1->getClass() != 0 'result lost'
-          current_fn()->addStat(new FrBExprStatement($<expr>1));
+	//TODO warning if $<expr>1->getClass() != 0 'result lost
+	current_block()->addStat(new FrBExprStatement($<expr>1));
       }
     | dim_stat new_line /* déclaration */
     | if_stat new_line /* if */
@@ -433,7 +435,14 @@ if_stat:
       elseif_list
       else_def
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
-    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat
+    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN /* inline if */
+      {
+	FrBConditionalStatement * b = new FrBConditionalStatement($<expr>2);
+
+	current_block()->addStat(b);
+	block_stack.push(b);
+      }
+      fn_stat { block_stack.pop(); }
       /*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat FRB_KW_TOKEN_ELSE fn_stat */
     ;
     
@@ -464,7 +473,7 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             {
                 int var_count = fn->localVarCount();
 
-                fn->addStat( new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5) );
+                current_block()->addStat(new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5));
                 fn->addLocalVar((*it), $<vtype>4);
                 
                 if(fn->localVarCount() == var_count)
@@ -484,7 +493,7 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             {
                 int var_count = fn->localVarCount();
                 
-                fn->addStat( new FrBDeclareStatement(var_count, $<vtype>2, $<expr>3) );
+                current_block()->addStat(new FrBDeclareStatement(var_count, $<vtype>2, $<expr>3));
                 fn->addLocalVar((*it), $<vtype>2);
 
                 if(fn->localVarCount() == var_count)

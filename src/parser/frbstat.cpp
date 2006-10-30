@@ -73,15 +73,14 @@ std::ostream&  FrBConditionalStatement::put(std::ostream& stream, int indent) co
 {
   String str_indent(indent, '\t');
 
-  stream << "if (" << *_cond << ") execute:" << std::endl;
+  stream << "if (" << *_cond << ") execute:";
 
   indent += 2;
 
   for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
   {
-    stream << str_indent << "\t*stat> ";
+    stream << std::endl << str_indent << "\t*stat> ";
     (*it)->put(stream, indent);
-    stream << std::endl;
   }
 
   return stream;
