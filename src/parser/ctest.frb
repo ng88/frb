@@ -4,47 +4,28 @@ DefLang EN
 
 Public Class Main
 
+    Public Shared Sub main(a As Int)
+
+	   Debug.println("factoriel(" & a & ")=" & Main.fact(a))
+
+
+	   'Dim b As Bool := a>5 'bug1
+
+
+    End Sub
+
+
+    Public Shared Function fact(n As Int) As Int
+	   If n > 1 Then
+	      Return n * Main.fact(n - 1)
+	   Else
+	      Return 1
+	   End If
+    End Function
 
     Public Shared Sub main()
 
-	Dim a As Boolean := False
-	
-	'inline if
-	If a Then Debug.println("a vrai")
-	
-
-	'multiline if
-
-	If a Then
-	   Debug.println("1")
-	Else If True Then
-	   Debug.println("2")
-	Else If a Then
-	   Debug.println("3")
-	Else
-	   Debug.println("sinon1")
-	End If
-
-
-	If a Then
-	   Debug.println("1")
-	Else If a Then
-	   Debug.println("sinon2")
-	End If
-
-
-	If a Then
-	   Debug.println("1")
-	Else
-	   Debug.println("sinon3")
-	End If
-
-	If a Then
-	   Debug.println("1")
-	   Debug.println("2")
-	   Debug.println("3")
-	End If
-
+	   Me.main(5)
 
     End Sub
 

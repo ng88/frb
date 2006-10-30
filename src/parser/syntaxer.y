@@ -554,6 +554,26 @@ delete_stat: /* Delete expr */
 
 return_stat: /* Return expr */
       FRB_KW_TOKEN_RETURN expr
+     {
+       if(current_fn()->sub())
+	  frb_error->error(FrBErrors::FRB_ERR_BAD_RETURN_SUB,
+			   FrBErrors::FRB_ERR_SEMANTIC,
+			   frb_lexer->lineno(), "", "", "",
+			   String(frb_lexer->YYText()));
+
+       current_block()->addStat(new FrBReturnStatement(current_fn(), $<expr>2));
+     }
+    | FRB_KW_TOKEN_RETURN
+      {
+       if(!current_fn()->sub())
+	  frb_error->error(FrBErrors::FRB_ERR_BAD_RETURN_FUNCTION,
+			   FrBErrors::FRB_ERR_SEMANTIC,
+			   frb_lexer->lineno(), "", "", "",
+			   String(frb_lexer->YYText()));
+
+       current_block()->addStat(new FrBReturnStatement(current_fn()));
+     }
+
     ;
     
 
@@ -806,22 +826,22 @@ expr:
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ASSIGN_VAL); }
       
     | expr FRB_KW_TOKEN_OP_ADD_ASSIGN expr          /* expr += expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_SUB_ASSIGN expr           /* expr -= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_SUB_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_MUL_ASSIGN expr           /* expr *= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_MUL_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_DIV_ASSIGN expr           /* expr /= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_DIV_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_INT_DIV_ASSIGN expr   /* expr \= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_INT_DIV_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_POW_ASSIGN expr           /* expr ^= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_POW_ASSIGN); }
       
     | expr FRB_KW_TOKEN_OP_SUB expr                       /* expr - expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_SUB); }
@@ -836,53 +856,53 @@ expr:
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_DIV); }
       
     | expr FRB_KW_TOKEN_OP_INT_DIV expr                 /* expr \ expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_INT_DIV); }
       
     | expr FRB_KW_TOKEN_OP_CONCAT expr                 /* expr & expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_CONCAT); }
       
     | expr FRB_KW_TOKEN_OP_MOD expr                         /* expr Mod expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_MOD); }
       
     | expr FRB_KW_TOKEN_OP_POW expr                      /* expr ^ expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_POW); }
       
     | FRB_KW_TOKEN_OP_SUB expr %prec FRB_KW_TOKEN_OP_UNARY_MINUS      /* -expr */
     
     | expr FRB_KW_TOKEN_OP_EQ expr                             /* expr == expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_EQ); }
       
     | expr FRB_KW_TOKEN_OP_NE expr                             /* expr <> expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_NE); }
       
     | expr FRB_KW_TOKEN_OP_LT expr                             /* expr < expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LT); }
       
     | expr FRB_KW_TOKEN_OP_GT expr                             /* expr > expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_GT); }
       
     | expr FRB_KW_TOKEN_OP_LE expr                             /* expr <= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LE); }
       
     | expr FRB_KW_TOKEN_OP_GE expr                             /* expr >= expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_GE); }
       
 //     //| expr FRB_KW_TOKEN_OP_BITW_LSHIFT expr                                /* expr << expr */
 //     //| expr FRB_KW_TOKEN_OP_BITW_RSHIFT expr                                /* expr >> expr */
 //     //op () et [] et IF THEN ELSE et (-> ?) et ++ et -- et New et Delete
     | expr FRB_KW_TOKEN_OP_LOG_AND expr                   /* expr And expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_AND); }
       
     | expr FRB_KW_TOKEN_OP_LOG_OR expr                 /* expr Or expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_OR); }
       
     | expr FRB_KW_TOKEN_OP_LOG_XOR expr                  /* expr Xor expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_XOR); }
       
     | FRB_KW_TOKEN_OP_LOG_NOT expr                      /* Not expr */
     
     | expr FRB_KW_TOKEN_OP_IS expr                           /* expr Is expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ADD); }
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IS); }
 
 //     | expr FRB_KW_TOKEN_OP_CLASS_TYPEOF expr               /* expr IsTypeOf expr */
 //     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr */

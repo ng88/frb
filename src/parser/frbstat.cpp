@@ -249,7 +249,7 @@ void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecu
 
 std::ostream& FrBExprStatement::put(std::ostream& stream, int) const
 {
-    return stream << "Eval expression " << *_expr;
+    return stream << "eval " << *_expr;
 }
 
 FrBExprStatement::~FrBExprStatement()
@@ -259,3 +259,44 @@ FrBExprStatement::~FrBExprStatement()
 
 
 
+
+/*        FrBReturnStatement        */
+
+FrBReturnStatement::FrBReturnStatement(const FrBFunction * f, FrBExpr* v)
+  : _val(v), _fn(f)
+{
+  frb_assert(f);
+}
+    
+void FrBReturnStatement::resolveAndCheck(FrBResolveEnvironment& e)
+  throw (FrBResolveException)
+{
+  if(_val)
+  {
+    _val->resolveAndCheck(e);
+    if(!FrBClass::areCompatibles(_val->getClass(), _fn->returnType()))
+      throw FrBIncompatibleClassException(_val->getClass(), _fn->returnType());
+  }
+}
+
+void FrBReturnStatement::execute(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+  throw FrBReturnException( _val ? 
+ 		    FrBClass::forceConvert(_val->eval(e), _fn->returnType()) : 0 );
+}
+
+std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
+{
+  stream << "return ";
+
+  if(_val)
+    stream << *_val;
+
+  return stream;
+}
+    
+FrBReturnStatement::~FrBReturnStatement()
+{
+  delete _val;
+}

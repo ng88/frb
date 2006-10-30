@@ -229,17 +229,22 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     e.stack().push(me);
     
     /* empile une place pr le retour et les variables locales */
+    //TODO a virer
     e.stack().push_empty(localVarCount() + 1);
     
-    for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+    try
+    {
+      for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
         (*it)->execute(e);
-       
-
-    FrBBaseObject * ret = e.stack().getTopValue(localVarCount());
-
-    e.stack().pop(var_count);
+    }
+    catch(FrBReturnException ex)
+    {
+      e.stack().pop(var_count);
+      return ex.value();
+    }   
     
-    return _sub ? 0 : ret;
+    e.stack().pop(var_count);
+    return 0;
     
 }
 

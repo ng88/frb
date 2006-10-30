@@ -138,8 +138,8 @@ int main(int argc, char ** argv)
     try
     {
         addClass(tree, FrBObject::initClass());
-        addClass(tree, FrBInt::initClass());
         addClass(tree, FrBBool::initClass());
+        addClass(tree, FrBInt::initClass());
         addClass(tree, FrBString::initClass());
         addClass(tree, FrBClassWrapper::initClass());
         addClass(tree, FrBFunctionWrapper::initClass());

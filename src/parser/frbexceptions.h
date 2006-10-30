@@ -43,6 +43,20 @@ class FrBExecutionException : public FrBException
 public:
 };
 
+/** exception that occurs when a return statement is encountered */
+class FrBReturnException : public FrBExecutionException
+{
+private:
+  FrBBaseObject * _val;
+
+public:
+  inline FrBReturnException(FrBBaseObject *v = 0) : _val(v) {}
+  inline FrBBaseObject* value() { return _val; }
+
+  std::ostream& put(std::ostream& stream) const { return stream; }
+
+};
+
 class FrBResolveException : public FrBException
 {
 public:

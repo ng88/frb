@@ -19,6 +19,7 @@
 #ifndef FRBSTAT_H
 #define FRBSTAT_H
 
+//TODO tous les destructeurs a refaire correctement ds stat & expr
 
 #include <iostream>
 #include "../common/string.h"
@@ -183,6 +184,23 @@ public:
     ~FrBExprStatement();
 };
 
+
+class FrBReturnStatement : public FrBStatement
+{
+private:
+    FrBExpr*             _val;
+    const FrBFunction *  _fn;
+    
+public:
+
+    FrBReturnStatement(const FrBFunction * f, FrBExpr* v = 0);
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
+    
+    ~FrBReturnStatement();
+};
 
 
 #endif
