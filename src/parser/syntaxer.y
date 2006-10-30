@@ -412,16 +412,41 @@ fn_stat:
     
 if_def: /* if <expr> then <lf> stats */
       FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
+      {
+	current_if = new FrBIfStatement();
+	current_block()->addStat(current_if);
+
+	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);
+
+	current_if->addCond(b);
+	block_stack.push(b);
+      }
       function_content_list
+      { block_stack.pop(); }
     ;
 
 elseif_def: /* else if <expr> then <lf> stats */
-      FRB_KW_TOKEN_ELSE if_def
+      FRB_KW_TOKEN_ELSE FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
+      {
+	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>3);
+
+	current_if->addCond(b);
+	block_stack.push(b);
+      }
+      function_content_list
+      { block_stack.pop(); }
     ;
 
 else_def: /* else <lf> stats or nothing */
       FRB_KW_TOKEN_ELSE new_line
+      {
+	FrBElseStatement * b = new FrBElseStatement();
+
+	current_if->addCond(b);
+	block_stack.push(b);
+      }
       function_content_list
+      { block_stack.pop(); }
     | /* empty */
     ;
 
@@ -437,7 +462,7 @@ if_stat:
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
     | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN /* inline if */
       {
-	FrBConditionalStatement * b = new FrBConditionalStatement($<expr>2);
+	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);
 
 	current_block()->addStat(b);
 	block_stack.push(b);

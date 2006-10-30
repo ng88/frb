@@ -27,6 +27,7 @@
         FrBClassMap * frb_classes; \
         FrBErrorCollector * frb_error; \
      private: \
+         FrBIfStatement * current_if;\
          FrBCodeClassStack class_stack; \
          FrBCodeFunctionStack fn_stack; \
          FrBBlockStack block_stack; \

@@ -6,13 +6,9 @@ Public Class Main
 
 
     Public Shared Sub main()
-	   
-	DefLang FR
-	Soit b Comme Booleen := Faux
-	DefLang EN
 
-	Dim a As Boolean := b
-
+	Dim a As Boolean := False
+	
 	'inline if
 	If a Then Debug.println("a vrai")
 	
@@ -21,26 +17,26 @@ Public Class Main
 
 	If a Then
 	   Debug.println("1")
-	Else If a Then
+	Else If True Then
 	   Debug.println("2")
 	Else If a Then
 	   Debug.println("3")
 	Else
-	   Debug.println("sinon")
+	   Debug.println("sinon1")
 	End If
 
 
 	If a Then
 	   Debug.println("1")
 	Else If a Then
-	   Debug.println("sinon")
+	   Debug.println("sinon2")
 	End If
 
 
 	If a Then
 	   Debug.println("1")
 	Else
-	   Debug.println("sinon")
+	   Debug.println("sinon3")
 	End If
 
 	If a Then

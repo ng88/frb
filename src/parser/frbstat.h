@@ -46,6 +46,7 @@ class FrBStatementBlock
    inline void addStat(FrBStatement * s) { _stats.push_back(s); }
 };
 
+
 typedef std::stack<FrBStatementBlock*> FrBBlockStack;
 
 //TODO optimisation de l'arbre avt serialisation
@@ -63,29 +64,66 @@ public:
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat);
 
-/** Simple conditional statement, ie if <expr> then <stats> */
-class FrBConditionalStatement : public FrBStatement, public FrBStatementBlock
+/** Block of statement (inconditional) */
+class FrBBlockStatement : public FrBStatement, public FrBStatementBlock
 {
-private:
-    FrBExpr *          _cond;
-    
 public:
-    FrBConditionalStatement(FrBExpr * cond);
+
+    FrBBlockStatement();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
-    /** return the value  of the evaluated condition */
-    bool executeCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-
     std::ostream& put(std::ostream& stream, int indent = 0) const;
     
-    ~FrBConditionalStatement();
+    ~FrBBlockStatement();
 };
 
-typedef std::vector<FrBConditionalStatement*> FrBCondList;
+/** abstract conditional block */
+class FrBConditionalBlockStatement : public FrBBlockStatement
+{
+protected:
+    /** return the value  of the evaluated condition */
+    virtual bool evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
 
-/** Full conditional statement, ie with if, else if, else... */
+public:
+    bool executeCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    
+
+    
+};
+
+/** Simple conditional statement, ie [else] if <expr> then <stats> */
+class FrBElseIfStatement : public FrBConditionalBlockStatement
+{
+private:
+    FrBExpr *          _cond;
+
+protected:
+    bool evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+
+public:
+    FrBElseIfStatement(FrBExpr * cond);
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
+    
+    ~FrBElseIfStatement();
+};
+
+/** Else */
+class FrBElseStatement : public FrBConditionalBlockStatement
+{
+protected:
+    bool evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+
+};
+
+
+typedef std::vector<FrBConditionalBlockStatement*> FrBCondList;
+
+/** Full if statement, ie with if, else if, else... */
 class FrBIfStatement : public FrBStatement
 {
 private:
@@ -97,6 +135,8 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
+
+    inline void addCond(FrBConditionalBlockStatement * c) { _conds.push_back(c); }
     
     ~FrBIfStatement();
 };

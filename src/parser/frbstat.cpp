@@ -29,51 +29,32 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
     return stat.put(s);
 }
 
-/*                    FrBConditionalStatement                  */
+/*        FrBBlockStatement                     */
 
-
-
-FrBConditionalStatement::FrBConditionalStatement(FrBExpr * cond)
-  : _cond(cond)
+FrBBlockStatement::FrBBlockStatement()
 {
-  frb_assert(cond);
 }
     
-void  FrBConditionalStatement::resolveAndCheck(FrBResolveEnvironment& e)
+void FrBBlockStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
 {
-  _cond->resolveAndCheck(e);
-  if(!FrBClass::areCompatibles(_cond->getClass(), FrBBool::getCppClass()))
-    throw FrBIncompatibleClassException(_cond->getClass(), FrBBool::getCppClass());
-
   for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     (*it)->resolveAndCheck(e);
+
 }
 
-void  FrBConditionalStatement::execute(FrBExecutionEnvironment& e) const
+void FrBBlockStatement::execute(FrBExecutionEnvironment& e) const
   throw (FrBExecutionException)
 {
-  (void)executeCond(e);
+  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+    (*it)->execute(e);
 }
-
-bool FrBConditionalStatement::executeCond(FrBExecutionEnvironment& e) const
-  throw (FrBExecutionException)
-{
-  FrBBaseObject * o = FrBClass::forceConvert(_cond->eval(e), FrBBool::getCppClass());
-  bool cond = (static_cast<FrBBool*>(o))->value();
-
-  if(cond)
-    for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
-      (*it)->execute(e);
-
-  return cond;
-}
-
-std::ostream&  FrBConditionalStatement::put(std::ostream& stream, int indent) const
+   
+std::ostream& FrBBlockStatement::put(std::ostream& stream, int indent) const
 {
   String str_indent(indent, '\t');
 
-  stream << "if (" << *_cond << ") execute:";
+  stream << "execute:";
 
   indent += 2;
 
@@ -86,9 +67,76 @@ std::ostream&  FrBConditionalStatement::put(std::ostream& stream, int indent) co
   return stream;
 }
     
-FrBConditionalStatement::~FrBConditionalStatement()
+FrBBlockStatement::~FrBBlockStatement()
 {
 }
+
+/*       FrBConditionalBlockStatement          */
+
+void FrBConditionalBlockStatement::execute(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+  (void)executeCond(e);
+}
+
+bool FrBConditionalBlockStatement::executeCond(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+  bool cond = evalCond(e);
+
+  if(cond)
+    FrBBlockStatement::execute(e);
+
+  return cond;
+}
+
+
+/*                    FrBElseIfStatement                  */
+
+
+
+FrBElseIfStatement::FrBElseIfStatement(FrBExpr * cond)
+  : _cond(cond)
+{
+  frb_assert(cond);
+}
+    
+void  FrBElseIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
+  throw (FrBResolveException)
+{
+  _cond->resolveAndCheck(e);
+  if(!FrBClass::areCompatibles(_cond->getClass(), FrBBool::getCppClass()))
+    throw FrBIncompatibleClassException(_cond->getClass(), FrBBool::getCppClass());
+
+  FrBBlockStatement::resolveAndCheck(e);
+
+}
+
+bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+  FrBBaseObject * o = FrBClass::forceConvert(_cond->eval(e), FrBBool::getCppClass());
+  return (static_cast<FrBBool*>(o))->value();
+}
+
+std::ostream& FrBElseIfStatement::put(std::ostream& stream, int indent) const
+{
+  stream << "if (" << *_cond << ") ";
+
+  return FrBBlockStatement::put(stream, indent);
+}
+    
+FrBElseIfStatement::~FrBElseIfStatement()
+{
+}
+
+/*         FrBElseStatement            */
+
+bool FrBElseStatement::evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+{
+  return true;
+}
+
 
 /*       FrBIfStatement                   */
 
@@ -116,6 +164,8 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 
   FrBCondList::const_iterator it = _conds.begin();
 
+  indent += 1;
+
   if(it != _conds.end())
   {
     (*it)->put(stream, indent);
@@ -124,12 +174,12 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 
   while(it != _conds.end())
   {
-    stream << str_indent << "*stat> else ";
+    stream << std::endl << str_indent << "       else ";
     (*it)->put(stream, indent);
     ++it;
   }
 
-  return stream << str_indent << "end if";
+  return stream << std::endl << str_indent << "       end if";
 }
     
 FrBIfStatement::~FrBIfStatement()
