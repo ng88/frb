@@ -136,7 +136,7 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + faire le control de la présence de retourne ds les fn + bug cf ctest.frb
+//TODONEXT cf log rev 83 & rev 101
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 
 /* Me expr */

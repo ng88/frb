@@ -34,6 +34,15 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 FrBBlockStatement::FrBBlockStatement()
 {
 }
+
+bool FrBBlockStatement::allPathContainsAReturn() const
+{
+  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+    if((*it)->allPathContainsAReturn())
+      return true;
+
+  return false;
+}
     
 void FrBBlockStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
@@ -73,6 +82,11 @@ FrBBlockStatement::~FrBBlockStatement()
 
 /*       FrBConditionalBlockStatement          */
 
+bool FrBConditionalBlockStatement::allPathContainsAReturn() const
+{
+  return false;
+}
+
 void FrBConditionalBlockStatement::execute(FrBExecutionEnvironment& e) const
   throw (FrBExecutionException)
 {
@@ -100,6 +114,7 @@ FrBElseIfStatement::FrBElseIfStatement(FrBExpr * cond)
 {
   frb_assert(cond);
 }
+
     
 void  FrBElseIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
@@ -141,8 +156,22 @@ bool FrBElseStatement::evalCond(FrBExecutionEnvironment& e) const throw (FrBExec
 /*       FrBIfStatement                   */
 
 FrBIfStatement::FrBIfStatement()
+  : _has_else(false)
 {
 }
+
+bool FrBIfStatement::allPathContainsAReturn() const
+{
+  if(!_has_else)
+    return false;
+
+  for(FrBCondList::const_iterator it = _conds.begin(); it != _conds.end(); ++it)
+    if(! (*it)->FrBBlockStatement::allPathContainsAReturn())
+      return false;
+
+  return true;
+}
+
     
 void  FrBIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
@@ -194,6 +223,12 @@ FrBDeclareStatement::FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * i
 
 }
 
+bool FrBDeclareStatement::allPathContainsAReturn() const
+{
+  return false;
+}
+
+
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _type->resolveAndCheck(e);
@@ -237,6 +272,11 @@ FrBExprStatement::FrBExprStatement(FrBExpr* expr)
     frb_assert2(expr, "frbparsingtree.h::FrBExprStatement::FrBExprStatement()");
 }
 
+bool FrBExprStatement::allPathContainsAReturn() const
+{
+  return false;
+}
+
 void FrBExprStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _expr->resolveAndCheck(e);
@@ -266,6 +306,11 @@ FrBReturnStatement::FrBReturnStatement(const FrBFunction * f, FrBExpr* v)
   : _val(v), _fn(f)
 {
   frb_assert(f);
+}
+
+bool FrBReturnStatement::allPathContainsAReturn() const
+{
+  return true;
 }
     
 void FrBReturnStatement::resolveAndCheck(FrBResolveEnvironment& e)

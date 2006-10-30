@@ -373,6 +373,13 @@ function:
                     frb_lexer->lineno(), "", "", "",
                     String(frb_lexer->YYText()));
            
+	  /* does all path contain a return statement ? */
+	  if( !current_fn()->sub() && !current_fn()->allPathContainsAReturn())
+            frb_error->error(FrBErrors::FRB_ERR_NO_RETURN_FUNCTION,
+			     FrBErrors::FRB_ERR_SEMANTIC,
+			     frb_lexer->lineno(), "", "", "",
+			     String(frb_lexer->YYText()) );
+
           fn_stack.pop();
 	  block_stack.pop();
       }
@@ -397,14 +404,14 @@ function_content_list:
      | new_line
      ;
      
-fn_stat:
+fn_stat: /* stat new_line */
       expr new_line /* expression */
       {
 	//TODO warning if $<expr>1->getClass() != 0 'result lost
 	current_block()->addStat(new FrBExprStatement($<expr>1));
       }
     | dim_stat new_line /* déclaration */
-    | if_stat new_line /* if */
+    | if_stat /* if */
     | delete_stat new_line /* destruction */
     | return_stat new_line /* return  */
     | typedef_stat /* typedef */
@@ -443,6 +450,7 @@ else_def: /* else <lf> stats or nothing */
 	FrBElseStatement * b = new FrBElseStatement();
 
 	current_if->addCond(b);
+	current_if->setHasElse(true);
 	block_stack.push(b);
       }
       function_content_list
@@ -459,7 +467,7 @@ if_stat:
       if_def
       elseif_list
       else_def
-      FRB_KW_TOKEN_END FRB_KW_TOKEN_IF
+      FRB_KW_TOKEN_END FRB_KW_TOKEN_IF new_line
     | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN /* inline if */
       {
 	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);

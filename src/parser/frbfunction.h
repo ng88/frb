@@ -230,7 +230,8 @@ public:
     
     /** Get unresolved param */
     inline FrBTypeExpr * getURParam(int index) const;
-    
+ 
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     

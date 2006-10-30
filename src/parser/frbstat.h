@@ -58,8 +58,12 @@ class FrBStatement
 {
 public:
     virtual ~FrBStatement() {}
+
+    /** indicates if all execution path of the statement contains a return */
+    virtual bool allPathContainsAReturn() const = 0;
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
+
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const = 0;
 };
 
@@ -72,6 +76,7 @@ public:
 
     FrBBlockStatement();
     
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
@@ -88,6 +93,7 @@ protected:
     virtual bool evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
 
 public:
+    bool allPathContainsAReturn() const;
     bool executeCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
@@ -129,15 +135,18 @@ class FrBIfStatement : public FrBStatement
 {
 private:
     FrBCondList _conds;
-    
+    bool        _has_else;
+
 public:
     FrBIfStatement();
     
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
     inline void addCond(FrBConditionalBlockStatement * c) { _conds.push_back(c); }
+    inline void setHasElse(bool v) { _has_else = v; }
     
     ~FrBIfStatement();
 };
@@ -159,6 +168,7 @@ private:
 public:
     FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val = 0);
     
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -177,6 +187,7 @@ public:
 
     FrBExprStatement(FrBExpr* expr);
     
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -195,6 +206,7 @@ public:
 
     FrBReturnStatement(const FrBFunction * f, FrBExpr* v = 0);
     
+    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
