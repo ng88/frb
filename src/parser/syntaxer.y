@@ -112,14 +112,15 @@ struct FnAttr
 /* 1. Opérateur de concaténation */
 %left FRB_KW_TOKEN_OP_CONCAT
 
-/* 2. Opérateurs de comparaison */
-%left FRB_KW_TOKEN_OP_EQ FRB_KW_TOKEN_OP_NE FRB_KW_TOKEN_OP_LT FRB_KW_TOKEN_OP_GT FRB_KW_TOKEN_OP_LE FRB_KW_TOKEN_OP_GE
+/* 4. Opérateurs d'assignement */
+%right FRB_KW_TOKEN_OP_ASSIGN_VAL FRB_KW_TOKEN_OP_ASSIGN_REF FRB_KW_TOKEN_OP_ADD_ASSIGN FRB_KW_TOKEN_OP_SUB_ASSIGN FRB_KW_TOKEN_OP_MUL_ASSIGN FRB_KW_TOKEN_OP_DIV_ASSIGN FRB_KW_TOKEN_OP_INT_DIV_ASSIGN FRB_KW_TOKEN_OP_POW_ASSIGN
 
 /* 3. Opérateurs logiques */
 %left FRB_KW_TOKEN_OP_LOG_AND FRB_KW_TOKEN_OP_LOG_OR FRB_KW_TOKEN_OP_LOG_XOR FRB_KW_TOKEN_OP_LOG_NOT
 
-/* 4. Opérateurs d'assignement */
-%right FRB_KW_TOKEN_OP_ASSIGN_VAL FRB_KW_TOKEN_OP_ASSIGN_REF FRB_KW_TOKEN_OP_ADD_ASSIGN FRB_KW_TOKEN_OP_SUB_ASSIGN FRB_KW_TOKEN_OP_MUL_ASSIGN FRB_KW_TOKEN_OP_DIV_ASSIGN FRB_KW_TOKEN_OP_INT_DIV_ASSIGN FRB_KW_TOKEN_OP_POW_ASSIGN
+/* 2. Opérateurs de comparaison */
+%left FRB_KW_TOKEN_OP_EQ FRB_KW_TOKEN_OP_NE FRB_KW_TOKEN_OP_LT FRB_KW_TOKEN_OP_GT FRB_KW_TOKEN_OP_LE FRB_KW_TOKEN_OP_GE
+
 
 /* 5. Opérateurs arithmétiques */
 %left FRB_KW_TOKEN_OP_ADD FRB_KW_TOKEN_OP_SUB
@@ -958,7 +959,7 @@ literal_expr:
       }
     | FRB_KW_TOKEN_ME
       {
-          $<expr>$ = new FrBMeExpr(current_class(), current_fn()->localVarCount() + 1);
+          $<expr>$ = new FrBMeExpr(current_class(), current_fn()->localVarCount());
       }
     | FRB_IDENTIFIER                  
       {
@@ -1012,7 +1013,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 2 + idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 1 + idvar);
                 
                 //puts("ID FOUND -- /* 2. function parameter */\n");
                 break;

@@ -220,7 +220,7 @@ FrBIfStatement::~FrBIfStatement()
 FrBDeclareStatement::FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val)
     : _varid(varid), _type(t), _init(init_val)
 {
-
+  frb_assert(t);
 }
 
 bool FrBDeclareStatement::allPathContainsAReturn() const

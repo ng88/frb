@@ -134,7 +134,7 @@ void FrBMemStack::push(const FrBBaseObjectList& lo)
 {
     check_space(lo.size());
     
-    for(FrBBaseObjectList::const_iterator it = lo.begin(); it != lo.end(); ++it)
+    for(FrBBaseObjectList::const_reverse_iterator it = lo.rbegin(); it != lo.rend(); ++it)
         _mem[++_stack_ptr] = (*it);
 }
 

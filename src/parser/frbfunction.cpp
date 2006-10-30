@@ -220,7 +220,7 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     if(e.stack().overflow())
         throw FrBStackOverflowException();
     
-    int var_count = args.size() + localVarCount() + 2;
+    int var_count = args.size() + localVarCount() + 1;
      
     /* empile les paramètres */
     e.stack().push(args);
@@ -228,9 +228,9 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     /* empile me */
     e.stack().push(me);
     
-    /* empile une place pr le retour et les variables locales */
+    /* empile une place les variables locales */
     //TODO a virer
-    e.stack().push_empty(localVarCount() + 1);
+    e.stack().push_empty(localVarCount());
     
     try
     {

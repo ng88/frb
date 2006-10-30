@@ -6,22 +6,16 @@ Public Class Main
 
     Public Shared Sub main(a As Int)
 
+	   Debug.showStack()
+
 	   Debug.println("factoriel(" & a & ")=" & Main.fact(a))
 
+    Dim a As Int
 
-	   'Dim b As Bool := a>5 'bug1
 
+	   'Dim b As Bool  := a>5 
 
     End Sub
-
-    Public Function A() As Int
-	If False Then
-	   Return 5
-	Else 
-	  Return 8
-	End If
-
-    End Function
 
 
     Public Shared Function fact(n As Int) As Int
