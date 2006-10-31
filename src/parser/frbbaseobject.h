@@ -35,6 +35,9 @@ protected:
     
     
 public:
+
+    enum { NULL_OBJECT = 0 };
+
     inline FrBBaseObject() : _const(false),_mem_pos(-2) { }
     inline FrBBaseObject(bool v) : _const(v) { }
     

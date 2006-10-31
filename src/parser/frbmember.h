@@ -22,6 +22,9 @@
 #include "frbexceptions.h"
 #include "../common/assert.h"
 
+#include "frbexecutionenvironment.h"
+#include "frbexpr.h"
+
 #include "frbexprlist.h"
 #include "frbconstants.h"
 
@@ -79,7 +82,7 @@ protected:
     FrBExpr*             _defaultVal;
     
 public:
-    inline FrBCodeMember(FrBTypeExpr * type, FrBExpr * init);
+    inline FrBCodeMember(FrBTypeExpr * type, FrBExpr * init = 0);
     ~FrBCodeMember();
     
     inline void setURType(FrBTypeExpr*);
