@@ -35,7 +35,7 @@ inline void __assert(bool cond, int line, char * file, char * str, char * cond_s
         string str;
         cin >> str;
         
-        if(str[0] != 'y' && str[0] != 'Y') exit(1);
+        if(str[0] != 'y' && str[0] != 'Y') abort();
     }
 }
 

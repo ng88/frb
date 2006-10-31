@@ -122,11 +122,12 @@ public:
 class FrBLocalVarExpr : public FrBExpr
 {
 private:
+    FrBCodeFunction *     _fn;
     FrBTypeExpr *     _type;
     int               _varid;
     
 public:
-    FrBLocalVarExpr(FrBTypeExpr * t, int varid);
+    FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int varid);
     ~FrBLocalVarExpr();
     
     bool isAssignable() const;
@@ -143,13 +144,15 @@ public:
 class FrBMeExpr : public FrBExpr
 {
 private:
-    FrBClass     *_type;
-    int           _varid;
+    FrBCodeFunction *     _fn;
+    FrBClass     *    _type;
+    int               _varid;
     
 public:
-    FrBMeExpr(FrBClass * t, int varid);
+    FrBMeExpr(FrBCodeFunction * f, FrBClass * t);
     ~FrBMeExpr();
-    
+
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    

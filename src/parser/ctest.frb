@@ -5,17 +5,46 @@ DefLang EN
 Public Class Main
 
     Public Shared Sub main(a As Int)
+	   Dim c,d As Int := 3 +3 
 
-	   Debug.showStack()
+	   Dim z As Int := c + 56 + d
+	   
+	   Debug.println("@z=" & Debug.addressof(z) & " val:" & z)
+	   Debug.println("@c=" & Debug.addressof(c) & " val:" & c)
+	   Debug.println("@d=" & Debug.addressof(d) & " val:" & d)
+	   Debug.println("@Me=" & Debug.addressof(Me) )
+	   Debug.println("@a=" & Debug.addressof(a) & " val:" & a)
 
-	   Debug.println("factoriel(" & a & ")=" & Main.fact(a))
+	   'Debug.showStack()
 
-    Dim a As Int
+	   'Debug.println("factoriel(" & a & ")=" & Main.fact(a+c))
+
+	       Dim a2 As			       Int := 56
 
 
-	   'Dim b As Bool  := a>5 
+	       d := d + a2
+
+Debug.println("@d=" & Debug.addressof(d) & " val:" & d)
+	   Debug.println("@a=" & Debug.addressof(a) & " val:" & a)
+	   Debug.println("@a2=" & Debug.addressof(a2) & " val:" & a2)
+	   'Debug.showStack()
+
+
+
+	   Dim bo As Bool  := a>5 
+
+	   
+	   Debug.println("bo=" & Main.bool2string(bo))
 
     End Sub
+
+    Public Shared Function bool2string(b As Bool) As String
+	   If b Then
+	      Return "True"
+	   Else
+	      Return "False"
+	   End If
+    End Function
 
 
     Public Shared Function fact(n As Int) As Int

@@ -161,12 +161,13 @@ public:
 class FrBDeclareStatement : public FrBStatement
 {
 private:
+    FrBCodeFunction *  _fn;
     int                _varid;
     FrBTypeExpr *      _type;
     FrBExpr *          _init;
-    
+
 public:
-    FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val = 0);
+    FrBDeclareStatement(FrBCodeFunction *,int varid, FrBTypeExpr * t, FrBExpr * init_val = 0);
     
     bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);

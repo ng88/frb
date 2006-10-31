@@ -217,8 +217,9 @@ FrBIfStatement::~FrBIfStatement()
 
 /*                 FrBDeclareStatement              */
 
-FrBDeclareStatement::FrBDeclareStatement(int varid, FrBTypeExpr * t, FrBExpr * init_val)
-    : _varid(varid), _type(t), _init(init_val)
+FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int varid,
+					    FrBTypeExpr * t, FrBExpr * init_val)
+    : _fn(f), _varid(varid), _type(t), _init(init_val)
 {
   frb_assert(t);
 }
@@ -231,6 +232,8 @@ bool FrBDeclareStatement::allPathContainsAReturn() const
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+  _varid += _fn->localVarCount();
+
     _type->resolveAndCheck(e);
     
     if(_init)

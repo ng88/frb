@@ -45,8 +45,8 @@ void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw 
 
 /*         FrBLocalVarExpr        */
 
-FrBLocalVarExpr::FrBLocalVarExpr(FrBTypeExpr * t, int varid)
- : _type(t), _varid(varid)
+FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int varid)
+ : _fn(fn), _type(t), _varid(varid)
 {
 }
 
@@ -72,7 +72,10 @@ FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
 
 void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _type->resolveAndCheck(e);
+  _varid += _fn->localVarCount();
+
+  //already done by resolvePrototype()
+  //_type->resolveAndCheck(e);
 }
 
 const FrBClass* FrBLocalVarExpr::getClass() const
@@ -337,14 +340,20 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
  
 /*        FrBMeExpr                */
 
-FrBMeExpr::FrBMeExpr(FrBClass * t, int varid)
- : _type(t), _varid(varid)
+FrBMeExpr::FrBMeExpr(FrBCodeFunction* f, FrBClass * t)
+ : _fn(f), _type(t)
 {
 }
 
 FrBMeExpr::~FrBMeExpr()
 {
 }
+
+void FrBMeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+  _varid = _fn->localVarCount();
+}
+
 
 FrBBaseObject* FrBMeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
@@ -379,11 +388,11 @@ FrBRefAssignExpr::~FrBRefAssignExpr()
 void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
 
-    _rhs->resolveAndCheck(e);
-    _lhs->resolveAndCheck(e);
-    
-    if(!FrBClass::areCompatibles(_rhs->getClass(), _rhs->getClass()))
-        throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
+  _rhs->resolveAndCheck(e);
+  _lhs->resolveAndCheck(e);
+  
+  if(!FrBClass::areCompatibles(_rhs->getClass(), _rhs->getClass()))
+    throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
 }
 
 bool FrBRefAssignExpr::isAssignable() const

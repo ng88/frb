@@ -507,7 +507,8 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             {
                 int var_count = fn->localVarCount();
 
-                current_block()->addStat(new FrBDeclareStatement(var_count, $<vtype>4, $<expr>5));
+                current_block()->addStat(new FrBDeclareStatement(fn, -var_count - 1,
+								 $<vtype>4, $<expr>5));
                 fn->addLocalVar((*it), $<vtype>4);
                 
                 if(fn->localVarCount() == var_count)
@@ -527,7 +528,8 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
             {
                 int var_count = fn->localVarCount();
                 
-                current_block()->addStat(new FrBDeclareStatement(var_count, $<vtype>2, $<expr>3));
+                current_block()->addStat(new FrBDeclareStatement(fn, -var_count - 1,
+								 $<vtype>2, $<expr>3));
                 fn->addLocalVar((*it), $<vtype>2);
 
                 if(fn->localVarCount() == var_count)
@@ -959,7 +961,7 @@ literal_expr:
       }
     | FRB_KW_TOKEN_ME
       {
-          $<expr>$ = new FrBMeExpr(current_class(), current_fn()->localVarCount());
+          $<expr>$ = new FrBMeExpr(current_fn(), current_class());
       }
     | FRB_IDENTIFIER                  
       {
@@ -968,8 +970,8 @@ literal_expr:
             //printf("ID NAME %s\n", $<str>1);
             free($<str>1);
             
-            const FrBClass * cc = current_class();
-            const FrBCodeFunction * cf = current_fn();
+	    FrBClass * cc = current_class();
+            FrBCodeFunction * cf = current_fn();
             
             (void)cc;
             
@@ -999,7 +1001,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf->getLocalVar(idvar), idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf, cf->getLocalVar(idvar), -idvar - 1);
                 
                 //puts("ID FOUND -- /* 1. local var */\n");
                 
@@ -1013,7 +1015,7 @@ literal_expr:
             {
                 /* found */
                 
-                $<expr>$ = new FrBLocalVarExpr(cf->getURParam(idvar),  cf->localVarCount() + 1 + idvar);
+                $<expr>$ = new FrBLocalVarExpr(cf, cf->getURParam(idvar),  idvar + 1);
                 
                 //puts("ID FOUND -- /* 2. function parameter */\n");
                 break;
