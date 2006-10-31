@@ -15,21 +15,36 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
+#include "frbmember.h"
 
-/*            FrBBoolean            */
-
-
-FrBCppClass * FrBBool::initClass()
+std::ostream& operator<<(std::ostream& s, const FrBMember& m)
 {
-    frb_assert2(_cpp_class == NULL, "FrBBool::initClass(), already initialized");
-    
-    _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
-    _cpp_class->setName("Bool");
-    //_cpp_class->setShared(false);
-    //_cpp_class->setAbstract(false);
-    _cpp_class->setSealed(true);
-    _cpp_class->setScope(SC_PUBLIC);
-    
-    
-    return _cpp_class;
+    return m.put(s);
 }
+
+
+/*     FrBCodeMember        */
+
+FrBCodeMember::~FrBCodeMember()
+{
+}  
+   
+void FrBCodeMember::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+
+void FrBCodeMember::resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+    
+const FrBClass * FrBCodeMember::type() const
+{
+}
+
+FrBBaseObject * FrBCodeMember::evalDefaultValue(FrBExecutionEnvironment& e) const 
+      throw (FrBExecutionException)
+{
+}
+    
+
+

@@ -25,12 +25,8 @@
 
 #include "frbexprlist.h"
 
-typedef int scope_t;
+#include "frbconstants.h"
 
-/* les defauts doivent etre à 0 */
-enum { SC_DEFAULT = 0 };
-enum { SC_PRIVATE = 0, SC_PROTECTED, SC_FRIEND, SC_PUBLIC };
-enum { SC_ABSTRACT = 1, SC_SHARED, SC_SEALED };
 
 class FrBClass;
 class FrBFunction;

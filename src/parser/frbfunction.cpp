@@ -174,7 +174,7 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
             
     return stream;
 }
-
+7
 
 
 /*           FrBCodeFunction            */

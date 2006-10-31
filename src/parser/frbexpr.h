@@ -137,7 +137,7 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 & rev 101
+//TODONEXT cf log rev 83 + implementer les membres (ds la grammaire et ds la VM)
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 
 /* Me expr */

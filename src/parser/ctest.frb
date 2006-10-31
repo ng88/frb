@@ -4,6 +4,8 @@ DefLang EN
 
 Public Class Main
 
+    Private Shared dbg As Debug
+
     Public Shared Sub main(a As Int)
 	   Dim c,d As Int := 3 +3 
 

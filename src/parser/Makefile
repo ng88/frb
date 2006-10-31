@@ -57,11 +57,11 @@ $(EXE): start main.o
 	@echo Done.
 
 
-        
+
 main.o: frbparser.o
 frbparser.o: frbparser.h frbparser.cpp parser
 frberrordesc.o: error_msg keywords_db
-frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o 
+frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbmember.o
 frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o frbexecutionenvironment.o
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
 frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o
@@ -74,13 +74,14 @@ frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
 frbexceptions.o: frbexceptions.h frbexceptions.cpp
 frbbuiltinclasses.h: $(BUILTIN_DEC)
 frbbuiltinclasses.cpp: $(BUILTIN_DEF)
+frbmember.o: frbmember.h frbmember.cpp
 
 .PHONY: exe clean install touchall force doc cleandoc
 
 doc:
 	@echo Creating documentation...
 	@doc++ -AHabj -d ../../docs/code-doc *.h *.cpp
-        
+
 cleandoc:
 	@echo Cleaning documentation...
 	@rm -fR ../../docs/code-doc
@@ -119,14 +120,14 @@ parser: frberrordesc.o syntaxer.y lexer.l frbexpr.o frbstat.o frbfunction.o frbc
 	@$(CXX) -c lexer.cpp $(CXXFLAGS) -Wno-unused
 	@echo Compiling syntaxer...
 	@$(CXX) -c syntaxer.cpp $(CXXFLAGS)
-        
+
 keywords_db: $(TRAD_PATH)/frbkeywords.key
 	@echo Creating keywords tables...
 	@awk -f create_keywords_db_header.awk  -- $(TRAD_PATH)frbkeywords.key > frbkeywords.h
 	@awk -f create_keywords_db_source.awk  -- $(TRAD_PATH)frbkeywords.key > frbkeywords.cpp
 	@echo Compiling keywords tables...
 	@$(CXX) -c frbkeywords.cpp $(CXXFLAGS)
-        
+
 error_msg: $(TRAD_PATH)/frberrors.$(TRAD_LANG).key
 	@echo "Creating error messages table ($(TRAD_LANG))..."
 	@awk -f create_errorsmsg_header.awk  -- $(TRAD_PATH)frberrors.$(TRAD_LANG).key > frberrors.h
@@ -141,4 +142,4 @@ install: all
 %.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) -c $< $(CXXFLAGS)
-    
+
