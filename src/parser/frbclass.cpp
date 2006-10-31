@@ -141,50 +141,51 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 
     String ident(level, '\t');
 
-    sout    << ident << "Class " << name() << " (" << specString() << ")" << endl
-            << ident << "\t+ Shared=" << shared() << endl
-            << ident << "\t+ Sealed=" << sealed() << endl
-            << ident << "\t+ Abstract=" << abstract() << endl
-            << ident << "\t+ Scope=" << scope() << endl
-            << ident << "\t+ Constructors:" << endl;
-            
+    level++;
+
+    sout    << ident 
+	    << FrBKeywords::scopeToString(scope()) << ' '
+	    << FrBKeywords::sharedToString(shared()) << ' '
+	    << FrBKeywords::sealedToString(sealed()) << ' '
+	    << FrBKeywords::abstractToString(abstract()) << ' '
+	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
+	    << name() << "\t' " << specString() << endl;
+
     const ConstructorContainer * ctors = constructorList();
     
     for(ConstructorContainer::const_iterator it = ctors->begin(); it != ctors->end(); ++it)
-        (*it)->put(sout, level);
-            
-    sout    << ident << "\t+ Destructor:" << endl;
-    
-    if(destructor() != 0)
-        sout << ident << *destructor() << endl;
+    {
+      sout << ident << "\t'As constructor ";
+      (*it)->put(sout, level);
+    }
+                
+    if(destructor())
+    {
+      sout << ident << "\t'As destructor ";
+      destructor()->put(sout, level);
+    }
         
-    sout << ident << "\t+ Functions:" << endl;
-    
     const FunctionContainer * fns = functionList();
-    
     
     for(FunctionContainer::const_iterator itf = fns->begin(); itf != fns->end(); ++itf)
             itf->second->put(sout, level);
     
-    sout << ident << "\t+ Operators:" << endl;
-    
     const OperatorContainer * ops = operatorList();
-    
-    
+        
     for(OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
     {
-        sout << ident << "\tFor operator " << FrBKeywords::getKeywordOrSymbol(itf->first) << endl;
+        sout << ident << "\t'As operator " << FrBKeywords::getKeywordOrSymbol(itf->first) << endl;
         itf->second->put(sout, level);
     }        
-                
-    sout << ident << "\t+ Inner classes:" << endl;
     
     const ClassContainer * inners = innerClassList();
     
     for(ClassContainer::const_iterator it = inners->begin(); it != inners->end(); ++it)
-        it->second->put(sout, level + 1);
+        it->second->put(sout, level);
 
-    return sout;
+    return sout << ident
+		<< FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END) << ' '
+		<< FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << endl;
 }
 
 

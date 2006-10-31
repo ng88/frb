@@ -122,8 +122,16 @@ END {
     print "    return key_set[index];"
     print "}\n\n"
     
-    
-    
+    print "const char* FrBKeywords::scopeToString(int s) {"
+    print "   switch(s) {"
+    print "     case SC_PUBLIC: return getKeyword(FRB_KW_PUBLIC);"
+    print "     case SC_PRIVATE: return getKeyword(FRB_KW_PRIVATE);"
+    print "     case SC_PROTECTED: return getKeyword(FRB_KW_PROTECTED);"
+    print "     default: return \"\";"
+    print "   }"
+    print "}\n\n"
+
+
     print "char* FrBKeywords::key_set[FRB_SET__COUNT] ="
     printf "    {\n"
     

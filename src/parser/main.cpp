@@ -21,7 +21,7 @@
 #include <fstream>
 #include "frbparser.h"
 #include "frbresolveenvironment.h"
-
+#include "frbkeywords.h"
 #include "frbmemory.h"
 
 using namespace std;
@@ -37,16 +37,17 @@ void usage(char * exe)
          << "     --parse-tree        print parse tree (not resolved neither optimized)" << endl
          << "     --improved-tree     print improved tree" << endl
          << "     --both-trees        print both parse and improved trees" << endl
+         << "     --tree-set s        where s is the name of the keyword set to use (default: EN)" << endl
          << "     --all-classes       show all classes in tree (not only user defined class)" << endl
          << "     --mem               show heap memory after execution" << endl
          << "     --stack             show stack after execution" << endl
          << "     --no-exec           do not execute the parsed program" << endl
-         << "     --main-class c      c should be the name of class (default: Main)" << endl
+         << "     --main-class c      where c is the name of class (default: Main)" << endl
          << "                         containing the main function" << endl
-         << "     --main-function f   f should be the name of main function (default: main)" << endl
+         << "     --main-function f   where f is the name of main function (default: main)" << endl
          << "     --int-arg i         if defined, i will be passed as an Int parameter of " << endl
          << "                         the main function" << endl
-         << "     --file f            f should be the path of the file to parse, if not" << endl
+         << "     --file f            where f is the path of the file to parse, if not" << endl
          << "                         defined, the standard input will be used" << endl
          << "     --                  explicit end of options" << endl;
 }
@@ -88,6 +89,7 @@ int main(int argc, char ** argv)
     
     char *     arg_main_class = "Main";
     char *     arg_main_function = "main";
+    int        arg_tree_set = FrBKeywords::FRB_SET_EN;
     istream *  arg_in = &cin;
     ifstream * arg_file = 0;
     int        arg_int_param = -1;
@@ -108,7 +110,15 @@ int main(int argc, char ** argv)
         else if(!strcmp(argv[i], "--main-function") && i + 1 < argc) arg_main_function = argv[++i];
         else if(!strcmp(argv[i], "--int-arg") && i + 1 < argc)  arg_int_param = atoi(argv[++i]); 
         else if(!strcmp(argv[i], "--file") && i + 1 < argc) arg_file = new ifstream(argv[++i], ios::in);
-        else
+        else if(!strcmp(argv[i], "--tree-set") && i + 1 < argc)
+        {
+	  int t = FrBKeywords::findSet(argv[++i]);
+	  if(t > -1)
+	    arg_tree_set = t;
+	  else
+	    cerr << '`' << argv[i] << "' is not a valid set name, ignored" << endl;
+	}
+	else
         {
             cerr << "invalid parameter `" << argv[i] << "'" << endl;
             usage(exename);
@@ -117,6 +127,8 @@ int main(int argc, char ** argv)
     }
     
     /******** Parsage ********/
+
+    
 
     if(arg_file)
     {
@@ -165,6 +177,8 @@ int main(int argc, char ** argv)
           
         if(!success)
             return 2;
+
+	FrBKeywords::setCurrentSet(arg_tree_set);
             
         if(args_switch[SHOW_PARSE_TREE])
             parser.printTree(cout, !args_switch[SHOW_ALL_CLASSES]);

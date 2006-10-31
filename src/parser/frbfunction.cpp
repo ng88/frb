@@ -20,6 +20,7 @@
 #include "frbclass.h"
 #include "../common/assert.h"
 #include "frbexecutionenvironment.h"
+#include "frbkeywords.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn)
 {
@@ -146,33 +147,38 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
     
     String str_indent(indent, '\t');
     
-
-    stream  << str_indent << "\t    Function " << name() << endl
-            << str_indent << "\t\t- Scope=" << scope() << endl
-            << str_indent << "\t\t- Shared=" << shared() << endl
-            << str_indent << "\t\t- Sub=" << sub() << endl
-            << str_indent << "\t\t- Const=" << isConst() << endl
-            << str_indent << "\t\t- Abstract=" << abstract() << endl
-            << str_indent << "\t\t- Parameters:" << endl;
+    stream  << str_indent << FrBKeywords::scopeToString(scope()) << ' '
+	    << FrBKeywords::sharedToString(shared()) << ' '
+	    << FrBKeywords::constToString(isConst()) << ' '
+	    << FrBKeywords::abstractToString(abstract()) << ' '
+	    << FrBKeywords::fnToString(sub()) << ' '
+	    << name() << '(';
             
-    for(int i = 0; i < parameterCount(); ++i)
+    int pcount = parameterCount();
+    for(int i = 0; i < pcount; ++i)
     {
-        stream << str_indent << "\t\t\t* " << (parameterByVal(i) ? "byval " : "byref ")
-                                           << parameterType(i)->name();
-        
-        if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
-            stream << " (optional)";
+      if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPTIONAL) << ' ';
             
-        if(paramArrayUsed() && i == parameterCount() - 1)
-            stream << " (param_array)";
+      if(paramArrayUsed() && i == parameterCount() - 1)
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_PARAMARRAY) << ' ';
+
+      stream << FrBKeywords::byvalToString(parameterByVal(i)) << ' '
+	     << 'p' << i << ' '
+	     << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_AS)
+	     << ' ' << parameterType(i)->name();
+      
+      if(i < pcount - 1)
+	stream << ", ";
             
-        stream << endl;
     }
+    stream << ") ";
             
     if(!sub())        
-        stream  << str_indent << "\t\t- Return type=" << returnType()->name() << endl;
+      stream  << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_AS) << ' '
+	      << returnType()->name();
             
-    return stream;
+    return stream << endl;
 }
 
 
@@ -288,54 +294,52 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     using namespace std;
     
     String str_indent(indent, '\t');
-
-
-    stream  << str_indent << "\t    Function " << name() << endl
-            << str_indent << "\t\t- Scope=" << scope() << endl
-            << str_indent << "\t\t- Shared=" << shared() << endl
-            << str_indent << "\t\t- Sub=" << sub() << endl
-            << str_indent << "\t\t- Const=" << isConst() << endl
-            << str_indent << "\t\t- Abstract=" << abstract() << endl
-            << str_indent << "\t\t- Parameters:" << endl;
+    
+    stream  << str_indent << FrBKeywords::scopeToString(scope()) << ' '
+	    << FrBKeywords::sharedToString(shared()) << ' '
+	    << FrBKeywords::constToString(isConst()) << ' '
+	    << FrBKeywords::abstractToString(abstract()) << ' '
+	    << FrBKeywords::fnToString(sub()) << ' '
+	    << name() << '(';
             
-    for(int i = 0; i < parameterCount(); ++i)
+    int pcount = parameterCount();
+    for(int i = 0; i < pcount; ++i)
     {
-        stream << str_indent << "\t\t\t* " << (parameterByVal(i) ? "byval " : "byref ")
-                                           << *getURParam(i);
-        
-        if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
-            stream << " (optional)";
+      if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPTIONAL) << ' ';
             
-        if(paramArrayUsed() && i == parameterCount() - 1)
-            stream << " (param_array)";
+      if(paramArrayUsed() && i == parameterCount() - 1)
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_PARAMARRAY) << ' ';
+
+      stream << FrBKeywords::byvalToString(parameterByVal(i)) << ' '
+	     << 'p' << i << ' '
+	     << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_AS)
+	     << ' ' << *getURParam(i);
+      
+      if(i < pcount - 1)
+	stream << ", ";
             
-        stream << endl;
     }
+    stream << ") ";
             
     if(!sub())        
-        stream  << str_indent << "\t\t- Return type=" << *_unresolvedRetType << endl;
-    
+      stream  << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_AS) << ' '
+	      << returnType()->name();
 
-    
-    stream  << str_indent << "\t\t- Local vars:" << endl;
-    
-    for(int i = 0; i < localVarCount(); ++i)
-    {
-        stream << str_indent << "\t\t\t* " << i << " (" << *getLocalVar(i) << ")" << endl;
-    }
+    stream << endl;
             
-    stream  << str_indent << "\t\t- Statements:" << endl;
-
-    indent += 3;
+    indent++;
 
     for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
-      stream << str_indent << "\t\t\t*stat> ";
+      stream << str_indent << '\t';
       (*it)->put(stream, indent);
       stream << endl;
     }
     
-    return stream;
+    return stream << str_indent
+		  << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END)
+		  << ' ' << FrBKeywords::fnToString(sub()) << endl;
 }
 
 

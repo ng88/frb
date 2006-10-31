@@ -253,8 +253,7 @@ member_scope_attr:
 
 fn_class_attr:
       FRB_KW_TOKEN_SHARED       { $<vint>$ = SC_SHARED; }
-    //| FRB_KW_TOKEN_VIRTUAL
-    | FRB_KW_TOKEN_PUREVIRTUAL  { $<vint>$ = SC_ABSTRACT; }
+    | FRB_KW_TOKEN_ABSTRACT     { $<vint>$ = SC_ABSTRACT; }
     | /* empty */               { $<vint>$ = SC_DEFAULT; }
     ;    
 

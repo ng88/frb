@@ -20,6 +20,7 @@ BEGIN {
 
     print "#ifndef FRBKEYWORDS_H"
     print "#define FRBKEYWORDS_H"
+    print "#include \"frbconstants.h\""
     
     print "class FrBKeywords {\npublic:"
     print "    enum { "
@@ -86,8 +87,29 @@ END {
     print "    static int findSet(const char* str); /* find set id for corresponding set name */"
     print "    static const char* getSetName(int index); /* return the set name for corresponding index ( 0 <= index < FRB_SET__COUNT ) */\n"
     print "    inline static int getCurrentSet() { return currentSet; }"
-    print "    inline static void setCurrentSet(int i) { currentSet = i; }"
-    print "private:"
+    print "    inline static void setCurrentSet(int i) { currentSet = i; }\n"
+
+    print "    inline static const char* fnToString(bool is_sub)"
+    print "       { return getKeyword(is_sub ? FRB_KW_SUB : FRB_KW_FUNCTION); }"
+
+    print "    inline static const char* byvalToString(bool vb)"
+    print "       { return getKeyword(vb ? FRB_KW_BYVAL : FRB_KW_BYREF); }"
+
+    print "    inline static const char* sharedToString(bool shared)"
+    print "       { return shared ? getKeyword(FRB_KW_SHARED) : \"\"; }"
+
+    print "    inline static const char* constToString(bool cst)"
+    print "       { return cst ? getKeyword(FRB_KW_CONST) : \"\"; }"
+
+    print "    inline static const char* abstractToString(bool abs)"
+    print "       { return abs ? getKeyword(FRB_KW_ABSTRACT) : \"\"; }"
+
+    print "    inline static const char* sealedToString(bool s)"
+    print "       { return s ? getKeyword(FRB_KW_SEALED) : \"\"; }"
+
+    print "    static const char* scopeToString(int);"
+
+    print "\nprivate:"
     print "    static int currentSet;"
     print "    static char* key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END]; /* keyword list */"
     print "    static char* symbol[FRB_KW__SYMBOL_END]; /* symbol list */"

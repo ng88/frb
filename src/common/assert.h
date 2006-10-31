@@ -29,8 +29,12 @@ inline void __assert(bool cond, int line, char * file, char * str, char * cond_s
     
     if(!(cond))
     {
+        cerr.flush();
+        cout.flush();
         cerr << "assertion error on `" << cond_str << "' in " << file
              << " at line " << line  << ": " << str << ", should we continue (y/n)? ";
+
+	cerr.flush();
 
         string str;
         cin >> str;
@@ -43,8 +47,10 @@ inline void __warning(bool cond, int line, char * file, char * str, char * cond_
 {
     if(!(cond))
     {
-        std::cerr << "warning on `" << cond_str << "' in " << file
-                    << " at line " << line  << ": " << str << std::endl;
+      std::cerr.flush();
+      std::cout.flush();
+      std::cerr << "warning on `" << cond_str << "' in " << file
+		<< " at line " << line  << ": " << str << std::endl;
     }
 }
 

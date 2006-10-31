@@ -26,7 +26,7 @@ std::ostream& operator<<(std::ostream& s, const FrBMember& m)
 
 std::ostream& FrBMember::put(std::ostream& stream, int indent) const
 {
-  //TODO refaire des put mieux que ca
+  //TODO
   return stream << "member " << _name;
 }
 

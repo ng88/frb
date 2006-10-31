@@ -22,7 +22,7 @@
 #include "../common/assert.h"
 #include "frbmemory.h"
 #include "frbbuiltinclasses.h"
-
+#include "frbkeywords.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 {
@@ -63,13 +63,11 @@ std::ostream& FrBBlockStatement::put(std::ostream& stream, int indent) const
 {
   String str_indent(indent, '\t');
 
-  stream << "execute:";
-
-  indent += 2;
+  indent++;
 
   for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
   {
-    stream << std::endl << str_indent << "\t*stat> ";
+    stream << std::endl << str_indent << '\t';
     (*it)->put(stream, indent);
   }
 
@@ -136,7 +134,10 @@ bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
 
 std::ostream& FrBElseIfStatement::put(std::ostream& stream, int indent) const
 {
-  stream << "if (" << *_cond << ") ";
+  stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_IF) << ' '
+	 << *_cond << ' '
+	 << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_THEN);
+  //	 << std::endl << String(indent, '\t');
 
   return FrBBlockStatement::put(stream, indent);
 }
@@ -193,7 +194,6 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 
   FrBCondList::const_iterator it = _conds.begin();
 
-  indent += 1;
 
   if(it != _conds.end())
   {
@@ -203,12 +203,17 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 
   while(it != _conds.end())
   {
-    stream << std::endl << str_indent << "       else ";
+    stream << std::endl << str_indent
+	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ELSE)
+	   << ' ';
     (*it)->put(stream, indent);
     ++it;
   }
 
-  return stream << std::endl << str_indent << "       end if";
+  return stream << std::endl << str_indent
+		<< FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_END)
+		<< ' '
+		<< FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_IF);
 }
     
 FrBIfStatement::~FrBIfStatement()
@@ -254,10 +259,15 @@ void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 {
-    stream << "declare <local_var:" << _varid << "> (" << *_type << ')';
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_DECLARE)
+           << " local_var_" << _varid << ' '
+	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_AS) << ' '
+	   << *_type;
     
     if(_init)
-        stream << " with init value " << *_init;
+      stream << ' '
+	     << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_ASSIGN_REF)
+	     << ' ' << *_init;
     
     return stream;
 }
@@ -292,7 +302,7 @@ void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecu
 
 std::ostream& FrBExprStatement::put(std::ostream& stream, int) const
 {
-    return stream << "eval " << *_expr;
+  return stream << *_expr;
 }
 
 FrBExprStatement::~FrBExprStatement()
@@ -336,7 +346,7 @@ void FrBReturnStatement::execute(FrBExecutionEnvironment& e) const
 
 std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
 {
-  stream << "return ";
+  stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_RETURN);
 
   if(_val)
     stream << *_val;

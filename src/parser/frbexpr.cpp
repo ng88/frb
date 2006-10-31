@@ -85,7 +85,7 @@ const FrBClass* FrBLocalVarExpr::getClass() const
 
 std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
 {
-    return stream << "<local_var:" << _varid << ">";
+    return stream << "local_var" << _varid;
 }
 
 /*     FrBUnresolvedIdExpr      */
@@ -122,9 +122,9 @@ const FrBClass* FrBUnresolvedIdExpr::getClass() const
 std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
 {
     if(_type)
-        return stream << "<" << _type->name() << ">";
+        return stream << _type->name();
     else
-        return stream << "<unresolved:" << _name << "?>";
+        return stream << "unresolved_" << _name;
 }
 
 
@@ -199,9 +199,9 @@ const FrBClass* FrBMemberOpExpr::getClass() const
 
 std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
 {
-    return stream << '(' << *_lhs << ' '
+    return stream << '(' << *_lhs
         << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
-        << ' ' << _rhs->name() << ')';
+        << _rhs->name() << ')';
 }
 
 /*              FrBFunctionCallExpr                */
@@ -330,9 +330,21 @@ const FrBClass* FrBFunctionCallExpr::getClass() const
 std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
 {
     stream << *_lhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
-    
-    for(FrBExprList::const_iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-        stream << **it << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP)  << ' ';
+
+    FrBExprList::const_iterator it = _rhs->begin();
+
+    if( it != _rhs->end() )
+    {
+      stream << **it;
+      ++it;
+    }
+
+    while(it != _rhs->end())
+    {
+      stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) 
+	     << ' ' << **it;
+      ++it;
+    }
         
             
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
@@ -539,7 +551,10 @@ const FrBClass* FrBBinOpExpr::getClass() const
 std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 {
     if(_fn)
-        return stream << _fn->name() << '(' << *_lhs << ", " << *_rhs << ')';
+      //return stream << _fn->name() << '(' << *_lhs << ", " << *_rhs << ')';
+      return stream << '(' << *_lhs << ' '
+		    << FrBKeywords::getKeywordOrSymbol(_op) << ' '
+		    << *_rhs << ')';
     else
         return stream << '(' << *_lhs << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op)
                 << "> " << *_rhs << ')';
@@ -549,6 +564,24 @@ std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 /*          FrBLiteralExpr            */
 
 
+
+std::ostream& FrBIntExpr::put(std::ostream& stream) const
+{
+  return stream << _value;
+}
+
+std::ostream& FrBBoolExpr::put(std::ostream& stream) const
+{
+  if(_value)
+    return stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_TRUE);
+  else
+    return stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_FALSE);
+}
+
+std::ostream& FrBStringExpr::put(std::ostream& stream) const
+{
+  return stream << '\"' << _value << '\"';
+}
 
 
 

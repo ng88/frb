@@ -4,10 +4,12 @@ DefLang EN
 
 Public Class Main
 
-    Private Shared dbg As Debug
+'    Private Shared dbg As Debug
 
     Public Shared Sub main(a As Int)
 	   Dim c,d As Int := 3 +3 
+
+	   Dim g1 As Int, g2 As Entier, g3 As Integer
 
 	   Dim z As Int := c + 56 + d
 	   
@@ -37,6 +39,7 @@ Debug.println("@d=" & Debug.addressof(d) & " val:" & d)
 
 	   
 	   Debug.println("bo=" & Main.bool2string(bo))
+
 
     End Sub
 
