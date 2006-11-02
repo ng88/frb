@@ -27,6 +27,7 @@
 #include "../common/iterators.h"
 #include "frbbaseobject.h"
 #include "frbfunction.h"
+#include "frbfield.h"
 
 typedef char op_t;
 
@@ -34,7 +35,7 @@ typedef char op_t;
 //utiliser une multimap pour les fonctions
 
 class FrBClass;
-class FrBCodeFunction;
+
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 
@@ -47,6 +48,7 @@ class FrBClass /* a frb class in memory */
 public:
 
     typedef std::multimap<const String, FrBFunction*>   FunctionContainer;
+    typedef std::map<const String, FrBField*>           FieldContainer;
     typedef std::multimap<int, FrBFunction*>            OperatorContainer;
     typedef FrBFunctionList                             ConstructorContainer;
     typedef FrBClassMap                                 ClassContainer;
@@ -66,7 +68,9 @@ protected:
 
     FunctionContainer _functions;
     ClassContainer _innerClasses;
-    
+
+    FieldContainer _fields;
+
     OperatorContainer _operators;
     
     ConstructorContainer _ctors;
@@ -153,6 +157,15 @@ public:
             
         return _dtor;
     }
+
+    inline FrBField * findField(const String& name) const
+         throw (FrBFieldNotFoundException)
+    {
+      //        NameParamList::const_iterator it = _paramName.find(name);
+      return 0;
+      //return (it == _paramName.end()) ? -1 : it->second;
+    }
+
     
     /** Execute the default constructor (with no param). If no ctor exists and if there are no other ctor, a default ctor is created and executed */
     void executeDefaultConstructor(FrBExecutionEnvironment&, FrBBaseObject * me) const
@@ -193,6 +206,7 @@ public:
     
     //TODO /* throw si existe deja */
     inline void addInnerClass(FrBClass * c) { _innerClasses[c->name()] = c; }
+    inline void addField(FrBField * c) { _fields[c->name()] = c; }
     inline void addFunction(FrBFunction * f) { _functions.insert(std::make_pair(f->name(), f)); }
     //TODO vérifier que au moins l'un des params concerne la classe (ie pour int il faut 
     // op(int, int) op(int, double) ou op(double, int) mais pas op(double, single)

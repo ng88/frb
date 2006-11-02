@@ -74,7 +74,7 @@ frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
 frbexceptions.o: frbexceptions.h frbexceptions.cpp
 frbbuiltinclasses.h: $(BUILTIN_DEC)
 frbbuiltinclasses.cpp: $(BUILTIN_DEF)
-frbmember.o: frbmember.h frbmember.cpp
+frbfield.o: frbfield.h frbfield.cpp
 
 .PHONY: exe clean install touchall force doc cleandoc
 

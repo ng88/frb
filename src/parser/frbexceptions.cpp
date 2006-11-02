@@ -67,6 +67,19 @@ std::ostream& FrBStackOverflowException::put(std::ostream& stream) const
     return stream;
 }
 
+/*          FrBFieldNotFoundException           */
+
+FrBFieldNotFoundException::FrBFieldNotFoundException(const String& name)
+  : _name(name)
+{
+}
+
+std::ostream& FrBFieldNotFoundException::put(std::ostream& stream) const
+{
+  return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_FIELD_NOT_FOUND, _name);
+}
+    
+
 /*             FrBFunctionNotFoundException                */
 
 

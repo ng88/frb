@@ -16,22 +16,22 @@
  ***************************************************************************/
 
 
-#ifndef FRBMEMBER_H
-#define FRBMEMBER_H
+#ifndef FRBFIELD_H
+#define FRBFIELD_H
 
 #include "frbexceptions.h"
 #include "../common/assert.h"
 
 #include "frbexecutionenvironment.h"
-#include "frbexpr.h"
 
 #include "frbexprlist.h"
 #include "frbconstants.h"
 
 class FrBClass;
+class FrBExpr;
+class FrBTypeExpr;
 
-
-class FrBMember /* a frb member */
+class FrBField /* a frb field */
 {
 protected:
     bool _shared;
@@ -41,9 +41,9 @@ protected:
     
 public:
 
-    inline FrBMember() : _shared(false), _const(false), _scope(SC_PUBLIC)  {}
+    inline FrBField() : _shared(false), _const(false), _scope(SC_PUBLIC)  {}
 
-    virtual ~FrBMember() {}
+    virtual ~FrBField() {}
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     inline void setShared(bool v) { _shared = v; }
@@ -60,7 +60,7 @@ public:
 
     virtual const FrBClass * type() const = 0;
 
-    /** Return the default value of the member */
+    /** Return the default value of the field */
     virtual FrBBaseObject * evalDefaultValue(FrBExecutionEnvironment& e) const
         throw (FrBExecutionException) = 0;
     
@@ -71,10 +71,10 @@ public:
         
 };
 
-std::ostream& operator<<(std::ostream& s, const FrBMember& m);
+std::ostream& operator<<(std::ostream& s, const FrBField& m);
 
 
-class FrBCodeMember : public FrBMember
+class FrBCodeField : public FrBField
 {    
 protected:
     
@@ -82,8 +82,8 @@ protected:
     FrBExpr*             _defaultVal;
     
 public:
-    inline FrBCodeMember(FrBTypeExpr * type, FrBExpr * init = 0);
-    ~FrBCodeMember();
+    inline FrBCodeField(FrBTypeExpr * type, FrBExpr * init = 0);
+    ~FrBCodeField();
     
     inline void setURType(FrBTypeExpr*);
     
@@ -117,12 +117,12 @@ public:
 
 /* Inlined */
 
-inline FrBCodeMember::FrBCodeMember(FrBTypeExpr * type, FrBExpr * init)
+inline FrBCodeField::FrBCodeField(FrBTypeExpr * type, FrBExpr * init)
   : _unresolvedType(type), _defaultVal(init)
 {
 }
 
-inline void FrBCodeMember::setURType(FrBTypeExpr* t)
+inline void FrBCodeField::setURType(FrBTypeExpr* t)
 {
     _unresolvedType = t;
 }

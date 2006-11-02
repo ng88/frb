@@ -723,9 +723,14 @@ expr_list:
     ;
 
 
+data_member_attr:
+      FRB_KW_TOKEN_SHARED   { $<vint>$ = SC_SHARED; }
+    | /* empty */           { $<vint>$ = SC_DEFAULT; }
+    ;
 
-data_member:
-      FRB_KW_TOKEN_PRIVATE
+
+data_member: /* eg Public Shared var As String [:= "e"] */
+      member_scope_attr data_member_attr FRB_IDENTIFIER as_type declare_init
     ;
 
 

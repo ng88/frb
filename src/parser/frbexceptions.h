@@ -110,7 +110,19 @@ public:
 };
 
 
+class FrBFieldNotFoundException : public FrBExecutionException, public FrBResolveException
+{
+protected:
+    String _name;
+    
+public:
+    FrBFieldNotFoundException(const String& name);
+    
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline const String& name() { return _name; }
 
+};
 
 //TODO prendre en charge les candidate
 class FrBFunctionNotFoundException : public FrBExecutionException, public FrBResolveException

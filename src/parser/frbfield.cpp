@@ -15,30 +15,32 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-#include "frbmember.h"
+#include "frbfield.h"
+#include "frbexpr.h"
+#include "frbclass.h"
 
-std::ostream& operator<<(std::ostream& s, const FrBMember& m)
+std::ostream& operator<<(std::ostream& s, const FrBField& m)
 {
     return m.put(s);
 }
 
-/*   FrBMember    */
+/*   FrBField    */
 
-std::ostream& FrBMember::put(std::ostream& stream, int indent) const
+std::ostream& FrBField::put(std::ostream& stream, int indent) const
 {
   //TODO
-  return stream << "member " << _name;
+  return stream << "field " << _name;
 }
 
 
 
-/*     FrBCodeMember        */
+/*     FrBCodeField        */
 
-FrBCodeMember::~FrBCodeMember()
+FrBCodeField::~FrBCodeField()
 {
 }  
    
-void FrBCodeMember::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBCodeField::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   if(_defaultVal)
   {
@@ -49,19 +51,19 @@ void FrBCodeMember::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveE
   }
 }
 
-void FrBCodeMember::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBCodeField::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   frb_assert(_unresolvedType);
   _unresolvedType->resolveAndCheck(e);
 }
     
-const FrBClass * FrBCodeMember::type() const
+const FrBClass * FrBCodeField::type() const
 {
   return _unresolvedType->getClass();
 }
 
 
-FrBBaseObject * FrBCodeMember::evalDefaultValue(FrBExecutionEnvironment& e) const 
+FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e) const 
       throw (FrBExecutionException)
 {
   frb_assert(_unresolvedType);
