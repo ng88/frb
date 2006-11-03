@@ -18,6 +18,7 @@
 #include "frbfield.h"
 #include "frbexpr.h"
 #include "frbclass.h"
+#include "frbkeywords.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m)
 {
@@ -28,8 +29,11 @@ std::ostream& operator<<(std::ostream& s, const FrBField& m)
 
 std::ostream& FrBField::put(std::ostream& stream, int indent) const
 {
-  //TODO
-  return stream << "field " << _name;
+  return stream << FrBKeywords::scopeToString(scope()) << ' '
+		<< FrBKeywords::sharedToString(shared()) << ' '
+		<< name() << ' '
+		<< FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_AS) << ' '
+		<< type()->name() << std::endl;
 }
 
 
@@ -73,6 +77,23 @@ FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e) const
   else
     return _unresolvedType->getClass()->createInstance(e);
 }
+
+std::ostream& FrBCodeField::put(std::ostream& stream, int indent) const
+{
+  stream << FrBKeywords::scopeToString(scope()) << ' '
+	 << FrBKeywords::sharedToString(shared()) << ' '
+	 << name() << ' '
+	 << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_AS) << ' '
+	 << *_unresolvedType;
+
+  if(_defaultVal)
+    stream << ' ' << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_ASSIGN_REF) 
+	   << ' ' << *_defaultVal;
+
+  return stream << std::endl;
+}
+
+
     
 
 

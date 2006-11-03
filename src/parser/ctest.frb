@@ -5,6 +5,7 @@ DefLang EN
 Public Class Main
 
     Private Shared dbg As Debug
+    Private i As Integer := 12+8
 
     Public Shared Sub main(a As Int)
 	   Dim c,d As Int := 3 +3 

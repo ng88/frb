@@ -61,7 +61,7 @@ $(EXE): start main.o
 main.o: frbparser.o
 frbparser.o: frbparser.h frbparser.cpp parser
 frberrordesc.o: error_msg keywords_db
-frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbmember.o
+frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbfield.o
 frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o frbexecutionenvironment.o
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
 frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o

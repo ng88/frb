@@ -40,6 +40,13 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
     
     if(_dtor) _dtor->resolvePrototype(e);
 
+    for(FieldContainer::iterator it = _fields.begin(); it != _fields.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolvePrototype(e);
+    }
+
+
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
     {
         frb_assert(itf->second);
@@ -69,6 +76,12 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
     }
     
     if(_dtor) _dtor->resolveAndCheck(e);
+
+    for(FieldContainer::iterator it = _fields.begin(); it != _fields.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolveAndCheck(e);
+    }
 
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
     {
@@ -150,6 +163,12 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    << FrBKeywords::abstractToString(abstract()) << ' '
 	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
 	    << name() << "\t' " << specString() << endl;
+
+    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+    {
+      sout << ident << '\t';
+      it->second->put(sout, level);
+    }
 
     const ConstructorContainer * ctors = constructorList();
     
