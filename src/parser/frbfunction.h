@@ -24,7 +24,7 @@
 #include "../common/assert.h"
 
 #include "frbexprlist.h"
-
+#include "frbmember.h"
 #include "frbconstants.h"
 
 
@@ -35,7 +35,7 @@ typedef std::vector<const FrBClass*> FrBConstClassList;
 typedef std::map<const String, FrBClass*> FrBClassMap;
 typedef std::vector<FrBFunction*> FrBFunctionList;
 
-class FrBFunction /* a frb function */
+class FrBFunction : public FrBMember /* a frb function */
 {
 protected:
     bool _sub;

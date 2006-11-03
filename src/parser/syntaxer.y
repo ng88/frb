@@ -301,10 +301,12 @@ function_return_type:
 function:
       fn_attr /*1*/ function_type /*2*/ sub_name /*3*/
       { /*4*/
-           frb_assert2(!class_stack.empty(), "sub declaration");
+           frb_assert2(!class_stack.empty(), "fn/sub declaration");
            
            FrBCodeFunction * nfn = new FrBCodeFunction();
-           
+
+           nfn->setContainer(current_class());
+
            nfn->setSub($<str>2 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_SUB));
            nfn->setName(String($<str>3));
            
@@ -733,6 +735,7 @@ data_member: /* eg Public Shared var As String [:= "e"] */
       member_scope_attr data_member_attr FRB_IDENTIFIER as_type declare_init
       {
 	FrBCodeField * f = new FrBCodeField($<vtype>4, $<expr>5);
+	f->setContainer(current_class());
 	f->setName($<str>3);
 	f->setScope($<vint>1);
 	f->setShared($<vint>2 == SC_SHARED);

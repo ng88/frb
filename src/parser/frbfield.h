@@ -23,7 +23,7 @@
 #include "../common/assert.h"
 
 #include "frbexecutionenvironment.h"
-
+#include "frbmember.h"
 #include "frbexprlist.h"
 #include "frbconstants.h"
 
@@ -31,7 +31,7 @@ class FrBClass;
 class FrBExpr;
 class FrBTypeExpr;
 
-class FrBField /* a frb field */
+class FrBField : public FrBMember /* a frb field */
 {
 protected:
     bool _shared;
