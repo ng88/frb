@@ -48,7 +48,7 @@ public:
     virtual FrBBaseObject* getField(int i) = 0;
 
     /** add field o */
-    virtual void addField(FrBBaseObject * o) = 0;
+    virtual void addField(int i, FrBBaseObject * o) = 0;
     
     //inline void setConst(bool v) { _const = v; }
     //inline bool isConst() { return _const; }
@@ -72,15 +72,20 @@ class FrBUserObject : public FrBBaseObject
 protected:
 
     const FrBClass * _type;
-    FrBBaseObject * _fields[];
+    FrBBaseObject ** _fields;
 
 public:
     
-    FrBUserObject(const FrBClass * type, int fc) : _type(type) {}
+    FrBUserObject(const FrBClass * type, int fc);
     
     const FrBClass * getClass() { return _type; }
+
+    FrBBaseObject* getField(int);
+    void addField(int, FrBBaseObject *);
      
-    virtual ~FrBUserObject() {}
+
+    ~FrBUserObject();
+
 
 };
 

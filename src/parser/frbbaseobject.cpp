@@ -27,4 +27,24 @@ FrBBindingObject::~FrBBindingObject()
 
 /*         FrBUserObject            */
 
-    FrBUserObject(const FrBClass * type, int fc) : _type(type) {}
+FrBUserObject::FrBUserObject(const FrBClass * type, int fc)
+  :_type(type)
+{
+  _fields = new FrBBaseObject*[fc];
+}
+
+
+FrBBaseObject* FrBUserObject::getField(int i)
+{
+  return _fields[i];
+}
+
+void FrBUserObject::addField(int i, FrBBaseObject * o)
+{
+  _fields[i] = o;
+}
+
+FrBUserObject::~FrBUserObject()
+{
+  delete[] _fields;
+}

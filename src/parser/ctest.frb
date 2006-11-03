@@ -2,46 +2,21 @@
 
 DefLang EN
 
+Public Class A
+
+       Public a As Debug
+       Public b As Debug
+       'Public d As A
+
+End Class
+
 Public Class Main
 
     Private Shared dbg As Debug
     Private i As Integer := Me.fact(5)
 
     Public Shared Sub main(a As Int)
-	   Dim c,d As Int := 3 +3 
-
-	   Dim g1 As Int, g2 As Entier, g3 As Integer
-
-	   Dim z As Int := c + 56 + d
-	   
-	   Debug.println("@z=" & Debug.addressof(z) & " val:" & z)
-	   Debug.println("@c=" & Debug.addressof(c) & " val:" & c)
-	   Debug.println("@d=" & Debug.addressof(d) & " val:" & d)
-	   Debug.println("@Me=" & Debug.addressof(Me) )
-	   Debug.println("@a=" & Debug.addressof(a) & " val:" & a)
-
-	   'Debug.showStack()
-
-	   'Debug.println("factoriel(" & a & ")=" & Main.fact(a+c))
-
-	       Dim a2 As			       Int := 56
-
-
-	       d := d + a2
-
-Debug.println("@d=" & Debug.addressof(d) & " val:" & d)
-	   Debug.println("@a=" & Debug.addressof(a) & " val:" & a)
-	   Debug.println("@a2=" & Debug.addressof(a2) & " val:" & a2)
-	   'Debug.showStack()
-
-
-
-	   Dim bo As Bool  := a>5 
-
-	   
-	   Debug.println("bo=" & Main.bool2string(bo))
-
-
+	   Dim a As A
     End Sub
 
     Public Shared Function bool2string(b As Bool) As String

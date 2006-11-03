@@ -137,7 +137,7 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + implementer les membres (ds la grammaire et ds la VM) + deux ordre possibles ds la grammaire pr classes et fonctions
+//TODONEXT cf log rev 83 + boucle cf ctest.frb + ajouter la classe declarante à frbfunction, field... + deux ordre possibles ds la grammaire pr classes et fonctions
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 
 /** Me expr */

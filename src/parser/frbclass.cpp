@@ -122,8 +122,9 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   throw (FrBExecutionException)
 {
   e.setOutsideMe(o);
+  int i = 0;
   for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
-    o->addField(it->second->evalDefaultValue(e));
+    o->addField(i++, it->second->evalDefaultValue(e));
 }
 
 FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const
