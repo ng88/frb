@@ -235,7 +235,6 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     e.stack().push(me);
     
     /* empile une place les variables locales */
-    //TODO a virer
     e.stack().push_empty(localVarCount());
     
     try

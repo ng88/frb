@@ -24,3 +24,7 @@
 FrBBindingObject::~FrBBindingObject()
 {
 }
+
+/*         FrBUserObject            */
+
+    FrBUserObject(const FrBClass * type, int fc) : _type(type) {}

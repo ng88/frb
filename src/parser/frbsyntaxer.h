@@ -39,7 +39,13 @@
          } \
          inline FrBCodeFunction* current_fn() \
          { \
-             frb_assert2(!fn_stack.empty(), "frbsyntaxer.h::FrBSynater::current_fn()");  \
+             if(fn_stack.empty()) \
+               frb_error->error(FrBErrors::FRB_ERR_INVALID_OUTSIDE_EXPR, \
+                                FrBErrors::FRB_ERR_SEMANTIC, \
+                                frb_lexer->lineno(), "", "", "", \
+                                String(frb_lexer->YYText()) ); \
+             \
+             /*frb_assert2(!fn_stack.empty(), "frbsyntaxer.h::FrBSynater::current_fn()");*/ \
              return fn_stack.top(); \
          } \
          inline FrBStatementBlock* current_block() \

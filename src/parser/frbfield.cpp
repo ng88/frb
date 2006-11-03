@@ -67,8 +67,8 @@ const FrBClass * FrBCodeField::type() const
 }
 
 
-FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e) const 
-      throw (FrBExecutionException)
+FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e)
+  const throw (FrBExecutionException)
 {
   frb_assert(_unresolvedType);
 

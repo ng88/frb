@@ -54,6 +54,12 @@ public:
     typedef FrBClassMap                                 ClassContainer;
     typedef FunctionContainer::const_iterator           FnContIt;
     typedef std::pair<FnContIt, FnContIt>               FnPairIt;
+
+private:
+
+    /** init stuff for o (create fields, ...*/
+    void initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
+      throw (FrBExecutionException);
     
 protected:
 
@@ -277,17 +283,11 @@ class FrBCodeClass : public FrBClass
 
 protected:
 
-    FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const throw (FrBAllocationException)
-    {
-        FrBBaseObject * o = new FrBUserObject(this);
-        e.addGarbagedObject(o);
-        return o;
-    }
-    
-    void freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) const throw (FrBAllocationException)
-    {
-        delete o;
-    }
+  FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const
+    throw (FrBAllocationException);
+
+  void freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) const
+    throw (FrBAllocationException);
 
 public:
     FrBCodeClass();

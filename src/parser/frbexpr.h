@@ -140,7 +140,7 @@ public:
 //TODONEXT cf log rev 83 + implementer les membres (ds la grammaire et ds la VM) + deux ordre possibles ds la grammaire pr classes et fonctions
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 
-/* Me expr */
+/** Me expr */
 class FrBMeExpr : public FrBExpr
 {
 private:
@@ -157,6 +157,22 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
+
+/** Me expr for expression that are outside function */
+class FrBOutsideMeExpr : public FrBExpr
+{
+private:
+    FrBClass     *    _type;
+    
+public:
+    FrBOutsideMeExpr(FrBClass * t);
+    ~FrBOutsideMeExpr();
+
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;    
+};
+
 
 /** Ref assignment <expr> := <expr> */
 class FrBRefAssignExpr : public FrBExpr

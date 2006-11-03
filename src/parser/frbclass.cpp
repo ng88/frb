@@ -118,13 +118,20 @@ void FrBClass::executeDefaultConstructor(FrBExecutionEnvironment& e, FrBBaseObje
         
 }
 
-FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
+  throw (FrBExecutionException)
+{
+  e.setOutsideMe(o);
+  for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+    o->addField(it->second->evalDefaultValue(e));
+}
+
+FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
 {
     FrBBaseObject * o = allocateInstance(e);
-    
+    initInstance(e, o);
     executeDefaultConstructor(e, o);
-   
-        
     return o;
 }
 
@@ -132,6 +139,7 @@ FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBa
     throw (FrBExecutionException)
 {
     FrBBaseObject * o = allocateInstance(e);
+    initInstance(e, o);
     executeConstructor(e, o, args);
     return o;
 }
@@ -262,6 +270,21 @@ FrBCodeClass::~FrBCodeClass()
 {
 
 };
+
+FrBBaseObject * FrBCodeClass::allocateInstance(FrBExecutionEnvironment& e) const
+  throw (FrBAllocationException)
+{
+  FrBBaseObject * o = new FrBUserObject(this, _fields.size());
+  e.addGarbagedObject(o);
+  return o;
+}
+    
+void FrBCodeClass::freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) const
+  throw (FrBAllocationException)
+{
+  delete o;
+}
+
 
 const char* FrBCodeClass::specString() const
 {

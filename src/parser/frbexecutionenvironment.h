@@ -32,6 +32,7 @@ private:
     FrBMemStack  _stack;
     FrBMemory * _mem;
     FrBResolveEnvironment * _resolveEnv;
+    FrBBaseObject * _outsideMe;
     
     FrBExecutionEnvironment(const FrBExecutionEnvironment&) {}
     
@@ -50,7 +51,10 @@ public:
     
     inline FrBMemStack& stack() { return _stack; }
     inline FrBMemory * memory() { return _mem; }
-    
+
+    /** used for expression that're outside function and need a Me value */
+    inline FrBBaseObject * outsideMe() { return _outsideMe; }
+    inline void setOutsideMe(FrBBaseObject * m) { _outsideMe = m; }
     
     /** Add the object to the FrBMemory so that it can be garbage-collected */
     inline void addGarbagedObject(FrBBaseObject * o)

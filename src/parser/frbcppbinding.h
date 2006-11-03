@@ -31,6 +31,10 @@ class FrBCppObject : public FrBBindingObject
 {
 
 public:
+    /** we don't care about fields in c++ binding */
+    FrBBaseObject* getField(int) { return 0; }
+    void addField(FrBBaseObject *) {}
+
     virtual ~FrBCppObject();
 };
 

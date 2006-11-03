@@ -30,26 +30,33 @@ class FrBBaseObject
 
 protected:
 
-    bool     _const;
+  //bool     _const;
     int      _mem_pos;
     
     
 public:
 
-    enum { NULL_OBJECT = 0 };
+    enum { NULL_OBJECT = 0, UNMANAGED_OBJECT = -2 };
 
-    inline FrBBaseObject() : _const(false),_mem_pos(-2) { }
-    inline FrBBaseObject(bool v) : _const(v) { }
+    inline FrBBaseObject() : /*_const(false),*/_mem_pos(UNMANAGED_OBJECT) { }
+    //    inline FrBBaseObject(bool v) : _const(v) { }
     
     virtual ~FrBBaseObject() { }
     virtual const FrBClass * getClass() = 0;
+
+    /** return the instance of the field i */
+    virtual FrBBaseObject* getField(int i) = 0;
+
+    /** add field o */
+    virtual void addField(FrBBaseObject * o) = 0;
     
     //inline void setConst(bool v) { _const = v; }
-    inline bool isConst() { return _const; }
+    //inline bool isConst() { return _const; }
     
-    inline void setMemPos(const int &v) { _mem_pos = v; }
+    /** used by the garbage collector */
+    inline void setMemPos(int v) { _mem_pos = v; }
     inline int memPos() const { return _mem_pos; }
-    inline bool isManaged() const { return _mem_pos != -2; }
+    inline bool isManaged() const { return _mem_pos != UNMANAGED_OBJECT; }
 
 
 };
@@ -65,10 +72,11 @@ class FrBUserObject : public FrBBaseObject
 protected:
 
     const FrBClass * _type;
+    FrBBaseObject * _fields[];
 
 public:
     
-    FrBUserObject(const FrBClass * type) : _type(type) {}
+    FrBUserObject(const FrBClass * type, int fc) : _type(type) {}
     
     const FrBClass * getClass() { return _type; }
      

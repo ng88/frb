@@ -973,6 +973,9 @@ literal_expr:
       }
     | FRB_KW_TOKEN_ME
       {
+	if(fn_stack.empty())
+          $<expr>$ = new FrBOutsideMeExpr(current_class());
+	else
           $<expr>$ = new FrBMeExpr(current_fn(), current_class());
       }
     | FRB_IDENTIFIER                  

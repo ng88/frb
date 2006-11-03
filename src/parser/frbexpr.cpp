@@ -382,6 +382,33 @@ std::ostream& FrBMeExpr::put(std::ostream& stream) const
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
 }
 
+/*              FrBOutisdeMeExpr           */
+FrBOutsideMeExpr::FrBOutsideMeExpr(FrBClass * t)
+  : _type(t)
+{
+}
+
+FrBOutsideMeExpr::~FrBOutsideMeExpr()
+{
+}
+
+FrBBaseObject* FrBOutsideMeExpr::eval(FrBExecutionEnvironment& e) const
+  throw (FrBEvaluationException)
+{
+  return e.outsideMe();
+}
+
+const FrBClass* FrBOutsideMeExpr::getClass() const
+{
+  return _type;
+}
+
+std::ostream& FrBOutsideMeExpr::put(std::ostream& stream) const
+{
+    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
+}
+
+
 
 /*           FrBRefAssignExpr                    */
 

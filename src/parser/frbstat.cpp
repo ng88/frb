@@ -349,7 +349,7 @@ std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
   stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_RETURN);
 
   if(_val)
-    stream << *_val;
+    stream << ' ' << *_val;
 
   return stream;
 }
