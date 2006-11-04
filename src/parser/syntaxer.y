@@ -979,7 +979,7 @@ literal_expr:
 	if(fn_stack.empty())
           $<expr>$ = new FrBOutsideMeExpr(current_class());
 	else
-          $<expr>$ = new FrBMeExpr(current_fn(), current_class());
+          $<expr>$ = new FrBMeExpr(current_fn());
       }
     | FRB_IDENTIFIER                  
       {

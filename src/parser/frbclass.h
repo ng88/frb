@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 //TODO: utiliser une hash_map à la place
 typedef std::map<const String, FrBFunction*> FrBFunctionMap;
 
-class FrBClass /* a frb class in memory */
+class FrBClass : public FrBMember /* a frb class in memory */
 {
 public:
 
@@ -96,10 +96,7 @@ protected:
     
 public:
 
-    FrBClass()
-     : _shared(false), _abstract(false), 
-       _sealed(false), _scope(SC_PRIVATE),_defaultCtor(0), _dtor(0) {}
-    
+    inline FrBClass();
     virtual ~FrBClass();
     
         //TODO:  fn_member_list; ...
@@ -112,7 +109,7 @@ public:
              
              callFunction/propety/getMember <- virtual = 0 ici
              
-             virtualité partout, trouvé une synatxe plus sympa pour la virtualité pure
+             virtualité partout, trouver une syntaxe plus sympa pour la virtualité pure
              */
     /** Used in type resolution */
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -120,114 +117,61 @@ public:
     
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
-          throw (FrBFunctionNotFoundException)
-    {
-        return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
-    }
+      throw (FrBFunctionNotFoundException);
     
-    inline FnPairIt findFunctions(const String& name) const
-    {
-        return _functions.equal_range(name);
-    }
+    inline FnPairIt findFunctions(const String& name) const;
     
     template<class ArgContainer>
     inline FrBFunction * findFunction(const String& name, const ArgContainer& args) const
-         throw (FrBFunctionNotFoundException)
-    {
-        FnPairIt seq = _functions.equal_range(name);
-        
-        return FrBFunction::findOverload(
-                const_map_snd_iterator<FunctionContainer>(seq.first),
-                const_map_snd_iterator<FunctionContainer>(seq.second),
-                args);
-    }
+      throw (FrBFunctionNotFoundException);
 
     template<class ArgContainer>
     inline FrBFunction * findOperator(int op, const ArgContainer& args) const
-         throw (FrBFunctionNotFoundException)
-    {
-        typedef OperatorContainer::const_iterator It;
-        std::pair<It, It> seq = _operators.equal_range(op);
-        
-        return FrBFunction::findOverload(
-                const_map_snd_iterator<OperatorContainer>(seq.first),
-                const_map_snd_iterator<OperatorContainer>(seq.second),
-                args);
-    }
-    
+      throw (FrBFunctionNotFoundException);
+
     inline FrBFunction * findDestructor() const
-        throw (FrBFunctionNotFoundException) 
-    {
-        if(_dtor == 0)
-            throw FrBDtorNotFoundException();
-            
-        return _dtor;
-    }
+      throw (FrBFunctionNotFoundException);
 
     inline FrBField * findField(const String& name) const
-         throw (FrBFieldNotFoundException)
-    {
-      //        NameParamList::const_iterator it = _paramName.find(name);
-      return 0;
-      //return (it == _paramName.end()) ? -1 : it->second;
-    }
-
+      throw (FrBFieldNotFoundException);
     
     /** Execute the default constructor (with no param). If no ctor exists and if there are no other ctor, a default ctor is created and executed */
     void executeDefaultConstructor(FrBExecutionEnvironment&, FrBBaseObject * me) const
         throw (FrBExecutionException);
     
     inline void executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
-                                        const FrBBaseObjectList& args) const
-        throw (FrBExecutionException) 
-    {
-        findConstructor(args)->execute(e, me, args);
-    }
+	   const FrBBaseObjectList& args) const throw (FrBExecutionException);
     
-    inline FrBBaseObject * executeFunction(FrBExecutionEnvironment& e, const String& name, FrBBaseObject * me,
-                                            const FrBBaseObjectList& args) const
-        throw (FrBExecutionException) 
-    {
-        return findFunction(name, args)->execute(e, me, args);
-    }
+    inline FrBBaseObject * executeFunction(FrBExecutionEnvironment& e,
+					   const String& name,
+					   FrBBaseObject * me,
+					   const FrBBaseObjectList& args) const
+                throw (FrBExecutionException);
     
-    inline FrBBaseObject * executeOperator(FrBExecutionEnvironment& e, int op, FrBBaseObject * me,
-                                                const FrBBaseObjectList& args) const
-        throw (FrBExecutionException) 
-    {
-        return findOperator(op, args)->execute(e, me, args);
-    }
+    inline FrBBaseObject * executeOperator(FrBExecutionEnvironment& e,
+					   int op,
+					   FrBBaseObject * me,
+					   const FrBBaseObjectList& args) const
+               throw (FrBExecutionException);
     
     inline FrBBaseObject * executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
-        throw (FrBExecutionException)
-    {
-        FrBBaseObjectList args;
-        return findDestructor()->execute(e, me, args);
-    }
-        
+               throw (FrBExecutionException);
+
     /*virtual FrBBaseObject * callOperator(String name, FrBBaseObjectList args) = 0;
     virtual FrBBaseObject * getProperty(String name, FrBBaseObjectList args) = 0;
     virtual FrBBaseObject * setProperty(String name, FrBBaseObjectList args) = 0;// faire une binaryOperator pr optimiser
     virtual FrBBaseObject * getMember(String name) = 0;*/
     
     //TODO /* throw si existe deja */
-    inline void addInnerClass(FrBClass * c) { _innerClasses[c->name()] = c; }
-    inline void addField(FrBField * c) { _fields[c->name()] = c; }
-    inline void addFunction(FrBFunction * f) { _functions.insert(std::make_pair(f->name(), f)); }
+    inline void addInnerClass(FrBClass * c);
+    inline void addField(FrBField * c);
+    inline void addFunction(FrBFunction * f);
     //TODO vérifier que au moins l'un des params concerne la classe (ie pour int il faut 
     // op(int, int) op(int, double) ou op(double, int) mais pas op(double, single)
-    inline void addOperator(int op, FrBFunction * f) { _operators.insert(std::make_pair(op, f)); }
+    inline void addOperator(int op, FrBFunction * f);
     //TODO /* verifier la validité des params et retour */
-    inline void addConstructor(FrBFunction * f)
-    {
-        frb_assert2(f, "FrBClass::addConstructor(FrBFunction f) -- f is null");
-        
-        if(f->parameterCount() == 0)
-            _defaultCtor = f;
-            
-        _ctors.push_back(f);
-    }
-    inline void addDestructor(FrBFunction * f) { _dtor = f; }
+    inline void addConstructor(FrBFunction * f);
+    inline void addDestructor(FrBFunction * f);
 
     inline const ClassContainer* innerClassList() const { return &_innerClasses; }
     inline const OperatorContainer* operatorList() const { return &_operators; }
@@ -303,6 +247,181 @@ public:
 
 typedef std::stack<FrBCodeClass*> FrBCodeClassStack;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*          Inlined         */
+
+
+inline FrBClass::FrBClass()
+  : _shared(false), _abstract(false), 
+    _sealed(false), _scope(SC_PRIVATE),_defaultCtor(0), _dtor(0)
+{
+}
+    
+template<class ArgContainer>
+inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
+     throw (FrBFunctionNotFoundException)
+{
+  return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
+}
+    
+inline FrBClass::FnPairIt FrBClass::findFunctions(const String& name) const
+{
+  return _functions.equal_range(name);
+}
+    
+template<class ArgContainer>
+inline FrBFunction * FrBClass::findFunction(const String& name, const ArgContainer& args) const
+     throw (FrBFunctionNotFoundException)
+{
+  FnPairIt seq = _functions.equal_range(name);
+        
+  return FrBFunction::findOverload(
+				   const_map_snd_iterator<FunctionContainer>(seq.first),
+				   const_map_snd_iterator<FunctionContainer>(seq.second),
+				   args);
+}
+
+template<class ArgContainer>
+inline FrBFunction * FrBClass::findOperator(int op, const ArgContainer& args) const
+     throw (FrBFunctionNotFoundException)
+{
+  typedef OperatorContainer::const_iterator It;
+  std::pair<It, It> seq = _operators.equal_range(op);
+        
+  return FrBFunction::findOverload(
+				   const_map_snd_iterator<OperatorContainer>(seq.first),
+				   const_map_snd_iterator<OperatorContainer>(seq.second),
+				   args);
+}
+
+    
+inline FrBFunction * FrBClass::findDestructor() const
+     throw (FrBFunctionNotFoundException) 
+{
+  if(_dtor == 0)
+    throw FrBDtorNotFoundException();
+            
+  return _dtor;
+}
+
+inline FrBField * FrBClass::findField(const String& name) const
+     throw (FrBFieldNotFoundException)
+{
+  //        NameParamList::const_iterator it = _paramName.find(name);
+  return 0;
+  //return (it == _paramName.end()) ? -1 : it->second;
+}
+   
+inline void FrBClass::executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
+			       const FrBBaseObjectList& args) const
+     throw (FrBExecutionException) 
+{
+  findConstructor(args)->execute(e, me, args);
+}
+    
+inline FrBBaseObject * FrBClass::executeFunction(FrBExecutionEnvironment& e, const String& name, FrBBaseObject * me,
+				       const FrBBaseObjectList& args) const
+     throw (FrBExecutionException) 
+{
+  return findFunction(name, args)->execute(e, me, args);
+}
+    
+inline FrBBaseObject * FrBClass::executeOperator(FrBExecutionEnvironment& e, int op, FrBBaseObject * me,
+				       const FrBBaseObjectList& args) const
+     throw (FrBExecutionException) 
+{
+  return findOperator(op, args)->execute(e, me, args);
+}
+    
+inline FrBBaseObject * FrBClass::executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
+     throw (FrBExecutionException)
+{
+  FrBBaseObjectList args;
+  return findDestructor()->execute(e, me, args);
+}
+
+
+inline void FrBClass::addInnerClass(FrBClass * c)
+{
+  frb_assert(c);
+
+  c->setContainer(this);
+  _innerClasses[c->name()] = c;
+}
+
+inline void FrBClass::addField(FrBField * c)
+{
+  frb_assert(c);
+
+  c->setContainer(this);
+  _fields[c->name()] = c;
+}
+
+inline void FrBClass::addFunction(FrBFunction * f)
+{
+  frb_assert(f);
+  f->setContainer(this);
+  _functions.insert(std::make_pair(f->name(), f)); 
+}
+
+inline void FrBClass::addOperator(int op, FrBFunction * f)
+{
+  frb_assert(f);
+  f->setContainer(this);
+  _operators.insert(std::make_pair(op, f));
+}
+
+inline void FrBClass::addConstructor(FrBFunction * f)
+{
+  frb_assert2(f, "FrBClass::addConstructor(FrBFunction f) -- f is null");
+
+  f->setContainer(this); 
+
+  if(f->parameterCount() == 0)
+    _defaultCtor = f;
+            
+  _ctors.push_back(f);
+}
+
+inline void FrBClass::addDestructor(FrBFunction * f) 
+{
+  frb_assert(f);
+  f->setContainer(this);
+  _dtor = f;
+}
 
 #endif
 

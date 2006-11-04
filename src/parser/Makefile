@@ -90,7 +90,7 @@ exe:
 	@./$(EXE)
 
 touchall:
-	@touch $(SRC) $(OBJS) *.y *.l *.key
+	@touch $(SRC) $(OBJS) *.y *.l ../trad/*.key
 
 force: touchall all
 

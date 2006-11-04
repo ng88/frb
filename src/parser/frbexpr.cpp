@@ -352,8 +352,8 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
  
 /*        FrBMeExpr                */
 
-FrBMeExpr::FrBMeExpr(FrBCodeFunction* f, FrBClass * t)
- : _fn(f), _type(t)
+FrBMeExpr::FrBMeExpr(FrBCodeFunction* f)
+ : _fn(f)
 {
 }
 
@@ -374,7 +374,7 @@ FrBBaseObject* FrBMeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvalu
 
 const FrBClass* FrBMeExpr::getClass() const
 {
-    return _type;
+    return _fn->container();
 }
 
 std::ostream& FrBMeExpr::put(std::ostream& stream) const

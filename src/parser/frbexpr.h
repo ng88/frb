@@ -145,11 +145,10 @@ class FrBMeExpr : public FrBExpr
 {
 private:
     FrBCodeFunction *     _fn;
-    FrBClass     *    _type;
     int               _varid;
     
 public:
-    FrBMeExpr(FrBCodeFunction * f, FrBClass * t);
+    FrBMeExpr(FrBCodeFunction * f);
     ~FrBMeExpr();
 
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
