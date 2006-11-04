@@ -73,9 +73,16 @@ FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e)
   frb_assert(_unresolvedType);
 
   if(_defaultVal)
+  {
     return FrBClass::forceConvert(_defaultVal->eval(e), _unresolvedType->getClass());
+  }
   else
-    return _unresolvedType->getClass()->createInstance(e);
+  {
+    /*TODO if(_unresolvedType->getClass()->inheritsFrom(container())
+       return la_valeur_null;
+     else*/
+       return _unresolvedType->getClass()->createInstance(e);
+  }
 }
 
 std::ostream& FrBCodeField::put(std::ostream& stream, int indent) const
