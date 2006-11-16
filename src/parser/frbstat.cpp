@@ -113,12 +113,11 @@ FrBElseIfStatement::FrBElseIfStatement(FrBExpr * cond)
   frb_assert(cond);
 }
 
-    
 void  FrBElseIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
 {
   _cond->resolveAndCheck(e);
-  if(!FrBClass::areCompatibles(_cond->getClass(), FrBBool::getCppClass()))
+  if(!_cond->getClass()->isCompatibleWith(FrBBool::getCppClass()))
     throw FrBIncompatibleClassException(_cond->getClass(), FrBBool::getCppClass());
 
   FrBBlockStatement::resolveAndCheck(e);
@@ -244,7 +243,7 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
     if(_init)
     {
         _init->resolveAndCheck(e);
-        if(!FrBClass::areCompatibles(_init->getClass(), _type->getClass()))
+        if(!_init->getClass()->isCompatibleWith(_type->getClass()))
             throw FrBIncompatibleClassException(_init->getClass(), _type->getClass());
     }
 }
@@ -332,7 +331,7 @@ void FrBReturnStatement::resolveAndCheck(FrBResolveEnvironment& e)
   if(_val)
   {
     _val->resolveAndCheck(e);
-    if(!FrBClass::areCompatibles(_val->getClass(), _fn->returnType()))
+    if(!_val->getClass()->isCompatibleWith(_fn->returnType()))
       throw FrBIncompatibleClassException(_val->getClass(), _fn->returnType());
   }
 }

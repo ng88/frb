@@ -430,7 +430,7 @@ void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
   _rhs->resolveAndCheck(e);
   _lhs->resolveAndCheck(e);
   
-  if(!FrBClass::areCompatibles(_rhs->getClass(), _rhs->getClass()))
+  if(!_rhs->getClass()->isCompatibleWith(_rhs->getClass()))
     throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
 }
 

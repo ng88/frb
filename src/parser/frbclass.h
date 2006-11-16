@@ -214,8 +214,12 @@ public:
     /** Convert from from to to without check */
     static FrBBaseObject* forceConvert(FrBBaseObject * from, const FrBClass * to);
     
-    /** Check if from and to are compatibles */
-    static bool areCompatibles(const FrBClass * from, const FrBClass * to);
+    
+    /** Check if this and to are compatibles (/!\ a->isCompatibleWith(b) != b->isCompatibleWith(a)) */
+    bool isCompatibleWith(const FrBClass * to) const;
+    
+    /** Return true if current class inherits from from */
+    bool inheritsFrom(const FrBClass * from) const;
     
 };
 

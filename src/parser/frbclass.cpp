@@ -219,7 +219,7 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 
 FrBBaseObject* FrBClass::convert(FrBBaseObject * from, const FrBClass * to) throw (FrBIncompatibleClassException)
 {
-    if(!areCompatibles(from->getClass(), to))
+    if(!from->getClass()->isCompatibleWith(to))
         throw FrBIncompatibleClassException(from->getClass(), to);
         
     return forceConvert(from, to);
@@ -232,19 +232,25 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 }
 
 
-bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
+bool FrBClass::isCompatibleWith(const FrBClass * to) const
 {
-    frb_assert2(from && to, "null pointer passed to FrBClass::areCompatibles()");
+    frb_assert2(to, "null pointer passed to FrBClass::isCompatibleWith()");
     
     //void (ie sub return) can not be converted or used in expression
-    if(from == FrBVoid::getCppClass())
+    if(this == FrBVoid::getCppClass())
         return false;
     
     //null can be used with all type
-    if(from == FrBNull::getCppClass())
+    if(this == FrBNull::getCppClass())
         return true;
 
-    return to == FrBObject::getCppClass() || from == to;
+    return to == FrBObject::getCppClass() || this == to;
+}
+
+bool FrBClass::inheritsFrom(const FrBClass * from) const
+{
+    //a faire
+    return isCompatibleWith(from);
 }
 
 

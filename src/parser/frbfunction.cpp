@@ -74,7 +74,7 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(b, a)) \
+                if(b->isCompatibleWith(a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \
@@ -85,7 +85,7 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
         { \
             if( (a = parameterType(count - 1)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(b, a)) \
+                if(b->isCompatibleWith(a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \
@@ -111,7 +111,7 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
-                if(FrBClass::areCompatibles(b, a)) \
+                if(b->isCompatibleWith(a)) \
                     full_match = false; \
                 else \
                     return NO_MATCH; \

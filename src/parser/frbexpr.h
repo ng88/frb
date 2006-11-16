@@ -137,7 +137,8 @@ public:
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
 };
-//TODONEXT cf log rev 83 + boucle cf ctest.frb + ajouter la classe declarante à frbfunction, field... + deux ordre possibles ds la grammaire pr classes et fonctions + il faudra bien la pile pour outsideme
+//TODONEXT cf log rev 83 + boucle cf ctest.frb + deux ordre possibles ds la grammaire pr classes et fonctions + il faudra bien la pile pour outsideme
+//+ finir les champs
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 //TODO utiliser un constructeur privé pour les types Void et Null
 

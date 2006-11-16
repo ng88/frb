@@ -49,7 +49,7 @@ void FrBCodeField::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveEx
   if(_defaultVal)
   {
     _defaultVal->resolveAndCheck(e);
-    if(!FrBClass::areCompatibles(_defaultVal->getClass(), _unresolvedType->getClass()))
+    if(!_defaultVal->getClass()->isCompatibleWith(_unresolvedType->getClass()))
       throw FrBIncompatibleClassException(_defaultVal->getClass(), 
 					  _unresolvedType->getClass());
   }
@@ -78,9 +78,9 @@ FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e)
   }
   else
   {
-    /*TODO if(_unresolvedType->getClass()->inheritsFrom(container())
-       return la_valeur_null;
-     else*/
+     if(_unresolvedType->getClass()->inheritsFrom(container()))
+       return FrBNull::nullValue();
+     else
        return _unresolvedType->getClass()->createInstance(e);
   }
 }
