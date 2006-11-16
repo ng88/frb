@@ -580,3 +580,13 @@
   
   --
   implémenter dans le futur un opérateur like gérant des regexp avancées.
+  
+  --
+  concept d\'objet évolutif :
+
+  un objet de base peut evoluer vers une objet de type dérivé
+  
+  --
+  il faut bien un type pour null
+  
+  

@@ -16,22 +16,53 @@
  ***************************************************************************/
 
 
-#ifndef FRBBUILTINCLASSES_H
-#define FRBBUILTINCLASSES_H
 
 
-#include "frbcppbinding.h"
-#include "frbmemory.h"
 
 
-#include "builtin/object.dec"
-#include "builtin/primitive.dec"
-#include "builtin/debug.dec"
-
-#include "builtin/null.dec"
-#include "builtin/void.dec"
+/*                   FrBVoid                       */
+FrBCppClass * FrBVoid::_cpp_class = NULL;
 
 
-#endif
 
+
+FrBCppClass * FrBVoid::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBVoid::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBVoid::Allocator());
+    _cpp_class->setName("Void");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+    
+    return _cpp_class;
+}
+
+FrBClass * FrBVoid::getClass()
+{
+    frb_assert2(_cpp_class != NULL, "FrBVoid::getClass(), call initClass() first");
+    return _cpp_class;
+}
+
+FrBVoid::~FrBVoid()
+{
+}
+
+FrBVoid * FrBVoid::Allocator::_void_value = NULL;
+
+FrBVoid * FrBVoid::Allocator::getInstance()
+{
+    if(!_void_value)
+        _void_value = new FrBVoid();
+        
+    return _void_value;
+}
+
+FrBCppObject * FrBVoid::Allocator::createObject() const
+{
+    return getInstance();
+}
+
+
+    
 

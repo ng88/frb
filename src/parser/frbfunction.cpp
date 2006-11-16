@@ -249,7 +249,8 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     }   
     
     e.stack().pop(var_count);
-    return 0;
+    
+    return FrBVoid::voidValue();
     
 }
 

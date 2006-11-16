@@ -612,4 +612,40 @@ std::ostream& FrBStringExpr::put(std::ostream& stream) const
 
 
 
+/*         FrBNullExpr                */
+
+FrBNullExpr * FrBNullExpr::_null_expr = NULL;
+    
+FrBNullExpr::FrBNullExpr()
+{
+}
+
+
+FrBNullExpr::~FrBNullExpr()
+{
+}
+
+FrBNullExpr * FrBNullExpr::nullExpr()
+{
+    if(!_null_expr)
+        _null_expr = new FrBNullExpr();
+        
+    return _null_expr;
+}
+
+FrBBaseObject* FrBNullExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return FrBNull::nullValue();
+}
+
+const FrBClass* FrBNullExpr::getClass() const
+{
+    return FrBNull::getCppClass();
+}
+
+std::ostream& FrBNullExpr::put(std::ostream& stream) const
+{
+    return stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_NULL);
+}    
+
 

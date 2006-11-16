@@ -139,6 +139,7 @@ public:
 };
 //TODONEXT cf log rev 83 + boucle cf ctest.frb + ajouter la classe declarante à frbfunction, field... + deux ordre possibles ds la grammaire pr classes et fonctions + il faudra bien la pile pour outsideme
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
+//TODO utiliser un constructeur privé pour les types Void et Null
 
 /** Me expr */
 class FrBMeExpr : public FrBExpr
@@ -268,6 +269,29 @@ typedef FrBLiteralExpr<bool>            FrBBoolExpr;
 // typedef FrBLiteralExpr<long int>        FrBLongIntExpr;
 typedef FrBLiteralExpr<String>          FrBStringExpr;
 // typedef FrBLiteralExpr<char>            FrBCharExpr;
+
+
+/** The Null expression */
+class FrBNullExpr : public FrBExpr
+{
+private:
+    static FrBNullExpr * _null_expr;
+    
+    FrBNullExpr();
+    
+public:
+    
+    ~FrBNullExpr();
+ 
+    static FrBNullExpr * nullExpr();
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    
+    const FrBClass* getClass() const;
+
+    std::ostream& put(std::ostream& stream) const;    
+
+};
 
 
 #endif

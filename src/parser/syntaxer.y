@@ -970,10 +970,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
     | literal_bool { $<expr>$ = $<expr>1; }
-    | FRB_KW_TOKEN_NULL
-      {
-          frb_assert2(false, "Null not yet implemented");
-      }
+    | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
     | FRB_KW_TOKEN_ME
       {
 	if(fn_stack.empty())

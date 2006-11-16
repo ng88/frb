@@ -33,3 +33,5 @@
 #include "builtin/function.def"
 #include "builtin/debug.def"
 
+#include "builtin/null.def"
+#include "builtin/void.def"

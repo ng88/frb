@@ -16,22 +16,53 @@
  ***************************************************************************/
 
 
-#ifndef FRBBUILTINCLASSES_H
-#define FRBBUILTINCLASSES_H
 
 
-#include "frbcppbinding.h"
-#include "frbmemory.h"
 
 
-#include "builtin/object.dec"
-#include "builtin/primitive.dec"
-#include "builtin/debug.dec"
-
-#include "builtin/null.dec"
-#include "builtin/void.dec"
+/*                   FrBNull                       */
+FrBCppClass * FrBNull::_cpp_class = NULL;
 
 
-#endif
 
+
+FrBCppClass * FrBNull::initClass()
+{
+    frb_assert2(_cpp_class == NULL, "FrBNull::initClass(), already initialized");
+    
+    _cpp_class = new FrBCppClass(new FrBNull::Allocator());
+    _cpp_class->setName("Null");
+    _cpp_class->setSealed(true);
+    _cpp_class->setScope(SC_PUBLIC);
+    
+    return _cpp_class;
+}
+
+FrBClass * FrBNull::getClass()
+{
+    frb_assert2(_cpp_class != NULL, "FrBNull::getClass(), call initClass() first");
+    return _cpp_class;
+}
+
+FrBNull::~FrBNull()
+{
+}
+
+FrBNull * FrBNull::Allocator::_null_value = NULL;
+
+FrBNull * FrBNull::Allocator::getInstance()
+{
+    if(!_null_value)
+        _null_value = new FrBNull();
+        
+    return _null_value;
+}
+
+FrBCppObject * FrBNull::Allocator::createObject() const
+{
+    return getInstance();
+}
+
+
+    
 

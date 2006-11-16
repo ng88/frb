@@ -234,9 +234,15 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 
 bool FrBClass::areCompatibles(const FrBClass * from, const FrBClass * to)
 {
-    //from or to can be null (sub return type)
-    if(from == 0 || to == 0)
-      return false;
+    frb_assert2(from && to, "null pointer passed to FrBClass::areCompatibles()");
+    
+    //void (ie sub return) can not be converted or used in expression
+    if(from == FrBVoid::getCppClass())
+        return false;
+    
+    //null can be used with all type
+    if(from == FrBNull::getCppClass())
+        return true;
 
     return to == FrBObject::getCppClass() || from == to;
 }

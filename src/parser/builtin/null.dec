@@ -16,22 +16,38 @@
  ***************************************************************************/
 
 
-#ifndef FRBBUILTINCLASSES_H
-#define FRBBUILTINCLASSES_H
+/** null type (ie type of the Null expression) */
+class FrBNull : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
 
+public:
 
-#include "frbcppbinding.h"
-#include "frbmemory.h"
-
-
-#include "builtin/object.dec"
-#include "builtin/primitive.dec"
-#include "builtin/debug.dec"
-
-#include "builtin/null.dec"
-#include "builtin/void.dec"
-
-
-#endif
-
-
+    static FrBCppClass * initClass();
+    
+    inline FrBNull()  {};
+    virtual ~FrBNull();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != NULL, "FrBNull::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      private:
+          static FrBNull * _null_value;
+          
+      public:
+          static FrBNull * getInstance();
+          FrBCppObject * createObject() const;
+    };
+    
+    inline static FrBNull * nullValue() { return Allocator::getInstance(); }
+        
+    
+};

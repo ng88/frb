@@ -149,7 +149,10 @@ int main(int argc, char ** argv)
     
     try
     {
+    
         addClass(tree, FrBObject::initClass());
+        addClass(tree, FrBNull::initClass());
+        addClass(tree, FrBVoid::initClass());
         addClass(tree, FrBBool::initClass());
         addClass(tree, FrBInt::initClass());
         addClass(tree, FrBString::initClass());
@@ -165,6 +168,7 @@ int main(int argc, char ** argv)
         addClassAlias(tree, FrBInt::getCppClass(), "Entier");
         addClassAlias(tree, FrBBool::getCppClass(), "Booleen");
         addClassAlias(tree, FrBString::getCppClass(), "Chaine");
+        addClassAlias(tree, FrBObject::getCppClass(), "Nul");
         
         
         bool success = parser.parse(*arg_in);
