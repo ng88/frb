@@ -121,10 +121,13 @@ void FrBClass::executeDefaultConstructor(FrBExecutionEnvironment& e, FrBBaseObje
 void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   throw (FrBExecutionException)
 {
-  e.setOutsideMe(o);
+  e.stack().push(o);
+  
   int i = 0;
   for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
     o->addField(i++, it->second->evalDefaultValue(e));
+    
+  e.stack().pop();
 }
 
 FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const

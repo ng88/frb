@@ -395,7 +395,7 @@ FrBOutsideMeExpr::~FrBOutsideMeExpr()
 FrBBaseObject* FrBOutsideMeExpr::eval(FrBExecutionEnvironment& e) const
   throw (FrBEvaluationException)
 {
-  return e.outsideMe();
+  return e.stack().top();
 }
 
 const FrBClass* FrBOutsideMeExpr::getClass() const

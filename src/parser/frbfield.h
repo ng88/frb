@@ -60,7 +60,7 @@ public:
 
     virtual const FrBClass * type() const = 0;
 
-    /** Return the default value of the field, me can be obtained by e.outsideMe() */
+    /** Return the default value of the field, me can be obtained by e.stack().top() */
     virtual FrBBaseObject * evalDefaultValue(FrBExecutionEnvironment& e) const
         throw (FrBExecutionException) = 0;
     

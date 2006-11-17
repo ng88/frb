@@ -81,7 +81,7 @@ protected:
     
 public:
    
-    /** all in byte expect geo_step */
+    /** all parameters are in byte expect geo_step */
     inline FrBMemory::FrBMemory(size_t init_size = MB,
                                 size_t collect_threshold = MB,
                                 size_t geo_step = 1,

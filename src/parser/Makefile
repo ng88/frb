@@ -21,11 +21,17 @@ ifndef TRAD_LANG
     TRAD_LANG=EN
 endif
 
+ifdef NO_ASSERT
+    DEBUGASSERT=
+else
+    DEBUGASSERT=-DDEBUG_ASSERT=1
+endif
+
 ifdef DEBUG
-    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 -DDEBUG_ASSERT=1
+    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 $(DEBUGASSERT)
     STRIP=echo '*** No strip in debug mode *** '
 else
-    DEBUGFLAGS=-DDEBUG_ASSERT=1
+    DEBUGFLAGS=$(DEBUGASSERT)
     STRIP=strip
 endif
 

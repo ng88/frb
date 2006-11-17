@@ -21,6 +21,30 @@
 
 #include <iostream>
 
+
+
+
+/** check that cond is true, str is displayed if it failed */
+#define frb_assert2(cond, str) __assert((cond), __LINE__, __FILE__, (str), #cond)
+
+/** check that cond is true, "assertion failed" is displayed if it failed */
+#define frb_assert(cond) frb_assert2((cond), "assertion failed")
+
+
+/** warm by showing str if cond is not true */
+#define frb_warning2(cond, str) __warning((cond), __LINE__, __FILE__, (str), #cond)
+
+/** warm by showing "warning" if cond is not true */
+#define frb_warning(cond) frb_warning2((cond), "warning")
+
+/** define code that will be used only when assertions are used */
+#define FRB_ASSERT_CODE(code) __FRB_ASSERT_CODE(code)
+
+
+
+
+
+
 #ifdef DEBUG_ASSERT
 
 inline void __assert(bool cond, int line, char * file, char * str, char * cond_str)
@@ -54,18 +78,25 @@ inline void __warning(bool cond, int line, char * file, char * str, char * cond_
     }
 }
 
+#define __FRB_ASSERT_CODE(code) code
+
 #else
 
 #define __assert(cond, line, file, str, cond_str)
 #define __warning(cond, line, file, str, cond_str)
+#define __FRB_ASSERT_CODE(code)
+
 
 #endif
 
+#ifndef __FILE__
+# define __FILE__ "__FILE__ not defined"
+#endif
 
-#define frb_assert2(cond, str) __assert((cond), __LINE__, __FILE__, (str), #cond)
-#define frb_assert(cond) frb_assert2((cond), "assertion failed")
+#ifndef __LINE__
+# define __LINE__ -1
+#endif
 
-#define frb_warning2(cond, str) __warning((cond), __LINE__, __FILE__, (str), #cond)
-#define frb_warning(cond) frb_warning2((cond), "warning")
+
 
 #endif

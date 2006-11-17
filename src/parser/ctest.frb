@@ -6,7 +6,7 @@ Public Class A
 
        Public a As Debug
        Public b As Debug
-       'Public d As A  '<-- BOUCLE ICI A CONTROLER
+       Public d As A  
 
 End Class
 
@@ -21,7 +21,7 @@ Public Class Main
            
            Debug.println(" (a = " & a & ") > 5 = " & Me.bool2string(a > 5) )
            
-
+b:=Null
            
            Debug.println("b="+b + "   @   " + Debug.addressof(b))
            

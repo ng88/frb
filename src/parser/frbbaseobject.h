@@ -22,6 +22,7 @@
 #include <map>
 #include <vector>
 #include "../common/string.h"
+#include "../common/assert.h"
 
 class FrBClass;
 
@@ -68,6 +69,9 @@ typedef std::map<String,FrBBaseObject*> FrBBaseObjectMap;
 /** user instance */
 class FrBUserObject : public FrBBaseObject
 {
+private:
+
+    FRB_ASSERT_CODE(int _field_count);
 
 protected:
 

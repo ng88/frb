@@ -31,16 +31,19 @@ FrBUserObject::FrBUserObject(const FrBClass * type, int fc)
   :_type(type)
 {
   _fields = new FrBBaseObject*[fc];
+  FRB_ASSERT_CODE(_field_count = fc);
 }
 
 
 FrBBaseObject* FrBUserObject::getField(int i)
 {
+  frb_warning2(i >= 0 && i < _field_count, "FrBUserObject::getField(), index out of bounds");
   return _fields[i];
 }
 
 void FrBUserObject::addField(int i, FrBBaseObject * o)
 {
+  frb_assert2(i >= 0 && i < _field_count, "FrBUserObject::addField(), index out of bounds");
   _fields[i] = o;
 }
 
