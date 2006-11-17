@@ -25,7 +25,6 @@ FrBCppClass * FrBNull::_cpp_class = NULL;
 
 
 
-
 FrBCppClass * FrBNull::initClass()
 {
     frb_assert2(_cpp_class == NULL, "FrBNull::initClass(), already initialized");

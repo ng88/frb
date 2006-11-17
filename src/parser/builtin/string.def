@@ -15,7 +15,7 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-
+#include <sstream>
 
 
 /*            FrBString            */
@@ -39,6 +39,22 @@ FrBBaseObject * operator_add_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
     return r;
 }
 
+FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    std::ostringstream tmp;
+    tmp << (static_cast<FrBString*>(me))->value();
+
+    if(arg0->getClass() == FrBNull::getCppClass())
+        tmp << "<null>";
+    else
+        tmp << "<object@" << (unsigned int)arg0 << ">";
+    
+    FrBString * r = new FrBString(tmp.str());
+    e.addGarbagedObject(r);
+    return r;
+}
+
+
 
 FrBCppClass * FrBString::initClass()
 {
@@ -57,10 +73,20 @@ FrBCppClass * FrBString::initClass()
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
+   
     
     f = new FrBUnaryCppFunction(operator_add_FrBString_FrBInt,  FrBInt::getCppClass(), false);
     f->setReturnType(_cpp_class);
     f->setName("operator+|&(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
+    
+    f = new FrBUnaryCppFunction(operator_add_FrBString_FrBObject, FrBObject::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator+|&(Object)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     

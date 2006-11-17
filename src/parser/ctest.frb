@@ -20,6 +20,11 @@ Public Class Main
            Debug.println("fact(a = " & a & ")=" & Me.fact(a) )
            
            Debug.println(" (a = " & a & ") > 5 = " & Me.bool2string(a > 5) )
+           
+
+           
+           Debug.println("b="+b + "   @   " + Debug.addressof(b))
+           
     End Sub
 
     Public Shared Function bool2string(b As Bool) As String
