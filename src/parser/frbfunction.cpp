@@ -145,6 +145,8 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 {
     using namespace std;
     
+    frb_assert(sub() || (!sub() && returnType()));
+    
     String str_indent(indent, '\t');
     
     stream  << str_indent << FrBKeywords::scopeToString(scope()) << ' '
@@ -269,8 +271,11 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
     if(!sub())
     {
         frb_assert(_unresolvedRetType);
+        
         _unresolvedRetType->resolveAndCheck(e);
         setReturnType(_unresolvedRetType->getClass());
+        
+        frb_assert(returnType());
     }
     
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
@@ -292,6 +297,8 @@ void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
 std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 {
     using namespace std;
+    
+    frb_assert(sub() || (!sub() && _unresolvedRetType));
     
     String str_indent(indent, '\t');
     
@@ -320,11 +327,12 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 	stream << ", ";
             
     }
-    stream << ") ";
-            
+    
+    stream << ") ";       
+    
     if(!sub())        
       stream  << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_AS) << ' '
-	      << returnType()->name();
+	      << *_unresolvedRetType;
 
     stream << endl;
             

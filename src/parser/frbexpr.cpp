@@ -102,6 +102,8 @@ FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
 
 void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    //TODO verif des var seules, peuvent être : classe (inner, outer, imported), function & co, membre
+    // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
     _type = e.getClassFromName(_name);
 }
 
@@ -155,7 +157,10 @@ void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
     (void)cc;
     (void)name;
     
-    //TODO a completer
+    //TODO cf FrBUnresolvedIdExpr::resolveAndCheck() ms avec un contexte de recherche
+    // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
+    
+
     /* _rhs est soit une inner classe soit un membre soit tout ce qui est function */
     
 //     /*  function/sub */

@@ -18,7 +18,7 @@
 
 #include "frbresolveenvironment.h"
 #include "frbclass.h"
-
+#include "../common/assert.h"
 
 FrBClass * FrBResolveEnvironment::getClassFromName(const String& name) throw (FrBClassNotFoundException)
 {
@@ -27,7 +27,10 @@ FrBClass * FrBResolveEnvironment::getClassFromName(const String& name) throw (Fr
     if(f == _root->end())
         throw FrBClassNotFoundException(name);
     else
+    {
+        frb_assert(f->second);
         return f->second;
+    }
 }
 
 FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)

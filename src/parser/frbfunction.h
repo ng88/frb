@@ -304,6 +304,7 @@ inline int FrBCodeFunction::localVarCount() const
 
 inline void FrBCodeFunction::setURReturnType(FrBTypeExpr* t)
 {
+    frb_assert(sub() || (!sub() && t));
     _unresolvedRetType = t;
 }
 

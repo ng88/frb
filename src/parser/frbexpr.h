@@ -63,8 +63,8 @@ class FrBTypeExpr : public FrBExpr
 class FrBUnresolvedIdExpr : public FrBTypeExpr
 {
 private:
-    String          _name;
-    FrBClass * _type;
+    String              _name;
+    FrBClass *          _type;
     
 public:
     FrBUnresolvedIdExpr(const String& name);

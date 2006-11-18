@@ -973,10 +973,14 @@ literal_expr:
     | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
     | FRB_KW_TOKEN_ME
       {
-	if(fn_stack.empty())
-          $<expr>$ = new FrBOutsideMeExpr(current_class());
-	else
-          $<expr>$ = new FrBMeExpr(current_fn());
+        if(current_fn()->shared())
+            ; //TODO declancher une erreur sémantique ici : pas de me ds une shared
+            
+        if(fn_stack.empty())
+            $<expr>$ = new FrBOutsideMeExpr(current_class());
+        else
+            $<expr>$ = new FrBMeExpr(current_fn());
+            
       }
     | FRB_IDENTIFIER                  
       {
@@ -984,13 +988,9 @@ literal_expr:
             String name($<str>1);
             //printf("ID NAME %s\n", $<str>1);
             free($<str>1);
-            
-	    FrBClass * cc = current_class();
+
             FrBCodeFunction * cf = current_fn();
-            
-            (void)cc;
-            
-            
+
             /*
                 We look for:
                   X 1. local var
@@ -1038,7 +1038,7 @@ literal_expr:
             
             //puts("ID UNRESOLVED\n");
             
-            $<expr>$ = new FrBUnresolvedIdExpr(name);
+            //$<expr>$ = new FrBUnresolvedIdExpr(name);
             
 
 //             

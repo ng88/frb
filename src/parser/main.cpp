@@ -63,9 +63,10 @@ int main(int argc, char ** argv)
                 argv[0],
                 "--file",
                 "ctest.frb",
+                "--parse-tree",
             };
         argv = debug_argv;
-        argc = 3;
+        argc = 4;
     }
 #endif
 
@@ -199,6 +200,7 @@ int main(int argc, char ** argv)
         FrBMemory memory(100 * FrBMemory::B, 10 * FrBMemory::B, 2, 0);
         FrBExecutionEnvironment env(&memory, &renv);
 
+        env.addGarbagedObject(FrBNull::nullValue());
         
         FrBClass * main = renv.getClassFromPath(arg_main_class);
         

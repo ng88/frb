@@ -69,14 +69,11 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
         frb_assert(it->second);
-        it->second->resolvePrototype(e);  
+        it->second->resolvePrototype(e);
     }
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
-    {
-        frb_assert(it->second);
-        it->second->resolveAndCheck(e);  
-    }
+        it->second->resolveAndCheck(e);
 }
 
 void FrBParser::dispose()

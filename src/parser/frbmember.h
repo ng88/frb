@@ -19,6 +19,7 @@
 #ifndef FRBMEMBER_H
 #define FRBMEMBER_H
 
+#include "../common/assert.h"
 
 class FrBClass;
 
@@ -28,12 +29,49 @@ protected:
     const FrBClass* _contClass;
     
 public:
+
+    FRB_ASSERT_CODE(FrBMember() : _contClass(0) {});
     
-    inline void setContainer(const FrBClass* c) { _contClass = c; }
-    inline const FrBClass* container() const { return _contClass; }    
+    inline void setContainer(const FrBClass* c);
+    inline const FrBClass* container() const;
         
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*                   inlined                   */
+
+
+inline void FrBMember::setContainer(const FrBClass* c)
+{
+    frb_assert(c);
+    _contClass = c;
+}
+
+inline const FrBClass* FrBMember::container() const
+{
+    frb_warning(_contClass);
+    return _contClass;
+}
 
 #endif
 

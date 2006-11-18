@@ -6,22 +6,20 @@ Public Class A
 
        Public a As Debug
        Public b As Debug
-       Public d As A  
+       Public d As A' := Null
 
 End Class
 
 Public Class Main
 
     Private Shared dbg As Debug
-    Private i As Integer := Me.fact(5)
+    'Private i As Integer := Me.fact(5)
 
     Public Shared Sub main(a As Int)
 	   Dim b As A
            Debug.println("fact(a = " & a & ")=" & Me.fact(a) )
            
            Debug.println(" (a = " & a & ") > 5 = " & Me.bool2string(a > 5) )
-           
-b:=Null
            
            Debug.println("b="+b + "   @   " + Debug.addressof(b))
            
