@@ -120,7 +120,7 @@ public:
     
 
     template<class It, class ArgContainer>    
-    static FrBFunction* findOverload(It begin, const It& end, const ArgContainer& args)
+    static FrBFunction* findOverload(const String& name, It begin, const It& end, const ArgContainer& args)
         throw (FrBFunctionNotFoundException)
     {
         FrBFunction * bestMatch = 0;
@@ -138,7 +138,7 @@ public:
         }
         
         if(matchDegree == NO_MATCH)
-            throw FrBFunctionNotFoundException("", args);
+            throw FrBFunctionNotFoundException(name, args);
             
         return bestMatch;
     }

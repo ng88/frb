@@ -253,14 +253,14 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
         try
         {
             _fn = cl->findOperator(_op, args);
-            if(!_fn->shared()) throw FrBFunctionNotFoundException("");
+            if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
         }
         catch(FrBFunctionNotFoundException)
         {
             try
             {
                 _fn = cr->findOperator(_op, args);
-                if(!_fn->shared()) throw FrBFunctionNotFoundException("");
+                if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
             }
             catch(FrBFunctionNotFoundException)
             {
@@ -269,7 +269,7 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
                     args.clear();
                     args.push_back(cr);
                     _fn = cl->findOperator(_op, args);
-                    if(_fn->shared()) throw FrBFunctionNotFoundException("");
+                    if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
                 }
                 catch(FrBFunctionNotFoundException)
                 {
@@ -511,14 +511,14 @@ void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveEx
     try
     {
         _fn = cl->findOperator(_op, args);
-        if(!_fn->shared()) throw FrBFunctionNotFoundException("");
+        if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
     }
     catch(FrBFunctionNotFoundException)
     {
         try
         {
             _fn = cr->findOperator(_op, args);
-            if(!_fn->shared()) throw FrBFunctionNotFoundException("");
+            if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
         }
         catch(FrBFunctionNotFoundException)
         {
@@ -527,7 +527,7 @@ void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveEx
                 args.clear();
                 args.push_back(cr);
                 _fn = cl->findOperator(_op, args);
-                if(_fn->shared()) throw FrBFunctionNotFoundException("");
+                if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
             }
             catch(FrBFunctionNotFoundException)
             {

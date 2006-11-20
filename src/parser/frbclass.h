@@ -28,6 +28,7 @@
 #include "frbbaseobject.h"
 #include "frbfunction.h"
 #include "frbfield.h"
+#include "frbkeywords.h"
 
 typedef char op_t;
 
@@ -298,7 +299,8 @@ template<class ArgContainer>
 inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
      throw (FrBFunctionNotFoundException)
 {
-  return FrBFunction::findOverload(_ctors.begin(), _ctors.end(), args);
+  return FrBFunction::findOverload(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME),
+                                       _ctors.begin(), _ctors.end(), args);
 }
     
 inline FrBClass::FnPairIt FrBClass::findFunctions(const String& name) const
@@ -312,7 +314,7 @@ inline FrBFunction * FrBClass::findFunction(const String& name, const ArgContain
 {
   FnPairIt seq = _functions.equal_range(name);
         
-  return FrBFunction::findOverload(
+  return FrBFunction::findOverload(name,
 				   const_map_snd_iterator<FunctionContainer>(seq.first),
 				   const_map_snd_iterator<FunctionContainer>(seq.second),
 				   args);
@@ -325,7 +327,7 @@ inline FrBFunction * FrBClass::findOperator(int op, const ArgContainer& args) co
   typedef OperatorContainer::const_iterator It;
   std::pair<It, It> seq = _operators.equal_range(op);
         
-  return FrBFunction::findOverload(
+  return FrBFunction::findOverload(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR) + ((char)op),
 				   const_map_snd_iterator<OperatorContainer>(seq.first),
 				   const_map_snd_iterator<OperatorContainer>(seq.second),
 				   args);

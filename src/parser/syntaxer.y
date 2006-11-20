@@ -973,13 +973,18 @@ literal_expr:
     | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
     | FRB_KW_TOKEN_ME
       {
-        if(current_fn()->shared())
-            ; //TODO declancher une erreur sémantique ici : pas de me ds une shared
             
         if(fn_stack.empty())
+        {
             $<expr>$ = new FrBOutsideMeExpr(current_class());
+        }
         else
+        {
+            if(current_fn()->shared())
+                ; //TODO declancher une erreur sémantique ici : pas de me ds une shared
+                
             $<expr>$ = new FrBMeExpr(current_fn());
+        }
             
       }
     | FRB_IDENTIFIER                  
@@ -989,56 +994,50 @@ literal_expr:
             //printf("ID NAME %s\n", $<str>1);
             free($<str>1);
 
-            FrBCodeFunction * cf = current_fn();
+            if(!fn_stack.empty())
+            {
+                FrBCodeFunction * cf = current_fn();
 
-            /*
-                We look for:
-                  X 1. local var
-                  X 2. function parameter
-                    3. local class member
-                 ---
-                  X 4. local class function/sub
-                    5. local class property
-                  X 6. class names of the inners classes
-                    7. class au même niveau ie ds le mm module
-                  X 8. imported class name
-                  Parent pout accéder a l'outer class
-                  Base.<nom> pour une super classe
-            
-            */
-            
-            //TODO ici on resoud que les var local(param, this, var) pas le reste (post traitement)
-            
-            /* 1. local var */
-           
-            int idvar = cf->findLocalVar(name);
-            if(idvar > -1)
-            {
-                /* found */
+                /*
+                    We look for:
+                    X 1. local var
+                    X 2. function parameter
+                        3. local class member
+                    ---
+                    X 4. local class function/sub
+                        5. local class property
+                    X 6. class names of the inners classes
+                        7. class au même niveau ie ds le mm module
+                    X 8. imported class name
+                    Parent pout accéder a l'outer class
+                    Base.<nom> pour une super classe
                 
-                $<expr>$ = new FrBLocalVarExpr(cf, cf->getLocalVar(idvar), -idvar - 1);
+                */
                 
-                //puts("ID FOUND -- /* 1. local var */\n");
+                //TODO ici on resoud que les var local(param, this, var) pas le reste (post traitement)
                 
-                break;
+                /* local var */
+                int idvar = cf->findLocalVar(name);
+                if(idvar > -1)
+                {
+                    $<expr>$ = new FrBLocalVarExpr(cf, cf->getLocalVar(idvar), -idvar - 1);
+                    break;
+                }
+
+                /* parameter */
+                idvar = cf->getParam(name);
+                if(idvar > -1)
+                {
+                    $<expr>$ = new FrBLocalVarExpr(cf, cf->getURParam(idvar),  idvar + 1);
+                    break;
+                }
+            
             }
             
-            /* 2. function parameter */
-            idvar = cf->getParam(name);
-            
-            if(idvar > -1)
-            {
-                /* found */
-                
-                $<expr>$ = new FrBLocalVarExpr(cf, cf->getURParam(idvar),  idvar + 1);
-                
-                //puts("ID FOUND -- /* 2. function parameter */\n");
-                break;
-            }
-            
-            //puts("ID UNRESOLVED\n");
-            
-            //$<expr>$ = new FrBUnresolvedIdExpr(name);
+            $<expr>$ = new FrBUnresolvedIdExpr(name /*, la classe ici en param
+                                                        car tout ce qui concerne la
+                                                        fonction eventuelle a deja
+                                                        ete traité */);
             
 
 //             

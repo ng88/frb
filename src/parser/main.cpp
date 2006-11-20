@@ -63,10 +63,9 @@ int main(int argc, char ** argv)
                 argv[0],
                 "--file",
                 "ctest.frb",
-                "--parse-tree",
             };
         argv = debug_argv;
-        argc = 4;
+        argc = 3;
     }
 #endif
 
