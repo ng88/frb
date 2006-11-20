@@ -981,7 +981,7 @@ literal_expr:
         else
         {
             if(current_fn()->shared())
-                ; //TODO declancher une erreur sémantique ici : pas de me ds une shared
+                ; //TODO declencher une erreur sémantique ici : pas de me ds une shared
                 
             $<expr>$ = new FrBMeExpr(current_fn());
         }
@@ -991,7 +991,6 @@ literal_expr:
       {
       
             String name($<str>1);
-            //printf("ID NAME %s\n", $<str>1);
             free($<str>1);
 
             if(!fn_stack.empty())
@@ -1013,9 +1012,7 @@ literal_expr:
                     Base.<nom> pour une super classe
                 
                 */
-                
-                //TODO ici on resoud que les var local(param, this, var) pas le reste (post traitement)
-                
+
                 /* local var */
                 int idvar = cf->findLocalVar(name);
                 if(idvar > -1)
@@ -1034,10 +1031,7 @@ literal_expr:
             
             }
             
-            $<expr>$ = new FrBUnresolvedIdExpr(name /*, la classe ici en param
-                                                        car tout ce qui concerne la
-                                                        fonction eventuelle a deja
-                                                        ete traité */);
+            $<expr>$ = new FrBUnresolvedIdWithContextExpr(current_class(), name);
             
 
 //             

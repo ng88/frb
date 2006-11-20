@@ -13,7 +13,7 @@ End Class
 Public Class Main
 
     Private Shared dbg As Debug
-    Private i As Integer := fact(5)
+    Private i As Integer := Me.fact(5)
 
 
     Public Shared Sub main(a As Int)

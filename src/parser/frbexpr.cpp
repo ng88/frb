@@ -104,7 +104,8 @@ void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 {
     //TODO verif des var seules, peuvent être : classe (inner, outer, imported), function & co, membre
     // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
-    _type = e.getClassFromName(_name);
+    //_type = e.getClassFromName(_name);
+    frb_assert(false);
 }
 
 FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
@@ -128,6 +129,31 @@ std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
     else
         return stream << "unresolved_" << _name;
 }
+
+/*     FrBUnresolvedIdWithContextExpr      */
+
+
+FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name)
+ : FrBUnresolvedIdExpr(name), _context(context)
+{
+}
+
+FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
+{
+}
+
+void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+
+FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
+{
+}
+
 
 
 

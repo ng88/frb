@@ -53,16 +53,19 @@ public:
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
 
-/** Used in syntaxer for type */
+/** Used in syntaxer for type & type resolution */
 class FrBTypeExpr : public FrBExpr
 {
 };
 
 
-/** Identifier not yet resolved (ie class name, function...) */
+/** Identifier not yet resolved (ie class name, function...)
+    no context is provied, typically it's used in an expression like
+    FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr))
+ */
 class FrBUnresolvedIdExpr : public FrBTypeExpr
 {
-private:
+protected:
     String              _name;
     FrBClass *          _type;
     
@@ -77,6 +80,27 @@ public:
     
     inline const String& name() const { return _name; }
 };
+
+/** Identifier not yet resolved (ie class name, function...)
+    current class context is provied, typically it's used in an expression like
+    FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr))
+    or simply
+    FrBUnresolvedIdWithContextExpr
+*/
+class FrBUnresolvedIdWithContextExpr : public FrBUnresolvedIdExpr
+{
+private:
+    FrBClass *          _context;
+    
+public:
+    FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name);
+    ~FrBUnresolvedIdWithContextExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+};
+
 
 /** Member operator (.) */
 class FrBMemberOpExpr : public FrBTypeExpr
