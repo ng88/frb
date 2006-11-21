@@ -222,6 +222,9 @@ public:
     /** Return true if current class inherits from from */
     bool inheritsFrom(const FrBClass * from) const;
     
+    /** can resolve any type of member (function, inner class, field, ...) */
+    const FrBMember* getMember(const String& name) const;
+    
 };
 
 

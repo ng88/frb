@@ -144,6 +144,7 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
 {
+    _type = e.getClassFromName(_name, _context);
 }
 
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)

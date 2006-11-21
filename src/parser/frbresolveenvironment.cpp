@@ -19,12 +19,16 @@
 #include "frbresolveenvironment.h"
 #include "frbclass.h"
 #include "../common/assert.h"
+#include "../common/string.h"
+#include "frbkeywords.h"
 
-FrBClass * FrBResolveEnvironment::getClassFromName(const String& name) throw (FrBClassNotFoundException)
+const FrBClass * FrBResolveEnvironment::getClassFromName(const String& name, FrBClass * parent) throw (FrBClassNotFoundException)
 {
-    FrBClassMap::iterator f = _root->find(name);
+    const FrBClassMap * inners = parent ? parent->innerClassList() : _root;
     
-    if(f == _root->end())
+    FrBClassMap::const_iterator f = inners->find(name);
+    
+    if(f == inners->end())
         throw FrBClassNotFoundException(name);
     else
     {
@@ -33,9 +37,19 @@ FrBClass * FrBResolveEnvironment::getClassFromName(const String& name) throw (Fr
     }
 }
 
-FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)
+const FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)
 {
-    //TODO
-    return getClassFromName(name);
+    StringList elm;
+    const FrBClassMap * current = 0;
+    
+    StringEx::split(elm, FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER), false);
+    
+    for(StringList::const_iterator it = elm.begin(); it != elm.end(); ++it)
+        current = getClassFromName(*it, current);
+    
+    if(!current)
+        throw FrBClassNotFoundException(name);
+        
+    return current;
 }
 

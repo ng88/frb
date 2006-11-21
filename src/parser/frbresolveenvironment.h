@@ -45,14 +45,12 @@ public:
     inline FrBClassMap * classRoot() { return _root; }
     
     /** can resolve things like "String" or "Int"... */
-    FrBClass * getClassFromName(const String& name/*, FrBClass * parent = 0*/) throw (FrBClassNotFoundException);
+    const FrBClass * getClassFromName(const String& name, FrBClass * parent = 0) throw (FrBClassNotFoundException);
     
     /** can resolve things like "FrB.String" or "Module1.Application1.Classe1" or "Int"... */
-    FrBClass * getClassFromPath(const String& name) throw (FrBClassNotFoundException);
+    const FrBClass * getClassFromPath(const String& name) throw (FrBClassNotFoundException);
 
-    
-    
-    
+        
 
 };
 

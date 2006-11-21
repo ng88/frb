@@ -67,7 +67,7 @@ class FrBUnresolvedIdExpr : public FrBTypeExpr
 {
 protected:
     String              _name;
-    FrBClass *          _type;
+    const FrBClass *    _type;
     
 public:
     FrBUnresolvedIdExpr(const String& name);
@@ -90,7 +90,7 @@ public:
 class FrBUnresolvedIdWithContextExpr : public FrBUnresolvedIdExpr
 {
 private:
-    FrBClass *          _context;
+    const FrBClass *          _context;
     
 public:
     FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name);
