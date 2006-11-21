@@ -38,8 +38,8 @@ typedef std::stack<char*> CStringStack;
 namespace StringEx /* extended functions on string */
 {
     /* split source in container using delim as delimiter */
-    template<class T>
-    size_t split(T &container, const String& source, char delim = '\n', bool allowEmptyEntries = true)
+    template<class T, class D>
+    size_t split(T &container, const String& source, D delim = '\n', bool allowEmptyEntries = true)
     {
         size_t found = 0;
         String::const_iterator left = source.begin();
