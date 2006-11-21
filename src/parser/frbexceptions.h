@@ -109,8 +109,11 @@ public:
     inline const String& name() { return _name; }
 };
 
+class FrBMemberNotFoundException : public FrBExecutionException, public FrBResolveException
+{
+};
 
-class FrBFieldNotFoundException : public FrBExecutionException, public FrBResolveException
+class FrBFieldNotFoundException : public FrBMemberNotFoundException
 {
 protected:
     String _name;
@@ -125,7 +128,7 @@ public:
 };
 
 //TODO prendre en charge les candidate
-class FrBFunctionNotFoundException : public FrBExecutionException, public FrBResolveException
+class FrBFunctionNotFoundException : public FrBMemberNotFoundException
 {
 protected:
     String _name;
@@ -144,6 +147,9 @@ public:
     inline void addCandidate(FrBFunction* f) { _candidates.push_back(f); }
 };
 
+//TODO to be improved
+typedef FrBFunctionNotFoundException FrBFunctionAmbiguityException;
+
 class FrBDefaultCtorNotFoundException : public FrBFunctionNotFoundException
 {
 public:
@@ -159,7 +165,7 @@ public:
 };
 
 
-class FrBClassNotFoundException : public FrBExecutionException, public FrBResolveException
+class FrBClassNotFoundException : public FrBMemberNotFoundException
 {
 protected:
     String _name;

@@ -180,6 +180,8 @@ public:
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
     
+    inline ClassContainer* innerClassPtr() { return &_innerClasses; }
+    
     
     inline bool shared() const { return _shared; }
     inline bool abstract() const { return _abstract; }
@@ -195,6 +197,7 @@ public:
     
     inline unsigned int typeID() const { return reinterpret_cast<unsigned int>(this); }
    
+    String fullName() const;
     
     /** allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
@@ -223,7 +226,7 @@ public:
     bool inheritsFrom(const FrBClass * from) const;
     
     /** can resolve any type of member (function, inner class, field, ...) */
-    const FrBMember* getMember(const String& name) const;
+    const FrBMember* getMember(const String& name) const throw (FrBMemberNotFoundException);
     
 };
 
@@ -349,9 +352,15 @@ inline FrBFunction * FrBClass::findDestructor() const
 inline FrBField * FrBClass::findField(const String& name) const
      throw (FrBFieldNotFoundException)
 {
-  //        NameParamList::const_iterator it = _paramName.find(name);
-  return 0;
-  //return (it == _paramName.end()) ? -1 : it->second;
+    FieldContainer::const_iterator f = _fields->find(name);
+    
+    if(f == _fields->end())
+        throw FrBFieldNotFoundException(name);
+    else
+    {
+        frb_assert(f->second);
+        return f->second;
+    }
 }
    
 inline void FrBClass::executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,

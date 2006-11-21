@@ -159,6 +159,16 @@ void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 
 }
 
+String FrBClass::fullName() const
+{
+    if(container())
+        return container()->fullName()
+                  .append(FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER))
+                  .append(name());
+    else
+        return name();
+}
+
 
 std::ostream& FrBClass::put(std::ostream& sout, int level) const
 {
@@ -252,8 +262,33 @@ bool FrBClass::isCompatibleWith(const FrBClass * to) const
 
 bool FrBClass::inheritsFrom(const FrBClass * from) const
 {
-    //a faire
+    //TODO a faire
     return isCompatibleWith(from);
+}
+
+const FrBMember* FrBClass::getMember(const String& name) const throw (FrBMemberNotFoundException)
+{
+    /* look for a field first */
+    
+    try
+    {
+        return findField(name);
+    }
+    catch(FrBFieldNotFoundException ex)
+    {
+        /* look for a function */
+        
+        FnPairIt pit = findFunctions(name);
+        
+        if(pit.second->second)
+            throw FrBFunctionAmbiguityException(name);
+        else if(pit.first != functionList()->end())
+            return pit.first->second;
+        else
+            throw FrBFunctionNotFoundException(name);
+    }
+    
+
 }
 
 

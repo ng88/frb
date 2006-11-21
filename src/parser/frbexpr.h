@@ -165,6 +165,8 @@ public:
 //+ finir les champs
 //TODO pr les operateur de conversion automatique (ie INT <-> STRING) : utiliser des interfaces
 //TODO utiliser un constructeur privé pour les types Void et Null
+//TODO GC, Makefile (pour common/*.cpp)
+//Import / Import ss As sd
 
 /** Me expr */
 class FrBMeExpr : public FrBExpr

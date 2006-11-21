@@ -29,6 +29,7 @@ class FrBResolveEnvironment
 private:
 
     FrBClassMap * _root;
+    FrBClassMap _importedClass;
     
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
     
@@ -37,18 +38,20 @@ public:
     /**
       * @param root Class root
       */
-    FrBResolveEnvironment(FrBClassMap * root)
-     : _root(root)
-    {
-    }
+    FrBResolveEnvironment(FrBClassMap * root)  : _root(root) { }
     
     inline FrBClassMap * classRoot() { return _root; }
     
-    /** can resolve things like "String" or "Int"... */
-    const FrBClass * getClassFromName(const String& name, FrBClass * parent = 0) throw (FrBClassNotFoundException);
+    /** can resolve things like "String" or "Int"... (look for imported (if lookForImported)  & root classes) */
+    const FrBClass * getClassFromName(const String& name, FrBClass * parent = 0, bool lookForImported = true)
+        throw (FrBClassNotFoundException);
+ 
     
     /** can resolve things like "FrB.String" or "Module1.Application1.Classe1" or "Int"... */
     const FrBClass * getClassFromPath(const String& name) throw (FrBClassNotFoundException);
+    
+    /** add an imported class or a class shortcut*/
+    void addImportedClass(const String& fullPath, const String& importName = "") throw (FrBClassNotFoundException);
 
         
 

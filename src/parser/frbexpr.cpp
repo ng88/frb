@@ -144,6 +144,7 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
 {
+    //c pas forcément un type........
     _type = e.getClassFromName(_name, _context);
 }
 
