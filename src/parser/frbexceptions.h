@@ -109,21 +109,26 @@ public:
     inline const String& name() { return _name; }
 };
 
+
 class FrBMemberNotFoundException : public FrBExecutionException, public FrBResolveException
 {
+protected:
+    String _name;
+
+public:
+    FrBMemberNotFoundException(const String& name);
+
+    inline const String& name() { return _name; }
+
 };
 
 class FrBFieldNotFoundException : public FrBMemberNotFoundException
 {
-protected:
-    String _name;
     
 public:
     FrBFieldNotFoundException(const String& name);
     
     std::ostream& put(std::ostream& stream) const;
-    
-    inline const String& name() { return _name; }
 
 };
 
@@ -131,7 +136,6 @@ public:
 class FrBFunctionNotFoundException : public FrBMemberNotFoundException
 {
 protected:
-    String _name;
     std::vector<const FrBClass*> _args;
     std::vector<FrBFunction*> _candidates;
     
@@ -142,8 +146,7 @@ public:
     FrBFunctionNotFoundException(const String& name);
     
     std::ostream& put(std::ostream& stream) const;
-    
-    inline const String& name() { return _name; }
+
     inline void addCandidate(FrBFunction* f) { _candidates.push_back(f); }
 };
 
@@ -167,14 +170,12 @@ public:
 
 class FrBClassNotFoundException : public FrBMemberNotFoundException
 {
-protected:
-    String _name;
+
     
 public:
     FrBClassNotFoundException(const String& name);
     std::ostream& put(std::ostream& stream) const;
-    
-    inline const String& name() { return _name; }
+
 };
 
 
@@ -189,18 +190,6 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
-class FrBMemberNotFoundException : public FrBResolveException
-{
-protected:
-    const FrBClass * _class;
-    String _name;
 
-public:
-    FrBMemberNotFoundException(const FrBClass * c, const String& name);
-    std::ostream& put(std::ostream& stream) const;
-    
-    inline const String& member() { return _name; }
-    inline const FrBClass * getClass() { return _class; }
-};
 
 #endif

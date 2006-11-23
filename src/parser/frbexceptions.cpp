@@ -70,7 +70,7 @@ std::ostream& FrBStackOverflowException::put(std::ostream& stream) const
 /*          FrBFieldNotFoundException           */
 
 FrBFieldNotFoundException::FrBFieldNotFoundException(const String& name)
-  : _name(name)
+  : FrBMemberNotFoundException(name)
 {
 }
 
@@ -84,23 +84,24 @@ std::ostream& FrBFieldNotFoundException::put(std::ostream& stream) const
 
 
 FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name)
-    : _name(name)
+    : FrBMemberNotFoundException(name)
 {
 }
 
 FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, const std::vector<const FrBClass*>& args)
-    : _name(name), _args(args)
+    : FrBMemberNotFoundException(name), _args(args)
 {
 }
 
 FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, const std::vector<FrBBaseObject*>& args)
-    : _name(name)
+    : FrBMemberNotFoundException(name)
 {
     for(std::vector<FrBBaseObject*>::const_iterator it = args.begin(); it != args.end(); ++it)
         _args.push_back( (*it)->getClass() );
 }
 
 FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, const FrBExprList& args)
+    : FrBMemberNotFoundException(name)
 {
     for(FrBExprList::const_iterator it = args.begin(); it != args.end(); ++it)
         _args.push_back( (*it)->getClass() );
@@ -135,7 +136,7 @@ FrBDtorNotFoundException::FrBDtorNotFoundException()
 /*             FrBClassNotFoundException             */
 
 FrBClassNotFoundException::FrBClassNotFoundException(const String& name)
-    : _name(name)
+    : FrBMemberNotFoundException(name)
 {
 }
 
@@ -162,15 +163,10 @@ std::ostream& FrBIncompatibleClassException::put(std::ostream& stream) const
 /*        FrBMemberNotFoundException           */
 
 
-FrBMemberNotFoundException::FrBMemberNotFoundException(const FrBClass * c, const String& name)
- : _class(c), _name(name)
+FrBMemberNotFoundException::FrBMemberNotFoundException(const String& name)
+ :  _name(name)
 {
 }
 
-
-std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
-{
-    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_MB_NOT_FOUND, _name, _class->name());
-}
 
 

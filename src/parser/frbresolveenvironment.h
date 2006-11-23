@@ -32,6 +32,9 @@ private:
     FrBClassMap _importedClass;
     
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
+
+    /** return container[name] if exists or 0 if not */
+    FrBClass * findClass(const String& name, FrBClassMap * container);
     
 public:
 
@@ -41,19 +44,25 @@ public:
     FrBResolveEnvironment(FrBClassMap * root)  : _root(root) { }
     
     inline FrBClassMap * classRoot() { return _root; }
-    
-    /** can resolve things like "String" or "Int"... (look for imported (if lookForImported)  & root classes) */
-    const FrBClass * getClassFromName(const String& name, FrBClass * parent = 0, bool lookForImported = true)
-        throw (FrBClassNotFoundException);
  
     
     /** can resolve things like "FrB.String" or "Module1.Application1.Classe1" or "Int"... */
-    const FrBClass * getClassFromPath(const String& name) throw (FrBClassNotFoundException);
+    FrBClass * getClassFromPath(const String& name)
+        throw (FrBClassNotFoundException);
+        
+    /** can resolve things like "String" or "Int"... (look for imported (if lookForImported)  & root classes)
+      * context, if specified, is the class in which name has been found
+      */
+    FrBClass * getClassFromName(const String& name, FrBClass * context = 0)
+        throw (FrBClassNotFoundException);
+    
+    /** can resolve things like parent.name where name is a type name */
+    static FrBClass * getNextClassFromName(const String& name, FrBClass * parent)
+        throw (FrBClassNotFoundException);
     
     /** add an imported class or a class shortcut*/
-    void addImportedClass(const String& fullPath, const String& importName = "") throw (FrBClassNotFoundException);
-
-        
+    void addImportedClass(const String& fullPath, const String& importName = "")
+        throw (FrBClassNotFoundException);
 
 };
 

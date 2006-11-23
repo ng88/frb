@@ -167,6 +167,8 @@ public:
 //TODO utiliser un constructeur privé pour les types Void et Null
 //TODO GC, Makefile (pour common/*.cpp)
 //Import / Import ss As sd
+//operator # (cardinal)
+//idée syntax constructeur Public Sub Initialize() Parent1(a, b, c), Parent2(a)
 
 /** Me expr */
 class FrBMeExpr : public FrBExpr

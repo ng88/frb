@@ -26,14 +26,15 @@ class FrBClass;
 class FrBMember /* a frb member */
 {
 protected:
-    const FrBClass* _contClass;
+    FrBClass* _contClass;
     
 public:
 
     FRB_ASSERT_CODE(FrBMember() : _contClass(0) {});
     
-    inline void setContainer(const FrBClass* c);
+    inline void setContainer(FrBClass* c);
     inline const FrBClass* container() const;
+    inline FrBClass* containerPtr();
         
 };
 
@@ -61,13 +62,19 @@ public:
 /*                   inlined                   */
 
 
-inline void FrBMember::setContainer(const FrBClass* c)
+inline void FrBMember::setContainer(FrBClass* c)
 {
     frb_assert(c);
     _contClass = c;
 }
 
 inline const FrBClass* FrBMember::container() const
+{
+    frb_warning(_contClass);
+    return _contClass;
+}
+
+inline FrBClass* FrBMember::containerPtr()
 {
     frb_warning(_contClass);
     return _contClass;

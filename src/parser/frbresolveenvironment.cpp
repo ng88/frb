@@ -25,25 +25,40 @@
 //et  getClassFromName serait utilisé pour la premiere etape de getClassFromPath et devrait en plus
 // s'occuper de la recherches des classes du module courant (ie container()->innerClassList())
 
-const FrBClass * FrBResolveEnvironment::getClassFromName(const String& name, FrBClass * parent,
-        bool lookForImported) throw (FrBClassNotFoundException)
-{
-    FrBClassMap::iterator f;
-    
-    if(lookForImported)
-    {
-        f = _importedClass.find(name);
-        
-        if(f != _importedClass.end())
-        {
-            frb_assert(f->second);
-            return f->second;
-        }
-    }
 
-    FrBClassMap * inners = parent ? parent->innerClassPtr() : _root;
+
+FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)
+{
+    StringList elm;
+    FrBClass * current = 0;
     
-    f = inners->find(name);
+    StringEx::split(elm, FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER), false);
+    
+    StringList::const_iterator it = elm.begin();
+    if(it != elm.end())
+    {
+        current = getClassFromName(*it);
+        it++;
+    }
+    
+    while(it != elm.end())
+    {
+        current = getNextClassFromName(*it, current);
+        it++;
+    }
+    
+    if(!current)
+        throw FrBClassNotFoundException(name);
+        
+    return current;
+}
+
+FrBClass * FrBResolveEnvironment::getNextClassFromName(const String& name, FrBClass * parent)
+    throw (FrBClassNotFoundException)
+{
+    FrBClassMap * inners = parent->innerClassPtr();
+    
+    FrBClassMap::iterator f = inners->find(name);
     
     if(f == inners->end())
         throw FrBClassNotFoundException(name);
@@ -54,33 +69,49 @@ const FrBClass * FrBResolveEnvironment::getClassFromName(const String& name, FrB
     }
 }
 
-const FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)
+FrBClass * FrBResolveEnvironment::findClass(const String& name, FrBClassMap * container)
 {
-    StringList elm;
-    FrBClassMap * current = 0;
-    
-    StringEx::split(elm, FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER), false);
-    
-    StringList::const_iterator it = elm.begin();
-    if(it != elm.end())
+    FrBClassMap::iterator f = container->find(name);
+    if(f != container->end())
     {
-        current = getClassFromName(*it, current, elm.size() == 1);
-        it++;
+        frb_assert(f->second);
+        return f->second;
     }
     
-    while(it != elm.end())
-    {
-        current = getClassFromName(*it, current, false);
-        it++;
-    }
-    
-    if(!current)
-        throw FrBClassNotFoundException(name);
-        
-    return current;
+    return 0;
 }
 
-void FrBResolveEnvironment::addImportedClass(const String& fullPath, const String& importName = "")
+FrBClass * FrBResolveEnvironment::getClassFromName(const String& name, FrBClass * context)
+    throw (FrBClassNotFoundException)
+{
+    FrBClass * ret = 0;
+    
+    /* look for local class (outer) */
+    
+    if( context && context->containerPtr() &&
+            (ret = findClass(name, context->containerPtr()->innerClassPtr())) )
+        return ret;
+        
+    /* look for local class (inner) */
+    
+    if( context && (ret = findClass(name, context->innerClassPtr())) )
+        return ret;
+    
+    /* look for imported class */
+    
+    if( (ret = findClass(name, &_importedClass)) )
+        return ret;
+        
+    /* look for class in root */
+    
+    if( (ret = findClass(name, _root)) )
+        return ret;
+    
+    throw FrBClassNotFoundException(name);
+}
+
+
+void FrBResolveEnvironment::addImportedClass(const String& fullPath, const String& importName)
     throw (FrBClassNotFoundException)
 {
     try

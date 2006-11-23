@@ -352,9 +352,9 @@ inline FrBFunction * FrBClass::findDestructor() const
 inline FrBField * FrBClass::findField(const String& name) const
      throw (FrBFieldNotFoundException)
 {
-    FieldContainer::const_iterator f = _fields->find(name);
+    FieldContainer::const_iterator f = _fields.find(name);
     
-    if(f == _fields->end())
+    if(f == _fields.end())
         throw FrBFieldNotFoundException(name);
     else
     {
