@@ -60,6 +60,12 @@ class FrBTypeExpr : public FrBExpr
 {
 };
 
+/** Represent a me expr, actually (ouside or inside)
+  */
+class FrBMeExpr : public FrBExpr
+{
+};
+
 /** hold full type like Module1.Module2.Type, used FOR TYPE ONLY */
 class FrBUnresolvedTypeExpr : public FrBTypeExpr
 {
@@ -112,16 +118,61 @@ public:
 */
 class FrBUnresolvedIdWithContextExpr : public FrBExpr
 {
-private:
-    enum value_t { NO_VALUE, CLASS, FIELD, FUNCTION };
+protected:
+
+    /** used to eval different kind of identifier */
+    class Evaluator
+    {
+     public:
+        virtual ~Evaluator() {}
+        virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
+        virtual const FrBClass* getClass() const = 0;
+    };
     
-    FrBClass *                _context;
+    /** field evalutor */
+    class FieldEvaluator
+    {
+     private:
+        FrbField * _fl;
+        FrBCodFrBClass * _currentFunction;
+     public:
+        FieldEvaluator(FrBClass * current, FrbField * f);
+        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        const FrBClass* getClass() const;
+    };
+    
+    /** function/sub evalutor */
+    class FunctionEvaluator
+    {
+     private:
+        FrBFunction * _fn;
+        FrBClass    * _currentFunction;
+     public:
+        FunctionEvaluator(FrBClass * current, FrBFunction * f);
+        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        const FrBClass* getClass() const;
+    };
+    
+    /** class evalutor */
+    class ClassEvaluator
+    {
+     private:
+        FrBClass * _cl;
+     public:
+        ClassEvaluator(FrBClass * c);
+        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        const FrBClass* getClass() const;
+    };
+    
+    FrBMeExpr *                _context;
     String                    _name;
     FrBMember  *              _value;
-    value_t                   _value_type;
+    Evaluator *               _evaluator;
+    
+
     
 public:
-    FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name);
+    FrBUnresolvedIdWithContextExpr(FrBMeExpr * context, const String& name);
     ~FrBUnresolvedIdWithContextExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -204,16 +255,16 @@ public:
 //dim a as expr (on aura comme cas particulier : dim a as typeof expr)
 //faire equivalent a ::String pour forcer root
 
-/** Me expr */
-class FrBMeExpr : public FrBExpr
+/** Me expr for expression that are inside function */
+class FrBInsideMeExpr : public FrBMeExpr
 {
 private:
     FrBCodeFunction *     _fn;
     int               _varid;
     
 public:
-    FrBMeExpr(FrBCodeFunction * f);
-    ~FrBMeExpr();
+    FrBInsideMeExpr(FrBCodeFunction * f);
+    ~FrBInsideMeExpr();
 
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
@@ -222,7 +273,7 @@ public:
 };
 
 /** Me expr for expression that are outside function */
-class FrBOutsideMeExpr : public FrBExpr
+class FrBOutsideMeExpr : public FrBMeExpr
 {
 private:
     FrBClass     *    _type;

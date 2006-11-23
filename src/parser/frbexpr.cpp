@@ -187,9 +187,60 @@ std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
 
 /*     FrBUnresolvedIdWithContextExpr      */
 
+/*     FrBUnresolvedIdWithContextExpr::*Evalutor      */
 
-FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name)
- : _context(context), _name(name), _value_type(NO_VALUE)
+
+        
+
+FrBUnresolvedIdWithContextExpr::FieldEvaluator::FieldEvaluator(FrbField * f)
+ : _fl(f)
+ {
+ }
+ 
+FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBExecutionEnvironment& e) const
+    throw (FrBEvaluationException)
+{
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::FieldEvaluator::getClass() const
+{
+}
+
+
+FrBUnresolvedIdWithContextExpr::FunctionEvaluator::FunctionEvaluator(FrBFunction * f)
+ : _fn(f)
+ {
+ }
+ 
+FrBBaseObject* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::eval(FrBExecutionEnvironment& e) const
+    throw (FrBEvaluationException)
+{
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::getClass() const
+{
+}
+
+
+FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
+ : _cl(f)
+ {
+ }
+ 
+FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBExecutionEnvironment& e) const
+    throw (FrBEvaluationException)
+{
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
+{
+}
+    
+
+
+
+FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBMeExpr * context, const String& name)
+ : _context(context), _name(name), _evaluator(0)
 {
     frb_assert(context);
 }
@@ -200,33 +251,55 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    _context->resolveAndCheck(e);
+    
+    const FrBClass * current_class = _context->getClass();
     
     try
-    { /* test for a function/sub or field of _context */
-        _value = _context->getMember(_name);
+    { 
+
+        try
+        { /* look for a field first */
+            _evaluator = new FieldEvaluator(current_class, current_class->findField(_name));
+        }
+        catch(FrBFieldNotFoundException ex)
+        {
+            /* look for a function */
+            
+            FnPairIt pit = current_class->findFunctions(_name);
+            
+            if(pit.second->second)
+                throw FrBFunctionAmbiguityException(_name);
+            else if(pit.first != functionList()->end())
+                _evaluator = new FunctionEvaluator( pit.first->second );
+            else
+                throw FrBFunctionNotFoundException(_name);
+        }
+
+        
     }
     catch(FrBMemberNotFoundException)
     { /* test for a class */
-        try
-        { 
-            _value = e.getNextClassFromName(_name, _context);
-        }
-        catch(FrBClassNotFoundException)
-        {
-            throw FrBMemberNotFoundException(_name);
-        }
+
+        _evaluator = new ClassEvaluator(current_class, e.getClassFromName(_name, current_class));
+//TODO voir si on peut pas redure l'arbre ici
     }
     //function, field, class
     //c pas forcément un type........
     //_type = e.getClassFromName(_name, _context);
 }
 
-FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const
+    throw (FrBEvaluationException)
 {
+    frb_assert(_evaluator);
+    return _evaluator->eval(e);
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 {
+    frb_assert(_evaluator);
+    return _evaluator->getClass(e);
 }
 
 std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
@@ -460,34 +533,34 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
  
-/*        FrBMeExpr                */
+/*        FrBInsideMeExpr                */
 
-FrBMeExpr::FrBMeExpr(FrBCodeFunction* f)
+FrBMeExpr::FrBInsideMeExpr(FrBCodeFunction* f)
  : _fn(f)
 {
 }
 
-FrBMeExpr::~FrBMeExpr()
+FrBInsideMeExpr::~FrBInsideMeExpr()
 {
 }
 
-void FrBMeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBInsideMeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   _varid = _fn->localVarCount();
 }
 
 
-FrBBaseObject* FrBMeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+FrBBaseObject* FrBInsideMeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     return e.stack().getTopValue(_varid);
 }
 
-const FrBClass* FrBMeExpr::getClass() const
+const FrBClass* FrBInsideMeExpr::getClass() const
 {
     return _fn->container();
 }
 
-std::ostream& FrBMeExpr::put(std::ostream& stream) const
+std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
 {
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
 }
