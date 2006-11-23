@@ -70,13 +70,11 @@ inline void FrBMember::setContainer(FrBClass* c)
 
 inline const FrBClass* FrBMember::container() const
 {
-    frb_warning(_contClass);
     return _contClass;
 }
 
 inline FrBClass* FrBMember::containerPtr()
 {
-    frb_warning(_contClass);
     return _contClass;
 }
 

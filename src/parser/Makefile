@@ -27,8 +27,15 @@ else
     DEBUGASSERT=-DDEBUG_ASSERT=1
 endif
 
+ifdef NO_CATCH
+    DEBUGCATCH=-DDEBUG_NO_CATCH=1
+else
+    DEBUGCATCH=
+endif
+
+
 ifdef DEBUG
-    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 $(DEBUGASSERT)
+    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 $(DEBUGASSERT) $(DEBUGCATCH)
     STRIP=echo '*** No strip in debug mode *** '
 else
     DEBUGFLAGS=$(DEBUGASSERT)
@@ -70,7 +77,7 @@ frberrordesc.o: error_msg keywords_db
 frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbfield.o
 frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o frbexecutionenvironment.o
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
-frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o
+frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o frbmember.o
 frbbaseobject.o: frbbaseobject.h frbbaseobject.cpp
 frbmemory.o: frbmemory.h frbmemory.cpp
 frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcppbinding.o
@@ -80,7 +87,8 @@ frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
 frbexceptions.o: frbexceptions.h frbexceptions.cpp
 frbbuiltinclasses.h: $(BUILTIN_DEC)
 frbbuiltinclasses.cpp: $(BUILTIN_DEF)
-frbfield.o: frbfield.h frbfield.cpp
+frbfield.o: frbfield.h frbfield.cpp frbmember.o
+frbmember.o: frbmember.h
 
 .PHONY: exe clean install touchall force doc cleandoc
 

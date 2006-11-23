@@ -21,10 +21,6 @@
 #include "../common/assert.h"
 #include "../common/string.h"
 #include "frbkeywords.h"
-//il faudrait une fonction simple a utiliser que pour la recherche de chemin complet pour getClassFromPath
-//et  getClassFromName serait utilisé pour la premiere etape de getClassFromPath et devrait en plus
-// s'occuper de la recherches des classes du module courant (ie container()->innerClassList())
-
 
 
 FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (FrBClassNotFoundException)
@@ -32,7 +28,7 @@ FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (Fr
     StringList elm;
     FrBClass * current = 0;
     
-    StringEx::split(elm, FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER), false);
+    StringEx::split(elm, name, FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER), true);
     
     StringList::const_iterator it = elm.begin();
     if(it != elm.end())
@@ -56,17 +52,14 @@ FrBClass * FrBResolveEnvironment::getClassFromPath(const String& name) throw (Fr
 FrBClass * FrBResolveEnvironment::getNextClassFromName(const String& name, FrBClass * parent)
     throw (FrBClassNotFoundException)
 {
-    FrBClassMap * inners = parent->innerClassPtr();
+    frb_assert(parent);
     
-    FrBClassMap::iterator f = inners->find(name);
+    FrBClass * ret = 0;
     
-    if(f == inners->end())
-        throw FrBClassNotFoundException(name);
-    else
-    {
-        frb_assert(f->second);
-        return f->second;
-    }
+    if( (ret = findClass(name, parent->innerClassPtr())) )
+        return ret;
+    
+    throw FrBClassNotFoundException(name);
 }
 
 FrBClass * FrBResolveEnvironment::findClass(const String& name, FrBClassMap * container)

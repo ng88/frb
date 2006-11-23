@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
             {
                 argv[0],
                 "--file",
-                "ctest.frb",
+                "test2.frb",
             };
         argv = debug_argv;
         argc = 3;
@@ -147,8 +147,10 @@ int main(int argc, char ** argv)
     FrBResolveEnvironment renv(tree);
     
     
+#ifndef DEBUG_NO_CATCH
     try
     {
+#endif
     
         addClass(tree, FrBObject::initClass());
         addClass(tree, FrBNull::initClass());
@@ -168,7 +170,7 @@ int main(int argc, char ** argv)
         addClassAlias(tree, FrBInt::getCppClass(), "Entier");
         addClassAlias(tree, FrBBool::getCppClass(), "Booleen");
         addClassAlias(tree, FrBString::getCppClass(), "Chaine");
-        addClassAlias(tree, FrBObject::getCppClass(), "Nul");
+        addClassAlias(tree, FrBNull::getCppClass(), "Nul");
         
         
         bool success = parser.parse(*arg_in);
@@ -232,6 +234,7 @@ int main(int argc, char ** argv)
                 env.stack().print();
         }
         
+#ifndef DEBUG_NO_CATCH
     }
     catch(const FrBResolveException &e)
     {
@@ -252,7 +255,7 @@ int main(int argc, char ** argv)
     {
         cerr << "unknown exception throwed" << endl;
     }
-    
+#endif
       
     return 0;
 

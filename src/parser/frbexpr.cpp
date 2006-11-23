@@ -88,6 +88,61 @@ std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
     return stream << "local_var" << _varid;
 }
 
+/*     FrBUnresolvedTypeExpr      */
+
+
+FrBUnresolvedTypeExpr::FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* current,
+                                                        FrBUnresolvedTypeExpr * ctxt)
+ : _name(name), _type(0), _context(ctxt), _currentClass(current)
+{
+}
+
+FrBUnresolvedTypeExpr::~FrBUnresolvedTypeExpr()
+{
+}
+
+void FrBUnresolvedTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    if(_context)
+    {
+        _context->resolveAndCheck(e);
+        _type = e.getNextClassFromName(_name, _context->getContext());
+        
+        delete _context; /* we don't need _context anymore */
+        _context = 0;
+    }
+    else
+    {
+        _type = e.getClassFromName(_name, _currentClass);
+    }
+        
+    
+}
+
+FrBBaseObject* FrBUnresolvedTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    frb_assert2(false, "can't eval FrBUnresolvedTypeExpr, use getContext() or getClass() to retrieve the type");
+    return 0;
+}
+
+const FrBClass* FrBUnresolvedTypeExpr::getClass() const
+{
+    frb_assert2(_type, "_type is a null pointer"
+                     " - FrBUnresolvedTypeExpr::resolveAndCheck() probably not called");
+    return _type;
+}
+
+std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
+{
+    if(_context)
+        stream << *_context << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER);
+        
+    if(_type)
+        return stream << _type->fullName();
+    else
+        return stream << "unresolved_type_" << _name;
+}
+
 /*     FrBUnresolvedIdExpr      */
 
 
@@ -127,7 +182,7 @@ std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
     if(_type)
         return stream << _type->name();
     else
-        return stream << "unresolved_" << _name;
+        return stream << "unresolved_id_" << _name;
 }
 
 /*     FrBUnresolvedIdWithContextExpr      */
@@ -142,10 +197,10 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 {
 }
 
-void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     //c pas forcément un type........
-    _type = e.getClassFromName(_name, _context);
+    //_type = e.getClassFromName(_name, _context);
 }
 
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)

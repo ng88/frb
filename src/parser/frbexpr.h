@@ -53,17 +53,40 @@ public:
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
 
-/** Used in syntaxer for type & type resolution */
+/** Represent a type expr, actually, only FrBUnresolvedTypeExpr is a type expr
+  * This class was keeped for backward compatibility
+  */
 class FrBTypeExpr : public FrBExpr
 {
 };
 
+/** hold full type like Module1.Module2.Type, used FOR TYPE ONLY */
+class FrBUnresolvedTypeExpr : public FrBTypeExpr
+{
+protected:
+    String                  _name;
+    FrBClass *              _type;
+    FrBUnresolvedTypeExpr * _context;
+    FrBCodeClass *          _currentClass;
+    
+public:
+    FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* current, FrBUnresolvedTypeExpr * ctxt = 0);
+    ~FrBUnresolvedTypeExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    FrBClass* getContext() { return _type; }
+    std::ostream& put(std::ostream& stream) const;
+    
+    inline const String& name() const { return _name; }
+};
 
-/** Identifier not yet resolved (ie class name, function...)
+/** Identifier not yet resolved (ie class name, function, field...)
     no context is provied, typically it's used in an expression like
     FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr))
  */
-class FrBUnresolvedIdExpr : public FrBTypeExpr
+class FrBUnresolvedIdExpr : public FrBExpr
 {
 protected:
     String              _name;
@@ -81,7 +104,7 @@ public:
     inline const String& name() const { return _name; }
 };
 
-/** Identifier not yet resolved (ie class name, function...)
+/** Identifier not yet resolved (ie class name, function, field...)
     current class context is provied, typically it's used in an expression like
     FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr))
     or simply
@@ -103,7 +126,7 @@ public:
 
 
 /** Member operator (.) */
-class FrBMemberOpExpr : public FrBTypeExpr
+class FrBMemberOpExpr : public FrBExpr
 {
     FrBExpr               *_lhs;
     FrBUnresolvedIdExpr   *_rhs;
@@ -169,6 +192,10 @@ public:
 //Import / Import ss As sd
 //operator # (cardinal)
 //idée syntax constructeur Public Sub Initialize() Parent1(a, b, c), Parent2(a)
+//tout l'arbre devra gérer les delete, gc seulement pr les type frb
+//pour le prob de declare on verifie en amont en comparant une evntuelle egalite de ptr
+//dim a as expr (on aura comme cas particulier : dim a as typeof expr)
+//faire equivalent a ::String pour forcer root
 
 /** Me expr */
 class FrBMeExpr : public FrBExpr

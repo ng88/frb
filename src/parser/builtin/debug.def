@@ -65,6 +65,13 @@ FrBBaseObject * dbg_addressof(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBas
     return o;
 }
 
+FrBBaseObject * dbg_typename(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0)
+{
+    FrBBaseObject * o = new FrBString( arg0->getClass()->fullName() );
+    e.addGarbagedObject(o);
+    return o;
+}
+
 
 FrBBaseObject * constructor1(FrBExecutionEnvironment&, FrBBaseObject * me)
 {
@@ -104,7 +111,15 @@ FrBCppClass * FrBDebug::initClass()
     
     _cpp_class->addConstructor(f);
 
-
+    f = new FrBUnaryCppFunction(dbg_typename, FrBObject::getCppClass(), false);
+    f->setName("typename");
+    f->setReturnType(FrBString::getCppClass());
+    f->setSub(false);
+    f->setShared(true);
+    f->setConst(true);
+    
+    _cpp_class->addFunction(f); 
+    
     f = new FrBUnaryCppFunction(dbg_addressof, FrBObject::getCppClass(), false);
     f->setName("addressof");
     f->setReturnType(FrBInt::getCppClass());

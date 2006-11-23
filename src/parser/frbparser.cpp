@@ -100,17 +100,10 @@ std::ostream& FrBParser::printTree(std::ostream& sout, bool user_class_only) con
     {
         FrBClass * c = it->second;
         
-        if(c->name() != it->first)
+        if(!user_class_only || (user_class_only && dynamic_cast<FrBCodeClass*>(c) ))
         {
-            sout << "' " << it->first << " is an alias for " << c->name() << endl;
-        }
-        else
-        {
-            if(user_class_only)
-            {
-                if(dynamic_cast<FrBCodeClass*>(c))
-                    sout << *c;
-            }
+            if(c->name() != it->first)
+                sout << "' " << it->first << " is an alias for " << c->name() << endl;
             else
                 sout << *c;
         }

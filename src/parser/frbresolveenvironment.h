@@ -34,7 +34,7 @@ private:
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
 
     /** return container[name] if exists or 0 if not */
-    FrBClass * findClass(const String& name, FrBClassMap * container);
+    static FrBClass * findClass(const String& name, FrBClassMap * container);
     
 public:
 

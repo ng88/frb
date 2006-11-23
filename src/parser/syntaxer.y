@@ -80,7 +80,7 @@ struct FnAttr
     char *                     str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
-    FrBTypeExpr *              vtype;
+    FrBUnresolvedTypeExpr *    vtype;
     FrBStatement *             stat;
     FrBExprList*               exprs;
     int                        vint;
@@ -809,20 +809,20 @@ as_type:
 
 
 type: 
-      name_expr { $<vtype>$ = $<vtype>1; }
-    | FRB_KW_TOKEN_CONST name_expr {  frb_assert2(false, "not yet implemented : const T"); }
+      full_type { $<vtype>$ = $<vtype>1; }
+    | FRB_KW_TOKEN_CONST full_type {  frb_assert2(false, "not yet implemented : const T"); }
     ;
 
- /* name expr, eg: Class1, String, Module1.Class1, ... */
-name_expr:
-      name_expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
+
+full_type: /* a.b.c.d.e.f ... */
+      full_type FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER       /* expr.id */
       {
-          $<vtype>$ = new FrBMemberOpExpr($<vtype>1, new FrBUnresolvedIdExpr($<str>3));
+          $<vtype>$ = new FrBUnresolvedTypeExpr($<str>3, current_class(), $<vtype>1);
           free($<str>3);
       }
-    | FRB_IDENTIFIER
+    | FRB_IDENTIFIER       /* id */
       {
-          $<vtype>$ = new FrBUnresolvedIdExpr($<str>1);
+          $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
           free($<str>1);
       }
     ;

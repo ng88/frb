@@ -37,25 +37,50 @@ typedef std::stack<char*> CStringStack;
 
 namespace StringEx /* extended functions on string */
 {
-    /* split source in container using delim as delimiter */
+
+    /** compute the size of a string, used in split */
+    inline size_t str_size(const char*& str) { return strlen(str); }
+    inline size_t str_size(const String& str) { return str.size(); }
+    inline size_t str_size(const char& str) { return 1; }
+
+    /** Split source in container using delim as delimiter.
+      * delim can be a char, a C string or a String
+      * Return the number of token added to container
+      */
     template<class T, class D>
-    size_t split(T &container, const String& source, D delim = '\n', bool allowEmptyEntries = true)
+    size_t split(T &container, const String& source, const D& delim = '\n', bool allowEmptyEntries = true)
     {
+        size_t pos = std::string::npos;
+        size_t old_pos = 0;
+        size_t delim_size = str_size(delim);
+        size_t source_size = str_size(source);
         size_t found = 0;
-        String::const_iterator left = source.begin();
-        for( String::const_iterator right = std::find(left, source.end(), delim);
-             right != source.end(); right = std::find(left, source.end(), delim) )
+        
+        if(delim_size == 0 || source_size == 0)
+            return 0;
+        
+        while( (pos = source.find(delim, old_pos)) != std::string::npos )
         {
-            if( allowEmptyEntries || (!allowEmptyEntries && left != right) )
-                container.push_back( String(left,right) );
-                
-            left = right + 1;
+            if( allowEmptyEntries || (!allowEmptyEntries && pos != old_pos) )
+            {
+                container.push_back( source.substr(old_pos, pos - old_pos) );
+                found++;
+            }
+               
+            old_pos = pos + delim_size;
+        }
+        
+        if( allowEmptyEntries || (!allowEmptyEntries && source_size != old_pos) )
+        {
+            container.push_back( source.substr(old_pos, source_size - old_pos) );
             found++;
         }
+        
         return found;
+                
     }
     
-    /* return true if stris only made of ' ' and '\t' */
+    /** return true if stris only made of ' ' and '\t' */
     bool isSpacesOnly(const String& str);
     
     
