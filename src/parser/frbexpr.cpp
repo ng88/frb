@@ -189,8 +189,9 @@ std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
 
 
 FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name)
- : FrBUnresolvedIdExpr(name), _context(context)
+ : _context(context), _name(name), _value_type(NO_VALUE)
 {
+    frb_assert(context);
 }
 
 FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
@@ -199,6 +200,23 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    
+    try
+    { /* test for a function/sub or field of _context */
+        _value = _context->getMember(_name);
+    }
+    catch(FrBMemberNotFoundException)
+    { /* test for a class */
+        try
+        { 
+            _value = e.getNextClassFromName(_name, _context);
+        }
+        catch(FrBClassNotFoundException)
+        {
+            throw FrBMemberNotFoundException(_name);
+        }
+    }
+    //function, field, class
     //c pas forcément un type........
     //_type = e.getClassFromName(_name, _context);
 }
@@ -211,6 +229,10 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 {
 }
 
+std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
+{
+
+}
 
 
 

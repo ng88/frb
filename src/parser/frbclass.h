@@ -226,7 +226,8 @@ public:
     bool inheritsFrom(const FrBClass * from) const;
     
     /** can resolve any type of member (function, inner class, field, ...) */
-    const FrBMember* getMember(const String& name) const throw (FrBMemberNotFoundException);
+    FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
+
     
 };
 

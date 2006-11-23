@@ -119,6 +119,8 @@ public:
     FrBMemberNotFoundException(const String& name);
 
     inline const String& name() { return _name; }
+    
+    std::ostream& put(std::ostream& stream) const;
 
 };
 

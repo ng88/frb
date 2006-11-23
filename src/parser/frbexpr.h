@@ -110,10 +110,15 @@ public:
     or simply
     FrBUnresolvedIdWithContextExpr
 */
-class FrBUnresolvedIdWithContextExpr : public FrBUnresolvedIdExpr
+class FrBUnresolvedIdWithContextExpr : public FrBExpr
 {
 private:
-    const FrBClass *          _context;
+    enum value_t { NO_VALUE, CLASS, FIELD, FUNCTION };
+    
+    FrBClass *                _context;
+    String                    _name;
+    FrBMember  *              _value;
+    value_t                   _value_type;
     
 public:
     FrBUnresolvedIdWithContextExpr(FrBClass * context, const String& name);
@@ -122,6 +127,8 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
+    
+    std::ostream& put(std::ostream& stream) const;
 };
 
 

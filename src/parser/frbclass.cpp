@@ -266,7 +266,8 @@ bool FrBClass::inheritsFrom(const FrBClass * from) const
     return isCompatibleWith(from);
 }
 
-const FrBMember* FrBClass::getMember(const String& name) const throw (FrBMemberNotFoundException)
+
+FrBMember* FrBClass::getMember(const String& name) throw (FrBMemberNotFoundException)
 {
     /* look for a field first */
     
@@ -287,7 +288,6 @@ const FrBMember* FrBClass::getMember(const String& name) const throw (FrBMemberN
         else
             throw FrBFunctionNotFoundException(name);
     }
-    
 
 }
 

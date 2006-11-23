@@ -108,11 +108,11 @@ FrBFunctionNotFoundException::FrBFunctionNotFoundException(const String& name, c
 }
 
 
-
 std::ostream& FrBFunctionNotFoundException::put(std::ostream& stream) const
 {
-    return stream << _name << ": " << FrBErrors::getMsg(FrBErrors::FRB_ERR_FN_NOT_FOUND);
+  return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_FN_NOT_FOUND, _name);
 }
+
 
 
 /*                   FrBDefaultCtorNotFoundException                */
@@ -142,7 +142,7 @@ FrBClassNotFoundException::FrBClassNotFoundException(const String& name)
 
 std::ostream& FrBClassNotFoundException::put(std::ostream& stream) const
 {
-    return stream << _name << ": " << FrBErrors::getMsg(FrBErrors::FRB_ERR_CLASS_NOT_FOUND);
+  return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_CLASS_NOT_FOUND, _name);
 }
 
 
@@ -169,4 +169,7 @@ FrBMemberNotFoundException::FrBMemberNotFoundException(const String& name)
 }
 
 
-
+std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
+{
+  return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_MEMBER_NOT_FOUND, _name);
+}
