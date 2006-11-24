@@ -175,6 +175,7 @@ public:
     inline void addDestructor(FrBFunction * f);
 
     inline const ClassContainer* innerClassList() const { return &_innerClasses; }
+    inline const FieldContainer* fieldList() const { return &_fields; }
     inline const OperatorContainer* operatorList() const { return &_operators; }
     inline const FunctionContainer* functionList() const { return &_functions; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }

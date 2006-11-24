@@ -98,7 +98,7 @@ public:
     virtual int parameterCount() const = 0;
     
     inline void setReturnType(const FrBClass * t) { _returnType = t; }
-    inline const FrBClass * returnType() const { return _sub ? 0 : _returnType; }
+    const FrBClass * returnType() const;
     
     inline void setName(const String& n) { _name = n; }
     inline const String& name() const { return _name; }

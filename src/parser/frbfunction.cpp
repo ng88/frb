@@ -21,6 +21,7 @@
 #include "../common/assert.h"
 #include "frbexecutionenvironment.h"
 #include "frbkeywords.h"
+#include "frbbuiltinclasses.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn)
 {
@@ -53,6 +54,11 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
     args.push_back(arg0);
     args.push_back(arg1);
     return execute(e, me, args);
+}
+
+const FrBClass * FrBFunction::returnType() const
+{
+    return _sub ? FrBVoid::getCppClass() : _returnType;
 }
 
 // Pas tres propre mais j'ai pas mieux pour le moment :

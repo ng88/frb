@@ -735,7 +735,7 @@ data_member: /* eg Public Shared var As String [:= "e"] */
       member_scope_attr data_member_attr FRB_IDENTIFIER as_type declare_init
       {
 	FrBCodeField * f = new FrBCodeField($<vtype>4, $<expr>5);
-	f->setContainer(current_class());
+        f->setIndex(current_class()->fieldList()->size());
 	f->setName($<str>3);
 	f->setScope($<vint>1);
 	f->setShared($<vint>2 == SC_SHARED);
@@ -971,22 +971,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_CHAR
     | literal_bool { $<expr>$ = $<expr>1; }
     | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
-    | FRB_KW_TOKEN_ME
-      {
-            
-        if(fn_stack.empty())
-        {
-            $<expr>$ = new FrBOutsideMeExpr(current_class());
-        }
-        else
-        {
-            if(current_fn()->shared())
-                ; //TODO declencher une erreur sémantique ici : pas de me ds une shared
-                
-            $<expr>$ = new FrBMeExpr(current_fn());
-        }
-            
-      }
+    | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
     | FRB_IDENTIFIER                  
       {
       
@@ -1030,8 +1015,11 @@ literal_expr:
                 }
             
             }
-            
-            $<expr>$ = new FrBUnresolvedIdWithContextExpr(current_class(), name);
+            //TODO declencher une erreur sémantique ici : pas de me ds une shared 
+            //                                              |
+            //                                              |
+            //                                              v
+            $<expr>$ = new FrBUnresolvedIdWithContextExpr(new_me_expr(), name);
             //pr le me ici, on peut quand même en faire un seulement pr le type
 
 //             

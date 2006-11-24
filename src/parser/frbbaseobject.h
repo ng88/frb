@@ -23,8 +23,10 @@
 #include <vector>
 #include "../common/string.h"
 #include "../common/assert.h"
+#include "frbexceptions.h"
 
 class FrBClass;
+
 
 class FrBBaseObject
 {
@@ -46,10 +48,10 @@ public:
     virtual const FrBClass * getClass() = 0;
 
     /** return the instance of the field i */
-    virtual FrBBaseObject* getField(int i) = 0;
+    virtual FrBBaseObject* getField(int i) throw (FrBEvaluationException) = 0;
 
     /** add field o */
-    virtual void addField(int i, FrBBaseObject * o) = 0;
+    virtual void addField(int i, FrBBaseObject * o) throw (FrBEvaluationException) = 0;
     
     //inline void setConst(bool v) { _const = v; }
     //inline bool isConst() { return _const; }
@@ -84,8 +86,8 @@ public:
     
     const FrBClass * getClass() { return _type; }
 
-    FrBBaseObject* getField(int);
-    void addField(int, FrBBaseObject *);
+    FrBBaseObject* getField(int) throw (FrBEvaluationException);
+    void addField(int, FrBBaseObject *) throw (FrBEvaluationException);
      
 
     ~FrBUserObject();

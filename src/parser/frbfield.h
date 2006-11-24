@@ -38,16 +38,20 @@ protected:
     bool _const; 
     String _name;
     scope_t  _scope;
+    int _index;
     
 public:
 
-    inline FrBField() : _shared(false), _const(false), _scope(SC_PUBLIC)  {}
+    inline FrBField() : _shared(false), _const(false), _scope(SC_PUBLIC), _index(-1)  {}
 
     virtual ~FrBField() {}
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     inline void setShared(bool v) { _shared = v; }
     inline bool shared() const { return _shared; }
+    
+    inline void setIndex(int v) { _index = v; }
+    inline int index() const { frb_assert(_index > -1); return _index; }
     
     inline void setConst(bool v) { _const = v; }
     inline bool isConst() const { return _const; }

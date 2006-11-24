@@ -18,7 +18,6 @@
 
 #include "frbbaseobject.h"
 
-
 /*            FrBBindingObject            */
 
 FrBBindingObject::~FrBBindingObject()
@@ -35,13 +34,13 @@ FrBUserObject::FrBUserObject(const FrBClass * type, int fc)
 }
 
 
-FrBBaseObject* FrBUserObject::getField(int i)
+FrBBaseObject* FrBUserObject::getField(int i) throw (FrBEvaluationException)
 {
   frb_warning2(i >= 0 && i < _field_count, "FrBUserObject::getField(), index out of bounds");
   return _fields[i];
 }
 
-void FrBUserObject::addField(int i, FrBBaseObject * o)
+void FrBUserObject::addField(int i, FrBBaseObject * o) throw (FrBEvaluationException)
 {
   frb_assert2(i >= 0 && i < _field_count, "FrBUserObject::addField(), index out of bounds");
   _fields[i] = o;

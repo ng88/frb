@@ -53,6 +53,17 @@
              frb_assert2(!block_stack.empty(), "frbsyntaxer.h::FrBSynater::current_block()");  \
              return block_stack.top(); \
          } \
+         inline FrBMeExpr* new_me_expr() \
+         { \
+            if(fn_stack.empty()) \
+                return new FrBOutsideMeExpr(current_class()); \
+            else \
+            { \
+                if(current_fn()->shared()) \
+                    ;\
+                return new FrBInsideMeExpr(current_fn()); \
+            } \
+         } \
      public: \
         virtual ~FrBSyntaxicalParser() {} \
         void switch_lexer_streams( std::istream* new_in = 0, std::ostream* new_out = 0 )\

@@ -64,6 +64,9 @@ class FrBTypeExpr : public FrBExpr
   */
 class FrBMeExpr : public FrBExpr
 {
+public:
+    virtual ~FrBMeExpr() {}
+    virtual FrBClass* getClassPtr() = 0;
 };
 
 /** hold full type like Module1.Module2.Type, used FOR TYPE ONLY */
@@ -125,42 +128,46 @@ protected:
     {
      public:
         virtual ~Evaluator() {}
-        virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
+        virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
+            throw (FrBEvaluationException) = 0;
         virtual const FrBClass* getClass() const = 0;
     };
     
-    /** field evalutor */
-    class FieldEvaluator
+    /** field evalutor, return the value of the field */
+    class FieldEvaluator : public Evaluator
     {
      private:
-        FrbField * _fl;
-        FrBCodFrBClass * _currentFunction;
+        FrBField * _fl;
      public:
-        FieldEvaluator(FrBClass * current, FrbField * f);
-        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        FieldEvaluator(FrBField * f);
+        FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
+            throw (FrBEvaluationException);
         const FrBClass* getClass() const;
     };
     
-    /** function/sub evalutor */
-    class FunctionEvaluator
+    /** function/sub evalutor (ie it returns an objet of the 'Function' type,
+      * it doesn't eval the function)
+      */
+    class FunctionEvaluator : public Evaluator
     {
      private:
         FrBFunction * _fn;
-        FrBClass    * _currentFunction;
      public:
-        FunctionEvaluator(FrBClass * current, FrBFunction * f);
-        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        FunctionEvaluator(FrBFunction * f);
+        FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
+            throw (FrBEvaluationException);
         const FrBClass* getClass() const;
     };
     
-    /** class evalutor */
-    class ClassEvaluator
+    /** class evalutor (ie it returns an objet of the 'Class' type)*/
+    class ClassEvaluator : public Evaluator
     {
      private:
         FrBClass * _cl;
      public:
         ClassEvaluator(FrBClass * c);
-        FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+        FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
+            throw (FrBEvaluationException);
         const FrBClass* getClass() const;
     };
     
@@ -269,6 +276,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
+    FrBClass* getClassPtr();
     std::ostream& put(std::ostream& stream) const;    
 };
 
@@ -284,6 +292,7 @@ public:
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
+    FrBClass* getClassPtr();
     std::ostream& put(std::ostream& stream) const;    
 };
 
