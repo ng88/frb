@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 
-
+/** Generic class that defines FrB classes from C++ primitives */
 template<class primitive_t>
 class FrBPrimitive : public FrBCppObject
 {
@@ -56,9 +56,18 @@ public:
     
 };
 
+/** The FrB Integer class */
 typedef FrBPrimitive<int> FrBInt;
+
+/** The FrB Boolean class */
 typedef FrBPrimitive<bool> FrBBool;
+
+/** The FrB String class */
 typedef FrBPrimitive<String> FrBString;
 
+/** The FrB Class class (used for introspection) */
 typedef FrBPrimitive<const FrBClass*> FrBClassWrapper;
+
+/** The FrB Function class (used for introspection) */
 typedef FrBPrimitive<const FrBFunction*> FrBFunctionWrapper;
+

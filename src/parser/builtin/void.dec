@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 
-/** void type (ie type the return value of a sub) */
+/** The FrB Void class (ie type the return type of a sub) */
 class FrBVoid : public FrBCppObject
 {
 private:

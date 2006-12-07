@@ -26,7 +26,35 @@
 
 class FrBCodeFunction;
 
+/** FrBExpr represents a general expression
 
+    I) Identifier expression
+        There are different kind of identifier expression :
+    
+            1. We're sure that expr is a type, so used class is FrBUnresolvedTypeExpr("MyClass", current_class)
+                for an expr like 'MyClass' or
+                FrBUnresolvedTypeExpr("MyClass", current_class, FrBUnresolvedTypeExpr("InnerClass1", current_class))
+                for an expr like 'MyClass.InnerClass1'
+    
+            2. We're sure that expr is Me, so used class is FrBInsideMeExpr if we're in a function block or FrBOutsideMeExpr
+                if we're outside (typically in a field initialization)
+    
+            3. We're sure that expr is Null, so used class is FrBNullExpr
+
+            4. We're sure that expr is a function parameter or a function local var, so used class is FrBLocalVarExpr
+    
+            5. We don't know yet what expr (it can be a type, a function name, an inner class name, a field...
+                but NOT a function parameter, a function local var, Null or Me), so used class is
+                FrBUnresolvedIdWithContextExpr
+
+            6. This is the general case of 5., expr can be something like expr.name, so used classes are :
+                FrBMemberOpExpr(expr, FrBUnresolvedIdExpr("name")) (expr can be simply a FrBUnresolvedIdWithContextExpr
+                or a more complex expression)
+            
+
+    II) Binary operator expression
+
+*/
 class FrBExpr
 {
 public:
@@ -52,6 +80,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
+
 
 /** Represent a type expr, actually, only FrBUnresolvedTypeExpr is a type expr
   * This class was keeped for backward compatibility
@@ -93,7 +122,7 @@ public:
 
 /** Identifier not yet resolved (ie class name, function, field...)
     no context is provied, typically it's used in an expression like
-    FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr))
+    FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr)) <=> expr.unresolved_id
  */
 class FrBUnresolvedIdExpr : public FrBExpr
 {
@@ -115,9 +144,9 @@ public:
 
 /** Identifier not yet resolved (ie class name, function, field...)
     current class context is provied, typically it's used in an expression like
-    FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr))
+    FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr)) <=> unresolved_id_wc.unresolved_id
     or simply
-    FrBUnresolvedIdWithContextExpr
+    FrBUnresolvedIdWithContextExpr <=> unresolved_id_wc
 */
 class FrBUnresolvedIdWithContextExpr : public FrBExpr
 {

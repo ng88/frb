@@ -28,6 +28,7 @@
 class FrBClass;
 
 
+/** Represents a general FrB object (ie an instance of a FrB Class) */
 class FrBBaseObject
 {
 
@@ -45,12 +46,14 @@ public:
     //    inline FrBBaseObject(bool v) : _const(v) { }
     
     virtual ~FrBBaseObject() { }
+    
+    /** Return object type */
     virtual const FrBClass * getClass() = 0;
 
-    /** return the instance of the field i */
+    /** Return the instance of the field i */
     virtual FrBBaseObject* getField(int i) throw (FrBEvaluationException) = 0;
 
-    /** add field o */
+    /** Add field o */
     virtual void addField(int i, FrBBaseObject * o) throw (FrBEvaluationException) = 0;
     
     //inline void setConst(bool v) { _const = v; }
@@ -68,7 +71,7 @@ typedef std::vector<FrBBaseObject*> FrBBaseObjectList;
 typedef std::map<String,FrBBaseObject*> FrBBaseObjectMap;
 
 
-/** user instance */
+/** Represents an FrB object created by the user (ie with the interpreter) */
 class FrBUserObject : public FrBBaseObject
 {
 private:

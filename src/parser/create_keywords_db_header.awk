@@ -22,6 +22,8 @@ BEGIN {
     print "#define FRBKEYWORDS_H"
     print "#include \"frbconstants.h\""
     
+    print "/** Class that holds keyword of the different set"
+    print "     Note: CurrentSet is static for convenience. A better solution may be used in future\n*/"
     print "class FrBKeywords {\npublic:"
     print "    enum { "
     print "        FRB_KW__NOTFOUND = -1,"
@@ -78,36 +80,60 @@ END {
     }
     print "        FRB_SET__COUNT };"
     print "    enum { FRB_KW__SYMBOL_END = " KW_SYMBOL_END " };"
-    print "    static int findKeyword(const char* str); /* find if str is a keyword [A-Z][a-z]* */"
-    print "    static int findKeywordOrSymbol(const char* str); /* find if str is a keyword [A-Z][a-z] or a symbol */"
-    print "    static int findSymbol(const char* str); /* find if str is a symbol (ie +, *, -, ...) */"
-    print "    static const char* getKeyword(int index); /* return the keyword for corresponding index ( FRB_KW__SYMBOL_END <= index < FRB_KW__COUNT ) */"
-    print "    static const char* getSymbol(int index); /* return the symbol for corresponding index ( 0 <= index < FRB_KW__SYMBOL_END ) */"
-    print "    static const char* getKeywordOrSymbol(int index); /* return the keyword for corresponding index ( 0 <= index < FRB_KW__COUNT ) */\n"
-    print "    static int findSet(const char* str); /* find set id for corresponding set name */"
-    print "    static const char* getSetName(int index); /* return the set name for corresponding index ( 0 <= index < FRB_SET__COUNT ) */\n"
+
+    print "    /** Find if str is a keyword (ie [A-Z][a-z]*) */"
+    print "    static int findKeyword(const char* str);"
+
+    print "    /** Find if str is a keyword (ie [A-Z][a-z]*) or a symbol (ie +, *, -, ...) */"
+    print "    static int findKeywordOrSymbol(const char* str);"
+
+    print "    /** Find if str is a symbol (ie +, *, -, ...) */"
+    print "    static int findSymbol(const char* str);"
+
+    print "    /** Return the keyword for corresponding index (FRB_KW__SYMBOL_END <= index < FRB_KW__COUNT) */"
+    print "    static const char* getKeyword(int index);"
+
+    print "    /** Return the symbol for corresponding index (0 <= index < FRB_KW__SYMBOL_END) */"
+    print "    static const char* getSymbol(int index);"
+
+    print "    /** Return the keyword for corresponding index (0 <= index < FRB_KW__COUNT) */"
+    print "    static const char* getKeywordOrSymbol(int index);\n"
+
+    print "    /** Find set id for corresponding set name */"
+    print "    static int findSet(const char* str);"
+
+    print "    /** Return the set name for corresponding index ( 0 <= index < FRB_SET__COUNT ) */"
+    print "    static const char* getSetName(int index);\n"
+
     print "    inline static int getCurrentSet() { return currentSet; }"
     print "    inline static void setCurrentSet(int i) { currentSet = i; }\n"
 
+    print "    /** Return FRB_KW_SUB string if is_sub is true, FRB_KW_FUNCTION string otherwise */"
     print "    inline static const char* fnToString(bool is_sub)"
     print "       { return getKeyword(is_sub ? FRB_KW_SUB : FRB_KW_FUNCTION); }"
 
+    print "    /** Return FRB_KW_BYVAL string if vb is true, FRB_KW_BYREF string otherwise */"
     print "    inline static const char* byvalToString(bool vb)"
     print "       { return getKeyword(vb ? FRB_KW_BYVAL : FRB_KW_BYREF); }"
 
+    print "    /** Return FRB_KW_SHARED string if shared is true, \"\" string otherwise */"
     print "    inline static const char* sharedToString(bool shared)"
     print "       { return shared ? getKeyword(FRB_KW_SHARED) : \"\"; }"
 
+    print "    /** Return FRB_KW_CONST string if cst is true, \"\" string otherwise */"
     print "    inline static const char* constToString(bool cst)"
     print "       { return cst ? getKeyword(FRB_KW_CONST) : \"\"; }"
 
+    print "    /** Return FRB_KW_ABSTRACT string if abs is true, \"\" string otherwise */"
     print "    inline static const char* abstractToString(bool abs)"
     print "       { return abs ? getKeyword(FRB_KW_ABSTRACT) : \"\"; }"
 
+    print "    /** Return FRB_KW_SEALED string if s is true, \"\" string otherwise */"
     print "    inline static const char* sealedToString(bool s)"
     print "       { return s ? getKeyword(FRB_KW_SEALED) : \"\"; }"
 
-    print "    static const char* scopeToString(int);"
+    print "    /** Return the string corresponding to the scope s (ie FRB_KW_PUBLIC or FRB_KW_PRIVATE string ...) */"
+    print "    static const char* scopeToString(int s);"
 
     print "\nprivate:"
     print "    static int currentSet;"

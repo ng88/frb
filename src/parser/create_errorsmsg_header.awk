@@ -24,6 +24,7 @@ BEGIN {
     print "#include \"../common/assert.h\"\n"
     print "#include \"../common/string.h\"\n"
     
+    print "/** Class that holds translated error messages */"
     print "class FrBErrors {\npublic:"
     print "    enum { "
     print "        FRB_ERR__NOTFOUND = -1,"
@@ -49,16 +50,26 @@ END {
     print "        FRB_ERR__COUNT };\n"
     print "    enum { FRB_ERR_DISPLAYSHIFT = 10 };"
     print "    static char* key[FRB_ERR__COUNT];"
+
+    print "    /** Return the message 'index' */"
     print "    inline static char* getMsg(int index) {"
     print "        frb_assert2(index >= 0 && index < FRB_ERR__COUNT, \"frberrors.h::FrBErrors::getMsg(int)\");"
     print "        return key[index]; }\n"
     
+    print "    /** Print the message 'index' on 's' */"
     print "    inline static std::ostream& putMsg(std::ostream& s, int index) {"
     print "        return s << getMsg(index); }\n"
     
+    print "    /** Print the message 'index' on 's', replacing '%N' tokens by 'l[N - 1]' */"
     print "    static std::ostream& putMsg(std::ostream&, int index, const StringList& l);"
+
+    print "    /** Print the message 'index' on 's', replacing the '%1' token by 's1' */"
     print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1);"
+
+    print "    /** Print the message 'index' on 's', replacing '%1' & '%2' token by 's1' & 's2' */"
     print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1, const String& s2);"
+    
+    print "    /** Print the message 'index' on 's', replacing '%1', '%2' & '%3' token by 's1', 's2' & 's3' */"
     print "    static std::ostream& putMsg(std::ostream&, int index, const String& s1, const String& s2, const String& s3);"
     print "    };"
     

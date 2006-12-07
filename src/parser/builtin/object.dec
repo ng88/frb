@@ -15,7 +15,7 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-
+/** The FrB Object class (ie base of each FrB class) */
 class FrBObject : public FrBCppObject
 {
 private:

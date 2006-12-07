@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 
-/** null type (ie type of the Null expression) */
+/** The FrB Null class (ie type of the Null expression) */
 class FrBNull : public FrBCppObject
 {
 private:

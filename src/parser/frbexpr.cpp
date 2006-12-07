@@ -158,16 +158,14 @@ FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
 
 void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    //TODO verif des var seules, peuvent être : classe (inner, outer, imported), function & co, membre
-    // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
-    //_type = e.getClassFromName(_name);
+    //
     frb_assert(false);
 }
 
 FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     frb_assert2(_type, "_type is a null pointer"
-                     " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
+                       " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
     return 0;
 }
 

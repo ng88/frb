@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 
-
+/** The FrB Debug class, used for debuging and testing purpose, contains methods like print(), showStack(), ... */
 class FrBDebug : public FrBCppObject
 {
 private:
