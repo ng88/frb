@@ -123,19 +123,24 @@ public:
     inline FrBFunction * findConstructor(const ArgContainer& args) const
       throw (FrBFunctionNotFoundException);
     
+    /** Return a sequence of all the functions named 'name' */
     inline FnPairIt findFunctions(const String& name) const;
     
+    /** Find a function named 'name' and matching the argument list 'args' */
     template<class ArgContainer>
     inline FrBFunction * findFunction(const String& name, const ArgContainer& args) const
       throw (FrBFunctionNotFoundException);
 
+    /** Find an operator for 'op' matching the argument list 'args' */
     template<class ArgContainer>
     inline FrBFunction * findOperator(int op, const ArgContainer& args) const
       throw (FrBFunctionNotFoundException);
 
+    /** Find the destructor */
     inline FrBFunction * findDestructor() const
       throw (FrBFunctionNotFoundException);
 
+    /** Return the field named 'name' */
     inline FrBField * findField(const String& name) const
       throw (FrBFieldNotFoundException);
     
@@ -143,21 +148,25 @@ public:
     void executeDefaultConstructor(FrBExecutionEnvironment&, FrBBaseObject * me) const
         throw (FrBExecutionException);
     
+    /** Find a constructor matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
     inline void executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
 	   const FrBBaseObjectList& args) const throw (FrBExecutionException);
     
+    /** Find a function named 'name' and matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
     inline FrBBaseObject * executeFunction(FrBExecutionEnvironment& e,
 					   const String& name,
 					   FrBBaseObject * me,
 					   const FrBBaseObjectList& args) const
                 throw (FrBExecutionException);
     
+    /** Find an operator for 'op' matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
     inline FrBBaseObject * executeOperator(FrBExecutionEnvironment& e,
 					   int op,
 					   FrBBaseObject * me,
 					   const FrBBaseObjectList& args) const
                throw (FrBExecutionException);
     
+    /** Find the destructor and execute it with 'me' as current instance and 'e' as execution environment */
     inline FrBBaseObject * executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
                throw (FrBExecutionException);
 
@@ -167,14 +176,25 @@ public:
     virtual FrBBaseObject * getMember(String name) = 0;*/
     
     //TODO /* throw si existe deja */
+    /** Add 'c' as an inner class for this */
     inline void addInnerClass(FrBClass * c);
+
+    /** Add 'c' as a field for this */
     inline void addField(FrBField * c);
+
+    /** Add 'f' as a function/sub for this */
     inline void addFunction(FrBFunction * f);
+
     //TODO vérifier que au moins l'un des params concerne la classe (ie pour int il faut 
     // op(int, int) op(int, double) ou op(double, int) mais pas op(double, single)
+    /** Add 'f' as an operator for 'op' for this */
     inline void addOperator(int op, FrBFunction * f);
+
     //TODO /* verifier la validité des params et retour */
+    /** Add 'f' as a constructor for this */
     inline void addConstructor(FrBFunction * f);
+
+    /** Set 'f' to be the destructor for this */
     inline void addDestructor(FrBFunction * f);
 
     inline const ClassContainer* innerClassList() const { return &_innerClasses; }
@@ -199,18 +219,29 @@ public:
     inline void setScope(scope_t v) { _scope = v; }
     inline void setName(String v) { _name = v; }
     
+    /** Return the unique typeID() of this class
+      *   Important note: typeID() my change from an execution to another and from a machine to another.
+      *                   So typeID() MUST NOT be stored for a furute usage. Typically typeID() have to
+      *                   compared only, eg: 
+      *                         if(classA->typeID() == classB->typeID())
+      *                         {
+      *                             // classA & classB are the same class
+      *                         }
+      */
     inline unsigned int typeID() const { return reinterpret_cast<unsigned int>(this); }
    
+    /** Return the full name of this class, ie Module1.Module2.MyClass1 */
     String fullName() const;
     
-    /** allocate instance and call the appropriate constructor */
+    /** Allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
     
-    /** call the destructor and free instance (call freeInstance to free the object)*/
+    /** Call the destructor and free instance (call freeInstance to free the object)*/
     void destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException);
     
+    /** Print this class on 'stream' */
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     /** String describing this overload of class */
@@ -229,7 +260,7 @@ public:
     /** Return true if current class inherits from from */
     bool inheritsFrom(const FrBClass * from) const;
     
-    /** can resolve any type of member (function, inner class, field, ...) */
+    /** Can resolve any type of member (function, inner class, field, ...) */
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
     
@@ -261,6 +292,7 @@ public:
 };
 
 
+/** Stack of FrBCodeClass* */
 typedef std::stack<FrBCodeClass*> FrBCodeClassStack;
 
 

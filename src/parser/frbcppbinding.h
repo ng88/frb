@@ -31,23 +31,24 @@ class FrBCppObject : public FrBBindingObject
 {
 
 public:
-    /** we don't care about fields in c++ binding */
+    /** We don't care about fields in c++ binding */
     FrBBaseObject* getField(int) throw (FrBEvaluationException) { return 0; }
+    /** We don't care about fields in c++ binding */
     void addField(int, FrBBaseObject *) throw (FrBEvaluationException) {}
 
     virtual ~FrBCppObject();
 };
 
 /** Allocator that allows creation of C++ objects */
-
 class FrBCppObjectAllocator
 {
 public:
+    /** Create an instance */
     virtual FrBCppObject * createObject() const = 0;
 };
 
 
-/** FrB class from C++ binding */
+/** Represents an FrB class from C++ binding */
 class FrBCppClass : public FrBClass
 {
 private:
@@ -76,14 +77,16 @@ public:
 
 /* cf p521*/
 
-/** Une fonction C++ exportée */
+/** Represents an FrB function that is a C++ exported function */
 class FrBCppFunction : public FrBFunction
 {
 private:
 public:
 };
 
-/** fn() */
+/** Represents an FrB function that is a C++ exported function without any parameter
+  *      ie fn()
+  */
 class FrBNoParamCppFunction : public FrBCppFunction
 {
 public:
@@ -96,6 +99,7 @@ private:
 
 public:
 
+    /** 'f' is a pointer to the C++ function */
     FrBNoParamCppFunction(NoParamFunction f) : _fn(f) {};
 
     const FrBClass * parameterType(int index) const;
@@ -108,7 +112,9 @@ public:
         throw (FrBExecutionException);
 };
 
-/** fn( ByVal/ByRef a1 As T) */
+/** Represents an FrB function that is a C++ exported function with one parameter
+  *      ie fn( ByVal/ByRef a1 As T)
+  */
 class FrBUnaryCppFunction : public FrBCppFunction
 {
     
@@ -124,6 +130,7 @@ private:
     
 public:
 
+    /** 'fn' is a pointer to the C++ function, 'arg0' is the type of the first argument and 'arg0_byval' indicates if the first arg must be passed byval or not (=byref)  */
     FrBUnaryCppFunction(UnaryFunction fn, FrBClass *  arg0, bool arg0_byval)
         : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval) {}
 
