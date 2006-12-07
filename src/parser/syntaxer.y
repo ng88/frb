@@ -60,7 +60,7 @@
 struct FnCParam
 {
     FrBTypeExpr * type;
-    char *     str;
+    CString       str;
 };
 
 struct FnAttr
@@ -77,7 +77,7 @@ struct FnAttr
 
 %union
 {
-    char *                     str;
+    CString                    str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
     FrBUnresolvedTypeExpr *    vtype;

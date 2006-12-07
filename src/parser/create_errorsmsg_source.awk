@@ -26,7 +26,7 @@ BEGIN {
     print "    frb_assert2(index >= 0 && index < FRB_ERR__COUNT, \"frberrors.h::FrBErrors::putMsg()\");"
     print ""
     print "    int i = 0;"
-    print "    char * str = key[index];"
+    print "    CString str = key[index];"
     print "    char c;"
     print "    while(c = str[i])"
     print "    {"
@@ -76,7 +76,7 @@ BEGIN {
     print "    return putMsg(o, index, l);"
     print "}\n\n"
     
-    print "char* FrBErrors::key[FRB_ERR__COUNT] = {"
+    print "CString FrBErrors::key[FRB_ERR__COUNT] = {"
     
     FS=";"
     

@@ -75,13 +75,13 @@ END {
     print "#include <cstring>"
     print "#include \"../common/assert.h\"\n"
 
-    print "int FrBKeywords::findKeyword(const char* str) {"
+    print "int FrBKeywords::findKeyword(const CString str) {"
     print "    for(int i = 0; i <  FRB_KW__COUNT - FRB_KW__SYMBOL_END; ++i)"
     print "        if( !strcmp(key[currentSet][i], str) )"
     print "            return i + FRB_KW__SYMBOL_END;\n"
     print "    return FRB_KW__NOTFOUND;\n}\n\n"
     
-    print "int FrBKeywords::findKeywordOrSymbol(const char* str) {"
+    print "int FrBKeywords::findKeywordOrSymbol(const CString str) {"
     print "    for(int i = 0; i <  FRB_KW__SYMBOL_END; ++i)"
     print "        if( !strcmp(symbol[i], str) )"
     print "            return i;\n"
@@ -90,39 +90,39 @@ END {
     print "            return i + FRB_KW__SYMBOL_END;\n"
     print "    return FRB_KW__NOTFOUND;\n}\n\n"
     
-    print "int FrBKeywords::findSymbol(const char* str) {"
+    print "int FrBKeywords::findSymbol(const CString str) {"
     print "    for(int i = 0; i <  FRB_KW__SYMBOL_END; ++i)"
     print "        if( !strcmp(symbol[i], str) )"
     print "            return i;\n"
     print "    return FRB_KW__NOTFOUND;\n}\n\n"
 
-    print "int FrBKeywords::findSet(const char* str) {"
+    print "int FrBKeywords::findSet(const CString str) {"
     print "    for(int i = 0; i <  FRB_SET__COUNT; ++i)"
     print "        if( !strcmp(key_set[i], str) )"
     print "            return i;\n"
     print "    return FRB_SET__NOTFOUND;\n}\n\n"
     
-    print "const char * FrBKeywords::getKeywordOrSymbol(int index) {"
+    print "const CString FrBKeywords::getKeywordOrSymbol(int index) {"
     print "    frb_assert2(index >= 0 && index < FRB_KW__COUNT, \"frbkeywords.cpp::FrBKeywords::getKeywordOrSymbol(int)\");"
     print "    return (index < FRB_KW__SYMBOL_END) ? symbol[index] : key[currentSet][index - FRB_KW__SYMBOL_END];"
     print "}\n\n"
     
-    print "const char * FrBKeywords::getSymbol(int index) {"
+    print "const CString FrBKeywords::getSymbol(int index) {"
     print "    frb_assert2(index >= 0 && index < FRB_KW__SYMBOL_END, \"frbkeywords.cpp::FrBKeywords::getSymbol(int)\");"
     print "    return symbol[index];"
     print "}\n\n"
     
-    print "const char * FrBKeywords::getKeyword(int index) {"
+    print "const CString FrBKeywords::getKeyword(int index) {"
     print "    frb_assert2(index >= FRB_KW__SYMBOL_END && index < FRB_KW__COUNT, \"frbkeywords.cpp::FrBKeywords::getKeyword(int)\");"
     print "    return key[currentSet][index - FRB_KW__SYMBOL_END];"
     print "}\n\n"
     
-    print "const char* FrBKeywords::getSetName(int index) {"
+    print "const CString FrBKeywords::getSetName(int index) {"
     print "    frb_assert2(index >= 0 && index < FRB_SET__COUNT, \"frbkeywords.cpp::FrBKeywords::getSetName(int)\");"
     print "    return key_set[index];"
     print "}\n\n"
     
-    print "const char* FrBKeywords::scopeToString(int s) {"
+    print "const CString FrBKeywords::scopeToString(int s) {"
     print "   switch(s) {"
     print "     case SC_PUBLIC: return getKeyword(FRB_KW_PUBLIC);"
     print "     case SC_PRIVATE: return getKeyword(FRB_KW_PRIVATE);"
@@ -132,7 +132,7 @@ END {
     print "}\n\n"
 
 
-    print "char* FrBKeywords::key_set[FRB_SET__COUNT] ="
+    print "CString FrBKeywords::key_set[FRB_SET__COUNT] ="
     printf "    {\n"
     
     for(i = 0; i < kwsetc; ++i)
@@ -146,12 +146,12 @@ END {
     print "    };\n\n"
     
     print "int FrBKeywords::currentSet = 0; /* default set: " first_set " */\n"
-    print "char* FrBKeywords::symbol[FRB_KW__SYMBOL_END] ="
+    print "CString FrBKeywords::symbol[FRB_KW__SYMBOL_END] ="
     print "    {"
     print FRB_SYMBOLS
     print "\n    };\n\n"
     
-    print "char* FrBKeywords::key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END] ="
+    print "CString FrBKeywords::key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END] ="
     print "    {"
     
     for(i = 0; i < kwsetc; ++i)

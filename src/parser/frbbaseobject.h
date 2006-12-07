@@ -67,11 +67,14 @@ public:
 
 };
 
+/** Vector of FrBBaseObject* */
 typedef std::vector<FrBBaseObject*> FrBBaseObjectList;
+
+/** Map of FrBBaseObject* with a String key */
 typedef std::map<String,FrBBaseObject*> FrBBaseObjectMap;
 
 
-/** Represents an FrB object created by the user (ie with the interpreter) */
+/** Represents an FrB object that is an instance of an user type (ie defined by the interpreter) */
 class FrBUserObject : public FrBBaseObject
 {
 private:
@@ -98,7 +101,7 @@ public:
 
 };
 
-/* Un objet FrB issu d'un binding FrB */
+/** Represents an FrB object that is an instance of a binding type */
 class FrBBindingObject : public FrBBaseObject
 {
 

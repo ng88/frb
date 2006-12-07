@@ -18,6 +18,7 @@
 
 #include <iterator>
 
+/** Map iterator returning 'second' only */
 template <class C>
 class map_snd_iterator
 {
@@ -46,6 +47,7 @@ public:
 
 };
 
+/** Map const_iterator returning 'second' only */
 template <class C>
 class const_map_snd_iterator
 {

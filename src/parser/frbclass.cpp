@@ -337,7 +337,7 @@ void FrBCodeClass::freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) con
 }
 
 
-const char* FrBCodeClass::specString() const
+const CString FrBCodeClass::specString() const
 {
     return "frb interpreted class";
 }

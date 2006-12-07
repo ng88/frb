@@ -211,7 +211,7 @@ frb_deflang           ("DefLang")
                                             {
                                                 //on utilise pas yytext car il faudrait faire un strdup
                                                 // et on a deja les chaines en mémoire
-                                                YYLVAL.str = const_cast<char*>(FrBKeywords::getKeyword(keyw_id));
+                                                YYLVAL.str = const_cast<CString>(FrBKeywords::getKeyword(keyw_id));
                                                 DBG_PRINTF("Keyword : %s (%d, %d) {str=%s}\n", yytext, keyw_id, KW2TOKEN(keyw_id), YYLVAL.str);
                                                 first_instruction = false;
                                                 //YYLVAL.a = 0;

@@ -28,27 +28,45 @@
 
 #include <cctype>
 
+/** Alias for std::string (to make a potential change easy) */ 
 typedef std::string String;
-typedef char* CString;
+
+/** Alias for char* (to make a potential change easy) */
+#define CString char*
+//typedef char* CString;
+
+/** Vector of String */
 typedef std::vector<String> StringList;
+
+/** Vector of CString */
 typedef std::vector<char*> CStringList;
+
+/** Stack of String */
 typedef std::stack<String> StringStack;
+
+/** Stack of CString */
 typedef std::stack<char*> CStringStack;
 
-namespace StringEx /* extended functions on string */
+/** Static class that provides extended functions on String */
+class StringEx 
 {
+public:
 
-    /** compute the size of a string, used in split */
-    inline size_t str_size(const char*& str) { return strlen(str); }
-    inline size_t str_size(const String& str) { return str.size(); }
-    inline size_t str_size(const char& str) { return 1; }
+    /** Compute the size of 'str', used in split */
+    static inline size_t str_size(const CString& str) { return strlen(str); }
 
-    /** Split source in container using delim as delimiter.
-      * delim can be a char, a C string or a String
+    /** Compute the size of 'str', used in split */
+    static inline size_t str_size(const String& str) { return str.size(); }
+
+    /** Compute the size of 'str', used in split */
+    static inline size_t str_size(const char& str) { return 1; }
+
+    /** Split 'source' in 'container' using 'delim' as delimiter.
+      * 'delim' can be a char, a C string or a String
       * Return the number of token added to container
       */
     template<class T, class D>
-    size_t split(T &container, const String& source, const D& delim = '\n', bool allowEmptyEntries = true)
+    static size_t split(T &container, const String& source, const D& delim = '\n', bool allowEmptyEntries = true)
     {
         size_t pos = std::string::npos;
         size_t old_pos = 0;
@@ -80,50 +98,53 @@ namespace StringEx /* extended functions on string */
                 
     }
     
-    /** return true if stris only made of ' ' and '\t' */
-    bool isSpacesOnly(const String& str);
+    /** Return true if 'str' is only made of spaces
+        (the C function isspace() is used to determine if a char is a space) */
+    static bool isSpacesOnly(const String& str);
     
-    
-    inline String left(const String& str, const String::size_type& pos)
+    /** Return the 'n' chars at left of 'str' */
+    static inline String left(const String& str, const String::size_type& pos)
     {
         return String( str, 0, pos );
     }
     
-    inline String right(const String& str, const String::size_type& pos)
+    /** Return the 'n' chars at right of 'str' */
+    static inline String right(const String& str, const String::size_type& pos)
     {
         return String( str, str.length() - 1 - pos, pos );
     }
     
-    inline bool isSpace(const char& c)
+    /** Return true if 'c' is a space 
+        (this is an alias for the C function isspace()) */
+    static inline bool isSpace(const char& c)
     {
         return isspace(c);
     }
     
-    String ltrim(const String& str);
-    String rtrim(const String& str);
-    String trim(const String& str);
+    static String ltrim(const String& str);
+    static String rtrim(const String& str);
+    static String trim(const String& str);
     
     
     template<class T>
-    inline String nb2string(T v)
+    static inline String nb2string(T v)
     {
         std::ostringstream tmp;
         tmp << v;
         return tmp.str();
     }
     
-    inline String int2string(int v)
+    static inline String int2string(int v)
     {
         return nb2string(v);
     }
     
-    inline String double2string(double v)
+    static inline String double2string(double v)
     {
         return nb2string(v);
     }
-}
+};
 
 
 #endif
-
 

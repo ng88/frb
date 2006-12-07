@@ -23,10 +23,10 @@
 #include "frbbaseobject.h"
 #include "../common/assert.h"
 
-/** Classes and declarations that allows using C++ classes in FrB */
+/* Classes and declarations that allows using C++ classes in FrB */
 
 
-/** Un objet FrB du binding C++ */
+/** Represents an FrB object that is an instance of a C++ binding type */
 class FrBCppObject : public FrBBindingObject
 {
 
@@ -69,7 +69,7 @@ public:
     
 
     
-    const char* specString() const;
+    const CString specString() const;
 
 };
 

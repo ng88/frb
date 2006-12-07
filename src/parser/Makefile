@@ -94,7 +94,7 @@ frbmember.o: frbmember.h
 
 doc:
 	@echo Creating documentation...
-	@doc++ -AHabj -d ../../docs/code-doc *.h *.cpp builtin/*.def builtin/*.dec
+	@doc++ -AHabj -d ../../docs/code-doc *.h *.cpp builtin/*.def builtin/*.dec ../common/*.h ../common/*.cpp
 
 cleandoc:
 	@echo Cleaning documentation...

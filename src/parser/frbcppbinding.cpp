@@ -40,7 +40,7 @@ void FrBCppClass::freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 }
 
 
-const char* FrBCppClass::specString() const
+const CString FrBCppClass::specString() const
 {
     return "C++ binding class";
 }

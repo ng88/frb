@@ -33,7 +33,6 @@
 typedef char op_t;
 
 
-//utiliser une multimap pour les fonctions
 
 class FrBClass;
 
@@ -44,7 +43,8 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 //TODO: utiliser une hash_map à la place
 typedef std::map<const String, FrBFunction*> FrBFunctionMap;
 
-class FrBClass : public FrBMember /* a frb class in memory */
+/** Represents an FrB class in memory */
+class FrBClass : public FrBMember
 {
 public:
 
@@ -58,7 +58,7 @@ public:
 
 private:
 
-    /** init stuff for o (create fields, ...*/
+    /** Init stuff for 'o' (create fields, ...) */
     void initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
       throw (FrBExecutionException);
     
@@ -112,10 +112,13 @@ public:
              
              virtualité partout, trouver une syntaxe plus sympa pour la virtualité pure
              */
-    /** Used in type resolution */
+    /** Used in type resolution (resolve type of var in function code...)*/
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+
+    /** Used in type resolution (resolve type of field, function prototype, ...) */
     virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
+    /** Find a constructor matching the argument list 'args' */
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
       throw (FrBFunctionNotFoundException);
@@ -211,7 +214,7 @@ public:
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     /** String describing this overload of class */
-    virtual const char* specString() const = 0;
+    virtual const CString specString() const = 0;
     
     /** Check if from and to are compatibles and convert from to to */
     static FrBBaseObject* convert(FrBBaseObject * from, const FrBClass * to)throw (FrBIncompatibleClassException);
@@ -252,7 +255,7 @@ public:
 
 
     
-    virtual const char* specString() const;
+    virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
    
 };
