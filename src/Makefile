@@ -21,8 +21,32 @@ ifndef TRAD_LANG
     TRAD_LANG=EN
 endif
 
-MAKE_OPT=TRAD_LANG=$(TRAD_LANG)
+ifdef NO_ASSERT
+    DEBUGASSERT=
+else
+    DEBUGASSERT=-DDEBUG_ASSERT=1
+endif
 
+ifdef NO_CATCH
+    DEBUGCATCH=-DDEBUG_NO_CATCH=1
+else
+    DEBUGCATCH=
+endif
+
+
+ifdef DEBUG
+    DEBUGFLAGS=-g -ggdb -dH -D_FRB_DEBUG_=1 $(DEBUGASSERT) $(DEBUGCATCH)
+    STRIP=echo '*** No strip in debug mode *** '
+else
+    DEBUGFLAGS=$(DEBUGASSERT)
+    STRIP=strip
+endif
+
+CXX=g++
+CXXFLAGS=-Wall -D_FRB_LANG_=\"$(TRAD_LANG)\" -D_FRB_LANG_IS_$(TRAD_LANG)_ $(DEBUGFLAGS)
+
+
+MAKE_OPT=TRAD_LANG="$(TRAD_LANG)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" STRIP="$(STRIP)"
 
 EXE=frb
 
@@ -31,15 +55,13 @@ EXE=frb
 all: $(EXE)
 
 $(EXE): common parser
-	@ln -s parser/parser_test $(EXE)
+	@cp -f parser/parser_test $(EXE)
 
 
-
-
-.PHONY: exe clean clean_parser clean_common #clean_interpreter
+.PHONY: exe clean clean_parser clean_common common parser #clean_interpreter
 
 exe:
-	@./$(EXE)
+	@../bin/$(EXE)
 
 
 ####    common stuff      ####
