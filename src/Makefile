@@ -24,48 +24,53 @@ endif
 MAKE_OPT=TRAD_LANG=$(TRAD_LANG)
 
 
-EXE=interpreter_test
+EXE=frb
 
 
 
 all: $(EXE)
 
-$(EXE): interpreter
-	@ln -s interpreter/$(EXE)
+$(EXE): common parser
+	@ln -s parser/parser_test $(EXE)
 
 
 
 
-.PHONY: exe clean force clean_parser clean_interpreter force_parser force_interpreter parser
+.PHONY: exe clean clean_parser clean_common #clean_interpreter
 
 exe:
 	@./$(EXE)
 
+
+####    common stuff      ####
+
+clean_common:
+	@$(MAKE) -C common $(MAKE_OPT) clean
+
+common:
+	@$(MAKE) -C common $(MAKE_OPT)
+
+####     Parser   ####
+
 clean_parser:
 	@$(MAKE) -C parser $(MAKE_OPT) clean
 
-
-clean_interpreter: force_parser
-	@$(MAKE) -C interpreter $(MAKE_OPT) clean
-
-force_parser:
-	@$(MAKE) -C parser $(MAKE_OPT) force
-
-
-force_interpreter:
-	@$(MAKE) -C interpreter $(MAKE_OPT) force
-
-force: force_interpreter
-
-clean: clean_parser clean_interpreter
-
-
-
 parser:
 	@$(MAKE) -C parser $(MAKE_OPT)
-        
-interpreter: parser
-	@$(MAKE) -C interpreter $(MAKE_OPT)
+
+####     Interpreter    ####
+
+# clean_interpreter: force_parser
+# 	@$(MAKE) -C interpreter $(MAKE_OPT) clean
+# 
+# interpreter: parser
+# 	@$(MAKE) -C interpreter $(MAKE_OPT)
+
+
+clean: clean_parser clean_common #clean_interpreter
+
+
+
 
 
 install: all
