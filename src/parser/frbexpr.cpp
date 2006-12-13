@@ -212,12 +212,25 @@ bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::needMe() const
     return !_fl->shared();
 }
 
+bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isAssignable() const
+{
+    return true;
+}
+
+void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvironment& e,
+        FrBBaseObject* me, FrBBaseObject* val) const throw (FrBEvaluationException)
+{
+    me->addField(_fl->index(), val);
+}
+
+/////////////////
 
 FrBUnresolvedIdWithContextExpr::FunctionEvaluator::FunctionEvaluator(FrBFunction * f)
  : _fn(f)
  {
  }
- 
+
+
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
@@ -234,7 +247,7 @@ bool FrBUnresolvedIdWithContextExpr::FunctionEvaluator::needMe() const
     return !_fn->shared();
 }
 
-
+/////////////////
 
 FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
  : _cl(f)
@@ -249,15 +262,17 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObjec
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
 {
-    return FrBClassWrapper::getCppClass();
+    //return FrBClassWrapper::getCppClass();
+    return _cl;
 }
 
 bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
 {
     return false;
 }
-    
 
+    
+/////////////////
 
 
 FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBExpr * context, const String& name)
@@ -278,7 +293,7 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 {
     if(!_context_resolved)
         _context->resolveAndCheck(e);
-    std::cout << _name << std::endl;
+
     //const_cast pas tres propre mais pour le moment c'est tres bien comme ca :)
     FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
 
@@ -290,13 +305,13 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     {
         /* look for a function */
         
-        FrBClass::FnPairIt pit = current_class->findFunctions(_name);
-        
-        if(pit.second->second)
-            throw FrBFunctionAmbiguityException(_name);
-        else if(pit.first != current_class->functionList()->end())
-            _evaluator = new FunctionEvaluator( pit.first->second );
-        else /* look for a class */
+//         FrBClass::FnPairIt pit = current_class->findFunctions(_name);
+//         
+//         if(pit.second->second)
+//             throw FrBFunctionAmbiguityException(_name);
+//         else if(pit.first != current_class->functionList()->end())
+//             _evaluator = new FunctionEvaluator( pit.first->second );
+//         else /* look for a class */
             _evaluator = new ClassEvaluator(e.getClassFromName(_name, current_class));
     }
 }
@@ -318,6 +333,25 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 {
     frb_assert(_evaluator);
     return _evaluator->getClass();
+}
+
+bool FrBUnresolvedIdWithContextExpr::isAssignable() const
+{
+    frb_assert(_evaluator);
+    return _evaluator->isAssignable();
+}
+
+void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* v) const
+    throw (FrBEvaluationException)
+{
+    frb_assert(_evaluator);
+
+    FrBBaseObject * me = 0;
+
+    if(_evaluator->needMe())
+        me = _context->eval(e);
+
+    _evaluator->refAssign(e, me, v);
 }
 
 std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
@@ -593,7 +627,9 @@ void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
 
   _rhs->resolveAndCheck(e);
   _lhs->resolveAndCheck(e);
-  
+
+  frb_assert2(_lhs->isAssignable(), "invalid lvalue");
+
   if(!_rhs->getClass()->isCompatibleWith(_rhs->getClass()))
     throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
 }

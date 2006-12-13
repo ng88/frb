@@ -135,6 +135,10 @@ protected:
 
         /** Return true if the evaluator need the me param to be set for evaluation */
         virtual bool needMe() const = 0;
+        
+        virtual bool isAssignable() const { return false; }
+        virtual void refAssign(FrBExecutionEnvironment&, FrBBaseObject* me, FrBBaseObject* val) const
+            throw (FrBEvaluationException) {}
 
         virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException) = 0;
@@ -151,6 +155,8 @@ protected:
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
         bool needMe() const;
+        bool isAssignable() const;
+        void refAssign(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject*) const throw (FrBEvaluationException);
     };
     
     /** function/sub evalutor (ie it returns an objet of the 'Function' type,
@@ -203,6 +209,9 @@ public:
     inline void setContextResolved() { _context_resolved = true; }
     
     std::ostream& put(std::ostream& stream) const;
+    
+    bool isAssignable() const;
+    void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
 };
 
 
