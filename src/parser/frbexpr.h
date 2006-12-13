@@ -186,8 +186,10 @@ protected:
     
     FrBExpr *                _context;
     String                    _name;
-    FrBMember  *              _value;
+    //FrBMember  *              _value;
     Evaluator *               _evaluator;
+
+    bool                      _context_resolved
     
 
     
@@ -198,6 +200,10 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
+
+    inline const String& name() const { return _name; }
+    inline FrBExpr* context() { return _context; }
+    inline void setContextResolved() { _context_resolved = true; }
     
     std::ostream& put(std::ostream& stream) const;
 };

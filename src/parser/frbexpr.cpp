@@ -261,7 +261,7 @@ bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
 
 
 FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBExpr * context, const String& name)
- : _context(context), _name(name), _evaluator(0)
+ : _context(context), _name(name), _evaluator(0), _context_resolved(false)
 {
     frb_assert(context);
 }
@@ -276,7 +276,8 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _context->resolveAndCheck(e);
+    if(!_context_resolved)
+        _context->resolveAndCheck(e);
     
     //const_cast pas tres propre mais pour le moment c'est tres bien comme ca :)
     FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
@@ -422,85 +423,40 @@ FrBFunctionCallExpr::~FrBFunctionCallExpr()
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-//     _lhs->resolveAndCheck(e);
-//     
-//     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-//         (*it)->resolveAndCheck(e);
-//         
-//     FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
-//     
-//     if(mo && !mo->resolved()) /* case of a real function call */
-//     {
-//         _fn = mo->lhs()->getClass()->findFunction(mo->rhs()->name(), *_rhs);
-//     }
-//     else /* case of an operator overload */
-//     {
-//      
-//     #if 1-1
-//         
-//         
-//         
-//         const FrBClass * cl = _lhs->getClass();
-//         const FrBClass * cr = _rhs->getClass();
-//         
-//         FrBConstClassList args;
-//         args.push_back(cl);
-//         args.push_back(cr);
-//         
-//         
-//         try
-//         {
-//             _fn = cl->findOperator(_op, args);
-//             if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-//         }
-//         catch(FrBFunctionNotFoundException)
-//         {
-//             try
-//             {
-//                 _fn = cr->findOperator(_op, args);
-//                 if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-//             }
-//             catch(FrBFunctionNotFoundException)
-//             {
-//                 try
-//                 {
-//                     args.clear();
-//                     args.push_back(cr);
-//                     _fn = cl->findOperator(_op, args);
-//                     if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-//                 }
-//                 catch(FrBFunctionNotFoundException)
-//                 {
-//                     FrBFunctionNotFoundException ex(
-//                                     String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
-//                                         .append(FrBKeywords::getKeywordOrSymbol(_op)),
-//                                     args
-//                                                     );
-//                     
-//                     const FrBClass::OperatorContainer * ops = cl->operatorList();
-//                     
-//                     for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
-//                             ex.addCandidate(itf->second);
-//                             
-//                     ops = cr->operatorList();
-//                     
-//                     for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
-//                             ex.addCandidate(itf->second);
-//                                                                         
-//                     throw ex;
-//                 }
-//             }
-//         }
-//     #endif
-//     }
+
+    
+    for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+        (*it)->resolveAndCheck(e);
+        
+    FrBUnresolvedIdWithContextExpr * mo = dynamic_cast<FrBUnresolvedIdWithContextExpr*>(_lhs);
+    
+    if(mo) 
+    {          /* case of a real function call ? */
+        try
+        {
+            mo->resolveAndCheck(e);
+            mo->setContextResolved(); /* to be sure that context'll not be resolved again after */
+
+            _fn = mo->context()->getClass()->findFunction(mo->name(), *_rhs);
+        }
+        catch()  /* no, this is not a funtion */
+        {
+        }
+        
+    }
+
+    /* case of the overload of the () operator */
+    frb_assert2(false, "overload of ()/[] not yet implemented");
+
+    _lhs->resolveAndCheck(e);
+
 }
 
 
 FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     frb_assert2(_fn, "frbexpr.cpp::FrBFunctionCallExpr::val() - _fn is a null pointer");
-    
-//   /*  
+
 //     FrBBaseObjectList rval;
 //     rval.reserve(_rhs->size());
 // 
@@ -521,7 +477,7 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 //             return _fn->execute(e, 0, rval);
 //         else
 //             return _fn->execute(e, lval, rval);
-//     }*/
+//     }
 
     return 0;
 }
