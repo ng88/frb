@@ -196,13 +196,13 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     
     for(ConstructorContainer::const_iterator it = ctors->begin(); it != ctors->end(); ++it)
     {
-      sout << ident << "\t'As constructor ";
+      sout << ident << "\t'As constructor " << endl;
       (*it)->put(sout, level);
     }
                 
     if(destructor())
     {
-      sout << ident << "\t'As destructor ";
+      sout << ident << "\t'As destructor "<< endl;
       destructor()->put(sout, level);
     }
         

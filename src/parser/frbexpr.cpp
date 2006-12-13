@@ -144,45 +144,45 @@ std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
         return stream << "ur_type_" << _name;
 }
 
-/*     FrBUnresolvedIdExpr      */
-
-
-FrBUnresolvedIdExpr::FrBUnresolvedIdExpr(const String& name)
- : _name(name), _type(0)
-{
-}
-
-FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
-{
-}
-
-void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
-{
-    //
-    frb_assert(false);
-}
-
-FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
-{
-    frb_assert2(_type, "_type is a null pointer"
-                       " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
-    return 0;
-}
-
-const FrBClass* FrBUnresolvedIdExpr::getClass() const
-{
-    frb_assert2(_type, "_type is a null pointer"
-                     " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
-    return _type;
-}
-
-std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
-{
-    if(_type)
-        return stream << _type->name();
-    else
-        return stream << "ur_id_" << _name;
-}
+// /*     FrBUnresolvedIdExpr      */
+// 
+// 
+// FrBUnresolvedIdExpr::FrBUnresolvedIdExpr(const String& name)
+//  : _name(name), _type(0)
+// {
+// }
+// 
+// FrBUnresolvedIdExpr::~FrBUnresolvedIdExpr()
+// {
+// }
+// 
+// void FrBUnresolvedIdExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+// {
+//     //
+//     frb_assert(false);
+// }
+// 
+// FrBBaseObject* FrBUnresolvedIdExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+// {
+//     frb_assert2(_type, "_type is a null pointer"
+//                        " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
+//     return 0;
+// }
+// 
+// const FrBClass* FrBUnresolvedIdExpr::getClass() const
+// {
+//     frb_assert2(_type, "_type is a null pointer"
+//                      " - FrBUnresolvedIdExpr::resolveAndCheck() probably not called");
+//     return _type;
+// }
+// 
+// std::ostream& FrBUnresolvedIdExpr::put(std::ostream& stream) const
+// {
+//     if(_type)
+//         return stream << _type->name();
+//     else
+//         return stream << "ur_id_" << _name;
+// }
 
 /*     FrBUnresolvedIdWithContextExpr      */
 
@@ -207,6 +207,11 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::FieldEvaluator::getClass() const
     return _fl->type();
 }
 
+bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::needMe() const
+{
+    return !_fl->shared();
+}
+
 
 FrBUnresolvedIdWithContextExpr::FunctionEvaluator::FunctionEvaluator(FrBFunction * f)
  : _fn(f)
@@ -224,6 +229,12 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::getClass() co
     return FrBFunctionWrapper::getCppClass();
 }
 
+bool FrBUnresolvedIdWithContextExpr::FunctionEvaluator::needMe() const
+{
+    return !_fn->shared();
+}
+
+
 
 FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
  : _cl(f)
@@ -240,11 +251,16 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
 {
     return FrBClassWrapper::getCppClass();
 }
+
+bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
+{
+    return false;
+}
     
 
 
 
-FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBMeExpr * context, const String& name)
+FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBExpr * context, const String& name)
  : _context(context), _name(name), _evaluator(0)
 {
     frb_assert(context);
@@ -262,7 +278,8 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 {
     _context->resolveAndCheck(e);
     
-    FrBClass * current_class = _context->getClassPtr();
+    //const_cast pas tres propre mais pour le moment c'est tres bien comme ca :)
+    FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
 
     try
     { /* look for a field first */
@@ -287,7 +304,13 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
     throw (FrBEvaluationException)
 {
     frb_assert(_evaluator);
-    return _evaluator->eval(_context->eval(e), e);
+
+    FrBBaseObject * me = 0;
+
+    if(_evaluator->needMe())
+        me = _context->eval(e);
+
+    return _evaluator->eval(me, e);
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
@@ -299,7 +322,7 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 {
     if(_evaluator)
-        return stream << _name << '(' << typeid(_evaluator).name()<< ')' ;
+        return stream << _name;
     else
         return stream << "urwc_id_" << _name;
 }
@@ -309,80 +332,80 @@ std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 
 
 /*     FrBMemberOpExpr      */
-
-FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs)
- : _lhs(lhs), _rhs(rhs)
-{
-    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBMemberOpExpr::FrBMemberOpExpr()");
-}
-
-FrBMemberOpExpr::~FrBMemberOpExpr()
-{
-    delete _lhs;
-    delete _rhs;
-}
-
-void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
-{
-    _lhs->resolveAndCheck(e);
-    
-    const FrBClass* cc  = _lhs->getClass();
-    const String & name =  _rhs->name();
-    
-    (void)cc;
-    (void)name;
-    
-    //TODO cf FrBUnresolvedIdExpr::resolveAndCheck() ms avec un contexte de recherche
-    // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
-    
-
-    /* _rhs est soit une inner classe soit un membre soit tout ce qui est function */
-    
-//     /*  function/sub */
-//     FrBClass::FnPairIt pit = cc->findFunctions(name);
+// /*
+// FrBMemberOpExpr::FrBMemberOpExpr(FrBExpr* lhs, FrBUnresolvedIdExpr* rhs)
+//  : _lhs(lhs), _rhs(rhs)
+// {
+//     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBMemberOpExpr::FrBMemberOpExpr()");
+// }
+// 
+// FrBMemberOpExpr::~FrBMemberOpExpr()
+// {
+//     delete _lhs;
+//     delete _rhs;
+// }
+// 
+// void FrBMemberOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+// {
+//     _lhs->resolveAndCheck(e);
 //     
-//     if(pit.second->second)
-//     {
-//         /* ambiguity */
+//     const FrBClass* cc  = _lhs->getClass();
+//     const String & name =  _rhs->name();
 //     
-//         puts("ID AMBIGUITY -- /* function/sub */\n");
-//         exit(0);
-//         
-//         break;
-//     }
-//     else if(pit.first != cc->functionList()->end())
-//     {
-//         /* found */
-//         
-//         $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
-//         
-//         puts("ID FOUND -- /* 4. function/sub */\n");
-//         
-//         break;
-//     }
-
-   // throw FrBMemberNotFoundException(cc, name);
-   
-   _resolved = false;
-    
-}
-
-FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
-{
-    return 0;
-}
-
-const FrBClass* FrBMemberOpExpr::getClass() const
-{
-    return 0;
-}
-
-std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
-{
-    return stream << '(' << *_lhs
-        << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
-        << _rhs->name() << ')';
-}
+//     (void)cc;
+//     (void)name;
+//     
+//     //TODO cf FrBUnresolvedIdExpr::resolveAndCheck() ms avec un contexte de recherche
+//     // il faudrait definir une fonction commune, static, exemple da,s FrBTypeExpr
+//     
+// 
+//     /* _rhs est soit une inner classe soit un membre soit tout ce qui est function */
+//     
+// //     /*  function/sub */
+// //     FrBClass::FnPairIt pit = cc->findFunctions(name);
+// //     
+// //     if(pit.second->second)
+// //     {
+// //         /* ambiguity */
+// //     
+// //         puts("ID AMBIGUITY -- /* function/sub */\n");
+// //         exit(0);
+// //         
+// //         break;
+// //     }
+// //     else if(pit.first != cc->functionList()->end())
+// //     {
+// //         /* found */
+// //         
+// //         $<expr>$ = new FrBObjectIdExpr(new FrBFunctionWrapper( pit.first->second ));
+// //         
+// //         puts("ID FOUND -- /* 4. function/sub */\n");
+// //         
+// //         break;
+// //     }
+// 
+//    // throw FrBMemberNotFoundException(cc, name);
+//    
+//    _resolved = false;
+//     
+// }
+// 
+// FrBBaseObject* FrBMemberOpExpr::eval(FrBExecutionEnvironment&) const throw (FrBEvaluationException)
+// {
+//     return 0;
+// }
+// 
+// const FrBClass* FrBMemberOpExpr::getClass() const
+// {
+//     return 0;
+// }
+// 
+// std::ostream& FrBMemberOpExpr::put(std::ostream& stream) const
+// {
+//     return stream << '(' << *_lhs
+//         << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER)
+//         << _rhs->name() << ')';
+// }*/
 
 /*              FrBFunctionCallExpr                */
 
@@ -399,77 +422,77 @@ FrBFunctionCallExpr::~FrBFunctionCallExpr()
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _lhs->resolveAndCheck(e);
-    
-    for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-        (*it)->resolveAndCheck(e);
-        
-    FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
-    
-    if(mo && !mo->resolved()) /* case of a real function call */
-    {
-        _fn = mo->lhs()->getClass()->findFunction(mo->rhs()->name(), *_rhs);
-    }
-    else /* case of an operator overload */
-    {
-     
-    #if 1-1
-        
-        
-        
-        const FrBClass * cl = _lhs->getClass();
-        const FrBClass * cr = _rhs->getClass();
-        
-        FrBConstClassList args;
-        args.push_back(cl);
-        args.push_back(cr);
-        
-        
-        try
-        {
-            _fn = cl->findOperator(_op, args);
-            if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-        }
-        catch(FrBFunctionNotFoundException)
-        {
-            try
-            {
-                _fn = cr->findOperator(_op, args);
-                if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-            }
-            catch(FrBFunctionNotFoundException)
-            {
-                try
-                {
-                    args.clear();
-                    args.push_back(cr);
-                    _fn = cl->findOperator(_op, args);
-                    if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
-                }
-                catch(FrBFunctionNotFoundException)
-                {
-                    FrBFunctionNotFoundException ex(
-                                    String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
-                                        .append(FrBKeywords::getKeywordOrSymbol(_op)),
-                                    args
-                                                    );
-                    
-                    const FrBClass::OperatorContainer * ops = cl->operatorList();
-                    
-                    for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
-                            ex.addCandidate(itf->second);
-                            
-                    ops = cr->operatorList();
-                    
-                    for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
-                            ex.addCandidate(itf->second);
-                                                                        
-                    throw ex;
-                }
-            }
-        }
-    #endif
-    }
+//     _lhs->resolveAndCheck(e);
+//     
+//     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+//         (*it)->resolveAndCheck(e);
+//         
+//     FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
+//     
+//     if(mo && !mo->resolved()) /* case of a real function call */
+//     {
+//         _fn = mo->lhs()->getClass()->findFunction(mo->rhs()->name(), *_rhs);
+//     }
+//     else /* case of an operator overload */
+//     {
+//      
+//     #if 1-1
+//         
+//         
+//         
+//         const FrBClass * cl = _lhs->getClass();
+//         const FrBClass * cr = _rhs->getClass();
+//         
+//         FrBConstClassList args;
+//         args.push_back(cl);
+//         args.push_back(cr);
+//         
+//         
+//         try
+//         {
+//             _fn = cl->findOperator(_op, args);
+//             if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
+//         }
+//         catch(FrBFunctionNotFoundException)
+//         {
+//             try
+//             {
+//                 _fn = cr->findOperator(_op, args);
+//                 if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
+//             }
+//             catch(FrBFunctionNotFoundException)
+//             {
+//                 try
+//                 {
+//                     args.clear();
+//                     args.push_back(cr);
+//                     _fn = cl->findOperator(_op, args);
+//                     if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
+//                 }
+//                 catch(FrBFunctionNotFoundException)
+//                 {
+//                     FrBFunctionNotFoundException ex(
+//                                     String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
+//                                         .append(FrBKeywords::getKeywordOrSymbol(_op)),
+//                                     args
+//                                                     );
+//                     
+//                     const FrBClass::OperatorContainer * ops = cl->operatorList();
+//                     
+//                     for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+//                             ex.addCandidate(itf->second);
+//                             
+//                     ops = cr->operatorList();
+//                     
+//                     for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+//                             ex.addCandidate(itf->second);
+//                                                                         
+//                     throw ex;
+//                 }
+//             }
+//         }
+//     #endif
+//     }
 }
 
 
@@ -477,28 +500,30 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 {
     frb_assert2(_fn, "frbexpr.cpp::FrBFunctionCallExpr::val() - _fn is a null pointer");
     
-    
-    FrBBaseObjectList rval;
-    rval.reserve(_rhs->size());
+//   /*  
+//     FrBBaseObjectList rval;
+//     rval.reserve(_rhs->size());
+// 
+//     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+//         rval.push_back((*it)->eval(e));
+// 
+//     FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
+//     
+//     if(mo && !mo->resolved()) /* case of a real function call */
+//     {
+//         FrBBaseObject* me = _fn->shared() ? 0 : mo->lhs()->eval(e);
+//         return _fn->execute(e, me, rval);
+//     }
+//     else
+//     {
+//         FrBBaseObject* lval = _lhs->eval(e);
+//         if(_fn->shared())
+//             return _fn->execute(e, 0, rval);
+//         else
+//             return _fn->execute(e, lval, rval);
+//     }*/
 
-    for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-        rval.push_back((*it)->eval(e));
-
-    FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
-    
-    if(mo && !mo->resolved()) /* case of a real function call */
-    {
-        FrBBaseObject* me = _fn->shared() ? 0 : mo->lhs()->eval(e);
-        return _fn->execute(e, me, rval);
-    }
-    else
-    {
-        FrBBaseObject* lval = _lhs->eval(e);
-        if(_fn->shared())
-            return _fn->execute(e, 0, rval);
-        else
-            return _fn->execute(e, lval, rval);
-    }
+    return 0;
 }
 
 const FrBClass* FrBFunctionCallExpr::getClass() const
@@ -557,11 +582,6 @@ const FrBClass* FrBInsideMeExpr::getClass() const
     return _fn->container();
 }
 
-FrBClass* FrBInsideMeExpr::getClassPtr()
-{
-    return _fn->containerPtr();
-}
-
 std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
 {
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
@@ -588,10 +608,6 @@ const FrBClass* FrBOutsideMeExpr::getClass() const
   return _type;
 }
 
-FrBClass* FrBOutsideMeExpr::getClassPtr()
-{
-  return _type;
-}
 
 std::ostream& FrBOutsideMeExpr::put(std::ostream& stream) const
 {

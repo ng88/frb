@@ -95,7 +95,6 @@ class FrBMeExpr : public FrBExpr
 {
 public:
     virtual ~FrBMeExpr() {}
-    virtual FrBClass* getClassPtr() = 0;
 };
 
 /** hold full type like Module1.Module2.Type, used FOR TYPE ONLY */
@@ -114,30 +113,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    FrBClass* getContext() { return _type; }
-    std::ostream& put(std::ostream& stream) const;
-    
-    inline const String& name() const { return _name; }
-};
-
-/** Identifier not yet resolved (ie class name, function, field...)
-    no context is provied, typically it's used in an expression like
-    FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr)) <=> expr.unresolved_id
-    (it's the right operand of the . operator)
- */
-class FrBUnresolvedIdExpr : public FrBExpr
-{
-protected:
-    String              _name;
-    const FrBClass *    _type;
-    
-public:
-    FrBUnresolvedIdExpr(const String& name);
-    ~FrBUnresolvedIdExpr();
-    
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
-    const FrBClass* getClass() const;
+    inline FrBClass* getContext() { return _type; }   
     std::ostream& put(std::ostream& stream) const;
     
     inline const String& name() const { return _name; }
@@ -158,9 +134,13 @@ protected:
     {
      public:
         virtual ~Evaluator() {}
+        virtual const FrBClass* getClass() const = 0;
+
+        /** Return true if the evaluator need the me param to be set for evaluation */
+        virtual bool needMe() const = 0;
+
         virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException) = 0;
-        virtual const FrBClass* getClass() const = 0;
     };
     
     /** field evalutor, return the value of the field */
@@ -173,6 +153,7 @@ protected:
         FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
+        bool needMe() const;
     };
     
     /** function/sub evalutor (ie it returns an objet of the 'Function' type,
@@ -187,6 +168,7 @@ protected:
         FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
+        bool needMe() const;
     };
     
     /** class evalutor (ie it returns an objet of the 'Class' type)*/
@@ -199,9 +181,10 @@ protected:
         FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
+        bool needMe() const;
     };
     
-    FrBMeExpr *                _context;
+    FrBExpr *                _context;
     String                    _name;
     FrBMember  *              _value;
     Evaluator *               _evaluator;
@@ -209,7 +192,7 @@ protected:
 
     
 public:
-    FrBUnresolvedIdWithContextExpr(FrBMeExpr * context, const String& name);
+    FrBUnresolvedIdWithContextExpr(FrBExpr * context, const String& name);
     ~FrBUnresolvedIdWithContextExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -221,7 +204,7 @@ public:
 
 
 /** Member operator (.) */
-class FrBMemberOpExpr : public FrBExpr
+/*class FrBMemberOpExpr : public FrBExpr
 {
     FrBExpr               *_lhs;
     FrBUnresolvedIdExpr   *_rhs;
@@ -239,7 +222,7 @@ public:
     inline bool resolved() { return _resolved; }
     inline FrBUnresolvedIdExpr* rhs() { return _rhs; }
     inline FrBExpr * lhs() { return _lhs; }
-};
+};*/
 
 /** Function all operator ie expr(expr, expr, ...) */
 class FrBFunctionCallExpr : public FrBExpr
@@ -298,6 +281,7 @@ public:
     classe de démarrage implémente Startable
     compilation des fichiers sources FrB en bibliotheque C++ si voulu
 */
+//   /!\  attention il faut faire les verif shared sinon ca seg fault
 
 /** Me expr for expression that are inside function */
 class FrBInsideMeExpr : public FrBMeExpr
@@ -313,7 +297,6 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    FrBClass* getClassPtr();
     std::ostream& put(std::ostream& stream) const;    
 };
 
@@ -329,7 +312,6 @@ public:
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    FrBClass* getClassPtr();
     std::ostream& put(std::ostream& stream) const;    
 };
 

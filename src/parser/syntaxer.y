@@ -944,7 +944,8 @@ expr:
     | new_expr                            /* New */
     | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
       {
-          $<expr>$ = new FrBMemberOpExpr($<expr>1,  new FrBUnresolvedIdExpr($<str>3));
+          //$<expr>$ = new FrBMemberOpExpr($<expr>1,  new FrBUnresolvedIdExpr($<str>3));
+          $<expr>$ = new FrBUnresolvedIdWithContextExpr($<expr>1, $<str>3);
           free($<str>3);
       }
     | expr parent_expr_list              /* function call expr(expr, expr, ...) */
