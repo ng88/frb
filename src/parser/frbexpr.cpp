@@ -278,7 +278,7 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 {
     if(!_context_resolved)
         _context->resolveAndCheck(e);
-    
+    std::cout << _name << std::endl;
     //const_cast pas tres propre mais pour le moment c'est tres bien comme ca :)
     FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
 
@@ -412,7 +412,7 @@ std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 
 
 FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
- : _lhs(lhs), _rhs(rhs), _fn(0)
+ : _lhs(lhs), _rhs(rhs), _fn(0), _me(0)
 {
     frb_assert2(rhs && lhs, "frbexpr.cpp::FrBFunctionCallExpr::FrBFunctionCallExpr()");
 }
@@ -423,6 +423,7 @@ FrBFunctionCallExpr::~FrBFunctionCallExpr()
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    String dbg_name = "unknow"; //for debug
 
     
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
@@ -434,21 +435,28 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
     {          /* case of a real function call ? */
         try
         {
-            mo->resolveAndCheck(e);
+            dbg_name = mo->name();
+
+            mo->context()->resolveAndCheck(e);
             mo->setContextResolved(); /* to be sure that context'll not be resolved again after */
 
             _fn = mo->context()->getClass()->findFunction(mo->name(), *_rhs);
+            _me = mo->context();
+
+            return;
         }
-        catch()  /* no, this is not a funtion */
+        catch(...)  /* no, this is not a real funtion call */
         {
         }
         
     }
 
     /* case of the overload of the () operator */
-    frb_assert2(false, "overload of ()/[] not yet implemented");
+    //frb_assert2(false, "overload of ()/[] not yet implemented");
 
-    _lhs->resolveAndCheck(e);
+    //_lhs->resolveAndCheck(e);
+
+    throw FrBFunctionNotFoundException(dbg_name);
 
 }
 
@@ -457,29 +465,23 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 {
     frb_assert2(_fn, "frbexpr.cpp::FrBFunctionCallExpr::val() - _fn is a null pointer");
 
-//     FrBBaseObjectList rval;
-//     rval.reserve(_rhs->size());
-// 
-//     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-//         rval.push_back((*it)->eval(e));
-// 
-//     FrBMemberOpExpr * mo = dynamic_cast<FrBMemberOpExpr*>(_lhs);
-//     
-//     if(mo && !mo->resolved()) /* case of a real function call */
-//     {
-//         FrBBaseObject* me = _fn->shared() ? 0 : mo->lhs()->eval(e);
-//         return _fn->execute(e, me, rval);
-//     }
-//     else
-//     {
-//         FrBBaseObject* lval = _lhs->eval(e);
-//         if(_fn->shared())
-//             return _fn->execute(e, 0, rval);
-//         else
-//             return _fn->execute(e, lval, rval);
-//     }
+    FrBBaseObjectList rval;
+    rval.reserve(_rhs->size());
 
-    return 0;
+    /* eval arguments */
+    for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+        rval.push_back((*it)->eval(e));
+
+    FrBBaseObject* me = 0;
+
+    if(!_fn->shared()) /* non-shared fn, me must be provided */
+    {
+        frb_assert(_me);
+        me = _me->eval(e);
+    }
+
+    return _fn->execute(e, me, rval);
+
 }
 
 const FrBClass* FrBFunctionCallExpr::getClass() const

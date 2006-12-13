@@ -46,13 +46,10 @@ class FrBCodeFunction;
             5. We don't know yet what expr (it can be a type, a function name, an inner class name, a field...
                 but NOT a function parameter, a function local var, Null or Me), so used class is
                 FrBUnresolvedIdWithContextExpr
-
-            6. This is the general case of 5., expr can be something like expr.name, so used classes are :
-                FrBMemberOpExpr(expr, FrBUnresolvedIdExpr("name")) (expr can be simply a FrBUnresolvedIdWithContextExpr
-                or a more complex expression)
             
 
     II) Binary operator expression
+    III) n-nary operator expression
 
 */
 class FrBExpr
@@ -189,7 +186,7 @@ protected:
     //FrBMember  *              _value;
     Evaluator *               _evaluator;
 
-    bool                      _context_resolved
+    bool                      _context_resolved;
     
 
     
@@ -233,9 +230,17 @@ public:
 /** Function all operator ie expr(expr, expr, ...) */
 class FrBFunctionCallExpr : public FrBExpr
 {
+    /** _lhs can be the function name or any expr of the Function-type */
     FrBExpr               *_lhs;
+    
+    /** arguments */
     FrBExprList           *_rhs;
+    
+    /** function to call (resolved from rhs & lhs) */
     FrBFunction           *_fn;
+    
+    /** expr that provides a me value for non-shared function */
+    FrBExpr               *_me;
 
     
 public:
