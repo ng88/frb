@@ -114,6 +114,19 @@ std::ostream& FrBFunctionNotFoundException::put(std::ostream& stream) const
 }
 
 
+/*             FrBFunctionAmbiguityException                */
+
+FrBFunctionAmbiguityException::FrBFunctionAmbiguityException(const String& name)
+    : FrBFunctionNotFoundException(name)
+{
+}
+
+std::ostream& FrBFunctionAmbiguityException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_FN_AMBIGUITY, _name);
+}
+
+
 
 /*                   FrBDefaultCtorNotFoundException                */
 

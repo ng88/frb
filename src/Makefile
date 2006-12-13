@@ -55,7 +55,7 @@ EXE=frb
 all: $(EXE)
 
 $(EXE): common parser
-	@cp -f parser/parser_test $(EXE)
+#	@cp -f parser/parser_test $(EXE)
 
 
 .PHONY: exe clean clean_parser clean_common common parser #clean_interpreter

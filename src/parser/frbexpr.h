@@ -123,6 +123,7 @@ public:
 /** Identifier not yet resolved (ie class name, function, field...)
     no context is provied, typically it's used in an expression like
     FrBMemberOpExpr(FrBExpr, FrBUnresolvedIdExpr)) <=> expr.unresolved_id
+    (it's the right operand of the . operator)
  */
 class FrBUnresolvedIdExpr : public FrBExpr
 {
@@ -290,6 +291,13 @@ public:
 //pour le prob de declare on verifie en amont en comparant une evntuelle egalite de ptr
 //dim a as expr (on aura comme cas particulier : dim a as typeof expr)
 //faire equivalent a ::String pour forcer root
+/*
+    empiler les addr des fonctions pour debug
+    introspection profonde quand possible
+    interpreteur embarqué
+    classe de démarrage implémente Startable
+    compilation des fichiers sources FrB en bibliotheque C++ si voulu
+*/
 
 /** Me expr for expression that are inside function */
 class FrBInsideMeExpr : public FrBMeExpr

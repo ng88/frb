@@ -299,7 +299,7 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 {
     if(_evaluator)
-        return stream << _name;
+        return stream << _name << '(' << typeid(_evaluator).name()<< ')' ;
     else
         return stream << "urwc_id_" << _name;
 }

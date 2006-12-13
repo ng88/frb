@@ -56,16 +56,16 @@ int main(int argc, char ** argv)
 {
     
 #ifdef _FRB_DEBUG_
+    char * debug_argv[] =
+        {
+            argv[0],
+            "--file",
+            "1.frb",
+        };
     if(argc == 1)
     {
-        char * debug_argv[] =
-            {
-                argv[0],
-                "--file",
-                "test2.frb",
-            };
         argv = debug_argv;
-        argc = 3;
+        argc = sizeof(debug_argv) / sizeof(debug_argv[0]);
     }
 #endif
 

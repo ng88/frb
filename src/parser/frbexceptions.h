@@ -153,7 +153,13 @@ public:
 };
 
 //TODO to be improved
-typedef FrBFunctionNotFoundException FrBFunctionAmbiguityException;
+class FrBFunctionAmbiguityException : public FrBFunctionNotFoundException
+{
+public:
+
+    FrBFunctionAmbiguityException(const String& name);
+    std::ostream& put(std::ostream& stream) const;
+};
 
 class FrBDefaultCtorNotFoundException : public FrBFunctionNotFoundException
 {
