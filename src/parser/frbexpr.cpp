@@ -101,8 +101,8 @@ FrBUnresolvedTypeExpr::FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* c
 
 FrBUnresolvedTypeExpr::~FrBUnresolvedTypeExpr()
 {
-    if(_context)
-        delete _context;
+    //if(_context)
+        //delete _context;
 }
 
 void FrBUnresolvedTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
