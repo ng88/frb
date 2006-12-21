@@ -236,7 +236,7 @@ bool FrBDeclareStatement::allPathContainsAReturn() const
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-  _varid += _fn->localVarCount();
+    _varid += _fn->localVarCount();
 
     _type->resolveAndCheck(e);
     

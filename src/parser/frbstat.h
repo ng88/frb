@@ -162,12 +162,20 @@ class FrBDeclareStatement : public FrBStatement
 {
 private:
     FrBCodeFunction *  _fn;
-    int                _varid;
+    std::vector<int>   _varsid;
     FrBTypeExpr *      _type;
     FrBExpr *          _init;
 
 public:
-    FrBDeclareStatement(FrBCodeFunction *,int varid, FrBTypeExpr * t, FrBExpr * init_val = 0);
+    /** Create a new Declare statement (ie for things like Dim a, b, c As MyClass */
+     * @param f function in which the statement is
+     * @param nb_vars number of var declared
+     * @param t type
+     * @param init_val initial value (optional)  
+     */
+    FrBDeclareStatement(FrBCodeFunction * f, int nb_vars, FrBTypeExpr * t, FrBExpr * init_val = 0);
+    
+    inline void addVarID(int v) { _varsid.push_back(v); }
     
     bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);

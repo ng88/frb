@@ -283,19 +283,16 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
         
         frb_assert(returnType());
     }
-    
+
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
         it->type->resolveAndCheck(e);
-
 }
 
 void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-     //TODO copie de e avec des infos qui vont bien (fonction, classe, outer classe)
-        
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
-        frb_assert((*it));
+        frb_assert(*it);
         (*it)->resolveAndCheck(e);
     }
 }

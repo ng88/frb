@@ -511,8 +511,8 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
                 current_block()->addStat(new FrBDeclareStatement(fn, -var_count - 1,
 								 $<vtype>4, $<expr>5));
                 fn->addLocalVar((*it), $<vtype>4);
-                
-                if(fn->localVarCount() == var_count)
+
+                if(fn->localVarCount() == var_count || fn->getParam(*it) != -1)
                     frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
@@ -533,7 +533,7 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
 								 $<vtype>2, $<expr>3));
                 fn->addLocalVar((*it), $<vtype>2);
 
-                if(fn->localVarCount() == var_count)
+                if(fn->localVarCount() == var_count || fn->getParam(*it) != -1)
                     frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
