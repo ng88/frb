@@ -43,6 +43,8 @@ class FrBStatementBlock
   FrBStatementlist _stats;
 
  public:
+    ~FrBStatementBlock();
+
    /** add a statement in the block */
    inline void addStat(FrBStatement * s) { _stats.push_back(s); }
 };
@@ -81,8 +83,6 @@ public:
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
     std::ostream& put(std::ostream& stream, int indent = 0) const;
-    
-    ~FrBBlockStatement();
 };
 
 /** abstract conditional block */

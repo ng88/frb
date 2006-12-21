@@ -29,6 +29,14 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
     return stat.put(s);
 }
 
+/*                  FrBStatementBlock                  */
+
+FrBStatementBlock::~FrBStatementBlock()
+{
+    for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
+        delete (*it);
+}
+
 /*        FrBBlockStatement                     */
 
 FrBBlockStatement::FrBBlockStatement()
@@ -74,9 +82,7 @@ std::ostream& FrBBlockStatement::put(std::ostream& stream, int indent) const
   return stream;
 }
     
-FrBBlockStatement::~FrBBlockStatement()
-{
-}
+
 
 /*       FrBConditionalBlockStatement          */
 
@@ -143,6 +149,7 @@ std::ostream& FrBElseIfStatement::put(std::ostream& stream, int indent) const
     
 FrBElseIfStatement::~FrBElseIfStatement()
 {
+    delete _cond;
 }
 
 /*         FrBElseStatement            */
@@ -217,6 +224,8 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
     
 FrBIfStatement::~FrBIfStatement()
 {
+    for(FrBCondList::iterator it = _conds.begin(); it != _conds.end(); ++it)
+        delete (*it);
 }
 
 /*                 FrBDeclareStatement              */
@@ -284,6 +293,8 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 
 FrBDeclareStatement::~FrBDeclareStatement()
 {
+    delete _init;
+    delete _type;
 }
 
 

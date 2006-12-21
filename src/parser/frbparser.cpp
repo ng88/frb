@@ -49,6 +49,7 @@ FrBParser::~FrBParser()
 
 bool FrBParser::parse(istream& in_stream)
 {
+    dispose();
     _disposed = false;
 
     _syntaxer->switch_lexer_streams( &in_stream, &cerr );
@@ -65,6 +66,8 @@ bool FrBParser::parse(const String& str)
 
 void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveException)
 { 
+    if(_disposed)
+        return;
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
@@ -81,11 +84,21 @@ void FrBParser::dispose()
     if(_disposed)
         return;
     
+    frb_warning2(false, "trying to dispose tree...");
     // destuct parsing tree
-    for(Tree::iterator it = _classes.begin(); it != _classes.end(); ++it) 
-        ;//delete it->second;
-     
-    frb_warning2(false, "tree not disposed");
+    for(Tree::iterator it = _classes.begin(); it != _classes.end(); ++it)
+    {
+    
+        std::cerr <<  "begin class `" << it->second->name() << "' {" << std::endl;
+
+        if(it->second->name() == it->first) // we delete only non-alias    
+            delete it->second;
+        else 
+        frb_warning2(false, "alias");
+        frb_warning2(false, "}");
+    }
+    //frb_warning2(false, "tree not disposed");
+    frb_warning2(false, "done.");
         
     _classes.clear();
         
@@ -95,6 +108,8 @@ void FrBParser::dispose()
 
 std::ostream& FrBParser::printTree(std::ostream& sout, bool user_class_only) const
 {
+    if(_disposed)
+        return sout;
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {

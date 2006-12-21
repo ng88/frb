@@ -42,6 +42,8 @@ std::ostream& FrBField::put(std::ostream& stream, int indent) const
 
 FrBCodeField::~FrBCodeField()
 {
+    delete _unresolvedType;
+    delete _defaultVal;
 }  
    
 void FrBCodeField::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)

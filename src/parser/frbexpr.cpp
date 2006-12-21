@@ -53,6 +53,7 @@ FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int vari
 
 FrBLocalVarExpr::~FrBLocalVarExpr()
 {
+    delete _type;
 }
 
 bool FrBLocalVarExpr::isAssignable() const
@@ -100,6 +101,8 @@ FrBUnresolvedTypeExpr::FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* c
 
 FrBUnresolvedTypeExpr::~FrBUnresolvedTypeExpr()
 {
+    if(_context)
+        delete _context;
 }
 
 void FrBUnresolvedTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -184,11 +187,12 @@ std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
 //         return stream << "ur_id_" << _name;
 // }
 
+
+
+
 /*     FrBUnresolvedIdWithContextExpr      */
 
 /*     FrBUnresolvedIdWithContextExpr::*Evalutor      */
-
-
         
 
 FrBUnresolvedIdWithContextExpr::FieldEvaluator::FieldEvaluator(FrBField * f)
@@ -442,8 +446,9 @@ std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 //         << _rhs->name() << ')';
 // }*/
 
-/*              FrBFunctionCallExpr                */
 
+
+/*              FrBFunctionCallExpr                */
 
 FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
  : _lhs(lhs), _rhs(rhs), _fn(0), _me(0)
@@ -453,6 +458,13 @@ FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
 
 FrBFunctionCallExpr::~FrBFunctionCallExpr()
 {
+    delete _lhs;
+
+    for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+        delete (*it);
+
+    delete _rhs;
+
 }
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -579,7 +591,10 @@ std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
 }
 
+
+
 /*              FrBOutisdeMeExpr           */
+
 FrBOutsideMeExpr::FrBOutsideMeExpr(FrBClass * t)
   : _type(t)
 {
@@ -619,8 +634,9 @@ FrBRefAssignExpr::FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctio
 
 FrBRefAssignExpr::~FrBRefAssignExpr()
 {
+    delete _lhs;
+    delete _rhs;
 }
-
 
 void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {

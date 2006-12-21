@@ -192,6 +192,27 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 
 
 /*           FrBCodeFunction            */
+
+/*         Param        */
+
+FrBCodeFunction::Param::~Param()
+{
+    /*delete type;
+    delete init;*/
+}
+
+FrBCodeFunction::Param::Param()
+: type(0), byval(false), init(0)
+{
+}
+
+FrBCodeFunction::Param::Param(FrBTypeExpr * t, bool b, FrBExpr * i)
+    : type(t), byval(b), init(i) 
+{
+}
+
+
+
 FrBCodeFunction::FrBCodeFunction()
 {
     _sub = false;
@@ -204,7 +225,15 @@ FrBCodeFunction::FrBCodeFunction()
 FrBCodeFunction::~FrBCodeFunction()
 {
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
-        delete(*it);
+        delete (*it);
+
+    for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
+    {
+        delete it->type;
+        delete it->init;
+    }
+
+    delete _unresolvedRetType;
 }
 
 const FrBClass * FrBCodeFunction::parameterType(int index) const

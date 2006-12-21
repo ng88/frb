@@ -32,6 +32,15 @@
 #include "builtin/void.dec"
 
 
+/*
+
+    /!\ WARNING /!\
+
+    A member MUST be added ONLY one time to ONLY one class.
+
+*/
+
+
 #endif
 
 

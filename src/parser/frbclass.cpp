@@ -294,23 +294,25 @@ FrBMember* FrBClass::getMember(const String& name) throw (FrBMemberNotFoundExcep
 
 FrBClass::~FrBClass()
 {
+    frb_warning2(false, "destuct inner classes...");
     for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it) //destuct inner classes
         delete it->second;
-
-    _innerClasses.clear();
-    
+    frb_warning2(false, "destuct functions...");
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf) //destuct functions
         delete itf->second;
-
-            
-    _functions.clear();
-        
+    frb_warning2(false, "destuct operators...");
+    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf) //destuct operators
+        delete itf->second;
+    frb_warning2(false, "destuct fields...");
+    for(FieldContainer::iterator itf = _fields.begin(); itf != _fields.end(); ++itf) //destuct fields
+        delete itf->second;
+    frb_warning2(false, "destuct ctors...");
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it) //destuct ctors
         delete *it;
-        
-    _ctors.clear();
-    
-    delete _dtor;
+    frb_warning2(false, "destuct dtor...");
+    if(_dtor)
+        delete _dtor; //destruct dtor
+    frb_warning2(false, "done class.");
 };
 
 /*        FrBCodeClass            */

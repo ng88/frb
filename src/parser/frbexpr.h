@@ -236,7 +236,7 @@ public:
     inline FrBExpr * lhs() { return _lhs; }
 };*/
 
-/** Function all operator ie expr(expr, expr, ...) */
+/** Function call operator ie expr(expr, expr, ...) */
 class FrBFunctionCallExpr : public FrBExpr
 {
     /** _lhs can be the function name or any expr of the Function-type */
@@ -335,6 +335,7 @@ public:
     std::ostream& put(std::ostream& stream) const;    
 };
 
+//TODO il y a du code a factoriser entre refassign et binop
 
 /** Ref assignment <expr> := <expr> */
 class FrBRefAssignExpr : public FrBExpr

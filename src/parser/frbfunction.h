@@ -156,17 +156,17 @@ class FrBCodeFunction : public FrBFunction, public FrBStatementBlock
 {
 public:
 
+    /** Represents a function parameter
+      */
     struct Param
     {
         FrBTypeExpr * type;
         bool byval;
         FrBExpr * init;
         
-        Param()
-        : type(0), byval(false), init(0) {}
-        
-        Param(FrBTypeExpr * t, bool b, FrBExpr * i)
-         : type(t), byval(b), init(i) {}
+        Param();
+        ~Param();
+        Param(FrBTypeExpr * t, bool b, FrBExpr * i);
         
     };
     
@@ -176,7 +176,7 @@ public:
     typedef int VarID;
     
     typedef std::map<const String, VarID> NameVarList;
-    typedef std::vector<FrBTypeExpr*> VarList;
+    typedef std::vector<FrBTypeExpr*>     VarList;
     
 protected:
     

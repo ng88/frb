@@ -67,30 +67,51 @@ FrBCppClass * FrBString::initClass()
     
     FrBFunction * f = new FrBUnaryCppFunction(operator_add_FrBString_FrBString, _cpp_class, false);
     f->setReturnType(_cpp_class);
-    f->setName("operator+|&(String)");
+    f->setName("operator+(String)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
+    f = new FrBUnaryCppFunction(operator_add_FrBString_FrBString, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator&(String)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
    
     
     f = new FrBUnaryCppFunction(operator_add_FrBString_FrBInt,  FrBInt::getCppClass(), false);
     f->setReturnType(_cpp_class);
-    f->setName("operator+|&(Int)");
+    f->setName("operator+(Int)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
+    f = new FrBUnaryCppFunction(operator_add_FrBString_FrBInt,  FrBInt::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator&(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
     
     f = new FrBUnaryCppFunction(operator_add_FrBString_FrBObject, FrBObject::getCppClass(), false);
     f->setReturnType(_cpp_class);
-    f->setName("operator+|&(Object)");
+    f->setName("operator+(Object)");
     f->setConst(true);
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
+    f = new FrBUnaryCppFunction(operator_add_FrBString_FrBObject, FrBObject::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator&(Object)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
 
     return _cpp_class;
