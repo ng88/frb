@@ -457,14 +457,17 @@ FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
 }
 
 FrBFunctionCallExpr::~FrBFunctionCallExpr()
-{
+{frb_warning2(false, "FrBFunctionCallExpr _lhs...");
     delete _lhs;
-
+frb_warning2(false, "FrBFunctionCallExpr FrBExprList...");
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+    {
+        (*it)->put(std::cerr);
         delete (*it);
-
+    }
+frb_warning2(false, "FrBFunctionCallExpr rhs...");
     delete _rhs;
-
+frb_warning2(false, "FrBFunctionCallExpr done.");
 }
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
