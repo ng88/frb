@@ -503,13 +503,19 @@ declare_init:
 declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As type [= init], ... */
       declare_list FRB_KW_TOKEN_OP_LIST_SEP identifier_list as_type declare_init
       {
+            /* /!\ doublon */
             FrBCodeFunction * fn = current_fn();
+
+            FrBDeclareStatement * d = new FrBDeclareStatement(fn, id_list.size(),
+                                                                $<vtype>4, $<expr>5);
+            fn->addStat(d);
+
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
 
-                current_block()->addStat(new FrBDeclareStatement(fn, -var_count - 1,
-								 $<vtype>4, $<expr>5));
+                d->addVarID(-var_count - 1);
+
                 fn->addLocalVar((*it), $<vtype>4);
 
                 if(fn->localVarCount() == var_count || fn->getParam(*it) != -1)
@@ -517,20 +523,26 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
                     String(*it));
-                
+
                 free(*it);
             }
             id_list.clear();
       }
     | identifier_list as_type declare_init
       {
+            /* /!\ doublon */
             FrBCodeFunction * fn = current_fn();
+
+            FrBDeclareStatement * d = new FrBDeclareStatement(fn, id_list.size(),
+                                                                $<vtype>2, $<expr>3);
+            fn->addStat(d);
+
             for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
             {
                 int var_count = fn->localVarCount();
-                
-                current_block()->addStat(new FrBDeclareStatement(fn, -var_count - 1,
-								 $<vtype>2, $<expr>3));
+
+                d->addVarID(-var_count - 1);
+
                 fn->addLocalVar((*it), $<vtype>2);
 
                 if(fn->localVarCount() == var_count || fn->getParam(*it) != -1)
@@ -538,7 +550,7 @@ declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
                     FrBErrors::FRB_ERR_SEMANTIC,
                     frb_lexer->lineno(), "", "", "",
                     String(*it));
-                
+
                 free(*it);
             }
             id_list.clear();

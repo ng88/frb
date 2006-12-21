@@ -221,22 +221,18 @@ FrBIfStatement::~FrBIfStatement()
 
 /*                 FrBDeclareStatement              */
 
-FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int varid,
+FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int nb,
 					    FrBTypeExpr * t, FrBExpr * init_val)
-    : _fn(f), _varid(varid), _type(t), _init(init_val)
+    : _fn(f), _type(t), _init(init_val)
 {
-  frb_assert(t);
+    frb_assert(t && nb > 0);
+    _varsid.reserve(nb);
 }
-
-bool FrBDeclareStatement::allPathContainsAReturn() const
-{
-  return false;
-}
-
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _varid += _fn->localVarCount();
+    for(VarIDList::iterator it = _varsid.begin(); it != _varsid.end(); ++it)
+        *it += _fn->localVarCount();
 
     _type->resolveAndCheck(e);
     
@@ -250,19 +246,34 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
+    FrBBaseObject * init_val = ((_init == 0) ? _type->getClass()->createInstance(e) :
+                                  FrBClass::forceConvert(_init->eval(e), _type->getClass()));
 
-    e.stack().setTopValue(_varid,
-                  ((_init == 0) ? _type->getClass()->createInstance(e) :
-                                  FrBClass::forceConvert(_init->eval(e), _type->getClass())));
+    for(VarIDList::const_iterator it = _varsid.begin(); it != _varsid.end(); ++it)
+        e.stack().setTopValue(*it, init_val);
 }
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 {
-    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_DECLARE)
-           << " local_var_" << _varid << ' '
-	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_AS) << ' '
-	   << *_type;
-    
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_DECLARE);
+
+    VarIDList::const_iterator it = _varsid.begin();
+
+    if(it != _varsid.end())
+    {
+           stream << " local_var_" << *it;
+            ++it;
+    }
+
+    while(it != _varsid.end())
+    {
+        stream << ", local_var_" << *it;
+        ++it;
+    }
+
+    stream  << ' ' << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_AS) << ' '
+            << *_type;
+
     if(_init)
       stream << ' '
 	     << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_ASSIGN_REF)
@@ -284,10 +295,6 @@ FrBExprStatement::FrBExprStatement(FrBExpr* expr)
     frb_assert2(expr, "frbparsingtree.h::FrBExprStatement::FrBExprStatement()");
 }
 
-bool FrBExprStatement::allPathContainsAReturn() const
-{
-  return false;
-}
 
 void FrBExprStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {

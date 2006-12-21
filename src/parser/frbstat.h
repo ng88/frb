@@ -60,7 +60,7 @@ public:
     virtual ~FrBStatement() {}
 
     /** indicates if all execution path of the statement contains a return */
-    virtual bool allPathContainsAReturn() const = 0;
+    virtual bool allPathContainsAReturn() const  { return false; }
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
 
@@ -152,32 +152,31 @@ public:
 };
 
 
-/*
-    delete stat
-            rule : delete local_var
-            exe : FrBClass::destroyInstance()
-*/
+//TODO    delete stat
 
 class FrBDeclareStatement : public FrBStatement
 {
 private:
+
+    typedef std::vector<int> VarIDList;
+
     FrBCodeFunction *  _fn;
-    std::vector<int>   _varsid;
+    VarIDList          _varsid;
     FrBTypeExpr *      _type;
     FrBExpr *          _init;
 
 public:
-    /** Create a new Declare statement (ie for things like Dim a, b, c As MyClass */
+    /** Create a new Declare statement (ie for things like Dim a, b, c As MyClass
      * @param f function in which the statement is
-     * @param nb_vars number of var declared
+     * @param nb_vars number of var declared (must be greater than 0)
      * @param t type
      * @param init_val initial value (optional)  
      */
     FrBDeclareStatement(FrBCodeFunction * f, int nb_vars, FrBTypeExpr * t, FrBExpr * init_val = 0);
     
+    /** Add the varid v to the declared var list */
     inline void addVarID(int v) { _varsid.push_back(v); }
     
-    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -196,7 +195,6 @@ public:
 
     FrBExprStatement(FrBExpr* expr);
     
-    bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;

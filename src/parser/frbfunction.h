@@ -211,7 +211,10 @@ public:
         
     /* local var handling functions */
     
-    /** add a local var */
+    /** Add a local var named 'name' of type 'type'
+      * Note: 'type' will not be resolved or deleted in this class,
+      *       because that will be done by the FrBDeclareStatement class
+      */
     inline void addLocalVar(String name, FrBTypeExpr* type);
     
     /** Return a pointer to a Param struct if found or 0 if not found */
