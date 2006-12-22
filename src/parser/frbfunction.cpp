@@ -223,25 +223,32 @@ FrBCodeFunction::FrBCodeFunction()
 
 
 FrBCodeFunction::~FrBCodeFunction()
-{frb_warning2(false, "destuct statements...");
+{
+    frb_warning2(false, "destuct statements...");
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
     {
-    frb_warning2(false, "{");
-        delete (*it);
-frb_warning2(false, "}");
+	frb_warning2(false, "{");
+	std::cout << (void*)(*it) << std::endl;
+	FrBStatement * s = *it;
+	delete s;
+	frb_warning2(false, "}");
     }
-frb_warning2(false, "destuct params...");
+    _stats.clear();
+    frb_warning2(false, "destuct params...");
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
-    {frb_warning2(false, "type...");
-        delete it->type;
-frb_warning2(false, "init...");
-        if(it->init)
-            delete it->init;
+    {
+	frb_warning2(false, "type...");
+	delete it->type;
+	frb_warning2(false, "init...");
+	if(it->init)
+	    delete it->init;
     }
-frb_warning2(false, "_unresolvedRetType...");
+
+    frb_warning2(false, "_unresolvedRetType...");
     if(_unresolvedRetType)
-        delete _unresolvedRetType;
-frb_warning2(false, "done.");
+	delete _unresolvedRetType;
+    
+    frb_warning2(false, "done.");
 }
 
 const FrBClass * FrBCodeFunction::parameterType(int index) const

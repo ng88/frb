@@ -294,7 +294,7 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 FrBDeclareStatement::~FrBDeclareStatement()
 {
     if(_init)
-        delete _init;
+      delete _init;
 
     delete _type;
 }

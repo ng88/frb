@@ -19,7 +19,6 @@
 #ifndef FRBSTAT_H
 #define FRBSTAT_H
 
-//TODO tous les destructeurs a refaire correctement ds stat & expr
 
 #include <iostream>
 #include "../common/string.h"

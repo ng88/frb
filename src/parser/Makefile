@@ -73,13 +73,13 @@ exe:
 	@./$(EXE)
 
 touchall:
-	@touch $(SRC) $(OBJS) *.y *.l ../trad/*.key
+	@touch $(SRC) $(OBJS) *.y *.l ../trad/*.key error_msg parser keywords_db
 
 force: touchall all
 
 clean:
 	@echo Cleaning parser...
-	@rm -f *.o *~ core *.core core.* *.tmp lexer.cpp *.output
+	@rm -f *.o *~ core *.core core.* *.tmp lexer.cpp *.output error_msg parser keywords_db
 	@rm -f syntaxer.cpp syntaxer.h frbkeywords.h frbkeywords.cpp
 	@rm -f frberrors.h frberrors.cpp
 	@rm -f syntaxer_kw.y lexer_kw.l
@@ -103,6 +103,7 @@ parser: frberrordesc.o syntaxer.y lexer.l frbexpr.o frbstat.o frbfunction.o frbc
 	@$(CXX) -c lexer.cpp $(CXXFLAGS) -Wno-unused
 	@echo Compiling syntaxer...
 	@$(CXX) -c syntaxer.cpp $(CXXFLAGS)
+	@touch parser
 
 keywords_db: $(TRAD_PATH)/frbkeywords.key
 	@echo Creating keywords tables...
@@ -110,6 +111,7 @@ keywords_db: $(TRAD_PATH)/frbkeywords.key
 	@awk -f create_keywords_db_source.awk  -- $(TRAD_PATH)frbkeywords.key > frbkeywords.cpp
 	@echo Compiling keywords tables...
 	@$(CXX) -c frbkeywords.cpp $(CXXFLAGS)
+	@touch keywords_db
 
 error_msg: $(TRAD_PATH)/frberrors.$(TRAD_LANG).key
 	@echo "Creating error messages table ($(TRAD_LANG))..."
@@ -117,6 +119,7 @@ error_msg: $(TRAD_PATH)/frberrors.$(TRAD_LANG).key
 	@awk -f create_errorsmsg_source.awk  -- $(TRAD_PATH)frberrors.$(TRAD_LANG).key > frberrors.cpp
 	@echo Compiling error messages table...
 	@$(CXX) -c frberrors.cpp $(CXXFLAGS)
+	@touch error_msg
 
 
 install: all
