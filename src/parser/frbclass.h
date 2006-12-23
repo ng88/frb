@@ -228,7 +228,7 @@ public:
       *                             // classA & classB are the same class
       *                         }
       */
-    inline unsigned int typeID() const { return reinterpret_cast<unsigned int>(this); }
+    inline long unsigned int typeID() const { return reinterpret_cast<unsigned long int>(this); }
    
     /** Return the full name of this class, ie Module1.Module2.MyClass1 */
     String fullName() const;
