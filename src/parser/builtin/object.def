@@ -17,12 +17,12 @@
 
 
 /*                   FrBObject                       */
-FrBCppClass * FrBObject::_cpp_class = NULL;
+FrBCppClass * FrBObject::_cpp_class = 0;
 
 
 FrBCppClass * FrBObject::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBObject::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBObject::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBObject::Allocator());
     _cpp_class->setName("Object");
@@ -34,7 +34,7 @@ FrBCppClass * FrBObject::initClass()
 
 FrBClass * FrBObject::getClass()
 {
-    frb_assert2(_cpp_class != NULL, "FrBObject::getClass(), call initClass() first");
+    frb_assert2(_cpp_class != 0, "FrBObject::getClass(), call initClass() first");
     return _cpp_class;
 }
 

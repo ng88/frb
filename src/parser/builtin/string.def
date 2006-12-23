@@ -47,7 +47,7 @@ FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrB
     if(arg0->getClass() == FrBNull::getCppClass())
         tmp << "<null>";
     else
-        tmp << "<object@" << (unsigned int)arg0 << ">";
+        tmp << "<object@" << (long unsigned int)arg0 << ">";
     
     FrBString * r = new FrBString(tmp.str());
     e.addGarbagedObject(r);
@@ -58,7 +58,7 @@ FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrB
 
 FrBCppClass * FrBString::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBString::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBString::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
     _cpp_class->setName("String");

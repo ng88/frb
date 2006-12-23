@@ -33,7 +33,7 @@ public:
     
     inline static FrBClass * getCppClass()
     {
-        frb_assert2(_cpp_class != NULL, "FrBNull::getClass(), call initClass() first");
+        frb_assert2(_cpp_class != 0, "FrBNull::getClass(), call initClass() first");
         return _cpp_class;
     }
     

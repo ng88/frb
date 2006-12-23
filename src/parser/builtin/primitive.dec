@@ -26,6 +26,8 @@ private:
 
 public:
 
+    typedef primitive_t ptype;
+
     static FrBCppClass * initClass();
     
     inline FrBPrimitive() : _val(0) {};
@@ -40,7 +42,7 @@ public:
     
     inline static FrBClass * getCppClass()
     {
-        frb_assert2(_cpp_class != NULL, "FrBInt::getClass(), call initClass() first");
+        frb_assert2(_cpp_class != 0, "FrBInt::getClass(), call initClass() first");
         return _cpp_class;
     }
     
@@ -57,7 +59,7 @@ public:
 };
 
 /** The FrB Integer class */
-typedef FrBPrimitive<int> FrBInt;
+typedef FrBPrimitive<long signed int> FrBInt;
 
 /** The FrB Boolean class */
 typedef FrBPrimitive<bool> FrBBool;

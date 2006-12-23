@@ -21,13 +21,13 @@
 
 
 /*                   FrBNull                       */
-FrBCppClass * FrBNull::_cpp_class = NULL;
+FrBCppClass * FrBNull::_cpp_class = 0;
 
 
 
 FrBCppClass * FrBNull::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBNull::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBNull::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBNull::Allocator());
     _cpp_class->setName("Null");
@@ -39,7 +39,7 @@ FrBCppClass * FrBNull::initClass()
 
 FrBClass * FrBNull::getClass()
 {
-    frb_assert2(_cpp_class != NULL, "FrBNull::getClass(), call initClass() first");
+    frb_assert2(_cpp_class != 0, "FrBNull::getClass(), call initClass() first");
     return _cpp_class;
 }
 
@@ -47,7 +47,7 @@ FrBNull::~FrBNull()
 {
 }
 
-FrBNull * FrBNull::Allocator::_null_value = NULL;
+FrBNull * FrBNull::Allocator::_null_value = 0;
 
 FrBNull * FrBNull::Allocator::getInstance()
 {

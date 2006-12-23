@@ -18,6 +18,7 @@
 
 /*            FrBInt            */
 
+
 FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() + (static_cast<FrBInt*>(arg0))->value());
@@ -57,7 +58,7 @@ FrBBaseObject * operator_gt_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * m
 
 FrBCppClass * FrBInt::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBInt::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBInt::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
     _cpp_class->setName("Int");

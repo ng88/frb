@@ -424,14 +424,14 @@ public:
 
 };
 
-typedef FrBLiteralExpr<signed int>      FrBIntExpr;
-typedef FrBLiteralExpr<bool>            FrBBoolExpr;
-// typedef FrBLiteralExpr<double>          FrBDoubleExpr;
-// typedef FrBLiteralExpr<float>           FrBSingleExpr;
-// typedef FrBLiteralExpr<short int>       FrBShortIntExpr;
-// typedef FrBLiteralExpr<long int>        FrBLongIntExpr;
-typedef FrBLiteralExpr<String>          FrBStringExpr;
-// typedef FrBLiteralExpr<char>            FrBCharExpr;
+typedef FrBLiteralExpr<FrBInt::ptype>       FrBIntExpr;
+typedef FrBLiteralExpr<FrBBool::ptype>      FrBBoolExpr;
+// typedef FrBLiteralExpr<FrBDouble::ptype> FrBDoubleExpr;
+// typedef FrBLiteralExpr<FrBSingle::ptype> FrBSingleExpr;
+// typedef FrBLiteralExpr<FrBShort::ptype>  FrBShortIntExpr;
+// typedef FrBLiteralExpr<FrBLong::ptype>   FrBLongIntExpr;
+typedef FrBLiteralExpr<FrBString::ptype>    FrBStringExpr;
+// typedef FrBLiteralExpr<FrBChar::ptype>   FrBCharExpr;
 
 
 /** The Null expression */

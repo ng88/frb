@@ -21,7 +21,7 @@
 
 
 /*                   FrBDebug                       */
-FrBCppClass * FrBDebug::_cpp_class = NULL;
+FrBCppClass * FrBDebug::_cpp_class = 0;
 
 
 
@@ -60,7 +60,7 @@ FrBBaseObject * printwr_FrBObject(FrBExecutionEnvironment&, FrBBaseObject*, FrBB
 
 FrBBaseObject * dbg_addressof(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0)
 {
-    FrBBaseObject * o = new FrBInt( ((int)arg0) );
+    FrBBaseObject * o = new FrBInt( ((unsigned long int)arg0) );
     e.addGarbagedObject(o);
     return o;
 }

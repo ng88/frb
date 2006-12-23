@@ -21,14 +21,14 @@
 
 
 /*                   FrBVoid                       */
-FrBCppClass * FrBVoid::_cpp_class = NULL;
+FrBCppClass * FrBVoid::_cpp_class = 0;
 
 
 
 
 FrBCppClass * FrBVoid::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBVoid::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBVoid::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBVoid::Allocator());
     _cpp_class->setName("Void");
@@ -40,7 +40,7 @@ FrBCppClass * FrBVoid::initClass()
 
 FrBClass * FrBVoid::getClass()
 {
-    frb_assert2(_cpp_class != NULL, "FrBVoid::getClass(), call initClass() first");
+    frb_assert2(_cpp_class != 0, "FrBVoid::getClass(), call initClass() first");
     return _cpp_class;
 }
 
@@ -48,7 +48,7 @@ FrBVoid::~FrBVoid()
 {
 }
 
-FrBVoid * FrBVoid::Allocator::_void_value = NULL;
+FrBVoid * FrBVoid::Allocator::_void_value = 0;
 
 FrBVoid * FrBVoid::Allocator::getInstance()
 {

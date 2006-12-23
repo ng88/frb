@@ -21,7 +21,7 @@
 
 FrBCppClass * FrBClassWrapper::initClass()
 {
-    frb_assert2(_cpp_class == NULL, "FrBClassWrapper::initClass(), already initialized");
+    frb_assert2(_cpp_class == 0, "FrBClassWrapper::initClass(), already initialized");
     
     _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
     _cpp_class->setName("Class");
