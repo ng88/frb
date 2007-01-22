@@ -23,7 +23,7 @@
 
 #include "frbexprlist.h"
 
-class FrBField;
+class FrBMember;
 
 //TODO TOUTES les erreurs devront être des exceptions récupérables dans l'application embarquante
 //     l'interpréteur sera un cas particulier d'application embarquante (le compilo aussi)
@@ -209,10 +209,10 @@ public:
 class FrBInvalidNonSharedException : public FrBExecutionException
 {
 protected:
-    FrBField *  _fl;
+    FrBMember *  _fl;
 public:
 
-    FrBInvalidNonSharedException(FrBField * f);
+    FrBInvalidNonSharedException(FrBMember * f);
     std::ostream& put(std::ostream& stream) const;
 
 };

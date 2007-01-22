@@ -141,6 +141,8 @@ protected:
 
         virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException) = 0;
+
+	virtual String name() const = 0;
     };
     
     /** field evalutor, return the value of the field */
@@ -155,6 +157,7 @@ protected:
         const FrBClass* getClass() const;
         bool needMe() const;
         bool isAssignable() const;
+	String name() const { return _fl->fullName(); }
         void refAssign(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject*) const throw (FrBEvaluationException);
     };
     
@@ -171,6 +174,7 @@ protected:
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
         bool needMe() const;
+	String name() const { return _fn->fullName(); }
     };
     
     /** class evalutor (ie it returns an objet of the 'Class' type)*/
@@ -184,6 +188,7 @@ protected:
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
         bool needMe() const;
+	String name() const { return _cl->fullName(); }
     };
     
     FrBExpr *                _context;

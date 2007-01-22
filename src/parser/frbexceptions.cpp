@@ -20,7 +20,7 @@
 #include "frberrors.h"
 #include "frbbaseobject.h"
 #include "frbclass.h"
-#include "frbfield.h"
+#include "frbmember.h"
 #include "frbexpr.h"
 #include "../common/assert.h"
 
@@ -193,7 +193,7 @@ std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
 /*      FrBInvalidNonSharedException       */
 
 
-FrBInvalidNonSharedException::FrBInvalidNonSharedException(FrBField * f)
+FrBInvalidNonSharedException::FrBInvalidNonSharedException(FrBMember * f)
     : _fl(f)
 {
 }

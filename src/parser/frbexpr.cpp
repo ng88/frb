@@ -202,6 +202,9 @@ FrBUnresolvedIdWithContextExpr::FieldEvaluator::FieldEvaluator(FrBField * f)
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
+    if(!_fl->shared() && !me)
+	throw FrBInvalidNonSharedException(_fl);
+
     return me->getField(_fl->index());
 }
 
@@ -223,6 +226,10 @@ bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isAssignable() const
 void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvironment& e,
         FrBBaseObject* me, FrBBaseObject* val) const throw (FrBEvaluationException)
 {
+    if(!_fl->shared() && !me)
+	throw FrBInvalidNonSharedException(_fl);
+
+
     me->addField(_fl->index(), val);
 }
 
@@ -360,7 +367,7 @@ void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBa
 std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 {
     if(_evaluator)
-        return stream << _name;
+        return stream << _evaluator->name();
     else
         return stream << "urwc_id_" << _name;
 }
@@ -523,6 +530,9 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 
     if(!_fn->shared()) /* non-shared fn, me must be provided */
     {
+	if(!me)
+	    throw FrBInvalidNonSharedException(_fn);
+
         frb_assert(_me);
         me = _me->eval(e);
     }
