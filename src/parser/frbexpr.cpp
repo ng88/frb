@@ -52,7 +52,7 @@ FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int vari
 
 FrBLocalVarExpr::~FrBLocalVarExpr()
 {
-    delete _type;
+    //delete _type; //done in functioncode destructor
 }
 
 bool FrBLocalVarExpr::isAssignable() const
@@ -464,6 +464,8 @@ frb_warning2(false, "FrBFunctionCallExpr FrBExprList...");
         (*it)->put(std::cerr);
         delete (*it);
     }
+    _rhs->clear();
+
 frb_warning2(false, "FrBFunctionCallExpr rhs...");
     delete _rhs;
 frb_warning2(false, "FrBFunctionCallExpr done.");
@@ -703,8 +705,12 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
 }
 FrBBinOpExpr::~FrBBinOpExpr()
 {
+    printf("r=%d, l=%d\n", _rhs, _lhs);
+    std::cout << *this << "\n";
     delete _rhs;
+printf("done rhs\n");
     delete _lhs;
+    printf("done inop\n");
 }
 
 void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)

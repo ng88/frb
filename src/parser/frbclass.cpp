@@ -297,17 +297,27 @@ FrBClass::~FrBClass()
     for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it) //destuct inner classes
         delete it->second;
 
+    _innerClasses.clear();
+
     for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf) //destuct functions
         delete itf->second;
+
+    _functions.clear();
 
     for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf) //destuct operators
         delete itf->second;
 
+    _operators.clear();
+
     for(FieldContainer::iterator itf = _fields.begin(); itf != _fields.end(); ++itf) //destuct fields
         delete itf->second;
 
+    _fields.clear();
+
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it) //destuct ctors
         delete *it;
+
+    _ctors.clear();
 
     if(_dtor)
         delete _dtor; //destruct dtor

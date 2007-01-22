@@ -34,6 +34,8 @@ FrBStatementBlock::~FrBStatementBlock()
 {
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
         delete (*it);
+
+    _stats.clear();
 }
 
 /*        FrBBlockStatement                     */
@@ -295,7 +297,7 @@ FrBDeclareStatement::~FrBDeclareStatement()
     if(_init)
       delete _init;
 
-    delete _type;
+    //delete _type; //done in functioncode destructor
 }
 
 

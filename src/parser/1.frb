@@ -8,7 +8,7 @@ Public Class MonAppli
         Public Shared Sub Initialize()
             Dim a As Int := 30 + Me.champs
 ' 
-            Me.champs := a * 2
+            Me.champs :=   2 * a + 5
             '1+1
         End Sub
 
