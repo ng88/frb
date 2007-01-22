@@ -9,7 +9,7 @@ Public Class MonAppli
             Dim a As Int := 30 + Me.champs
 ' 
             Me.champs :=   2 * a + 5
-            '1+1
+            1+1
         End Sub
 
         Public Shared Sub test(a As Int)
@@ -28,33 +28,32 @@ Public Class Main
 
     Public Shared Sub main()
 
-        'Dim a As MonAppli.Dem
-        'Dim a, b, c, d As Int := 8
+         Dim app As MonAppli.Dem
+         Dim a, b, c, d As Int := 8
 
         
-        'Debug.println("" + a + " @" + Debug.addressof(a))
-        'Debug.println("" + b + " @" + Debug.addressof(b))
-        'Debug.println("" + c + " @" + Debug.addressof(c))
-        'Debug.println("" + d + " @" + Debug.addressof(d))
+        Debug.println("" + a + " @" + Debug.addressof(a))
+        Debug.println("" + b + " @" + Debug.addressof(b))
+        Debug.println("" + c + " @" + Debug.addressof(c))
+        Debug.println("" + d + " @" + Debug.addressof(d))
 
-        'Debug.showStack()
-        'b := 5
-        'b := 12 + a + 1
-        'Debug.showStack()
+        Debug.showStack()
+        b := 5
+        b := 12 + a + 1
+        Debug.showStack()
 
-        'Debug.println("" + a + " @" + Debug.addressof(a))
-        'Debug.println("" + b + " @" + Debug.addressof(b))
-        'Debug.println("" + c + " @" + Debug.addressof(c))
-        'Debug.println("" + d + " @" + Debug.addressof(d))
-        
-
-        'a.a := a.a + 5
-        'b.a := -100
-        'c.a := b.a + a.a
-    
-        'Debug.println("a.a" & a.a)
-        'Debug.println("b.a" & b.a)
-        'Debug.println("c.a" & c.a)
+        Debug.println("" + a + " @" + Debug.addressof(a))
+        Debug.println("" + b + " @" + Debug.addressof(b))
+        Debug.println("" + c + " @" + Debug.addressof(c))
+        Debug.println("" + d + " @" + Debug.addressof(d))
+' 
+'         a.a := a.a + 5
+'         b.a := -100
+'         c.a := b.a + a.a
+'     
+'         Debug.println("a.a" & a.a)
+'         Debug.println("b.a" & b.a)
+'         Debug.println("c.a" & c.a)
 
     End Sub
 

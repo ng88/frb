@@ -229,6 +229,12 @@ FrBIfStatement::~FrBIfStatement()
         delete (*it);
 }
 
+
+
+
+
+
+
 /*                 FrBDeclareStatement              */
 
 FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int nb,
@@ -295,9 +301,11 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 FrBDeclareStatement::~FrBDeclareStatement()
 {
     if(_init)
-      delete _init;
+	delete _init;
 
-    //delete _type; //done in functioncode destructor
+    _varsid.clear();
+
+    delete _type;
 }
 
 

@@ -242,10 +242,9 @@ FrBCodeFunction::~FrBCodeFunction()
 	    delete it->init;
     }
     _param.clear();
+    frb_warning2(false, "_var.....");
 
-    for(VarList::iterator it = _var.begin(); it != _var.end(); ++it)
-	delete *it;
-
+    //_var element disposal is done in FrBDeclareStatement
     _var.clear();
 	
 
