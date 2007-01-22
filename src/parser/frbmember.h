@@ -19,6 +19,8 @@
 #define FRBMEMBER_H
 
 #include "../common/assert.h"
+#include "../common/string.h"
+#include "frbconstants.h"
 
 class FrBClass;
 
@@ -26,11 +28,30 @@ class FrBMember /* a frb member */
 {
 protected:
     FrBClass* _contClass;
+    String    _name;
+    bool      _shared;
+    bool      _const; 
+    scope_t   _scope;
     
 public:
 
-    FRB_ASSERT_CODE(FrBMember() : _contClass(0) {});
+    FrBMember();
     
+    inline void setShared(bool v) { _shared = v; }
+    inline bool shared() const { return _shared; }
+
+    inline void setConst(bool v) { _const = v; }
+    inline bool isConst() const { return _const; }
+    
+    inline scope_t scope() const { return _scope; }
+    inline void setScope(scope_t v) { _scope = v; }
+    
+    inline void setName(const String& n) { _name = n; }
+    inline const String& name() const { return _name; }
+
+    String fullName() const;
+
+
     inline void setContainer(FrBClass* c);
     inline const FrBClass* container() const;
     inline FrBClass* containerPtr();

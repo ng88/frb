@@ -29,7 +29,7 @@
 #include "frbfield.h"
 #include "frbkeywords.h"
 
-typedef char op_t;
+
 
 
 
@@ -65,12 +65,9 @@ protected:
 
 
 
-    bool     _shared; /* shared class, ie module */
     bool     _abstract; /* abstract class, ie interface */
     bool     _sealed; /* sealed class */
 
-    scope_t  _scope;
-    String   _name;
 
     FunctionContainer _functions;
     ClassContainer _innerClasses;
@@ -206,17 +203,11 @@ public:
     inline ClassContainer* innerClassPtr() { return &_innerClasses; }
     
     
-    inline bool shared() const { return _shared; }
     inline bool abstract() const { return _abstract; }
     inline bool sealed() const { return _sealed; }
-    inline scope_t scope() const { return _scope; }
-    inline String name() const { return _name; }
     
-    inline void setShared(bool v) { _shared = v; }
     inline void setAbstract(bool v) { _abstract = v; }
     inline void setSealed(bool v) { _sealed = v; }
-    inline void setScope(scope_t v) { _scope = v; }
-    inline void setName(String v) { _name = v; }
     
     /** Return the unique typeID() of this class
       *   Important note: typeID() my change from an execution to another and from a machine to another.
@@ -230,7 +221,7 @@ public:
     inline long unsigned int typeID() const { return reinterpret_cast<unsigned long int>(this); }
    
     /** Return the full name of this class, ie Module1.Module2.MyClass1 */
-    String fullName() const;
+
     
     /** Allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
@@ -332,8 +323,7 @@ typedef std::stack<FrBCodeClass*> FrBCodeClassStack;
 
 
 inline FrBClass::FrBClass()
-  : _shared(false), _abstract(false), 
-    _sealed(false), _scope(SC_PRIVATE),_defaultCtor(0), _dtor(0)
+  : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)
 {
 }
     

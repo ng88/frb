@@ -14,17 +14,26 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-#ifndef FRBCONSTANTS_H
-#define FRBCONSTANTS_H
+#include "frbmember.h"
+#include "frbkeywords.h"
+#include "frbclass.h"
 
-typedef int scope_t;
+   
+FrBMember::FrBMember()
+    : _contClass(0), _shared(false), _const(false), _scope(SC_PUBLIC)
+{
 
-/* les defauts doivent etre à 0 */
-enum { SC_DEFAULT = 0 };
-enum { SC_PRIVATE = 0, SC_PROTECTED = 12, SC_FRIEND = 13, SC_PUBLIC = 14};
-enum { SC_ABSTRACT = 1, SC_SHARED = 2, SC_SEALED = 3};
+}
 
-typedef char op_t;
 
-#endif
+String FrBMember::fullName() const
+{
+    if(container())
+        return container()->fullName()
+                  .append(FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER))
+                  .append(name());
+    else
+        return name();
+}
+
 

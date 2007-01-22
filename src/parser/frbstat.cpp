@@ -262,11 +262,14 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-    FrBBaseObject * init_val = ((_init == 0) ? _type->getClass()->createInstance(e) :
-                                  FrBClass::forceConvert(_init->eval(e), _type->getClass()));
 
     for(VarIDList::const_iterator it = _varsid.begin(); it != _varsid.end(); ++it)
+    {
+	FrBBaseObject * init_val = ((_init == 0) ? _type->getClass()->createInstance(e) :
+                                  FrBClass::forceConvert(_init->eval(e), _type->getClass()));
+
         e.stack().setTopValue(*it, init_val);
+    }
 }
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const

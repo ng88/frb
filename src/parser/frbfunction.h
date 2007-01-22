@@ -24,7 +24,6 @@
 
 #include "frbexprlist.h"
 #include "frbmember.h"
-#include "frbconstants.h"
 
 
 class FrBClass;
@@ -38,11 +37,8 @@ class FrBFunction : public FrBMember /* a frb function */
 {
 protected:
     bool _sub;
-    bool _shared;
-    bool _const; 
     bool _abstract;
     //TODO, const=true => Me est const dans cette foction
-    String _name;
     
     //FrBClassList _argsType;
     const FrBClass * _returnType;
@@ -57,7 +53,7 @@ protected:
     
 public:
 
-    enum { SHARED = 0 };
+    //enum { SHARED = 0 };
 
     typedef enum { NO_MATCH = 0,
                    MATCH_WITH_CONV,
@@ -65,8 +61,8 @@ public:
                    MATCH_WITH_OPT,
                    MATCH } match_t;
  
-    inline FrBFunction() : _sub(false), _shared(false), _const(false), _abstract(false), _firstOptional(-1),
-                           _paramArray(false), _scope(SC_PUBLIC)  {};
+    inline FrBFunction() : _sub(false), _abstract(false), _firstOptional(-1),
+                           _paramArray(false)  {};
                              
     virtual ~FrBFunction() {}
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
@@ -74,18 +70,9 @@ public:
     inline void setSub(bool v) { _sub = v; }
     inline bool sub() const { return _sub; }
     
-    inline void setShared(bool v) { _shared = v; }
-    inline bool shared() const { return _shared; }
-    
-    inline void setConst(bool v) { _const = v; }
-    inline bool isConst() const { return _const; }
-    
     inline void setAbstract(bool v) { _abstract = v; }
     inline bool abstract() const { return _abstract; }
-    
-    inline scope_t scope() const { return _scope; }
-    inline void setScope(scope_t v) { _scope = v; }
-    
+  
     inline void setParamArrayUsed(bool v) { _paramArray = v; }
     inline bool paramArrayUsed() const { return _paramArray; }
     
@@ -98,9 +85,6 @@ public:
     
     inline void setReturnType(const FrBClass * t) { _returnType = t; }
     const FrBClass * returnType() const;
-    
-    inline void setName(const String& n) { _name = n; }
-    inline const String& name() const { return _name; }
     
     virtual FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me) const
         throw (FrBExecutionException);

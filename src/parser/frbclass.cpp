@@ -158,16 +158,6 @@ void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 
 }
 
-String FrBClass::fullName() const
-{
-    if(container())
-        return container()->fullName()
-                  .append(FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_MEMBER))
-                  .append(name());
-    else
-        return name();
-}
-
 
 std::ostream& FrBClass::put(std::ostream& sout, int level) const
 {

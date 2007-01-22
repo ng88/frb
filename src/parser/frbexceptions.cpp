@@ -20,7 +20,9 @@
 #include "frberrors.h"
 #include "frbbaseobject.h"
 #include "frbclass.h"
+#include "frbfield.h"
 #include "frbexpr.h"
+#include "../common/assert.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBException& c)
 {
@@ -184,4 +186,20 @@ FrBMemberNotFoundException::FrBMemberNotFoundException(const String& name)
 std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
 {
   return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_MEMBER_NOT_FOUND, _name);
+}
+
+
+
+/*      FrBInvalidNonSharedException       */
+
+
+FrBInvalidNonSharedException::FrBInvalidNonSharedException(FrBField * f)
+    : _fl(f)
+{
+}
+
+std::ostream& FrBInvalidNonSharedException::put(std::ostream& stream) const
+{
+    frb_assert(_fl);
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INVALID_NON_SHARED, _fl->fullName());
 }

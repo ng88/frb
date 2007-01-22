@@ -20,7 +20,15 @@ Public Class MonAppli
     End Class
 
     Public Class A
-        Public a As Int := 5
+    
+        Public Shared b As Int := 1024
+        
+        Public a As Int :=  2
+        
+        
+        Public Shared Sub Initialize()
+        End Sub
+        
     End Class
 End Class
 
@@ -29,31 +37,39 @@ Public Class Main
     Public Shared Sub main()
 
          Dim app As MonAppli.Dem
-         Dim a, b, c, d As Int := 8
+         Dim a, b, c, d As MonAppli.A
 
+        MonAppli.A.a := 78
+
+         a.a:= b.a := c.a := d.a := 7
+
+        Debug.println("app.champs " + app.champs + " @" + Debug.addressof(app) + "." + Debug.addressof( app.champs))
+        Debug.println("a.a " + a.a + " @" + Debug.addressof(a) + "." + Debug.addressof(a.a))
+        Debug.println("b.a " + b.a + " @" + Debug.addressof(b) + "." + Debug.addressof(b.a))
+        Debug.println("c.a " + c.a + " @" + Debug.addressof(c) + "." + Debug.addressof(c.a))
+        Debug.println("d.a " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.a))
+        Debug.println("")
+
+        Debug.showStack()
+        c.a := 5
+        b.a := 12 + a.a + 1
+        Debug.showStack()
+
+        Debug.println("a.a " + a.a + " @" + Debug.addressof(a) + "." + Debug.addressof(a.a))
+        Debug.println("b.a " + b.a + " @" + Debug.addressof(b) + "." + Debug.addressof(b.a))
+        Debug.println("c.a " + c.a + " @" + Debug.addressof(c) + "." + Debug.addressof(c.a))
+        Debug.println("d.a " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.a))
+        Debug.println("")
         
-        Debug.println("" + a + " @" + Debug.addressof(a))
-        Debug.println("" + b + " @" + Debug.addressof(b))
-        Debug.println("" + c + " @" + Debug.addressof(c))
-        Debug.println("" + d + " @" + Debug.addressof(d))
-
-        Debug.showStack()
-        b := 5
-        b := 12 + a + 1
-        Debug.showStack()
-
-        Debug.println("" + a + " @" + Debug.addressof(a))
-        Debug.println("" + b + " @" + Debug.addressof(b))
-        Debug.println("" + c + " @" + Debug.addressof(c))
-        Debug.println("" + d + " @" + Debug.addressof(d))
-' 
-'         a.a := a.a + 5
-'         b.a := -100
-'         c.a := b.a + a.a
-'     
-'         Debug.println("a.a" & a.a)
-'         Debug.println("b.a" & b.a)
-'         Debug.println("c.a" & c.a)
+        a.a := a.a + 5
+        b.a := -100
+        c.a := b.a + a.a
+    
+        Debug.println("a.a " + a.a + " @" + Debug.addressof(a) + "." + Debug.addressof(a.a))
+        Debug.println("b.a " + b.a + " @" + Debug.addressof(b) + "." + Debug.addressof(b.a))
+        Debug.println("c.a " + c.a + " @" + Debug.addressof(c) + "." + Debug.addressof(c.a))
+        Debug.println("d.a " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.a))
+        Debug.println("")
 
     End Sub
 

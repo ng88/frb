@@ -116,7 +116,7 @@ public:
 };
 
 /** Identifier not yet resolved (ie class name, function, field...)
-    current class context is provied, typically it's used in an expression like
+    current class context is provided, typically it's used in an expression like
     FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr)) <=> unresolved_id_wc.unresolved_id
     or simply
     FrBUnresolvedIdWithContextExpr <=> unresolved_id_wc

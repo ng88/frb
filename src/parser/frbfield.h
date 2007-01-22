@@ -24,7 +24,6 @@
 #include "frbexecutionenvironment.h"
 #include "frbmember.h"
 #include "frbexprlist.h"
-#include "frbconstants.h"
 
 class FrBClass;
 class FrBExpr;
@@ -33,33 +32,17 @@ class FrBTypeExpr;
 class FrBField : public FrBMember /* a frb field */
 {
 protected:
-    bool _shared;
-    bool _const; 
-    String _name;
-    scope_t  _scope;
     int _index;
     
 public:
 
-    inline FrBField() : _shared(false), _const(false), _scope(SC_PUBLIC), _index(-1)  {}
+    inline FrBField() : _index(-1)  {}
 
     virtual ~FrBField() {}
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
-    
-    inline void setShared(bool v) { _shared = v; }
-    inline bool shared() const { return _shared; }
-    
+
     inline void setIndex(int v) { _index = v; }
     inline int index() const { frb_assert(_index > -1); return _index; }
-    
-    inline void setConst(bool v) { _const = v; }
-    inline bool isConst() const { return _const; }
-    
-    inline scope_t scope() const { return _scope; }
-    inline void setScope(scope_t v) { _scope = v; }
-    
-    inline void setName(const String& n) { _name = n; }
-    inline const String& name() const { return _name; }
 
     virtual const FrBClass * type() const = 0;
 

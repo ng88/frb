@@ -23,6 +23,12 @@
 
 #include "frbexprlist.h"
 
+class FrBField;
+
+//TODO TOUTES les erreurs devront être des exceptions récupérables dans l'application embarquante
+//     l'interpréteur sera un cas particulier d'application embarquante (le compilo aussi)
+ 
+
 class FrBClass;
 class FrBBaseObject;
 class FrBFunction;
@@ -197,6 +203,19 @@ public:
     std::ostream& put(std::ostream& stream) const;
 };
 
+
+
+/** Occurs when using a non static member as a static member  */
+class FrBInvalidNonSharedException : public FrBExecutionException
+{
+protected:
+    FrBField *  _fl;
+public:
+
+    FrBInvalidNonSharedException(FrBField * f);
+    std::ostream& put(std::ostream& stream) const;
+
+};
 
 
 #endif
