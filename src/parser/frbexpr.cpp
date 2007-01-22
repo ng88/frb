@@ -456,19 +456,16 @@ FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
 }
 
 FrBFunctionCallExpr::~FrBFunctionCallExpr()
-{frb_warning2(false, "FrBFunctionCallExpr _lhs...");
+{
     delete _lhs;
-frb_warning2(false, "FrBFunctionCallExpr FrBExprList...");
+
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-    {
-        (*it)->put(std::cerr);
         delete (*it);
-    }
+
     _rhs->clear();
 
-frb_warning2(false, "FrBFunctionCallExpr rhs...");
     delete _rhs;
-frb_warning2(false, "FrBFunctionCallExpr done.");
+
 }
 
 void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -705,12 +702,8 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
 }
 FrBBinOpExpr::~FrBBinOpExpr()
 {
-    printf("r=%d, l=%d\n", _rhs, _lhs);
-    std::cout << *this << "\n";
     delete _rhs;
-printf("done rhs\n");
     delete _lhs;
-    printf("done inop\n");
 }
 
 void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
