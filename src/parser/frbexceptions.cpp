@@ -203,3 +203,14 @@ std::ostream& FrBInvalidNonSharedException::put(std::ostream& stream) const
     frb_assert(_fl);
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INVALID_NON_SHARED, _fl->fullName());
 }
+
+
+
+/*         FrBNullReferenceException       */
+
+
+
+std::ostream& FrBNullReferenceException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_NULL_REF);
+}

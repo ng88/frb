@@ -217,5 +217,14 @@ public:
 
 };
 
+class FrBNullReferenceException : public FrBExecutionException
+{
+protected:
+
+public:
+
+    std::ostream& put(std::ostream& stream) const;
+
+};
 
 #endif

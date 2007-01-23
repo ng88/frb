@@ -47,6 +47,7 @@ public:
     };
     
     inline static FrBNull * nullValue() { return Allocator::getInstance(); }
+    inline static bool isNull(FrBBaseObject * o) { return nullValue() == o; }
         
     
 };

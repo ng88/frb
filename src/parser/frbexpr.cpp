@@ -331,10 +331,15 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
 {
     frb_assert(_evaluator);
 
-    FrBBaseObject * me = 0;
+    FrBBaseObject * me = FrBNull::nullValue();
 
     if(_evaluator->needMe())
+    {
         me = _context->eval(e);
+
+	if(FrBNull::isNull(me))
+	    throw FrBNullReferenceException();
+    }
 
     return _evaluator->eval(me, e);
 }
