@@ -214,3 +214,15 @@ std::ostream& FrBNullReferenceException::put(std::ostream& stream) const
 {
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_NULL_REF);
 }
+
+
+
+/*           FrBSharedInMeException            */
+
+
+
+std::ostream& FrBSharedInMeException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_SHARED_IN_ME);
+}
+

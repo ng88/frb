@@ -47,7 +47,13 @@ public:
     };
     
     inline static FrBNull * nullValue() { return Allocator::getInstance(); }
-    inline static bool isNull(FrBBaseObject * o) { return nullValue() == o; }
-        
+    inline static bool isNull(FrBBaseObject * o)
+    {
+	frb_assert(o);
+	frb_assert( (nullValue() == o) == (o->getClass() == getCppClass()) );
+
+	return (nullValue() == o);
+    }
+
     
 };

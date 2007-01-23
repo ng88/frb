@@ -43,7 +43,7 @@ FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrB
     std::ostringstream tmp;
     tmp << (static_cast<FrBString*>(me))->value();
 
-    if(arg0->getClass() == FrBNull::getCppClass())
+    if(FrBNull::isNull(arg0))
         tmp << "<null>";
     else
         tmp << "<object@" << (long unsigned int)arg0 << ">";

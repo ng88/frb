@@ -227,4 +227,16 @@ public:
 
 };
 
+
+class FrBSharedInMeException : public FrBResolveException
+{
+protected:
+
+public:
+
+    std::ostream& put(std::ostream& stream) const;
+
+};
+
+
 #endif
