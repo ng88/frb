@@ -588,8 +588,10 @@ FrBInsideMeExpr::~FrBInsideMeExpr()
 
 void FrBInsideMeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+  //on peut le faire plutot dans frbsyntaxer.h, mais voir comment faire remonter l'exception
 //verifier les nonsharedexception plus haut
-    if(_fn->shared()
+  ++++++ VOIR CA EN PREMIER
+  if(_fn->shared())
    throw FrBSharedInMeException
   _varid = _fn->localVarCount();
 }
