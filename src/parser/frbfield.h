@@ -72,6 +72,7 @@ public:
     ~FrBCodeField();
     
     inline void setURType(FrBTypeExpr*);
+    inline void setInitExpr(FrBExpr * e);
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -103,6 +104,7 @@ public:
 
 
 
+
 /* Inlined */
 
 inline FrBCodeField::FrBCodeField(FrBTypeExpr * type, FrBExpr * init)
@@ -113,6 +115,11 @@ inline FrBCodeField::FrBCodeField(FrBTypeExpr * type, FrBExpr * init)
 inline void FrBCodeField::setURType(FrBTypeExpr* t)
 {
     _unresolvedType = t;
+}
+
+inline void FrBCodeField::setInitExpr(FrBExpr * e)
+{
+    _defaultVal = e;
 }
 
 #endif

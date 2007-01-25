@@ -588,11 +588,7 @@ FrBInsideMeExpr::~FrBInsideMeExpr()
 
 void FrBInsideMeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-  //on peut le faire plutot dans frbsyntaxer.h, mais voir comment faire remonter l'exception
-//verifier les nonsharedexception plus haut
-  ++++++ VOIR CA EN PREMIER
-  if(_fn->shared())
-   throw FrBSharedInMeException
+
   _varid = _fn->localVarCount();
 }
 
@@ -616,14 +612,15 @@ std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
 
 /*              FrBOutisdeMeExpr           */
 
-FrBOutsideMeExpr::FrBOutsideMeExpr(FrBClass * t)
-  : _type(t)
+FrBOutsideMeExpr::FrBOutsideMeExpr(FrBField * t)
+  : _field(t)
 {
 }
 
 FrBOutsideMeExpr::~FrBOutsideMeExpr()
 {
 }
+
 
 FrBBaseObject* FrBOutsideMeExpr::eval(FrBExecutionEnvironment& e) const
   throw (FrBEvaluationException)
@@ -633,7 +630,7 @@ FrBBaseObject* FrBOutsideMeExpr::eval(FrBExecutionEnvironment& e) const
 
 const FrBClass* FrBOutsideMeExpr::getClass() const
 {
-  return _type;
+  return _field->container();
 }
 
 

@@ -85,7 +85,7 @@ clean:
 
 
 
-parser: frberrordesc.o syntaxer.y lexer.l frbexpr.o frbstat.o frbfunction.o frbclass.o
+parser: frberrordesc.o syntaxer.y lexer.l frbexpr.o frbstat.o frbfunction.o frbclass.o frbsyntaxer.h
 	@echo Defining syntaxical parser keyword token...
 	@awk -f create_keywords_db_syntaxer.awk  -- $(TRAD_PATH)frbkeywords.key > token_list.tmp
 	@./insert.sh '%DECLARE_KEYWORDS_TOKEN' syntaxer_kw.y syntaxer.y token_list.tmp

@@ -5,7 +5,7 @@ Public Class MonAppli
     
         Public champs As Int := 5
     
-        Public Shared Sub Initialize()
+        Public Sub Initialize()
             Dim a As Int := 30 + Me.champs
 ' 
             Me.champs :=   2 * a + 5
@@ -22,12 +22,12 @@ Public Class MonAppli
     Public Class A
     
         Public Shared b As Int := 1024
-        Public Shared beee As A := Me
+        Public beee As A := Me
         
         Public a As Int :=  2
         
         
-        Public Shared Sub Initialize()
+        Public Sub Initialize()
         End Sub
         
     End Class
@@ -41,15 +41,6 @@ Public Class Main
 
          Dim app As MonAppli.Dem
          Dim a, b, c, d As MonAppli.A
-
-            Dim aaa As Main := Me '1 faire marcher ca + faire NullReferenceEx
-                                    '2 faire un endroit ou stocker les shared
-        
-
-        Debug.println("aaa.foo " + "aaa.foo" + " @" + Debug.addressof(aaa) + "." + Debug.addressof(aaa.foo))
-        MonAppli.A.a := 78
-        aaa.foo := 5
-        Debug.println("aaa.foo " + aaa.foo + " @" + Debug.addressof(aaa) + "." + Debug.addressof(aaa.foo))
 
          a.a:= b.a := c.a := d.a := 7
 

@@ -18,6 +18,13 @@
 #ifndef FRBSYNTAXER_H
 #define FRBSYNTAXER_H
 
+#ifndef YY_FrBSyntaxicalParser_CONSTRUCTOR_CODE
+#define YY_FrBSyntaxicalParser_CONSTRUCTOR_CODE \
+       _current_field = 0; \
+       current_if = 0;
+
+#endif
+
 
 #ifndef YY_FrBSyntaxicalParser_MEMBERS
 #define YY_FrBSyntaxicalParser_MEMBERS \
@@ -26,11 +33,17 @@
         FrBClassMap * frb_classes; \
         FrBErrorCollector * frb_error; \
      private: \
+         FrBCodeField * _current_field; \
          FrBIfStatement * current_if;\
          FrBCodeClassStack class_stack; \
          FrBCodeFunctionStack fn_stack; \
          FrBBlockStack block_stack; \
          CStringList id_list; \
+         inline FrBCodeField* current_field() \
+         { \
+             /*frb_assert2(_current_field, "frbsyntaxer.h::FrBSynater::current_field()")*/;  \
+             return _current_field; \
+         } \
          inline FrBCodeClass* current_class() \
          { \
              frb_assert2(!class_stack.empty(), "frbsyntaxer.h::FrBSynater::current_class()");  \
@@ -52,16 +65,29 @@
              frb_assert2(!block_stack.empty(), "frbsyntaxer.h::FrBSynater::current_block()");  \
              return block_stack.top(); \
          } \
-         inline FrBMeExpr* new_me_expr() \
+         /** artificial indicates whether me have a real Me or an artificial Me used only for context */ \
+         inline FrBMeExpr* new_me_expr(bool artificial = false) \
          { \
-            if(fn_stack.empty()) \
-                return new FrBOutsideMeExpr(current_class()); \
-            else \
+            frb_assert( (current_field() != 0) xor !fn_stack.empty()); \
+            if(current_field()) \
             { \
-                if(current_fn()->shared()) \
-                    ;\
+		if(!artificial && current_field()->shared()) \
+			 frb_error->error(FrBErrors::FRB_ERR_ME_IN_SHARED, \
+                                FrBErrors::FRB_ERR_SEMANTIC, \
+                                frb_lexer->lineno(), "", "", "", \
+                                String(frb_lexer->YYText()) ); \
+                return new FrBOutsideMeExpr(current_field()); \
+	    } \
+            else \
+	    { \
+		if(!artificial && current_fn()->shared()) \
+			 frb_error->error(FrBErrors::FRB_ERR_ME_IN_SHARED, \
+                                FrBErrors::FRB_ERR_SEMANTIC, \
+                                frb_lexer->lineno(), "", "", "", \
+                                String(frb_lexer->YYText()) ); \
                 return new FrBInsideMeExpr(current_fn()); \
-            } \
+	    } \
+             \
          } \
      public: \
         virtual ~FrBSyntaxicalParser() {} \

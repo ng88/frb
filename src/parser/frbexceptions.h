@@ -228,11 +228,13 @@ public:
 };
 
 
-class FrBSharedInMeException : public FrBResolveException
+class FrBMeInSharedException : public FrBResolveException
 {
 protected:
 
+
 public:
+    FrBMeInSharedException();
 
     std::ostream& put(std::ostream& stream) const;
 

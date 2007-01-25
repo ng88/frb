@@ -328,10 +328,10 @@ public:
 class FrBOutsideMeExpr : public FrBMeExpr
 {
 private:
-    FrBClass     *    _type;
+    FrBField     *    _field;
     
 public:
-    FrBOutsideMeExpr(FrBClass * t);
+    FrBOutsideMeExpr(FrBField * t);
     ~FrBOutsideMeExpr();
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
