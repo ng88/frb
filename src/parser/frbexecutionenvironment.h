@@ -28,8 +28,15 @@ class FrBExecutionEnvironment
 {
 private:
 
+    /** Memory stack */
     FrBMemStack  _stack;
+
+    /** Global memory (heap + stack) */
     FrBMemory * _mem;
+
+    /** Shared memory (for shared data members) */
+    FrBSharedMem _sharedMem;
+
     FrBResolveEnvironment * _resolveEnv;
     
     FrBExecutionEnvironment(const FrBExecutionEnvironment&) {}

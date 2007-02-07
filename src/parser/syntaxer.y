@@ -746,7 +746,7 @@ data_member: /* eg Public Shared var As String [:= "e"] */
       member_scope_attr data_member_attr FRB_IDENTIFIER as_type 
       {
 	_current_field = new FrBCodeField($<vtype>4);
-        _current_field->setIndex(current_class()->fieldList()->size());
+        //_current_field->setIndex(current_class()->fieldList()->size());
 	_current_field->setName($<str>3);
 	_current_field->setScope($<vint>1);
 	_current_field->setShared($<vint>2 == SC_SHARED);

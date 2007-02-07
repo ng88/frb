@@ -25,6 +25,7 @@ Public Class MonAppli
         Public beee As A := Me
         
         Public a As Int :=  2
+        Public b As Int :=  20
         
         
         Public Sub Initialize()
@@ -71,6 +72,9 @@ Public Class Main
         Debug.println("c.a " + c.a + " @" + Debug.addressof(c) + "." + Debug.addressof(c.a))
         Debug.println("d.a " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.a))
         Debug.println("")
+        
+        Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
+        Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
 
     End Sub
 

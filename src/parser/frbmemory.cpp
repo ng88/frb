@@ -156,4 +156,45 @@ std::ostream& FrBMemStack::print(std::ostream& stream) const
     return stream;
 }
      
+
     
+/*******         FrBSharedMem         *********/
+//    std::map<const FrBClass*, FrBBaseObject**> _mem;
+
+FrBSharedMem::FrBSharedMem()
+{
+}
+
+FrBSharedMem::~FrBSharedMem()
+{
+    for(Storage::iterator it = _mem.begin(); it != _mem.end(); ++it)
+	delete[] it->second;
+}
+   
+void FrBSharedMem::addClass(const FrBClass * c)
+{
+    frb_assert2( _mem.find(c) == _mem.end() , "class c has already a shared storage");
+
+    int shared_count = c->sharedFieldCount();
+
+    FrBBaseObject ** tab = new FrBBaseObject*[shared_count];
+
+    for(int i = 0; i < shared_count; ++i)
+	tab[i] = 0;
+
+    _mem[c] = tab;
+}
+
+void FrBSharedMem::setSharedMember(const FrBClass * c, int index, FrBBaseObject * o)
+{
+    frb_assert(index >= 0 && index < c->sharedFieldCount());
+    frb_assert2( _mem.find(c) != _mem.end(), "class c has NOT a shared storage, call addClass() before");
+    _mem[c][index] = o;
+}
+
+FrBBaseObject * FrBSharedMem::getSharedMember(const FrBClass * c, int index)
+{
+    frb_assert(index >= 0 && index < c->sharedFieldCount());
+    frb_assert2( _mem.find(c) != _mem.end(), "class c has NOT a shared storage, call addClass() before");
+    return _mem[c][index];
+}

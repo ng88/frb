@@ -21,6 +21,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "../common/assert.h"
 #include "../common/string.h"
 #include "../common/iterators.h"
@@ -201,6 +202,8 @@ public:
     inline const FrBFunction* destructor() const { return _dtor; }
     
     inline ClassContainer* innerClassPtr() { return &_innerClasses; }
+
+    inline int sharedFieldCount() const;
     
     
     inline bool abstract() const { return _abstract; }
@@ -417,6 +420,17 @@ inline FrBBaseObject * FrBClass::executeDestructor(FrBExecutionEnvironment& e, F
   return findDestructor()->execute(e, me, args);
 }
 
+inline int FrBClass::sharedFieldCount() const
+{
+    int ret = 0;
+
+    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+	if(it->second->shared())
+	    ret++;
+
+    return ret;
+}
+
 
 inline void FrBClass::addInnerClass(FrBClass * c)
 {
@@ -429,6 +443,10 @@ inline void FrBClass::addInnerClass(FrBClass * c)
 inline void FrBClass::addField(FrBField * c)
 {
   frb_assert(c);
+
+  int shared_count = sharedFieldCount();
+
+  c->setIndex(c->shared() ? shared_count : _fields.size() - shared_count);
 
   c->setContainer(this);
   _fields[c->name()] = c;

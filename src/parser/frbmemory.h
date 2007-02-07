@@ -116,6 +116,9 @@ public:
 };
 
 
+
+
+/** Represents the stack */
 class FrBMemStack
 {
 protected:
@@ -151,6 +154,50 @@ public:
     
 
 };
+
+
+
+
+/** Memory used for shared object (ie shared data member) */
+class FrBSharedMem
+{
+public:
+    typedef std::map<const FrBClass*, FrBBaseObject**> Storage;
+private:
+
+    Storage _mem;
+
+public:
+
+    FrBSharedMem();
+    ~FrBSharedMem();
+
+    
+    /** Create space for shared member of the class 'c' */
+    void addClass(const FrBClass * c);
+
+    /** Set the shared member 'index' of the class 'c' to 'o'
+      * addClass(c) must be called before the first call of this function
+      */
+    void setSharedMember(const FrBClass * c, int index, FrBBaseObject * o);
+
+    /** Get the shared member 'index' of the class 'c'
+      * addClass(c) must be called before the first call of this function
+      */
+    FrBBaseObject * getSharedMember(const FrBClass * c, int index);
+
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -282,6 +329,7 @@ inline bool FrBMemStack::overflow() const
 {
     return _stack_ptr > 5000;
 }
+
 
 
 #endif

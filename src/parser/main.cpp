@@ -53,7 +53,7 @@ void usage(char * exe)
 
 int main(int argc, char ** argv)
 {
-    
+
 #ifdef _FRB_DEBUG_
     char * debug_argv[] =
         {

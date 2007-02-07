@@ -42,6 +42,11 @@ public:
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
 
     inline void setIndex(int v) { _index = v; }
+
+    /** Return the field index.
+     *  Warning: shared and non shared fields are counted independently, ie in a same class,
+     *  a shared field can have the same index as a non shared field.
+     */
     inline int index() const { frb_assert(_index > -1); return _index; }
 
     virtual const FrBClass * type() const = 0;
@@ -54,6 +59,14 @@ public:
     /** Used in type resolution */
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {};
     virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {};
+
+    FRB_ASSERT_CODE(
+	void setShared(bool v)
+        {
+	    frb_assert2(container() && index() == -1, "field index can't be changed when container is set");
+	    FrBMember::setShared(v); 
+	} 
+	           );
         
 };
 

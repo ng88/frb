@@ -298,6 +298,32 @@ public:
 //pour le prob de declare on verifie en amont en comparant une evntuelle egalite de ptr
 //dim a as expr (on aura comme cas particulier : dim a as typeof expr)
 //faire equivalent a ::String pour forcer root
+// 2 notions possibles pour partial class :
+// * classe partielle (definies a plusieurs endroits), exemple
+// 
+//    Partial Class A
+//      Public Sub a()
+//      End Sub
+//    End Class
+//
+//    Partial Class A
+//      Public Sub b()
+//      End Sub
+//    End Class
+// now A has two subs : a & b
+// * classe a definition partielle
+//    Class A
+//       Public Sub Initialize(a As Integer, s As String)
+//       End Sub
+//    End Class
+//
+//    TypeDef A(5) B
+//
+//    ca ne dispense pas des templates
+//
+// 
+
+
 /*
     empiler les addr des fonctions pour debug
     introspection profonde quand possible
