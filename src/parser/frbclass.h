@@ -214,7 +214,7 @@ public:
     
     /** Return the unique typeID() of this class
       *   Important note: typeID() my change from an execution to another and from a machine to another.
-      *                   So typeID() MUST NOT be stored for a furute usage. Typically typeID() have to
+      *                   So typeID() MUST NOT be stored for a furute usage. Typically typeID() have to be
       *                   compared only, eg: 
       *                         if(classA->typeID() == classB->typeID())
       *                         {
@@ -231,10 +231,18 @@ public:
 	/* add storage space */
 	e.sharedMem().addClass(this);
 
+	std::cout << "init begin with " << fullName() << "\n";
+
 	/* initialize fields */
 	for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
 	    if(it->second->shared())
-		e.sharedMem().setSharedField(it->second, it->second->evalDefaultValue(e));
+	    {
+		FrBBaseObject * o = it->second->evalDefaultValue(e);
+		e.sharedMem().setSharedField(it->second,o );
+		std::cout << "init " << it->second->fullName() << " " << o
+			  << " " << e.sharedMem().getSharedField(it->second) << "\n";
+
+	    }
     }
     
     /** Allocate instance and call the appropriate constructor */
