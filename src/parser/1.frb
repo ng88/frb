@@ -11,10 +11,13 @@ Public Class MonAppli
             Me.champs :=   2 * a + 5
             1+1
         End Sub
+        
+        Public Shared t As Int := Dem.test(5)
 
-        Public Shared Sub test(a As Int)
-
-        End Sub
+        Public Shared Function test(a As Int) As Int
+            Debug.println("Static init... a=" + a)
+            Return a 
+        End Function
     
     
     End Class
@@ -75,8 +78,32 @@ Public Class Main
         
         Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
         Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
+        Debug.println("")
+        
+        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.b))
+        Debug.println("MonAppli.A.b=" + MonAppli.A.b)
+'         Debug.println("a.b " + a.b)
+'         Debug.println("b.b " + b.b)
+'         Debug.println("c.b " + c.b)
+'         Debug.println("d.b " + d.b) 
 
     End Sub
 
+End Class
+
+Public Class TTTT
+
+    Public Shared as As Int := 5
+    Public a As Int := 10
+    Public Shared bs As Int := 6
+    Public b As Int := 9
+    Public Shared cs As Int := 7
+    Public c As Int := 8
+    Public Shared ds As Int := 8
+    Public d As Int := 7
+    Public Shared es As Int := 9
+    Public e As Int := 6
+    Public Shared fs As Int := 10
+    Public f As Int := 5
 End Class
 

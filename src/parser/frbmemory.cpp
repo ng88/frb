@@ -167,6 +167,8 @@ FrBSharedMem::FrBSharedMem()
 
 FrBSharedMem::~FrBSharedMem()
 {
+    // FrBBaseObject* are destroyed by GC, not here
+    // here we just care about FrBBaseObject* array
     for(Storage::iterator it = _mem.begin(); it != _mem.end(); ++it)
 	delete[] it->second;
 }
@@ -178,9 +180,6 @@ void FrBSharedMem::addClass(const FrBClass * c)
     int shared_count = c->sharedFieldCount();
 
     FrBBaseObject ** tab = new FrBBaseObject*[shared_count];
-
-    for(int i = 0; i < shared_count; ++i)
-	tab[i] = 0;
 
     _mem[c] = tab;
 }

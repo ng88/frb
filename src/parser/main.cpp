@@ -36,7 +36,9 @@ void sharedInit(const FrBClass::ClassContainer * classes, FrBExecutionEnvironmen
 	if(it->first == it->second->name())
 	{
 	    sharedInit(it->second->innerClassList(), e);
-	    it->second->initSharedField(e);
+	  
+	    if(it->second->sharedFieldCount() > 0)
+		it->second->initSharedField(e);
 	}
     }
 }

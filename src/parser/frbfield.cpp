@@ -99,7 +99,7 @@ std::ostream& FrBCodeField::put(std::ostream& stream, int indent) const
     stream << ' ' << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_ASSIGN_REF) 
 	   << ' ' << *_defaultVal;
 
-  return stream << std::endl;
+  return stream << " ' index=" << index() << std::endl;
 }
 
 
