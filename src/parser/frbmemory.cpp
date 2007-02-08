@@ -185,14 +185,14 @@ void FrBSharedMem::addClass(const FrBClass * c)
     _mem[c] = tab;
 }
 
-void FrBSharedMem::setSharedMember(const FrBClass * c, int index, FrBBaseObject * o)
+void FrBSharedMem::setSharedField(const FrBClass * c, int index, FrBBaseObject * o)
 {
     frb_assert(index >= 0 && index < c->sharedFieldCount());
     frb_assert2( _mem.find(c) != _mem.end(), "class c has NOT a shared storage, call addClass() before");
     _mem[c][index] = o;
 }
 
-FrBBaseObject * FrBSharedMem::getSharedMember(const FrBClass * c, int index)
+FrBBaseObject * FrBSharedMem::getSharedField(const FrBClass * c, int index)
 {
     frb_assert(index >= 0 && index < c->sharedFieldCount());
     frb_assert2( _mem.find(c) != _mem.end(), "class c has NOT a shared storage, call addClass() before");

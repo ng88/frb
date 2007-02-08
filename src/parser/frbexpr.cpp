@@ -202,10 +202,12 @@ FrBUnresolvedIdWithContextExpr::FieldEvaluator::FieldEvaluator(FrBField * f)
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    if(!_fl->shared() && !me)
+    if(_fl->shared()) /* shared field */
+	return return e.sharedMem().getSharedField(_fl);
+    else if(!me) /* non shared but called as a shared field */
 	throw FrBInvalidNonSharedException(_fl);
-
-    return me->getField(_fl->index());
+    else /* non shared field */
+	return me->getField(_fl);
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::FieldEvaluator::getClass() const

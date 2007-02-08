@@ -23,6 +23,7 @@
 #include "../common/string.h"
 #include "../common/assert.h"
 #include "frbexceptions.h"
+#include "frbfield.h"
 
 class FrBClass;
 
@@ -36,7 +37,7 @@ protected:
   //bool     _const;
     int      _mem_pos;
     
-    
+
 public:
 
     enum { NULL_OBJECT = 0, UNMANAGED_OBJECT = -2 };
@@ -54,6 +55,12 @@ public:
 
     /** Add field o */
     virtual void addField(int i, FrBBaseObject * o) throw (FrBEvaluationException) = 0;
+
+    /** Overloaded function, provided for convenience */
+    inline FrBBaseObject* getField(const FrBField * f);
+
+    /** Overloaded function, provided for convenience */
+    inline void addField(const FrBField * f, FrBBaseObject * o);
     
     //inline void setConst(bool v) { _const = v; }
     //inline bool isConst() { return _const; }
@@ -112,3 +119,38 @@ public:
 
 #endif
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*** Inlined  ***/
+
+
+inline FrBBaseObject* FrBBaseObject::getField(const FrBField * f)
+{
+    frb_assert2(!f->shared(), "f MUST be a non-shared field");
+    return getField(f->index());
+}
+
+inline void FrBBaseObject::addField(const FrBField * f, FrBBaseObject * o)
+{
+    frb_assert2(!f->shared(), "f MUST be a non-shared field");
+    setField(f->index(), o);
+}

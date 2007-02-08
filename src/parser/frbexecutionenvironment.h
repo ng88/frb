@@ -55,6 +55,7 @@ public:
     inline FrBResolveEnvironment * resolveEnv() { return _resolveEnv; }
     
     inline FrBMemStack& stack() { return _stack; }
+    inline FrBSharedMem& sharedMem() { return _sharedMem; }
     inline FrBMemory * memory() { return _mem; }
     
     /** Add the object to the FrBMemory so that it can be garbage-collected */

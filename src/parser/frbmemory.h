@@ -167,24 +167,39 @@ private:
 
     Storage _mem;
 
+protected:
+
+    /** Set the shared field 'index' of the class 'c' to 'o'
+      * addClass(c) must be called before the first call of this function
+      */
+    void setSharedField(const FrBClass * c, int index, FrBBaseObject * o);
+
+    /** Get the value of the shared field 'index' of the class 'c'
+      * addClass(c) must be called before the first call of this function
+      */
+    FrBBaseObject * getSharedField(const FrBClass * c, int index);
+
 public:
 
     FrBSharedMem();
     ~FrBSharedMem();
 
     
-    /** Create space for shared member of the class 'c' */
+    /** Create space for shared field of the class 'c' */
     void addClass(const FrBClass * c);
 
-    /** Set the shared member 'index' of the class 'c' to 'o'
-      * addClass(c) must be called before the first call of this function
-      */
-    void setSharedMember(const FrBClass * c, int index, FrBBaseObject * o);
 
-    /** Get the shared member 'index' of the class 'c'
-      * addClass(c) must be called before the first call of this function
+    /** Set the value of the shared field 'f' to 'o'
+      * addClass(f->container()) must be called before the first call of this function
       */
-    FrBBaseObject * getSharedMember(const FrBClass * c, int index);
+    inline void setSharedField(const FrBField * f, FrBBaseObject * o);
+
+
+    /** Get the value of the shared field 'f'
+      * addClass(f->container()) must be called before the first call of this function
+      */
+    inline FrBBaseObject * getSharedField(const FrBField * f);
+
 
 };
 
@@ -330,6 +345,19 @@ inline bool FrBMemStack::overflow() const
     return _stack_ptr > 5000;
 }
 
+/*          FrBSharedMem             */
+
+inline void setSharedField(const FrBField * f, FrBBaseObject * o)
+{
+    frb_assert2(f->shared(), "f MUST be a shared field");
+    setSharedField(f->container(), f->index(), o);
+}
+
+inline FrBBaseObject * getSharedField(const FrBField * f)
+{
+    frb_assert2(f->shared(), "f MUST be a shared field");
+    return getSharedField(f->container(), f->index());
+}
 
 
 #endif
