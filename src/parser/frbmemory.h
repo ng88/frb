@@ -347,13 +347,13 @@ inline bool FrBMemStack::overflow() const
 
 /*          FrBSharedMem             */
 
-inline void setSharedField(const FrBField * f, FrBBaseObject * o)
+inline void FrBSharedMem::setSharedField(const FrBField * f, FrBBaseObject * o)
 {
     frb_assert2(f->shared(), "f MUST be a shared field");
     setSharedField(f->container(), f->index(), o);
 }
 
-inline FrBBaseObject * getSharedField(const FrBField * f)
+inline FrBBaseObject * FrBSharedMem::getSharedField(const FrBField * f)
 {
     frb_assert2(f->shared(), "f MUST be a shared field");
     return getSharedField(f->container(), f->index());

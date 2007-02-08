@@ -16,6 +16,7 @@
 
 
 #include "frbbaseobject.h"
+#include "frbfield.h"
 
 /*            FrBBindingObject            */
 
@@ -49,3 +50,5 @@ FrBUserObject::~FrBUserObject()
 {
   delete[] _fields;
 }
+
+

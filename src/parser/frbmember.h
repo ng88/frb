@@ -49,6 +49,7 @@ public:
     inline void setName(const String& n) { _name = n; }
     inline const String& name() const { return _name; }
 
+    /** Return the full name of this member, ie Module1.Module2.MyClass1 */
     String fullName() const;
 
 

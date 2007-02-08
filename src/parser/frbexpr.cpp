@@ -203,7 +203,7 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBBaseObjec
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     if(_fl->shared()) /* shared field */
-	return return e.sharedMem().getSharedField(_fl);
+	return e.sharedMem().getSharedField(_fl);
     else if(!me) /* non shared but called as a shared field */
 	throw FrBInvalidNonSharedException(_fl);
     else /* non shared field */
@@ -228,11 +228,14 @@ bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isAssignable() const
 void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvironment& e,
         FrBBaseObject* me, FrBBaseObject* val) const throw (FrBEvaluationException)
 {
-    if(!_fl->shared() && !me)
+    if(_fl->shared()) /* shared field */
+	e.sharedMem().setSharedField(_fl, val);
+    else if(!me) /* non shared but called as a shared field */
 	throw FrBInvalidNonSharedException(_fl);
+    else /* non shared field */
+	me->addField(_fl, val);
 
 
-    me->addField(_fl->index(), val);
 }
 
 /////////////////

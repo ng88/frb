@@ -223,8 +223,19 @@ public:
       */
     inline long unsigned int typeID() const { return reinterpret_cast<unsigned long int>(this); }
    
-    /** Return the full name of this class, ie Module1.Module2.MyClass1 */
+    /** Call this to initialize the shared storage for shared fields of this class
+      *  (it also evaluates the init expression of the shared fields)
+      */
+    void initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+    {
+	/* add storage space */
+	e.sharedMem().addClass(this);
 
+	/* initialize fields */
+	for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+	    if(it->second->shared())
+		e.sharedMem().setSharedField(it->second, it->second->evalDefaultValue(e));
+    }
     
     /** Allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);

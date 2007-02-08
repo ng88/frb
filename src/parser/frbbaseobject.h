@@ -28,6 +28,7 @@
 class FrBClass;
 
 
+
 /** Represents a general FrB object (ie an instance of a FrB Class) */
 class FrBBaseObject
 {
@@ -117,7 +118,6 @@ public:
 
 };
 
-#endif
 
 
 
@@ -134,13 +134,9 @@ public:
 
 
 
+/********* Inlined ************/
 
 
-
-
-
-
-/*** Inlined  ***/
 
 
 inline FrBBaseObject* FrBBaseObject::getField(const FrBField * f)
@@ -152,5 +148,16 @@ inline FrBBaseObject* FrBBaseObject::getField(const FrBField * f)
 inline void FrBBaseObject::addField(const FrBField * f, FrBBaseObject * o)
 {
     frb_assert2(!f->shared(), "f MUST be a non-shared field");
-    setField(f->index(), o);
+    addField(f->index(), o);
 }
+
+
+
+
+
+
+
+
+#endif
+
+

@@ -18,6 +18,7 @@
 #include "frbexpr.h"
 #include "frbclass.h"
 #include "frbkeywords.h"
+#include "frbexecutionenvironment.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m)
 {

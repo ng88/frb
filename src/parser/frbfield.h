@@ -21,13 +21,15 @@
 #include "frbexceptions.h"
 #include "../common/assert.h"
 
-#include "frbexecutionenvironment.h"
+
 #include "frbmember.h"
 #include "frbexprlist.h"
 
 class FrBClass;
 class FrBExpr;
 class FrBTypeExpr;
+class FrBExecutionEnvironment;
+class FrBResolveEnvironment;
 
 class FrBField : public FrBMember /* a frb field */
 {

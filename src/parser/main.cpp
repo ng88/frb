@@ -26,8 +26,17 @@
 using namespace std;
 
 inline void addClass(FrBParser::Tree * tree, FrBClass * c) { (*tree)[c->name()] = c; }
-inline void addClassAlias(FrBParser::Tree * tree, FrBClass * c, String name)  { (*tree)[name] = c; }
+inline void addClassAlias(FrBParser::Tree * tree, FrBClass * c, String name) { (*tree)[name] = c; }
 
+/** stupid shared initialization */
+void sharedInit(const FrBClass::ClassContainer * classes, FrBExecutionEnvironment& e)
+{
+    for(FrBClass::ClassContainer::const_iterator it =  classes->begin(); it != classes->end(); ++it)
+    {
+	sharedInit(it->second->innerClassList(), e);
+	it->second->initSharedField(e);
+    }
+}
 
 void usage(char * exe)
 {
@@ -201,12 +210,16 @@ int main(int argc, char ** argv)
         FrBExecutionEnvironment env(&memory, &renv);
 
         env.addGarbagedObject(FrBNull::nullValue());
-        
+
         FrBClass * main = renv.getClassFromPath(arg_main_class);
         
         if(args_switch[EXEC])
         {
     
+	    /****** Shared initialization *******/
+	    cout << "Shared initialization...\n";
+	    sharedInit(tree, env);
+
             cout << "Call to " << arg_main_class << "::" << arg_main_function;
             
             if(arg_int_param > -1) 

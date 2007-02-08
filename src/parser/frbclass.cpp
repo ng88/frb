@@ -122,9 +122,9 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
 {
   e.stack().push(o);
   
-  int i = 0;
   for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
-      o->addField(i++, it->second->evalDefaultValue(e));
+      if(!it->second->shared())
+	  o->addField(it->second, it->second->evalDefaultValue(e));
     
   e.stack().pop();
 }
