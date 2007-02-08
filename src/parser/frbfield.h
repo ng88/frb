@@ -65,7 +65,7 @@ public:
     FRB_ASSERT_CODE(
 	void setShared(bool v)
         {
-	    frb_assert2(container() && index() == -1, "field index can't be changed when container is set");
+	    frb_assert2(!container(), "field index can't be changed when container is set");
 	    FrBMember::setShared(v); 
 	} 
 	           );

@@ -33,8 +33,11 @@ void sharedInit(const FrBClass::ClassContainer * classes, FrBExecutionEnvironmen
 {
     for(FrBClass::ClassContainer::const_iterator it =  classes->begin(); it != classes->end(); ++it)
     {
-	sharedInit(it->second->innerClassList(), e);
-	it->second->initSharedField(e);
+	if(it->first == it->second->name())
+	{
+	    sharedInit(it->second->innerClassList(), e);
+	    it->second->initSharedField(e);
+	}
     }
 }
 
