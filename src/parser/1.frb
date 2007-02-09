@@ -24,7 +24,7 @@ Public Class MonAppli
 
     Public Class A
     
-        Public Shared b As Int := 1024
+        Public Shared c As Int := 1024
         Public beee As A := Me
         
         Public a As Int :=  2
@@ -40,6 +40,7 @@ End Class
 Public Class Main
 
     Public foo As Int
+    
     
     Public Shared Sub main()
 
@@ -80,12 +81,22 @@ Public Class Main
         Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
         Debug.println("")
         
-        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.b))
-        Debug.println("MonAppli.A.b=" + MonAppli.A.b)
-'         Debug.println("a.b " + a.b)
-'         Debug.println("b.b " + b.b)
-'         Debug.println("c.b " + c.b)
-'         Debug.println("d.b " + d.b) 
+        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println("a.c " + a.c)
+        Debug.println("b.c " + b.c)
+        Debug.println("c.c " + c.c)
+        Debug.println("d.c " + d.c)
+
+        
+        MonAppli.A.b := 12
+        
+        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println("a.c " + a.c)
+        Debug.println("b.c " + b.c)
+        Debug.println("c.c " + c.c)
+        Debug.println("d.c " + d.c) 
 
     End Sub
 

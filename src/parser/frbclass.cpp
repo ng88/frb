@@ -158,6 +158,24 @@ void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 
 }
 
+void FrBClass::initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+{
+    /* add storage space */
+    e.sharedMem().addClass(this);
+
+    /* initialize fields */
+    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+	if(it->second->shared())
+	{
+	    FrBBaseObject * o = it->second->evalDefaultValue(e);
+	    e.sharedMem().setSharedField(it->second,o );
+	    std::cout << "init " << it->second->fullName() << " " << o
+		      << " " << e.sharedMem().getSharedField(it->second) << "\n";
+
+	}
+}
+    
+
 
 std::ostream& FrBClass::put(std::ostream& sout, int level) const
 {

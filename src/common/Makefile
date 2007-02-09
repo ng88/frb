@@ -30,7 +30,7 @@ start:
 
 
 string.o: string.h string.cpp
-
+misc.o: misc.h misc.cpp
 
 .PHONY: clean
 

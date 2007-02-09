@@ -224,26 +224,10 @@ public:
     inline long unsigned int typeID() const { return reinterpret_cast<unsigned long int>(this); }
    
     /** Call this to initialize the shared storage for shared fields of this class
-      *  (it also evaluates the init expression of the shared fields)
+      * (it also evaluates the init expression of the shared fields)
+      *  Warning: initSharedField() does NOT initialize innerClass() shared fields
       */
-    void initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
-    {
-	/* add storage space */
-	e.sharedMem().addClass(this);
-
-	std::cout << "init begin with " << fullName() << "\n";
-
-	/* initialize fields */
-	for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
-	    if(it->second->shared())
-	    {
-		FrBBaseObject * o = it->second->evalDefaultValue(e);
-		e.sharedMem().setSharedField(it->second,o );
-		std::cout << "init " << it->second->fullName() << " " << o
-			  << " " << e.sharedMem().getSharedField(it->second) << "\n";
-
-	    }
-    }
+    void initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
     /** Allocate instance and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);

@@ -17,6 +17,7 @@
 
 #include "frbexpr.h"
 #include "../common/assert.h"
+#include "../common/misc.h"
 #include "frbkeywords.h"
 #include "frbfunction.h"
 #include "frbresolveenvironment.h"
@@ -204,7 +205,7 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBBaseObjec
 {
     if(_fl->shared()) /* shared field */
 	return e.sharedMem().getSharedField(_fl);
-    else if(!me) /* non shared but called as a shared field */
+    else if(FrBNull::isNull(me) || Misc::isTypeOf<FrBClassWrapper>(me)) /* non shared but called as a shared field */
 	throw FrBInvalidNonSharedException(_fl);
     else /* non shared field */
 	return me->getField(_fl);
@@ -230,7 +231,7 @@ void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvir
 {
     if(_fl->shared()) /* shared field */
 	e.sharedMem().setSharedField(_fl, val);
-    else if(!me) /* non shared but called as a shared field */
+    else if(FrBNull::isNull(me) || Misc::isTypeOf<FrBClassWrapper>(me)) /* non shared but called as a shared field */
 	throw FrBInvalidNonSharedException(_fl);
     else /* non shared field */
 	me->addField(_fl, val);
@@ -366,7 +367,7 @@ void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBa
 {
     frb_assert(_evaluator);
 
-    FrBBaseObject * me = 0;
+    FrBBaseObject * me = FrBNull::nullValue();
 
     if(_evaluator->needMe())
         me = _context->eval(e);
