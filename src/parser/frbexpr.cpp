@@ -229,6 +229,7 @@ bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isAssignable() const
 void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvironment& e,
         FrBBaseObject* me, FrBBaseObject* val) const throw (FrBEvaluationException)
 {
+    std::cout << "assign " << me << " (" << me->getClass()->fullName() << ") to " << _fl->fullName() << " (shared=" << _fl->shared() << ")\n";
     if(_fl->shared()) /* shared field */
 	e.sharedMem().setSharedField(_fl, val);
     else if(FrBNull::isNull(me) || Misc::isTypeOf<FrBClassWrapper>(me)) /* non shared but called as a shared field */
@@ -250,7 +251,9 @@ FrBUnresolvedIdWithContextExpr::FunctionEvaluator::FunctionEvaluator(FrBFunction
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return e.addGarbagedObject(new FrBFunctionWrapper(_fn));
+    //return e.addGarbagedObject(new FrBFunctionWrapper(_fn));
+    frb_assert2(false, "not yet implemented");
+    return  0; ++//prob ici il faudrait revoir ca car ca merde pour la detection statique
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::getClass() const
@@ -273,14 +276,16 @@ FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return e.addGarbagedObject(new FrBClassWrapper(_cl));
+    //return e.addGarbagedObject(new FrBClassWrapper(_cl));
+    frb_assert2(false, "not yet implemented");
+    return  0;
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
 {
     //return FrBClassWrapper::getCppClass();
     return _cl;
-}
+   }
 
 bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
 {
