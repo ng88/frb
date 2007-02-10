@@ -219,6 +219,12 @@ public:
     ~FrBReturnStatement();
 };
 
+class FrBForLoopStatement : public FrBBlockStatement
+{
+public:
+    FrBForLoopStatement(FrBLocalVarExpr * var, FrBExpr * init, int direction, FrBExpr * step);
+
+};
 
 #endif
 

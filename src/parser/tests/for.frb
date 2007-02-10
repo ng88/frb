@@ -6,7 +6,9 @@ Public Class Main
     
     Public Shared Sub main()
 
-        For a
+        For a := 5 To 12
+            Debug.println("test")
+        Next
      
     End Sub
 

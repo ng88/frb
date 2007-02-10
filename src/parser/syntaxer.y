@@ -1094,12 +1094,13 @@ for_increment_direction: /* To or DownTo */
     | FRB_KW_TOKEN_DOWNTO { $<vint>$ = -1; }
     ;
 
+
 for_loop: /* For id [As Type] := expr To|DownTo expr [Step expr] */
-      FRB_KW_TOKEN_FOR FRB_IDENTIFIER /*as_type_optionnal declare_init_nonempty for_increment_direction expr for_loop_step
-    | function_content_list
-    | FRB_KW_TOKEN_END FRB_KW_TOKEN_FOR
+      FRB_KW_TOKEN_FOR FRB_IDENTIFIER as_type_optionnal declare_init_nonempty for_increment_direction expr for_loop_step new_line
+      function_content_list
+      FRB_KW_TOKEN_NEXT
     ;
-				      */
+
     //TODO : pour le for avec déclaration (ie <=> for(int i = 0; ....)) faire une
     //       forme sépciale qui déclare directement For i As Int = 0
 
