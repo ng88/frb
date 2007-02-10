@@ -109,7 +109,7 @@ Public Class Main
         Debug.println("a.c " + a.c)
         Debug.println("b.c " + b.c)
         Debug.println("c.c " + c.c)
-        Debug.println("d.c " + d.c) 
+        Debug.println("d.c " + d.c)
 
     End Sub
 

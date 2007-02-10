@@ -293,9 +293,6 @@ function_type:
        FRB_KW_TOKEN_SUB { $<str>$ = $<str>1; }
      | FRB_KW_TOKEN_FUNCTION { $<str>$ = $<str>1; }
 
-function_return_type:
-       as_type     { $<vtype>$ = $<vtype>1; }
-     | /* empty */ { $<vtype>$ = 0; }
  
 function:
       fn_attr /*1*/ function_type /*2*/ sub_name /*3*/
@@ -349,7 +346,7 @@ function:
 	   block_stack.push(nfn);
            
       }
-      fn_arg_list /*5*/ function_return_type /*6*/ /* sub/function */
+      fn_arg_list /*5*/ as_type_optionnal /*6*/ /* sub/function */
       { /*7*/
            if(current_fn()->sub() && $<vtype>6 != 0)
                 frb_error->error(FrBErrors::FRB_ERR_SUB_RETURN_TYPE,
@@ -416,6 +413,7 @@ fn_stat: /* stat new_line */
     | delete_stat new_line /* destruction */
     | return_stat new_line /* return  */
     | typedef_stat /* typedef */
+    | for_loop new_line /* for */
     ;
     
 if_def: /* if <expr> then <lf> stats */
@@ -485,7 +483,7 @@ dim_stat: /* Dim nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As ty
       FRB_KW_TOKEN_DECLARE declare_list
     ;
 
-declare_init:
+declare_init_nonempty:
       FRB_KW_TOKEN_OP_ASSIGN_VAL expr
       {
             frb_error->error(FrBErrors::FRB_ERR_DECLARE_INIT_ASSIGN,
@@ -497,7 +495,12 @@ declare_init:
             $<expr>$ = 0;
       }
     | FRB_KW_TOKEN_OP_ASSIGN_REF expr { $<expr>$ = $<expr>2; }
+    ;
+
+declare_init:
+      declare_init_nonempty           { $<expr>$ = $<expr>1; }
     | /* empty */                     { $<expr>$ = 0; }
+    ;
 
 declare_list: /* nom1_1, nom1_2, ... As type [= init], nom2_1, nom2_2, ... As type [= init], ... */
       declare_list FRB_KW_TOKEN_OP_LIST_SEP identifier_list as_type declare_init
@@ -768,6 +771,11 @@ as_type:
           $<vtype>$ = $<vtype>2;
       }
     ;
+
+as_type_optionnal:
+       as_type     { $<vtype>$ = $<vtype>1; }
+     | /* empty */ { $<vtype>$ = 0; }
+    ;
     
 // type_single: /* "single" type, no array */
 //       FRB_KW_TOKEN_CONST FRB_KW_TOKEN_OP_O_BRACKET expr FRB_KW_TOKEN_OP_C_BRACKET /* Const type dynamique */
@@ -940,8 +948,8 @@ expr:
     | expr FRB_KW_TOKEN_OP_IS expr                           /* expr Is expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IS); }
 
-//     | expr FRB_KW_TOKEN_OP_CLASS_TYPEOF expr               /* expr IsTypeOf expr */
-//     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr */
+//     | expr FRB_KW_TOKEN_OP_CLASS_TYPEOF expr               /* expr IsTypeOf expr  |definissable sur object ca peut etre sympa */
+//     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr  | monobj.isTypeOf(Type|Object)*/
 //     | expr FRB_KW_TOKEN_OP_CLASS_INHERITS expr           /* expr Inherits expr */
     
     | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
@@ -1076,8 +1084,22 @@ array_elt_list:
     | expr
     ;
 
-    
+for_loop_step: /* Step expr */
+      FRB_KW_TOKEN_STEP expr { $<expr>$ = $<expr>2; }
+    | /* nothing */ { $<expr>$ = 0; }
+    ;
 
+for_increment_direction: /* To or DownTo */
+      FRB_KW_TOKEN_TO { $<vint>$ = 1; }
+    | FRB_KW_TOKEN_DOWNTO { $<vint>$ = -1; }
+    ;
+
+for_loop: /* For id [As Type] := expr To|DownTo expr [Step expr] */
+      FRB_KW_TOKEN_FOR FRB_IDENTIFIER /*as_type_optionnal declare_init_nonempty for_increment_direction expr for_loop_step
+    | function_content_list
+    | FRB_KW_TOKEN_END FRB_KW_TOKEN_FOR
+    ;
+				      */
     //TODO : pour le for avec déclaration (ie <=> for(int i = 0; ....)) faire une
     //       forme sépciale qui déclare directement For i As Int = 0
 
