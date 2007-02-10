@@ -76,7 +76,7 @@
                                 FrBErrors::FRB_ERR_SEMANTIC, \
                                 frb_lexer->lineno(), "", "", "", \
                                 String(frb_lexer->YYText()) ); \
-                return new FrBOutsideMeExpr(current_field()); \
+                return new FrBOutsideMeExpr(current_field(), !current_field()->shared()); \
 	    } \
             else \
 	    { \
@@ -85,7 +85,7 @@
                                 FrBErrors::FRB_ERR_SEMANTIC, \
                                 frb_lexer->lineno(), "", "", "", \
                                 String(frb_lexer->YYText()) ); \
-                return new FrBInsideMeExpr(current_fn()); \
+                return new FrBInsideMeExpr(current_fn(), !current_fn()->shared()); \
 	    } \
              \
          } \

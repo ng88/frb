@@ -35,6 +35,11 @@ bool FrBExpr::isAssignable() const
     return false;
 }
 
+bool FrBExpr::isInstance() const
+{
+    return true;
+}
+
 void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw (FrBEvaluationException)
 {
     //frb_assert(isAssignable());
@@ -205,8 +210,6 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::FieldEvaluator::eval(FrBBaseObjec
 {
     if(_fl->shared()) /* shared field */
 	return e.sharedMem().getSharedField(_fl);
-    else if(FrBNull::isNull(me) || Misc::isTypeOf<FrBClassWrapper>(me)) /* non shared but called as a shared field */
-	throw FrBInvalidNonSharedException(_fl);
     else /* non shared field */
 	return me->getField(_fl);
 }
@@ -229,15 +232,17 @@ bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isAssignable() const
 void FrBUnresolvedIdWithContextExpr::FieldEvaluator::refAssign(FrBExecutionEnvironment& e,
         FrBBaseObject* me, FrBBaseObject* val) const throw (FrBEvaluationException)
 {
-    std::cout << "assign " << me << " (" << me->getClass()->fullName() << ") to " << _fl->fullName() << " (shared=" << _fl->shared() << ")\n";
     if(_fl->shared()) /* shared field */
 	e.sharedMem().setSharedField(_fl, val);
-    else if(FrBNull::isNull(me) || Misc::isTypeOf<FrBClassWrapper>(me)) /* non shared but called as a shared field */
-	throw FrBInvalidNonSharedException(_fl);
     else /* non shared field */
 	me->addField(_fl, val);
 
 
+}
+
+bool FrBUnresolvedIdWithContextExpr::FieldEvaluator::isInstance() const
+{
+    return true;
 }
 
 /////////////////
@@ -251,9 +256,7 @@ FrBUnresolvedIdWithContextExpr::FunctionEvaluator::FunctionEvaluator(FrBFunction
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    //return e.addGarbagedObject(new FrBFunctionWrapper(_fn));
-    frb_assert2(false, "not yet implemented");
-    return  0; ++//prob ici il faudrait revoir ca car ca merde pour la detection statique
+    return e.addGarbagedObject(new FrBFunctionWrapper(_fn));
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::FunctionEvaluator::getClass() const
@@ -266,6 +269,11 @@ bool FrBUnresolvedIdWithContextExpr::FunctionEvaluator::needMe() const
     return !_fn->shared();
 }
 
+bool FrBUnresolvedIdWithContextExpr::FunctionEvaluator::isInstance() const
+{
+    return true;
+}
+
 /////////////////
 
 FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
@@ -276,9 +284,8 @@ FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    //return e.addGarbagedObject(new FrBClassWrapper(_cl));
-    frb_assert2(false, "not yet implemented");
-    return  0;
+    frb_warning2(false, "using FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval()");
+    return e.addGarbagedObject(new FrBClassWrapper(_cl));
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
@@ -288,6 +295,11 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
    }
 
 bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
+{
+    return false;
+}
+
+bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::isInstance() const
 {
     return false;
 }
@@ -319,13 +331,23 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
 
     try
-    { /* look for a field first */
-        _evaluator = new FieldEvaluator(current_class->findField(_name));
+    { /* is this a field ? */
+	FrBField * f = current_class->findField(_name);
+
+	/* yes. is the context an instance or a class ? */
+	if(!_context->isInstance())
+	{
+	    /* this is a class, so field must be shared */
+	    if(!f->shared())
+		throw FrBInvalidNonSharedException(f);
+	}
+
+	/* ok fine, we'll behave like a field now */
+	_evaluator = new FieldEvaluator(f);
     }
     catch(FrBFieldNotFoundException ex)
-    {
-        /* look for a function */
-        
+    { 
+
 //         FrBClass::FnPairIt pit = current_class->findFunctions(_name);
 //         
 //         if(pit.second->second)
@@ -333,8 +355,14 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 //         else if(pit.first != current_class->functionList()->end())
 //             _evaluator = new FunctionEvaluator( pit.first->second );
 //         else /* look for a class */
-            _evaluator = new ClassEvaluator(e.getClassFromName(_name, current_class));
+
+       /* no, is this a class ? */
+	FrBClass * c = e.getClassFromName(_name, current_class);
+
+       /* ok fine, we'll behave like a class now */
+	_evaluator = new ClassEvaluator(c);
     }
+
 }
 
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const
@@ -344,15 +372,15 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
 
     FrBBaseObject * me = FrBNull::nullValue();
 
-    if(_evaluator->needMe())
-    {
-        me = _context->eval(e);
+    me = _context->eval(e);
 
-	if(FrBNull::isNull(me))
+    if(_evaluator->needMe() && FrBNull::isNull(me))
 	    throw FrBNullReferenceException();
-    }
 
-    return _evaluator->eval(me, e);
+    if(isInstance())
+	return _evaluator->eval(me, e);
+    else
+	return  FrBNull::nullValue();
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
@@ -367,6 +395,13 @@ bool FrBUnresolvedIdWithContextExpr::isAssignable() const
     return _evaluator->isAssignable();
 }
 
+bool FrBUnresolvedIdWithContextExpr::isInstance() const
+{
+   frb_assert(_evaluator);
+   return _evaluator->isInstance();
+}
+
+
 void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* v) const
     throw (FrBEvaluationException)
 {
@@ -374,8 +409,12 @@ void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBa
 
     FrBBaseObject * me = FrBNull::nullValue();
 
-    if(_evaluator->needMe())
-        me = _context->eval(e);
+    me = _context->eval(e);
+
+    if(_evaluator->needMe() && FrBNull::isNull(me))
+	    throw FrBNullReferenceException();
+
+    frb_assert(isInstance());
 
     _evaluator->refAssign(e, me, v);
 }
@@ -585,11 +624,26 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
             
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
+
+       
+/*          FrBMeExpr                 */
+
+FrBMeExpr::FrBMeExpr(bool nonSharedContext)
+    : _nonSharedContext(nonSharedContext)
+{
+}
+
+
+bool FrBMeExpr::isInstance()
+{
+    return _nonSharedContext;
+}
+
  
 /*        FrBInsideMeExpr                */
 
-FrBInsideMeExpr::FrBInsideMeExpr(FrBCodeFunction* f)
- : _fn(f)
+FrBInsideMeExpr::FrBInsideMeExpr(FrBCodeFunction* f, bool nonSharedContext)
+ : FrBMeExpr(nonSharedContext), _fn(f)
 {
 }
 
@@ -623,8 +677,8 @@ std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
 
 /*              FrBOutisdeMeExpr           */
 
-FrBOutsideMeExpr::FrBOutsideMeExpr(FrBField * t)
-  : _field(t)
+FrBOutsideMeExpr::FrBOutsideMeExpr(FrBField * t, bool nonSharedContext)
+  : FrBMeExpr(nonSharedContext),_field(t)
 {
 }
 

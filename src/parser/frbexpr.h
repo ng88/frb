@@ -65,11 +65,14 @@ public:
     /** Evaluate expression (can be called ONLY IF resolveAndCheck() was called before) */
     virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
     
-    /** Return true if expr can be assigned, ie if we can write <expr> := something */
+    /** Return true if expr can be assigned, ie if we can write <expr> := something (default is false) */
     virtual bool isAssignable() const;
     
     /** Do assignement */
     virtual void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
+
+    /** Return true if expr is an instance (and not a type) (default is true) */
+    virtual bool isInstance() const;
     
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
@@ -89,7 +92,14 @@ class FrBTypeExpr : public FrBExpr
   */
 class FrBMeExpr : public FrBExpr
 {
+protected:
+    bool _nonSharedContext;
 public:
+
+    /** sharedContext indicates wheter we are in a shared member definition or not
+     */
+    FrBMeExpr(bool nonSharedContext);
+    bool isInstance();
     virtual ~FrBMeExpr() {}
 };
 
@@ -139,10 +149,14 @@ protected:
         virtual void refAssign(FrBExecutionEnvironment&, FrBBaseObject* me, FrBBaseObject* val) const
             throw (FrBEvaluationException) {}
 
+	//virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
+
         virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException) = 0;
 
 	virtual String name() const = 0;
+	virtual bool isInstance() const = 0;
+
     };
     
     /** field evaluator, return the value of the field */
@@ -159,6 +173,7 @@ protected:
         bool isAssignable() const;
 	String name() const { return _fl->fullName(); }
         void refAssign(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject*) const throw (FrBEvaluationException);
+	bool isInstance() const;
     };
     
     /** function/sub evaluator (ie it returns an objet of the 'Function' type,
@@ -175,6 +190,7 @@ protected:
         const FrBClass* getClass() const;
         bool needMe() const;
 	String name() const { return _fn->fullName(); }
+	bool isInstance() const;
     };
     
     /** class evaluator (ie it returns an objet of the 'Class' type)*/
@@ -189,6 +205,7 @@ protected:
         const FrBClass* getClass() const;
         bool needMe() const;
 	String name() const { return _cl->fullName(); }
+	bool isInstance() const;
     };
     
     FrBExpr *                _context;
@@ -216,11 +233,13 @@ public:
     
     bool isAssignable() const;
     void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
+
+    bool isInstance() const;
 };
 
 
-/** Member operator (.) */
-/*class FrBMemberOpExpr : public FrBExpr
+
+/*  Member operator (.) class FrBMemberOpExpr : public FrBExpr
 {
     FrBExpr               *_lhs;
     FrBUnresolvedIdExpr   *_rhs;
@@ -346,7 +365,7 @@ private:
     int               _varid;
     
 public:
-    FrBInsideMeExpr(FrBCodeFunction * f);
+    FrBInsideMeExpr(FrBCodeFunction * f, bool nonSharedContext);
     ~FrBInsideMeExpr();
 
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
@@ -362,7 +381,7 @@ private:
     FrBField     *    _field;
     
 public:
-    FrBOutsideMeExpr(FrBField * t);
+    FrBOutsideMeExpr(FrBField * t, bool nonSharedContext);
     ~FrBOutsideMeExpr();
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);

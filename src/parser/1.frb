@@ -22,6 +22,7 @@ Public Class MonAppli
         
         Public Shared Function test() As A
             Dim a As A
+            a.a := a.a + 12
             Return a
         End Function
     
@@ -89,21 +90,22 @@ Public Class Main
         
         Debug.println("MonAppli.Dem.t=" + MonAppli.Dem.t)
         Debug.println("MonAppli.Dem.test(3) + 2=" + (MonAppli.Dem.test(3) + 2))
-        Debug.println("MonAppli.Dem.test().champs=" + MonAppli.Dem.test().champs)
+        Debug.println("MonAppli.Dem.test().a=" + MonAppli.Dem.test().a)
         Debug.println("")
+
         
-        'Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
-        'Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
         Debug.println("a.c " + a.c)
         Debug.println("b.c " + b.c)
         Debug.println("c.c " + c.c)
         Debug.println("d.c " + d.c)
 
         
-        'MonAppli.A.b := 12
+        MonAppli.A.c := MonAppli.A.c * 2
         
-        'Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
-        'Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
         Debug.println("a.c " + a.c)
         Debug.println("b.c " + b.c)
         Debug.println("c.c " + c.c)
