@@ -15,7 +15,7 @@
  * Partial classe
  
  
- *** Beaucoup de choses sont obsoletes, cf le document "FrB Specification [draft]" pour une version correcte ***
+ *** Beaucoup de choses sont obsoletes (comme dans le document "FrB Specification [draft]" :/) ***
  
  --
  Il est déconseillé d'utiliser des id commencant par une maj mais ce n'est pas illégal.
@@ -166,10 +166,10 @@
  Les boucles :
  Dim i As Int
  For i = dep To|DownTo fin [Step pas]
- Next i
+ Next
  'ou
  For i As Int = dep To|DownTo fin [Step pas]
- Next i
+ Next
  
  Do [While condition]
  Loop [Until condition]
