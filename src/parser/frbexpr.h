@@ -145,7 +145,7 @@ protected:
 	virtual String name() const = 0;
     };
     
-    /** field evalutor, return the value of the field */
+    /** field evaluator, return the value of the field */
     class FieldEvaluator : public Evaluator
     {
      private:
@@ -161,7 +161,7 @@ protected:
         void refAssign(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject*) const throw (FrBEvaluationException);
     };
     
-    /** function/sub evalutor (ie it returns an objet of the 'Function' type,
+    /** function/sub evaluator (ie it returns an objet of the 'Function' type,
       * it doesn't eval the function)
       */
     class FunctionEvaluator : public Evaluator
@@ -177,7 +177,7 @@ protected:
 	String name() const { return _fn->fullName(); }
     };
     
-    /** class evalutor (ie it returns an objet of the 'Class' type)*/
+    /** class evaluator (ie it returns an objet of the 'Class' type)*/
     class ClassEvaluator : public Evaluator
     {
      private:
@@ -321,7 +321,12 @@ public:
 //
 //    ca ne dispense pas des templates
 //
-// 
+// introspection :
+//
+// Dim c As Class, f As Function
+// c := MyClass    <-- utilise un operator de conversion qui retournera un FrBClassWrapper(MyClass.getClass())
+// d := myFunction
+
 
 
 /*

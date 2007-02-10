@@ -16,7 +16,13 @@ Public Class MonAppli
 
         Public Shared Function test(a As Int) As Int
             Debug.println("Static init... a=" + a)
-            Return a 
+            Return a + 1
+        End Function
+        
+        
+        Public Shared Function test() As A
+            Dim a As A
+            Return a
         End Function
     
     
@@ -81,18 +87,23 @@ Public Class Main
         Debug.println("d.b " + d.a + " @" + Debug.addressof(d) + "." + Debug.addressof(d.b))
         Debug.println("")
         
-        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
-        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println("MonAppli.Dem.t=" + MonAppli.Dem.t)
+        Debug.println("MonAppli.Dem.test(3) + 2=" + (MonAppli.Dem.test(3) + 2))
+        Debug.println("MonAppli.Dem.test().champs=" + MonAppli.Dem.test().champs)
+        Debug.println("")
+        
+        'Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        'Debug.println("MonAppli.A.c=" + MonAppli.A.c)
         Debug.println("a.c " + a.c)
         Debug.println("b.c " + b.c)
         Debug.println("c.c " + c.c)
         Debug.println("d.c " + d.c)
 
         
-        MonAppli.A.b := 12
+        'MonAppli.A.b := 12
         
-        Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
-        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        'Debug.println(""+Debug.addressof(MonAppli.A)+"."+Debug.addressof(MonAppli.A.c))
+        'Debug.println("MonAppli.A.c=" + MonAppli.A.c)
         Debug.println("a.c " + a.c)
         Debug.println("b.c " + b.c)
         Debug.println("c.c " + c.c)
