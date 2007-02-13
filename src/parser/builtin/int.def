@@ -25,6 +25,13 @@ FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * 
     return r;
 }
 
+FrBBaseObject * operator_add_assign_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    FrBInt * i = static_cast<FrBInt*>(me);
+    i->setValue(i->value() + (static_cast<FrBInt*>(arg0))->value());
+    return me;
+}
+
 FrBBaseObject * operator_sub_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() - (static_cast<FrBInt*>(arg0))->value());
@@ -54,6 +61,14 @@ FrBBaseObject * operator_gt_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * m
     return r;
 }
 
+FrBBaseObject * operator_le_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    FrBBool * r = new FrBBool( (static_cast<FrBInt*>(me))->value() <=	
+					(static_cast<FrBInt*>(arg0))->value() );
+    e.addGarbagedObject(r);
+    return r;
+}
+
 
 FrBCppClass * FrBInt::initClass()
 {
@@ -74,6 +89,14 @@ FrBCppClass * FrBInt::initClass()
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_GT, f);
 
+    f = new FrBUnaryCppFunction(operator_le_FrBInt, _cpp_class, false);
+    f->setReturnType(FrBBool::getCppClass());
+    f->setName("operator<=(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_LE, f);
+
     
     f = new FrBUnaryCppFunction(operator_add_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);
@@ -82,6 +105,14 @@ FrBCppClass * FrBInt::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
+
+    f = new FrBUnaryCppFunction(operator_add_assign_FrBInt, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator+=(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD_ASSIGN, f);
 
     f = new FrBUnaryCppFunction(operator_sub_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);

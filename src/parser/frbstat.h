@@ -29,6 +29,7 @@
 class FrBExpr;
 class FrBTypeExpr;
 class FrBClass;
+class FrBBinOpExpr;
 class FrBCodeFunction;
 class FrBStatement;
 

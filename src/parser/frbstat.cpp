@@ -405,7 +405,6 @@ FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int dire
 
 void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    printf("dddd\n");
     _incrementor->resolveAndCheck(e);
     _assignator->resolveAndCheck(e);
     _bounds_checker->resolveAndCheck(e);
@@ -439,6 +438,19 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 std::ostream& FrBForLoopStatement::put(std::ostream& stream, int indent) const
 {
+    _assignator->put(stream);
+
+    stream << std::endl << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_WHILE) << ' ';
+    _bounds_checker->put(stream);
+
+    stream << std::endl;
+
+    FrBBlockStatement::put(stream, indent);
+    _incrementor->put(stream);
+
+    stream << std::endl << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_END) << ' '
+	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_WHILE);
+
     return stream;
 }
 
