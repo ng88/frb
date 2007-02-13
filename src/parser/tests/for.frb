@@ -6,7 +6,7 @@ Public Class Main
     
     Public Shared Sub main()
 
-        For a := 5 To 12
+        For a As Int := 5 To 12 Step 1+1
             Debug.println("test")
         Next
      

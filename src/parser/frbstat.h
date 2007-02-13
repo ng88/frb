@@ -221,8 +221,20 @@ public:
 
 class FrBForLoopStatement : public FrBBlockStatement
 {
+private:
+
+    FrBExpr * _incrementor;
+    FrBExpr *  _assignator;
+    FrBExpr *  _bounds_checker;
+
 public:
-    FrBForLoopStatement(FrBLocalVarExpr * var, FrBExpr * init, int direction, FrBExpr * step);
+    FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step);
+
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    std::ostream& put(std::ostream& stream, int indent = 0) const;
+
+    ~FrBForLoopStatement();
 
 };
 

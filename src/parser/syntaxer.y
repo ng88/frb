@@ -991,7 +991,11 @@ literal_expr:
     | literal_bool { $<expr>$ = $<expr>1; }
     | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
     | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
-    | FRB_IDENTIFIER                  
+    | identifier_expr
+    ;
+
+identifier_expr:
+      FRB_IDENTIFIER                  
       {
       
             String name($<str>1);
@@ -1095,12 +1099,62 @@ for_increment_direction: /* To or DownTo */
     ;
 
 
-for_loop: /* For id [As Type] := expr To|DownTo expr [Step expr] */
-      FRB_KW_TOKEN_FOR FRB_IDENTIFIER as_type_optionnal declare_init_nonempty for_increment_direction expr for_loop_step new_line
-      function_content_list
-      FRB_KW_TOKEN_NEXT
+for_loop: /* For id := expr To|DownTo expr [Step expr] */
+      FRB_KW_TOKEN_FOR /*1*/ identifier_expr /*2*/ declare_init_nonempty /*3*/
+                                 for_increment_direction /*4*/ expr /*5*/ for_loop_step /*6*/ new_line /*7*/
+     {
+        FrBForLoopStatement * b = new FrBForLoopStatement($<expr>2, $<expr>3, $<vint>4, $<expr>5, $<expr>6);
+
+	block_stack.push(b);
+
+      } /*8*/
+      function_content_list /*9*/
+      {
+	  block_stack.pop();
+      } /*10*/
+      FRB_KW_TOKEN_NEXT /*11*/
     ;
+
+//for_loop_dec: /* For id As Type := expr To|DownTo expr [Step expr] */
+//      FRB_KW_TOKEN_FOR /*1*/ identifier_expr /*2*/ as_type /*3*/ declare_init_nonempty /*4*/
+//                                 for_increment_direction /*5*/ expr /*6*/ for_loop_step /*7*/ new_line /*8*/
+//     {
+//	current_block()->addStat(new FrBDeclareStatement(current_fn(), 1, $<vtype>3));
+//
+//        FrBForLoopStatement * b = new FrBForLoopStatement($<expr>2, $<expr>4, $<vint>5, $<expr>6, $<expr>7);
+//
+//	block_stack.push(b);
+//
+//      } /*9*/
+//      function_content_list /*10*/
+//      {
+//	  block_stack.pop();
+//      } /*11*/
+//      FRB_KW_TOKEN_NEXT /*12*/
+//    ;
+
 
     //TODO : pour le for avec déclaration (ie <=> for(int i = 0; ....)) faire une
     //       forme sépciale qui déclare directement For i As Int = 0
+
+/*         FrBDeclareStatement * d = new FrBDeclareStatement(fn, id_list.size(),
+                                                                $<vtype>4, $<expr>5);
+            fn->addStat(d);
+
+            for(CStringList::iterator it = id_list.begin(); it != id_list.end(); ++it)
+            {
+                int var_count = fn->localVarCount();
+
+                d->addVarID(-var_count - 1);
+
+                fn->addLocalVar((*it), $<vtype>4);
+
+                if(fn->localVarCount() == var_count || fn->getParam(*it) != -1)
+                    frb_error->error(FrBErrors::FRB_ERR_REDECL_ID,
+                    FrBErrors::FRB_ERR_SEMANTIC,
+                    frb_lexer->lineno(), "", "", "",
+                    String(*it));
+
+                free(*it);
+		}*/
 

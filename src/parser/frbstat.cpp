@@ -389,3 +389,52 @@ FrBReturnStatement::~FrBReturnStatement()
 {
   delete _val;
 }
+
+    FrBExpr * _incrementor;
+    FrBExpr * _var;
+    FrBExpr * _init;
+    FrBExpr * _max;
+    FrBExpr * _step;
+
+/*             FrBForLoopStatement                    */
+
+FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step)
+    : _var(var), _init(init), _max(max), _step(step)
+{
+    //TODO : _step = -step si direction = -1
+    //      si _step == 0 -> on utilse un incréenteur ++
+    _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD);
+    _assignator = new FrBRefAssignExpr(var, init);
+    _bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_LE);
+}
+
+
+void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+    _incrementor->resolveAndCheck(e);
+    _assignator->resolveAndCheck(e);
+    _bounds_checker->resolveAndCheck(e);
+}
+
+
+void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
+{
+   //Faire break & continue
+}
+
+
+std::ostream& FrBForLoopStatement::put(std::ostream& stream, int indent) const
+{
+    return stream;
+}
+
+
+FrBForLoopStatement::~FrBForLoopStatement()
+{
+    delete _incrementor;
+    delete _assignator;
+    delete  _bounds_checker;
+}
+
+
+
