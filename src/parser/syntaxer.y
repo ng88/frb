@@ -1105,6 +1105,8 @@ for_loop: /* For id := expr To|DownTo expr [Step expr] */
      {
         FrBForLoopStatement * b = new FrBForLoopStatement($<expr>2, $<expr>3, $<vint>4, $<expr>5, $<expr>6);
 
+	current_block()->addStat(b);
+
 	block_stack.push(b);
 
       } /*8*/

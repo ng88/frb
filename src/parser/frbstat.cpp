@@ -390,36 +390,50 @@ FrBReturnStatement::~FrBReturnStatement()
   delete _val;
 }
 
-    FrBExpr * _incrementor;
-    FrBExpr * _var;
-    FrBExpr * _init;
-    FrBExpr * _max;
-    FrBExpr * _step;
 
 /*             FrBForLoopStatement                    */
 
 FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step)
-    : _var(var), _init(init), _max(max), _step(step)
 {
     //TODO : _step = -step si direction = -1
     //      si _step == 0 -> on utilse un incréenteur ++
-    _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD);
+    _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
     _assignator = new FrBRefAssignExpr(var, init);
     _bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_LE);
 }
 
 
-void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    printf("dddd\n");
     _incrementor->resolveAndCheck(e);
     _assignator->resolveAndCheck(e);
     _bounds_checker->resolveAndCheck(e);
+
+    if(!_bounds_checker->getClass()->isCompatibleWith(FrBBool::getCppClass()))
+	throw FrBIncompatibleClassException(_bounds_checker->getClass(), FrBBool::getCppClass());
+
+    FrBBlockStatement::resolveAndCheck(e);
 }
 
 
 void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-   //Faire break & continue
+   //TODO Faire break & continue
+
+    /* var := init */
+    _assignator->eval(e);
+
+    /* while(var <= max) */
+    while( (static_cast<FrBBool*>(FrBClass::forceConvert(_bounds_checker->eval(e), FrBBool::getCppClass())))->value() );
+    {
+
+	FrBBlockStatement::execute(e);
+	
+	/*var++ or var-- or var += step */
+	_incrementor->eval(e);
+    }
+
 }
 
 
@@ -428,12 +442,16 @@ std::ostream& FrBForLoopStatement::put(std::ostream& stream, int indent) const
     return stream;
 }
 
+bool FrBForLoopStatement::allPathContainsAReturn() const
+{
+    return false;
+}
 
 FrBForLoopStatement::~FrBForLoopStatement()
 {
     delete _incrementor;
     delete _assignator;
-    delete  _bounds_checker;
+    delete _bounds_checker;
 }
 
 

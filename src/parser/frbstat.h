@@ -233,6 +233,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
+    bool allPathContainsAReturn() const;
 
     ~FrBForLoopStatement();
 
