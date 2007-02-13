@@ -399,15 +399,20 @@ FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int dire
     //      si _step == 0 -> on utilse un incréenteur ++
     _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
     _assignator = new FrBRefAssignExpr(var, init);
-    _bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_LE);
+
+    if(direction == 1)
+	_bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_LE);
+    else
+	_bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_GE);
 }
 
 
 void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _incrementor->resolveAndCheck(e);
     _assignator->resolveAndCheck(e);
-    _bounds_checker->resolveAndCheck(e);
+
+    _incrementor->partialResolveAndCheck(e);
+    _bounds_checker->partialResolveAndCheck(e);
 
     if(!_bounds_checker->getClass()->isCompatibleWith(FrBBool::getCppClass()))
 	throw FrBIncompatibleClassException(_bounds_checker->getClass(), FrBBool::getCppClass());
@@ -424,11 +429,11 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
     _assignator->eval(e);
 
     /* while(var <= max) */
-    while( (static_cast<FrBBool*>(FrBClass::forceConvert(_bounds_checker->eval(e), FrBBool::getCppClass())))->value() );
+    //while( (static_cast<FrBBool*>(FrBClass::forceConvert(_bounds_checker->eval(e), FrBBool::getCppClass())))->value() )
+    while( ((FrBBool*)(_bounds_checker->eval(e)))->value() )
     {
-
 	FrBBlockStatement::execute(e);
-	
+
 	/*var++ or var-- or var += step */
 	_incrementor->eval(e);
     }
@@ -438,17 +443,18 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 std::ostream& FrBForLoopStatement::put(std::ostream& stream, int indent) const
 {
+    String str_indent(indent, '\t');
+
     _assignator->put(stream);
 
-    stream << std::endl << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_WHILE) << ' ';
+    stream << std::endl << str_indent << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_WHILE) << ' ';
     _bounds_checker->put(stream);
 
-    stream << std::endl;
-
     FrBBlockStatement::put(stream, indent);
+    stream << std::endl << str_indent << '\t';
     _incrementor->put(stream);
 
-    stream << std::endl << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_END) << ' '
+    stream << std::endl << str_indent << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_END) << ' '
 	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_WHILE);
 
     return stream;

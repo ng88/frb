@@ -793,8 +793,13 @@ FrBBinOpExpr::~FrBBinOpExpr()
 
 void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-   
     _lhs->resolveAndCheck(e);
+    partialResolveAndCheck(e);
+}
+
+void FrBBinOpExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+   
     _rhs->resolveAndCheck(e);
     
     const FrBClass * cl = _lhs->getClass();

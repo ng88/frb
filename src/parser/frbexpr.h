@@ -426,6 +426,7 @@ public:
     ~FrBBinOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const; 
