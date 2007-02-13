@@ -428,7 +428,10 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const;    
+    std::ostream& put(std::ostream& stream) const; 
+
+    inline void setLHS(FrBExpr * e) { _lhs = e; }   
+    inline void setRHS(FrBExpr * e) { _rhs = e; }   
 };
 
 /*class FrBNewExpr : public FrBExpr

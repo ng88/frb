@@ -784,8 +784,11 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
 }
 FrBBinOpExpr::~FrBBinOpExpr()
 {
-    delete _rhs;
-    delete _lhs;
+    if(_rhs)
+	delete _rhs;
+
+    if(_lhs)
+	delete _lhs;
 }
 
 void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)

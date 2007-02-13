@@ -449,9 +449,14 @@ bool FrBForLoopStatement::allPathContainsAReturn() const
 
 FrBForLoopStatement::~FrBForLoopStatement()
 {
-    delete _incrementor;
+
+    _incrementor->setLHS(0);
+    _bounds_checker->setLHS(0);
+
     delete _assignator;
     delete _bounds_checker;
+    delete _incrementor;
+
 }
 
 

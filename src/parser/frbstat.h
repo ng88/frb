@@ -223,9 +223,9 @@ class FrBForLoopStatement : public FrBBlockStatement
 {
 private:
 
-    FrBExpr * _incrementor;
+    FrBBinOpExpr * _incrementor;
+    FrBBinOpExpr *  _bounds_checker;
     FrBExpr *  _assignator;
-    FrBExpr *  _bounds_checker;
 
 public:
     FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step);
