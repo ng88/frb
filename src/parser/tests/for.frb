@@ -6,28 +6,48 @@ Public Class Main
     
     Public Shared Sub main()
         Dim a As Int
+'         
+'         Debug.println("a="+a)
+'                 
+'         Debug.println("a>=1="+bool2str(a>=1))
+'         Debug.println("a<=0="+bool2str(a<=0))
+'                 
+'         For a := 1 To 5 Step 1
+'             Debug.println("dans for 1 , a vaut " + a)
+'         Next
+'         
+'         For a := 10 DownTo 5 Step 1-2
+'             Debug.println("dans for 2 , a vaut " + a)
+'         Next
+'         
+'         For a := 1 To 5 Step 2
+'             Debug.println("dans for 3 , a vaut " + a)
+'         Next
+'         
+         Dim b As Int
+'         
+'         For a := 1 To 3 Step 1
+'             For b := 1 To 3 Step 1
+'                 Debug.println("dans for/for 4 , a=" + a + " b=" + b + " ((a+b) >= 5)=" +bool2str( (a+b) >= 5 ))
+'             Next
+'         Next
         
-        For a := 1 To 5 Step 1
-            Debug.println("dans for 1 , a vaut " + a)
+        For a := 1 To 1024 Step 1
+            b = a * b + 411
         Next
         
-        For a := 10 DownTo 5 Step 1-2
-            Debug.println("dans for 2 , a vaut " + a)
-        Next
-        
-        For a := 1 To 5 Step 2
-            Debug.println("dans for 3 , a vaut " + a)
-        Next
-        
-        Dim b As Int
-        
-        For a := 1 To 3 Step 1
-            For b := 1 To 3 Step 1
-                Debug.println("dans for/for 4 , a=" + a + " b=" + b)
-            Next
-        Next
+        Debug.showMem()
      
     End Sub
+    
+    
+'     Public Shared Function bool2str(b As Bool) As String
+'         If b Then
+'             Return "True"
+'         Else
+'             Return "False"
+'         End If
+'     End Function
 
 End Class
 

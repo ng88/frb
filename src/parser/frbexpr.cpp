@@ -904,7 +904,7 @@ std::ostream& FrBIntExpr::put(std::ostream& stream) const
   return stream << _value;
 }
 
-std::ostream& FrBBoolExpr::put(std::ostream& stream) const
+std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
 {
   if(_value)
     return stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_TRUE);

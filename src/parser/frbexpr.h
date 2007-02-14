@@ -451,7 +451,7 @@ public:
 template<class literal_type>
 class FrBLiteralExpr : public FrBExpr
 {
-private:
+protected:
     literal_type  _value;
     
 public:
@@ -467,12 +467,7 @@ public:
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
-        FrBCppObject* o = new FrBPrimitive<literal_type>(_value);
-
-        e.addGarbagedObject(o);
-
-        return o;
-
+        return e.addGarbagedObject(new FrBPrimitive<literal_type>(_value));
     }
     
     const FrBClass* getClass() const
@@ -485,7 +480,7 @@ public:
 };
 
 typedef FrBLiteralExpr<FrBInt::ptype>       FrBIntExpr;
-typedef FrBLiteralExpr<FrBBool::ptype>      FrBBoolExpr;
+typedef FrBLiteralExpr<FrBBool::ptype>      FrBBaseBoolExpr;
 // typedef FrBLiteralExpr<FrBDouble::ptype> FrBDoubleExpr;
 // typedef FrBLiteralExpr<FrBSingle::ptype> FrBSingleExpr;
 // typedef FrBLiteralExpr<FrBShort::ptype>  FrBShortIntExpr;
@@ -493,6 +488,20 @@ typedef FrBLiteralExpr<FrBBool::ptype>      FrBBoolExpr;
 typedef FrBLiteralExpr<FrBString::ptype>    FrBStringExpr;
 // typedef FrBLiteralExpr<FrBChar::ptype>   FrBCharExpr;
 
+/** Bool expression */
+class FrBBoolExpr : public FrBBaseBoolExpr
+{
+public:
+    FrBBoolExpr(const bool& v)
+	: FrBBaseBoolExpr(v) { }
+ 
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+    {
+        return FrBBool::fromCPPBool(_value);
+    }
+
+};
 
 /** The Null expression */
 class FrBNullExpr : public FrBExpr

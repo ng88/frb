@@ -215,6 +215,8 @@ int main(int argc, char ** argv)
         FrBExecutionEnvironment env(&memory, &renv);
 
         env.addGarbagedObject(FrBNull::nullValue());
+        env.addGarbagedObject(FrBBool::trueValue());
+        env.addGarbagedObject(FrBBool::falseValue());
 
         FrBClass * main = renv.getClassFromPath(arg_main_class);
         

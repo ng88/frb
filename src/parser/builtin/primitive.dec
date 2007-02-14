@@ -47,7 +47,7 @@ public:
     
 
     FrBClass * getClass() { return getCppClass(); }
-    
+
     
     class Allocator : public FrBCppObjectAllocator
     {
@@ -59,9 +59,6 @@ public:
 
 /** The FrB Integer class */
 typedef FrBPrimitive<long signed int> FrBInt;
-
-/** The FrB Boolean class */
-typedef FrBPrimitive<bool> FrBBool;
 
 /** The FrB String class */
 typedef FrBPrimitive<String> FrBString;

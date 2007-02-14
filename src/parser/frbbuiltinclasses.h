@@ -25,6 +25,7 @@
 
 #include "builtin/object.dec"
 #include "builtin/primitive.dec"
+#include "builtin/boolean.dec"
 #include "builtin/debug.dec"
 
 #include "builtin/null.dec"

@@ -991,7 +991,7 @@ literal_expr:
     | literal_bool { $<expr>$ = $<expr>1; }
     | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
     | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
-    | identifier_expr
+    | identifier_expr { $<expr>$ = $<expr>1; }
     ;
 
 identifier_expr:

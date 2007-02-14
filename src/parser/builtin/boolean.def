@@ -18,7 +18,7 @@
 /*            FrBBoolean            */
 
 
-FrBCppClass * FrBBool::initClass()
+FrBCppClass * FrBBaseBool::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBBool::initClass(), already initialized");
     
@@ -32,3 +32,6 @@ FrBCppClass * FrBBool::initClass()
     
     return _cpp_class;
 }
+
+FrBBool * FrBBool::_trueValue = new FrBBool(true);
+FrBBool * FrBBool::_falseValue = new FrBBool(false);

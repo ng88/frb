@@ -55,26 +55,20 @@ FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject
 
 FrBBaseObject * operator_gt_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    FrBBool * r = new FrBBool( (static_cast<FrBInt*>(me))->value() >	
+    return FrBBool::fromCPPBool( (static_cast<FrBInt*>(me))->value() >
 					(static_cast<FrBInt*>(arg0))->value() );
-    e.addGarbagedObject(r);
-    return r;
 }
 
 FrBBaseObject * operator_le_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    FrBBool * r = new FrBBool( (static_cast<FrBInt*>(me))->value() <=	
+    return FrBBool::fromCPPBool( (static_cast<FrBInt*>(me))->value() <=	
 					(static_cast<FrBInt*>(arg0))->value() );
-    e.addGarbagedObject(r);
-    return r;
 }
 
 FrBBaseObject * operator_ge_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    FrBBool * r = new FrBBool( (static_cast<FrBInt*>(me))->value() >=	
+    return FrBBool::fromCPPBool( (static_cast<FrBInt*>(me))->value() >=	
 					(static_cast<FrBInt*>(arg0))->value() );
-    e.addGarbagedObject(r);
-    return r;
 }
 
 FrBCppClass * FrBInt::initClass()
