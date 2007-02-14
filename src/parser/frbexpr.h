@@ -452,22 +452,33 @@ template<class literal_type>
 class FrBLiteralExpr : public FrBExpr
 {
 protected:
-    literal_type  _value;
+    FrBBaseObject* _value;
+
+
+    FrBLiteralExpr(FrBBaseObject* o)
+    {
+        _value = o;
+    }
     
 public:
     FrBLiteralExpr(const literal_type& v)
     {
-        _value = v;
+        _value = new FrBPrimitive<literal_type>(v);
     }
     
     ~FrBLiteralExpr()
     {
+	if(!_value->isManaged())
+	    delete _value;
     }
  
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
-        return e.addGarbagedObject(new FrBPrimitive<literal_type>(_value));
+	if(!_value->isManaged())
+	    e.addGarbagedObject(_value);
+
+        return _value;
     }
     
     const FrBClass* getClass() const
@@ -493,13 +504,8 @@ class FrBBoolExpr : public FrBBaseBoolExpr
 {
 public:
     FrBBoolExpr(const bool& v)
-	: FrBBaseBoolExpr(v) { }
+	: FrBBaseBoolExpr(FrBBool::fromCPPBool(v)) { }
  
-    
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
-    {
-        return FrBBool::fromCPPBool(_value);
-    }
 
 };
 

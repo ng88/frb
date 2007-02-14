@@ -6,12 +6,7 @@ Public Class Main
     
     Public Shared Sub main()
         Dim a As Int
-'         
-'         Debug.println("a="+a)
-'                 
-'         Debug.println("a>=1="+bool2str(a>=1))
-'         Debug.println("a<=0="+bool2str(a<=0))
-'                 
+
 '         For a := 1 To 5 Step 1
 '             Debug.println("dans for 1 , a vaut " + a)
 '         Next
@@ -23,8 +18,8 @@ Public Class Main
 '         For a := 1 To 5 Step 2
 '             Debug.println("dans for 3 , a vaut " + a)
 '         Next
-'         
-         Dim b As Int
+'        
+          Dim b As Int
 '         
 '         For a := 1 To 3 Step 1
 '             For b := 1 To 3 Step 1
@@ -33,21 +28,12 @@ Public Class Main
 '         Next
         
         For a := 1 To 1024 Step 1
-            b = a * b + 411
+           b = a * b + 411
         Next
         
-        Debug.showMem()
+      '  Debug.showMem()
      
     End Sub
-    
-    
-'     Public Shared Function bool2str(b As Bool) As String
-'         If b Then
-'             Return "True"
-'         Else
-'             Return "False"
-'         End If
-'     End Function
 
 End Class
 

@@ -400,10 +400,8 @@ FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int dire
     _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
     _assignator = new FrBRefAssignExpr(var, init);
 
-    if(direction == 1)
-	_bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_LE);
-    else
-	_bounds_checker = new FrBBinOpExpr(var, max, FrBKeywords::FRB_KW_OP_GE);
+    _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE);
+
 }
 
 
@@ -430,6 +428,7 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
     /* while(var <= max) */
     //while( (static_cast<FrBBool*>(FrBClass::forceConvert(_bounds_checker->eval(e), FrBBool::getCppClass())))->value() )
+    //while( _bounds_checker->eval(e) == FrBBool::trueValue()  )
     while( ((FrBBool*)(_bounds_checker->eval(e)))->value() )
     {
 	FrBBlockStatement::execute(e);
