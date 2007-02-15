@@ -147,6 +147,15 @@ FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBa
     return o;
 }
 
+FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBFunction * ctor,  const FrBBaseObjectList& args) const
+    throw (FrBExecutionException)
+{
+    FrBBaseObject * o = allocateInstance(e);
+    initInstance(e, o);
+    ctor->execute(e, o, args);
+    return o;
+}
+
 void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException)
 {
     /** if o is managed by the GC */

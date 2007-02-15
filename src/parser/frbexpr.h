@@ -436,18 +436,26 @@ public:
     inline void setRHS(FrBExpr * e) { _rhs = e; }   
 };
 
-/*class FrBNewExpr : public FrBExpr
+class FrBNewExpr : public FrBExpr
 {
 private:
+
+    FrBTypeExpr *_type;
     FrBExprList * _args;
     FrBFunction * _ctor;
     
 public:
-    FrBNewExpr( FrBExprList * _args);
+    FrBNewExpr(FrBTypeExpr * type, FrBExprList * args);
     ~FrBNewExpr();
+
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    const FrBClass* getClass() const;
+
+
     FrBBaseObject* eval() const throw (FrBEvaluationException);
+
     std::ostream& put(std::ostream& stream) const;    
-};*/
+};
 
 template<class literal_type>
 class FrBLiteralExpr : public FrBExpr

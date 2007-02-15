@@ -233,6 +233,10 @@ public:
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
+
+    /** Allocate instance and call ctor */
+    FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBFunction * ctor,  const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
     
     /** Call the destructor and free instance (call freeInstance to free the object)*/
     void destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBExecutionException);

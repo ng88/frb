@@ -854,7 +854,7 @@ full_type: /* a.b.c.d.e.f ... */
     
 new_expr:
       FRB_KW_TOKEN_OP_NEW type parent_expr_list /* New type(arg, arg, ...) */
-      { /*$<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3);*/ }
+      { $<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3); }
     ;
 
 expr:
