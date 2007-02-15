@@ -1,0 +1,30 @@
+DefLang EN
+
+
+Public Class Main
+
+    Public Class A
+    
+        Private val As Int := Null
+    
+        Public Sub Initialize(v As Int)
+            val := v
+        End Sub
+    
+        Public Sub printMe()
+            Debug.println("A at " + Debug.addressof(Me) + ", val=" + val)
+        End Sub
+    
+    End Class
+    
+    Public Shared Sub main()
+        Dim a As A := Null
+
+
+        Debug.println("a=" + a)
+        
+
+    End Sub
+
+End Class
+
