@@ -218,6 +218,15 @@ class:
 
                YYABORT;
            }
+
+	   if(!current_class()->hasDefaultCtor())
+	   {
+	       FrBFunction * f = new FrBNopCppFunction();
+	       f->setName("$generated_ctor$");
+	       f->setSub(true);
+	       f->setScope(SC_PUBLIC);
+	       current_class()->addConstructor(f);
+	   }
            
            class_stack.pop();
        }  

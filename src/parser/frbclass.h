@@ -119,6 +119,9 @@ public:
     template<class ArgContainer>
     inline FrBFunction * findConstructor(const ArgContainer& args) const
       throw (FrBFunctionNotFoundException);
+
+    /** Return the default constructor if it exists  */
+    inline FrBFunction * findConstructor() const throw (FrBFunctionNotFoundException);
     
     /** Return a sequence of all the functions named 'name' */
     inline FnPairIt findFunctions(const String& name) const;
@@ -140,32 +143,7 @@ public:
     /** Return the field named 'name' */
     inline FrBField * findField(const String& name) const
       throw (FrBFieldNotFoundException);
-    
-    /** Execute the default constructor (with no param). If no ctor exists and if there are no other ctor, a default ctor is created and executed */
-    void executeDefaultConstructor(FrBExecutionEnvironment&, FrBBaseObject * me) const
-        throw (FrBExecutionException);
-    
-    /** Find a constructor matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
-    inline void executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
-	   const FrBBaseObjectList& args) const throw (FrBExecutionException);
-    
-    /** Find a function named 'name' and matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
-    inline FrBBaseObject * executeFunction(FrBExecutionEnvironment& e,
-					   const String& name,
-					   FrBBaseObject * me,
-					   const FrBBaseObjectList& args) const
-                throw (FrBExecutionException);
-    
-    /** Find an operator for 'op' matching the argument list 'args' and execute it with 'me' as current instance and 'e' as execution environment */
-    inline FrBBaseObject * executeOperator(FrBExecutionEnvironment& e,
-					   int op,
-					   FrBBaseObject * me,
-					   const FrBBaseObjectList& args) const
-               throw (FrBExecutionException);
-    
-    /** Find the destructor and execute it with 'me' as current instance and 'e' as execution environment */
-    inline FrBBaseObject * executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
-               throw (FrBExecutionException);
+
 
     /*virtual FrBBaseObject * callOperator(String name, FrBBaseObjectList args) = 0;
     virtual FrBBaseObject * getProperty(String name, FrBBaseObjectList args) = 0;
@@ -200,6 +178,10 @@ public:
     inline const FunctionContainer* functionList() const { return &_functions; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
+
+    /** Return true if this class has a defaultCtor */
+    inline bool hasDefaultCtor() const { return _defaultCtor != 0; }
+    
     
     inline ClassContainer* innerClassPtr() { return &_innerClasses; }
 
@@ -229,8 +211,12 @@ public:
       */
     void initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
-    /** Allocate instance and call the appropriate constructor */
+    /** Allocate instance, resolve and call the default constructor
+      * Note: Here, resolve does not take any time, because it've done when constructor was added) 
+      */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
+    
+    /** Allocate instance, resolve and call the appropriate constructor */
     FrBBaseObject * createInstance(FrBExecutionEnvironment&e, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
@@ -336,6 +322,14 @@ inline FrBClass::FrBClass()
   : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)
 {
 }
+
+inline FrBFunction * FrBClass::findConstructor() const throw (FrBFunctionNotFoundException);
+{
+    if(_defaultCtor)
+        return _defaultCtor;
+    else
+	throw FrBDefaultCtorNotFoundException();
+}
     
 template<class ArgContainer>
 inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
@@ -398,34 +392,7 @@ inline FrBField * FrBClass::findField(const String& name) const
         return f->second;
     }
 }
-   
-inline void FrBClass::executeConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me,
-			       const FrBBaseObjectList& args) const
-     throw (FrBExecutionException) 
-{
-  findConstructor(args)->execute(e, me, args);
-}
     
-inline FrBBaseObject * FrBClass::executeFunction(FrBExecutionEnvironment& e, const String& name, FrBBaseObject * me,
-				       const FrBBaseObjectList& args) const
-     throw (FrBExecutionException) 
-{
-  return findFunction(name, args)->execute(e, me, args);
-}
-    
-inline FrBBaseObject * FrBClass::executeOperator(FrBExecutionEnvironment& e, int op, FrBBaseObject * me,
-				       const FrBBaseObjectList& args) const
-     throw (FrBExecutionException) 
-{
-  return findOperator(op, args)->execute(e, me, args);
-}
-    
-inline FrBBaseObject * FrBClass::executeDestructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const
-     throw (FrBExecutionException)
-{
-  FrBBaseObjectList args;
-  return findDestructor()->execute(e, me, args);
-}
 
 inline int FrBClass::sharedFieldCount() const
 {
@@ -491,6 +458,9 @@ inline void FrBClass::addDestructor(FrBFunction * f)
   f->setContainer(this);
   _dtor = f;
 }
+
+
+
 
 #endif
 

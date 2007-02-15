@@ -101,22 +101,6 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
     }
 }
 
-void FrBClass::executeDefaultConstructor(FrBExecutionEnvironment& e, FrBBaseObject * me) const throw (FrBExecutionException)
-{
-    if(_defaultCtor)
-    {
-        _defaultCtor->execute(e, me);
-    }
-    else
-    {
-        if(_ctors.size() > 0)
-            throw FrBDefaultCtorNotFoundException();
-        else
-            ;//TODO  default ctor creation & execution
-    }
-        
-}
-
 void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   throw (FrBExecutionException)
 {
@@ -129,21 +113,22 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   e.stack().pop();
 }
 
-FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const
-  throw (FrBExecutionException)
-{
-    FrBBaseObject * o = allocateInstance(e);
-    initInstance(e, o);
-    executeDefaultConstructor(e, o);
-    return o;
-}
 
 FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e, const FrBBaseObjectList& args) const
     throw (FrBExecutionException)
 {
     FrBBaseObject * o = allocateInstance(e);
     initInstance(e, o);
-    executeConstructor(e, o, args);
+    findConstructor(args)->execute(e, o, args);
+    return o;
+}
+
+FrBBaseObject * FrBClass::createInstance(FrBExecutionEnvironment& e) const
+  throw (FrBExecutionException)
+{
+    FrBBaseObject * o = allocateInstance(e);
+    initInstance(e, o);
+    findConstructor()->execute(e, o);
     return o;
 }
 

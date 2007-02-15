@@ -83,6 +83,26 @@ private:
 public:
 };
 
+/** Function that does nothing */
+class FrBNopCppFunction : public FrBCppFunction
+{
+
+public:
+
+    FrBNopCppFunction() {}
+
+    const FrBClass * parameterType(int index) const { return 0; }
+    bool parameterByVal(int index) const { return false; }
+    int parameterCount() const { return 0; }
+    
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject *) const
+        throw (FrBExecutionException) { return 0; }
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList&) const
+        throw (FrBExecutionException) { return 0; }
+
+};
+
+
 /** Represents an FrB function that is a C++ exported function without any parameter
   *      ie fn()
   */

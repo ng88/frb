@@ -258,6 +258,9 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
         if(!_init->getClass()->isCompatibleWith(_type->getClass()))
             throw FrBIncompatibleClassException(_init->getClass(), _type->getClass());
     }
+    else
+	/* check for default ctor */
+	_type->getClass()->findConstructor();
 }
 
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)

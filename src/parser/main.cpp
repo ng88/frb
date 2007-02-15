@@ -241,7 +241,7 @@ int main(int argc, char ** argv)
             if(arg_int_param > -1)
                 args.push_back(&param0);
             
-            main->executeFunction(env, arg_main_function, 0, args);
+            main->findFunction(arg_main_function, args)->execute(env, 0, args);
 
             if(args_switch[SHOW_MEM])
             {
