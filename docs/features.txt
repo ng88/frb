@@ -593,4 +593,10 @@
   Literal tableau : {a, b, c, d}
   Literal map : {a => b, c => e, y => z}
   
-  
+  --
+  Declarations simples :
+  Declare Public Sub test()
+  Abstract Public Sub test()
+  Dec Public Sub test()
+ 
+ 
