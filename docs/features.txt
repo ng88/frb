@@ -589,4 +589,8 @@
   --
   il faut bien un type pour null
   
+  --
+  Literal tableau : {a, b, c, d}
+  Literal map : {a => b, c => e, y => z}
+  
   

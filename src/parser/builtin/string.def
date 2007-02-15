@@ -38,6 +38,40 @@ FrBBaseObject * operator_add_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
     return r;
 }
 
+/** 
+  *"abc " * 0 -> ""
+  *"abc " * 1 -> "abc "
+  *"abc " * 3 -> "abc abc abc "
+  *"abc " * -1 -> "cba "
+  *"abc " * -3 -> " cba cba cba"
+  */
+FrBBaseObject * operator_mul_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    int c = (static_cast<FrBInt*>(arg0))->value();
+    String ret;
+
+    if(c)
+    {
+	String motif = (static_cast<FrBInt*>(me))->value();
+	    
+	if(c < 0)
+	{
+	    c *= -1;
+	    motif = StringEx::reverse(motif);
+	}
+
+	for(int i = 1; i <= c; ++i)
+	    ret.append(motif);
+    }
+
+    return e.addGarbagedObject(new FrBString(ret));
+}
+
+FrBBaseObject * operator_mul_FrBInt_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+   return operator_mul_FrBString_FrBInt(e, arg0, me);
+}
+
 FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     std::ostringstream tmp;
@@ -112,6 +146,22 @@ FrBCppClass * FrBString::initClass()
     f->setScope(SC_PUBLIC);
 
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_CONCAT, f);
+
+    f = new FrBUnaryCppFunction(operator_mul_FrBString_FrBInt,  FrBInt::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator*(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
+
+    /*f = new FrBUnaryCppFunction(operator_mul_FrBInt_FrBString,  FrBInt::getCppClass(), false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator+(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);*/
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
 
     return _cpp_class;
 }
