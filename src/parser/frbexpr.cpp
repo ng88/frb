@@ -49,6 +49,7 @@ void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw 
 }
 
 
+
 /*         FrBLocalVarExpr        */
 
 FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int varid)
@@ -921,7 +922,7 @@ std::ostream& FrBStringExpr::put(std::ostream& stream) const
 
 /*         FrBNullExpr                */
 
-FrBNullExpr * FrBNullExpr::_null_expr = NULL;
+//FrBNullExpr * FrBNullExpr::_null_expr = 0;
     
 FrBNullExpr::FrBNullExpr()
 {
@@ -932,13 +933,13 @@ FrBNullExpr::~FrBNullExpr()
 {
 }
 
-FrBNullExpr * FrBNullExpr::nullExpr()
+/*FrBNullExpr * FrBNullExpr::nullExpr()
 {
     if(!_null_expr)
         _null_expr = new FrBNullExpr();
         
     return _null_expr;
-}
+}*/
 
 FrBBaseObject* FrBNullExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {

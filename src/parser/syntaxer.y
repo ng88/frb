@@ -960,6 +960,7 @@ expr:
       }
       
     | new_expr                            /* New */
+      { $<expr>$ = $<expr>1; }
     | expr FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER                     /* expr.expr_id */
       {
           //$<expr>$ = new FrBMemberOpExpr($<expr>1,  new FrBUnresolvedIdExpr($<str>3));
@@ -989,7 +990,7 @@ literal_expr:
     | FRB_TYPE_LITERAL_STRING         { $<expr>$ = new FrBStringExpr($<str>1); }
     | FRB_TYPE_LITERAL_CHAR
     | literal_bool { $<expr>$ = $<expr>1; }
-    | FRB_KW_TOKEN_NULL { $<expr>$ = FrBNullExpr::nullExpr(); }
+    | FRB_KW_TOKEN_NULL { $<expr>$ = new FrBNullExpr(); /*FrBNullExpr::nullExpr();*/ }
     | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
     | identifier_expr { $<expr>$ = $<expr>1; }
     ;

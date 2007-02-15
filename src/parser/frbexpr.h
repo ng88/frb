@@ -76,6 +76,7 @@ public:
     
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
+
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
@@ -513,15 +514,16 @@ public:
 class FrBNullExpr : public FrBExpr
 {
 private:
-    static FrBNullExpr * _null_expr;
+    //static FrBNullExpr * _null_expr;
     
-    FrBNullExpr();
+    //FrBNullExpr();
     
 public:
     
+    FrBNullExpr();
     ~FrBNullExpr();
  
-    static FrBNullExpr * nullExpr();
+    //static FrBNullExpr * nullExpr();
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     

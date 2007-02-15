@@ -7,18 +7,18 @@ Public Class Main
     Public Shared Sub main()
         Dim a As Int
 
-'         For a := 1 To 5 Step 1
-'             Debug.println("dans for 1 , a vaut " + a)
-'         Next
-'         
-'         For a := 10 DownTo 5 Step 1-2
-'             Debug.println("dans for 2 , a vaut " + a)
-'         Next
-'         
-'         For a := 1 To 5 Step 2
-'             Debug.println("dans for 3 , a vaut " + a)
-'         Next
-'        
+        For a := 1 To 5 Step 1
+            Debug.println("dans for 1 , a vaut " + a)
+        Next
+        
+        For a := 10 DownTo 5 Step 1-2
+            Debug.println("dans for 2 , a vaut " + a)
+        Next
+        
+        For a := 1 To 5 Step 2
+            Debug.println("dans for 3 , a vaut " + a)
+        Next
+       
           Dim b As Int
 '         
 '         For a := 1 To 3 Step 1
@@ -27,9 +27,9 @@ Public Class Main
 '             Next
 '         Next
         
-        For a := 1 To 1024 Step 1
-           b = a * b + 411
-        Next
+'         For a := 1 To 1024 Step 1
+'            b = a * b + 411
+'         Next
         
       '  Debug.showMem()
      

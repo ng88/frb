@@ -225,6 +225,7 @@ FrBCodeFunction::~FrBCodeFunction()
     for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
 	delete *it;
 
+
     _stats.clear();
 
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
