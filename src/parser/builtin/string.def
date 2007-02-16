@@ -41,9 +41,12 @@ FrBBaseObject * operator_add_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
 /**
   *  "abc" - 1 -> "ab"
   *  "absalutc" - "salut" -> "abc"
+  *  "salut" In "absalutc" -> true
+  *  "abc" In "abdec" -> false
   *  #"abc" -> 3
   *  "a,cde,dfg,e" / "," -> {"a", "cde", "dfg", "e"}
   *  "abc"[2] -> 'c'
+  *  -"abc" -> "cba"
   */
 
 /**
@@ -60,12 +63,12 @@ FrBBaseObject * operator_mul_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
 
     if(c)
     {
-	String motif = (static_cast<FrBInt*>(me))->value();
+	String motif = (static_cast<FrBString*>(me))->value();
 	    
 	if(c < 0)
 	{
 	    c *= -1;
-	    motif = StringEx::reverse(motif);
+	    motif = String(motif.rbegin(), motif.rend());
 	}
 
 	for(int i = 1; i <= c; ++i)

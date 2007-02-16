@@ -323,7 +323,7 @@ inline FrBClass::FrBClass()
 {
 }
 
-inline FrBFunction * FrBClass::findConstructor() const throw (FrBFunctionNotFoundException);
+inline FrBFunction * FrBClass::findConstructor() const throw (FrBFunctionNotFoundException)
 {
     if(_defaultCtor)
         return _defaultCtor;

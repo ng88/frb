@@ -452,27 +452,27 @@ public:
     const FrBClass* getClass() const;
 
 
-    FrBBaseObject* eval() const throw (FrBEvaluationException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
 
     std::ostream& put(std::ostream& stream) const;    
 };
 
-template<class literal_type>
+template<class T>
 class FrBLiteralExpr : public FrBExpr
 {
 protected:
-    FrBBaseObject* _value;
+    T* _value;
 
 
-    FrBLiteralExpr(FrBBaseObject* o)
+    FrBLiteralExpr(T* o)
     {
         _value = o;
     }
     
 public:
-    FrBLiteralExpr(const literal_type& v)
+    FrBLiteralExpr(const typename T::ptype& v)
     {
-        _value = new FrBPrimitive<literal_type>(v);
+        _value = new T(v);
     }
     
     ~FrBLiteralExpr()
@@ -492,20 +492,25 @@ public:
     
     const FrBClass* getClass() const
     {
-        return  FrBPrimitive<literal_type>::getCppClass();
+        return  T::getCppClass();
+    }
+
+    inline const typename T::ptype& value() const
+    {
+	return _value->value();
     }
 
     std::ostream& put(std::ostream& stream) const;    
 
 };
 
-typedef FrBLiteralExpr<FrBInt::ptype>       FrBIntExpr;
-typedef FrBLiteralExpr<FrBBool::ptype>      FrBBaseBoolExpr;
+typedef FrBLiteralExpr<FrBInt>       FrBIntExpr;
+typedef FrBLiteralExpr<FrBBool>      FrBBaseBoolExpr;
 // typedef FrBLiteralExpr<FrBDouble::ptype> FrBDoubleExpr;
 // typedef FrBLiteralExpr<FrBSingle::ptype> FrBSingleExpr;
 // typedef FrBLiteralExpr<FrBShort::ptype>  FrBShortIntExpr;
 // typedef FrBLiteralExpr<FrBLong::ptype>   FrBLongIntExpr;
-typedef FrBLiteralExpr<FrBString::ptype>    FrBStringExpr;
+typedef FrBLiteralExpr<FrBString>    FrBStringExpr;
 // typedef FrBLiteralExpr<FrBChar::ptype>   FrBCharExpr;
 
 /** Bool expression */

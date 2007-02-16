@@ -31,6 +31,15 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    if(!shared() && !hasDefaultCtor())
+    {
+	FrBFunction * f = new FrBNopCppFunction();
+	f->setName("$generated_ctor$");
+	f->setSub(true);
+	f->setScope(SC_PUBLIC);
+	addConstructor(f);
+    }
+
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
     {
         frb_assert((*it));

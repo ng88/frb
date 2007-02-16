@@ -59,6 +59,7 @@ protected:
     FrBBaseObject * allocateInstance(FrBExecutionEnvironment&) const throw (FrBAllocationException);
     void freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const throw (FrBAllocationException);
 
+
 public:
     inline FrBCppClass(FrBCppObjectAllocator * a)
        : _allocator(a) { frb_assert2(a != 0, "FrBCppClass::FrBCppClass(), null FrBCppObjectAllocator pointer"); };

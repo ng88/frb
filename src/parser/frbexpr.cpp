@@ -931,17 +931,25 @@ void  FrBNewExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExc
 const FrBClass*  FrBNewExpr::getClass() const
 {
     frb_assert(_ctor);
-    _type->getClass();
+    return _type->getClass();
 }
 
-FrBBaseObject*  FrBNewExpr::eval() const throw (FrBEvaluationException)
+FrBBaseObject*  FrBNewExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
+    FrBBaseObjectList rval;
+    rval.reserve(_args->size());
+
+    /* eval constructor arguments */
+    for(FrBExprList::iterator it = _args->begin(); it != _args->end(); ++it)
+        rval.push_back((*it)->eval(e));
+
+    return _type->getClass()->createInstance(e, _ctor, rval);
 }
 
 
 std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 {
-    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_NEW) << ' ' << _type->fullName()
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_NEW) << ' ' << _type->getClass()->fullName()
 	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
 
     FrBExprList::const_iterator it = _args->begin();
@@ -971,12 +979,12 @@ std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 
 std::ostream& FrBIntExpr::put(std::ostream& stream) const
 {
-  return stream << _value;
+  return stream << value();
 }
 
 std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
 {
-  if(_value)
+  if(value())
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_TRUE);
   else
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_FALSE);
@@ -984,7 +992,7 @@ std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
 
 std::ostream& FrBStringExpr::put(std::ostream& stream) const
 {
-  return stream << '\"' << _value << '\"';
+  return stream << '\"' << value() << '\"';
 }
 
 

@@ -16,6 +16,7 @@
 
 
 #include "frbcppbinding.h"
+#include "frbbuiltinclasses.h"
 #include "../common/assert.h"
 
 /*       FrBCppClass          */
@@ -31,6 +32,7 @@ FrBBaseObject * FrBCppClass::allocateInstance(FrBExecutionEnvironment& e) const 
     e.addGarbagedObject(o);
     return o;
 }
+
 
 void FrBCppClass::freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
                 throw (FrBAllocationException)
