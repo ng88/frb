@@ -2,6 +2,7 @@ Projets exemples à réaliser en FrB
 ----------------------------------
 * Tetris (avec moult option genre pièces perso...)
 * Client SimpleComm
+* Poker multijoueur
 
 
 Bien sur il faudra faire le binding Qt avant.
