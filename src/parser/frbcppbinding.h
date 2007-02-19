@@ -31,7 +31,7 @@ class FrBCppObject : public FrBBindingObject
 
 public:
     /** We don't care about fields in c++ binding */
-    FrBBaseObject* getField(int) throw (FrBEvaluationException) { return 0; }
+    FrBBaseObject* getField(int) const throw (FrBEvaluationException) { return 0; }
     /** We don't care about fields in c++ binding */
     void addField(int, FrBBaseObject *) throw (FrBEvaluationException) {}
 

@@ -52,13 +52,13 @@ public:
     virtual const FrBClass * getClass() = 0;
 
     /** Return the instance of the field i */
-    virtual FrBBaseObject* getField(int i) throw (FrBEvaluationException) = 0;
+    virtual FrBBaseObject* getField(int i) const throw (FrBEvaluationException) = 0;
 
     /** Add field o */
     virtual void addField(int i, FrBBaseObject * o) throw (FrBEvaluationException) = 0;
 
     /** Overloaded function, provided for convenience */
-    inline FrBBaseObject* getField(const FrBField * f);
+    inline FrBBaseObject* getField(const FrBField * f) const throw (FrBEvaluationException);
 
     /** Overloaded function, provided for convenience */
     inline void addField(const FrBField * f, FrBBaseObject * o);
@@ -99,7 +99,7 @@ public:
     
     const FrBClass * getClass() { return _type; }
 
-    FrBBaseObject* getField(int) throw (FrBEvaluationException);
+    FrBBaseObject* getField(int) const throw (FrBEvaluationException);
     void addField(int, FrBBaseObject *) throw (FrBEvaluationException);
      
 
@@ -139,7 +139,7 @@ public:
 
 
 
-inline FrBBaseObject* FrBBaseObject::getField(const FrBField * f)
+inline FrBBaseObject* FrBBaseObject::getField(const FrBField * f) const throw (FrBEvaluationException)
 {
     frb_assert2(!f->shared(), "f MUST be a non-shared field");
     return getField(f->index());

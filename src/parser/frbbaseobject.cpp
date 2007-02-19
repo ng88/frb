@@ -34,7 +34,7 @@ FrBUserObject::FrBUserObject(const FrBClass * type, int fc)
 }
 
 
-FrBBaseObject* FrBUserObject::getField(int i) throw (FrBEvaluationException)
+FrBBaseObject* FrBUserObject::getField(int i) const throw (FrBEvaluationException)
 {
   frb_warning2(i >= 0 && i < _field_count, "FrBUserObject::getField(), index out of bounds");
   return _fields[i];
