@@ -63,16 +63,23 @@ FrBBaseObject * operator_mul_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
 
     if(c)
     {
-	const String& motif = (static_cast<FrBString*>(me))->value();
+	const String & motif = (static_cast<FrBString*>(me))->value();
+
 	    
 	if(c < 0)
 	{
-	    c *= -1;
-	    motif = String(motif.rbegin(), motif.rend());
+	    String rev = String(motif.rbegin(), motif.rend());
+
+	    for(int i = c; i < 0; ++i)
+		ret->valuePtr().append(rev);
+
+	}
+	else
+	{
+	    for(int i = 1; i <= c; ++i)
+		ret->valuePtr().append(motif);
 	}
 
-	for(int i = 1; i <= c; ++i)
-	    ret->valuePtr().append(motif);
     }
 
     return e.addGarbagedObject(ret);
