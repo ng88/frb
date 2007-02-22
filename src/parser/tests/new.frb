@@ -23,7 +23,17 @@ Public Class Main
 
         Debug.println("a=" + a)
         
-
+        Dim s As String := "salut "
+        Debug.println("s="+s)
+        s := s * 4
+        Debug.println("s="+s)
+        s := s * (1-2)
+        Debug.println("s="+s)
+        s := s * (2-4)
+        Debug.println("s="+s)
+        s := s * 0
+        Debug.println("s="+s)
+        
     End Sub
 
 End Class

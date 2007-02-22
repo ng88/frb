@@ -36,7 +36,7 @@ public:
     
     inline void setValue(const primitive_t& v) { _val = v; }
     inline const primitive_t& value() { return _val; }
-    
+    inline primitive_t& valuePtr() { return _val; } 
     
     
     inline static FrBClass * getCppClass()

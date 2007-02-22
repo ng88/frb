@@ -59,11 +59,11 @@ FrBBaseObject * operator_add_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
 FrBBaseObject * operator_mul_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     int c = (static_cast<FrBInt*>(arg0))->value();
-    String ret;
+    FrBString * ret = new FrBString("");
 
     if(c)
     {
-	String motif = (static_cast<FrBString*>(me))->value();
+	const String& motif = (static_cast<FrBString*>(me))->value();
 	    
 	if(c < 0)
 	{
@@ -72,10 +72,10 @@ FrBBaseObject * operator_mul_FrBString_FrBInt(FrBExecutionEnvironment& e, FrBBas
 	}
 
 	for(int i = 1; i <= c; ++i)
-	    ret.append(motif);
+	    ret->valuePtr().append(motif);
     }
 
-    return e.addGarbagedObject(new FrBString(ret));
+    return e.addGarbagedObject(ret);
 }
 
 FrBBaseObject * operator_mul_FrBInt_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
@@ -172,7 +172,7 @@ FrBCppClass * FrBString::initClass()
     f->setConst(true);
     f->setScope(SC_PUBLIC);*/
     
-    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
+    //_cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
 
     return _cpp_class;
 }

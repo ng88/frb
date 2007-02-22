@@ -166,6 +166,7 @@ std::ostream& FrBClassNotFoundException::put(std::ostream& stream) const
 FrBIncompatibleClassException::FrBIncompatibleClassException(const FrBClass * provided, const FrBClass * needed)
     : _provided(provided), _needed(needed)
 {
+
 }
 
 std::ostream& FrBIncompatibleClassException::put(std::ostream& stream) const
