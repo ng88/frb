@@ -262,7 +262,7 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
     {
 	/* check for default ctor */
 	if(!_type->getClass()->hasDefaultCtor())
-	    throw FrBDecWithoutDefaultCtor(_type->getClass());
+	    throw FrBDecWithoutDefaultCtorException(_type->getClass());
     }
 }
 

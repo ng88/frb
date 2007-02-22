@@ -245,16 +245,16 @@ public:
 
 
 /** Occurs in code like 'Dim a As A' where A does not have a default ctor  */
-/*class FrBDecWithoutDefaultCtor : public FrBExecutionException
+class FrBDecWithoutDefaultCtorException : public FrBResolveException
 {
 protected:
-    FrBMember *  _fl;
+    const FrBMember *  _fl;
 public:
 
-    FrBInvalidNonSharedException(FrBMember * f);
+    FrBDecWithoutDefaultCtorException(const FrBMember * f);
     std::ostream& put(std::ostream& stream) const;
 
-};*/
+};
 
 
 #endif

@@ -229,3 +229,17 @@ std::ostream& FrBMeInSharedException::put(std::ostream& stream) const
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_ME_IN_SHARED);
 }
 
+/*          FrBDecWithoutDefaultCtorException          */
+
+FrBDecWithoutDefaultCtorException::FrBDecWithoutDefaultCtorException(const FrBMember * f)
+    : _fl(f)
+{
+}
+ 
+std::ostream& FrBDecWithoutDefaultCtorException::put(std::ostream& stream) const
+{
+    frb_assert(_fl);
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_NO_DEF_CTOR, _fl->fullName());
+}
+
+

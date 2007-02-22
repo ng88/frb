@@ -73,6 +73,12 @@ FrBBaseObject * operator_gt_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * m
 					(static_cast<FrBInt*>(arg0))->value() );
 }
 
+FrBBaseObject * operator_eq_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    return FrBBool::fromCPPBool( (static_cast<FrBInt*>(me))->value() ==	
+					(static_cast<FrBInt*>(arg0))->value() );
+}
+
 FrBBaseObject * operator_le_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     return FrBBool::fromCPPBool( (static_cast<FrBInt*>(me))->value() <=	
@@ -119,6 +125,14 @@ FrBCppClass * FrBInt::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_GE, f);
+
+    f = new FrBUnaryCppFunction(operator_eq_FrBInt, _cpp_class, false);
+    f->setReturnType(FrBBool::getCppClass());
+    f->setName("operator==(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_EQ, f);
 
     
     f = new FrBUnaryCppFunction(operator_add_FrBInt, _cpp_class, false);

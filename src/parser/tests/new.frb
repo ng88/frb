@@ -8,7 +8,7 @@ Public Class Main
         Private val As Int := Null
     
         Public Sub Initialize(v As Int)
-            val := Null
+            val := 8 + v
         End Sub
         
     
@@ -22,11 +22,20 @@ Public Class Main
         
         Utils.printTitre("debut des tests")
         
-        Dim a As A := New A(5)
         
-        Debug.println("a=" + a)
-        a.printMe()
+        Dim list As Utils.LinkedList
         
+        list.add(5)
+        list.add(4)
+        list.add(12)
+        list.add(45)
+        
+        
+        Dim it As Utils.LinkedList.Iterator := list.begin()
+
+        
+        
+        Utils.printTitre("fin des tests")
 
     End Sub
     
@@ -49,6 +58,85 @@ End Class
 
 
 Public Module Utils
+
+
+    Public Class LinkedList
+    
+        Private Class Node
+            Public next As Node := Null
+            Public value As Object := Null
+            
+            Public Sub Initialize(n As Node, v As Object)
+                next := n
+                value := v
+            End Sub
+            
+            Public Sub add(n As Node)
+                If Utils.isNull(next) Then
+                    next := n
+                Else
+                    next.add(n)
+                End If
+            End Sub
+        End Class
+        
+        Public Class Iterator
+            Private pos As Node := Null
+            
+            Public Sub Initialize(n As Node)
+                pos := n
+            End Sub
+            
+            'to be replaced by operator overloading
+            Public Function inc() As Iterator
+                If Utils.isNull(pos) Then Return Null
+                
+                If Utils.isNull(pos.next) Then
+                    Return Null
+                Else
+                    pos := pos.next
+                    Return Me
+                End If
+            End Function
+            
+            Public Function val() As Object
+                If Utils.isNull(pos) Then
+                    Return Null
+                Else
+                    Return pos.value
+                End If
+            End Function
+            
+        End Class
+    
+        Protected root As Node := Null
+        
+        
+        Public Sub add(v As Object)
+            Dim n As Node := New Node(Null, v)
+            
+            If Utils.isNull(root) Then
+                root := n
+            Else
+                root.add(n)
+            End If
+            
+        End Sub
+        
+        Public Function begin() As Iterator
+            Return New Iterator(root)
+        End Function
+        
+        Public Function end() As Iterator
+            Return Null
+        End Function
+    
+    End Class
+
+
+    Public Shared Function isNull(o As Object) As Bool
+        Return Debug.addressof(o) == Debug.addressof(Null)
+    End Function
 
     Public Shared Sub printTitre(t As String)
         Debug.println(titre(t, 50))
