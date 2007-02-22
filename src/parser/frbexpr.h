@@ -100,8 +100,9 @@ public:
     /** sharedContext indicates wheter we are in a shared member definition or not
      */
     FrBMeExpr(bool nonSharedContext);
-    bool isInstance();
+    bool isInstance() const;
     virtual ~FrBMeExpr() {}
+    std::ostream& put(std::ostream& stream) const;
 };
 
 /** hold full type like Module1.Module2.Type, used FOR TYPE ONLY */
@@ -374,7 +375,6 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);    
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const;    
 };
 
 /** Me expr for expression that are outside function */
@@ -389,7 +389,6 @@ public:
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const;    
 };
 
 //TODO il y a du code a factoriser entre refassign et binop

@@ -335,6 +335,10 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     { /* is this a field ? */
 	FrBField * f = current_class->findField(_name);
 
+	std::cout << "ns test ; "<< *_context << " <- " << _name 
+		  << " me n'est pas une instance=" << !_context->isInstance()
+		  << " champs est partage=" << !f->shared() << "\n";
+
 	/* yes. is the context an instance or a class ? */
 	if(!_context->isInstance())
 	{
@@ -553,11 +557,22 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
             _fn = mo->context()->getClass()->findFunction(mo->name(), *_rhs);
             _me = mo->context();
 
-            return;
+
         }
         catch(...)  /* no, this is not a real funtion call */
         {
+	    throw FrBFunctionNotFoundException(dbg_name);
         }
+
+	/* yes. is the context an instance or a class ? */
+	if(!_me->isInstance())
+	{
+	    /* this is a class, so fn must be shared */
+	    if(!_fn->shared())
+		throw FrBInvalidNonSharedException(_fn);
+	}
+	
+	return;
         
     }
 
@@ -590,7 +605,8 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
         me = _me->eval(e);
 
 	if(!me || FrBNull::isNull(me))
-	    throw FrBInvalidNonSharedException(_fn);
+	    //throw FrBInvalidNonSharedException(_fn);
+	    throw FrBNullReferenceException();
     }
 
     return _fn->execute(e, me, rval);
@@ -635,11 +651,17 @@ FrBMeExpr::FrBMeExpr(bool nonSharedContext)
 }
 
 
-bool FrBMeExpr::isInstance()
+bool FrBMeExpr::isInstance() const
 {
     return _nonSharedContext;
 }
 
+
+std::ostream& FrBMeExpr::put(std::ostream& stream) const
+{
+    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME) 
+		  << "_" << (_nonSharedContext ? "non_shared" : "shared");
+}
  
 /*        FrBInsideMeExpr                */
 
@@ -669,10 +691,6 @@ const FrBClass* FrBInsideMeExpr::getClass() const
     return _fn->container();
 }
 
-std::ostream& FrBInsideMeExpr::put(std::ostream& stream) const
-{
-    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
-}
 
 
 
@@ -700,10 +718,7 @@ const FrBClass* FrBOutsideMeExpr::getClass() const
 }
 
 
-std::ostream& FrBOutsideMeExpr::put(std::ostream& stream) const
-{
-    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ME);
-}
+
 
 
 

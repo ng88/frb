@@ -16,21 +16,23 @@ Public Class Main
         End Sub
     
     End Class
-        
+    
     Public Shared Sub main()
         
-        Debug.println(titre("debut des tests", 100))
+        printTitre("debut des tests")
         
-        Dim a As A := Null
+        Dim a As A
         Debug.println("a=" + a)
+    
 
         
-        Debug.println(titre("fin des tests", 100))
-        Debug.println(titre("test", 100)) 
-        Dim as As String := "foo"
-        Debug.println(titre(as, 100)) 
+        printTitre("fin des tests")
     End Sub
     
+    
+    Public Shared Sub printTitre(t As String)
+        Debug.println(titre(t, 50))
+    End Sub
     
     Public Shared Function titre(chaine As String, tailleTotale As Int) As String
     

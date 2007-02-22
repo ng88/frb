@@ -69,9 +69,10 @@ public:
 
 
 
-class FrBEvaluationException : public FrBExecutionException
+/*class FrBEvaluationException : public FrBExecutionException
 {
-};
+};*/
+typedef FrBExecutionException FrBEvaluationException;
 
 
 class FrBInvalidLValueException : public FrBExecutionException
@@ -206,7 +207,7 @@ public:
 
 
 /** Occurs when using a non static member as a static member  */
-class FrBInvalidNonSharedException : public FrBExecutionException
+class FrBInvalidNonSharedException : public FrBResolveException
 {
 protected:
     FrBMember *  _fl;
@@ -239,6 +240,20 @@ public:
     std::ostream& put(std::ostream& stream) const;
 
 };
+
+
+
+/** Occurs in code like 'Dim a As A' where A does not have a default ctor  */
+/*class FrBDecWithNoDefaultCTor : public FrBExecutionException
+{
+protected:
+    FrBMember *  _fl;
+public:
+
+    FrBInvalidNonSharedException(FrBMember * f);
+    std::ostream& put(std::ostream& stream) const;
+
+};*/
 
 
 #endif
