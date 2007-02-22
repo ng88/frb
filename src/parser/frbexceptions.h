@@ -169,8 +169,9 @@ public:
 
 class FrBDefaultCtorNotFoundException : public FrBFunctionNotFoundException
 {
+    const FrBClass * _c;
 public:
-    FrBDefaultCtorNotFoundException();
+    FrBDefaultCtorNotFoundException(const FrBClass * _c);
 };
 
 
@@ -244,7 +245,7 @@ public:
 
 
 /** Occurs in code like 'Dim a As A' where A does not have a default ctor  */
-/*class FrBDecWithNoDefaultCTor : public FrBExecutionException
+/*class FrBDecWithoutDefaultCtor : public FrBExecutionException
 {
 protected:
     FrBMember *  _fl;

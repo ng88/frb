@@ -8,8 +8,9 @@ Public Class Main
         Private val As Int := Null
     
         Public Sub Initialize(v As Int)
-            val := v
+            val := Null
         End Sub
+        
     
         Public Sub printMe()
             Debug.println("A at " + Debug.addressof(Me) + ", val=" + val)
@@ -19,17 +20,36 @@ Public Class Main
     
     Public Shared Sub main()
         
-        printTitre("debut des tests")
+        Utils.printTitre("debut des tests")
         
-        Dim a As A
+        Dim a As A := New A(5)
+        
         Debug.println("a=" + a)
-    
-
+        a.printMe()
         
-        printTitre("fin des tests")
+
     End Sub
     
-    
+   
+
+End Class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Public Module Utils
+
     Public Shared Sub printTitre(t As String)
         Debug.println(titre(t, 50))
     End Sub
@@ -50,6 +70,6 @@ Public Class Main
         End If
     
     End Function
-
-End Class
-
+    
+    
+End Module

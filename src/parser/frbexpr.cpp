@@ -335,10 +335,6 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     { /* is this a field ? */
 	FrBField * f = current_class->findField(_name);
 
-	std::cout << "ns test ; "<< *_context << " <- " << _name 
-		  << " me n'est pas une instance=" << !_context->isInstance()
-		  << " champs est partage=" << !f->shared() << "\n";
-
 	/* yes. is the context an instance or a class ? */
 	if(!_context->isInstance())
 	{

@@ -132,8 +132,8 @@ std::ostream& FrBFunctionAmbiguityException::put(std::ostream& stream) const
 /*                   FrBDefaultCtorNotFoundException                */
 
 
-FrBDefaultCtorNotFoundException::FrBDefaultCtorNotFoundException()
- : FrBFunctionNotFoundException(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME))
+FrBDefaultCtorNotFoundException::FrBDefaultCtorNotFoundException(const FrBClass * c)
+    : FrBFunctionNotFoundException(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME)), _c(c)
 {
 }
 

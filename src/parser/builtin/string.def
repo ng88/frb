@@ -90,6 +90,7 @@ FrBBaseObject * operator_mul_FrBInt_FrBString(FrBExecutionEnvironment& e, FrBBas
    return operator_mul_FrBString_FrBInt(e, arg0, me);
 }
 
+
 FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     std::ostringstream tmp;

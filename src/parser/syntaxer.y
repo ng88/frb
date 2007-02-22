@@ -69,6 +69,8 @@ struct FnAttr
     bool  is_const;
 };
 
+enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
+
 
 %}
 
@@ -297,6 +299,9 @@ function_type:
 function:
       fn_attr /*1*/ function_type /*2*/ sub_name /*3*/
       { /*4*/
+
+	   $<vint>$ = FN_UNKNOW;
+
            frb_assert2(!class_stack.empty(), "fn/sub declaration");
            
            FrBCodeFunction * nfn = new FrBCodeFunction();
@@ -322,16 +327,19 @@ function:
                if( $<str>3 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME))
                {
                    //TODO: verifier les parametres/retour
-                   current_class()->addConstructor(nfn);
+                   current_class()->addConstructor(nfn, true);
+	   	   $<vint>$ = FN_CTOR;
                }
                else if( $<str>3 == FrBKeywords::getKeyword(FrBKeywords::FRB_KW_DESTRUCTOR_NAME))
                {
                    current_class()->addDestructor(nfn);
+		   $<vint>$ = FN_DTOR;
                }
                else
                {
                    current_class()->addFunction(nfn);
                    free($<str>3);
+		   $<vint>$ = FN_NORMAL;
                }
                    
                
@@ -348,18 +356,23 @@ function:
       }
       fn_arg_list /*5*/ as_type_optionnal /*6*/ /* sub/function */
       { /*7*/
-           if(current_fn()->sub() && $<vtype>6 != 0)
+	   FrBCodeFunction * f = current_fn();
+
+	   if($<vint>4 == FN_CTOR && f->parameterCount() == 0)
+	       current_class()->setDefaultCtor(f);
+
+           if(f->sub() && $<vtype>6 != 0)
                 frb_error->error(FrBErrors::FRB_ERR_SUB_RETURN_TYPE,
                     FrBErrors::FRB_ERR_PARSE,
                     frb_lexer->lineno(), "", "", "",
                     String(frb_lexer->YYText()));
-            else if(!current_fn()->sub() && $<vtype>6 == 0)
+            else if(!f->sub() && $<vtype>6 == 0)
                 frb_error->error(FrBErrors::FRB_ERR_FN_RETURN_TYPE,
                     FrBErrors::FRB_ERR_PARSE,
                     frb_lexer->lineno(), "", "", "",
                     String(frb_lexer->YYText()));
                     
-            current_fn()->setURReturnType($<vtype>6);        
+            f->setURReturnType($<vtype>6);        
            
       }
       function_content_list /*8*/

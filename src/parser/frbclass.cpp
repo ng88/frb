@@ -31,7 +31,7 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    if(!shared() && !hasDefaultCtor())
+    if(!shared() && !hasDefaultCtor() &&  constructorList()->size() == 0)
     {
 	FrBFunction * f = new FrBNopCppFunction();
 	f->setName("$generated_ctor$");

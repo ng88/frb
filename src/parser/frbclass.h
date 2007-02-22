@@ -167,7 +167,7 @@ public:
 
     //TODO /* verifier la validité des params et retour */
     /** Add 'f' as a constructor for this */
-    inline void addConstructor(FrBFunction * f);
+    inline void addConstructor(FrBFunction * f, bool no_default = false);
 
     /** Set 'f' to be the destructor for this */
     inline void addDestructor(FrBFunction * f);
@@ -181,7 +181,8 @@ public:
 
     /** Return true if this class has a defaultCtor */
     inline bool hasDefaultCtor() const { return _defaultCtor != 0; }
-    
+
+    inline void setDefaultCtor(FrBFunction * v) { frb_assert(v->parameterCount() == 0); _defaultCtor = v; }
     
     inline ClassContainer* innerClassPtr() { return &_innerClasses; }
 
@@ -328,7 +329,7 @@ inline FrBFunction * FrBClass::findConstructor() const throw (FrBFunctionNotFoun
     if(_defaultCtor)
         return _defaultCtor;
     else
-	throw FrBDefaultCtorNotFoundException();
+	throw FrBDefaultCtorNotFoundException(this);
 }
     
 template<class ArgContainer>
@@ -440,13 +441,13 @@ inline void FrBClass::addOperator(int op, FrBFunction * f)
   _operators.insert(std::make_pair(op, f));
 }
 
-inline void FrBClass::addConstructor(FrBFunction * f)
+inline void FrBClass::addConstructor(FrBFunction * f, bool no_default)
 {
   frb_assert2(f, "FrBClass::addConstructor(FrBFunction f) -- f is null");
 
   f->setContainer(this); 
 
-  if(f->parameterCount() == 0)
+  if(!no_default && f->parameterCount() == 0)
     _defaultCtor = f;
             
   _ctors.push_back(f);
