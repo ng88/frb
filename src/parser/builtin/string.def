@@ -105,6 +105,10 @@ FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrB
     return r;
 }
 
+FrBBaseObject * size_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    return e.addGarbagedObject(new FrBInt((static_cast<FrBString*>(me))->valuePtr().size()));
+}
 
 
 FrBCppClass * FrBString::initClass()
@@ -172,6 +176,15 @@ FrBCppClass * FrBString::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
+
+    f = new FrBNoParamCppFunction(size_FrBString);
+    f->setReturnType(FrBInt::getCppClass());
+    f->setName("size");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addFunction(f);
+
 
     /*f = new FrBUnaryCppFunction(operator_mul_FrBInt_FrBString,  FrBInt::getCppClass(), false);
     f->setReturnType(_cpp_class);

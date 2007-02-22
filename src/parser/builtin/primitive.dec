@@ -48,6 +48,16 @@ public:
 
     FrBClass * getClass() { return getCppClass(); }
 
+    /** This function is used in the optimization pass to compute constant values
+      * Typically, when an expression like 1+1 is seen, 
+      * int.operatorOptimizationEnabled(FrBKeywords::FRB_KW_OP_ADD, int, int) is
+      * called to know if we can compute this value at compile time (of course
+      * arguments that are given to this function always are littral expressions)
+      * Note: This function does not need to check is the operator is definied, because
+      * the caller had already done this check
+      */
+    virtual bool operatorOptimizationEnabled(int op/*, ArgContainer args*/) { return false; }
+
     
     class Allocator : public FrBCppObjectAllocator
     {

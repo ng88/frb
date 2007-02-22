@@ -16,16 +16,38 @@ Public Class Main
         End Sub
     
     End Class
-    
+        
     Public Shared Sub main()
+        
+        Debug.println(titre("debut des tests", 100))
+        
         Dim a As A := Null
-
-        Debug.println("-" * 10 + " debut des tests " + "-" * 10)
-
         Debug.println("a=" + a)
 
-                
+        
+        Debug.println(titre("fin des tests", 100))
+        Debug.println(titre("test", 100)) 
+        Dim as As String := "foo"
+        Debug.println(titre(as, 100)) 
     End Sub
+    
+    
+    Public Shared Function titre(chaine As String, tailleTotale As Int) As String
+    
+        If chaine.size() Mod 2 >= 1 Then
+            chaine := chaine + " "
+        End If
+        
+        Dim nbTirets As Int := (tailleTotale - chaine.size()) / 2 - 2
+        
+        If nbTirets <= 0 Then
+            Return chaine
+        Else
+            Dim tirets As String := "-" * nbTirets
+            Return tirets + " " + chaine + " " + tirets
+        End If
+    
+    End Function
 
 End Class
 

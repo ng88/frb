@@ -47,6 +47,20 @@ FrBBaseObject * operator_mul_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * 
     return r;
 }
 
+FrBBaseObject * operator_div_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() / (static_cast<FrBInt*>(arg0))->value());
+    e.addGarbagedObject(r);
+    return r;
+}
+
+FrBBaseObject * operator_mod_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    FrBInt * r = new FrBInt((static_cast<FrBInt*>(me))->value() % (static_cast<FrBInt*>(arg0))->value());
+    e.addGarbagedObject(r);
+    return r;
+}
+
 FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
     (static_cast<FrBInt*>(me))->setValue( (static_cast<FrBInt*>(arg0))->value() );
@@ -138,6 +152,22 @@ FrBCppClass * FrBInt::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MUL, f);
+
+    f = new FrBUnaryCppFunction(operator_div_FrBInt, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator/(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_DIV, f);
+
+    f = new FrBUnaryCppFunction(operator_mod_FrBInt, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operatorMod(Int)");
+    f->setConst(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_MOD, f);
     
     f = new FrBUnaryCppFunction(operator_affect_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);
@@ -145,6 +175,8 @@ FrBCppClass * FrBInt::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ASSIGN_VAL, f);
+
+
 
     //TODO ajouter _cpp_class au module frb::std
     

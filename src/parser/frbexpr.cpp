@@ -586,11 +586,11 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 
     if(!_fn->shared()) /* non-shared fn, me must be provided */
     {
-	if(!me)
-	    throw FrBInvalidNonSharedException(_fn);
-
         frb_assert(_me);
         me = _me->eval(e);
+
+	if(!me || FrBNull::isNull(me))
+	    throw FrBInvalidNonSharedException(_fn);
     }
 
     return _fn->execute(e, me, rval);
