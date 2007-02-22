@@ -110,7 +110,7 @@ Public Module Utils
         End Class
     
         Protected root As Node := Null
-        
+
         
         Public Sub add(v As Object)
             Dim n As Node := New Node(Null, v)
@@ -134,6 +134,7 @@ Public Module Utils
     End Class
 
 
+    'to be replaced by o Is Null
     Public Shared Function isNull(o As Object) As Bool
         Return Debug.addressof(o) == Debug.addressof(Null)
     End Function

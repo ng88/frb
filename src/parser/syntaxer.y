@@ -133,10 +133,10 @@ enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
 %left FRB_KW_TOKEN_OP_MEMBER
 
 /* 7. Opérateur d'objet */
-%left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
+%left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_IN FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
 %nonassoc FRB_KW_TOKEN_OP_SIZEOF
 
-%nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END
+%nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_CARD FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END
 
 %%
 
@@ -925,6 +925,8 @@ expr:
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_POW); }
       
     | FRB_KW_TOKEN_OP_SUB expr %prec FRB_KW_TOKEN_OP_UNARY_MINUS      /* -expr */
+
+    | FRB_KW_TOKEN_OP_CARD expr                                          /* #expr */
     
     | expr FRB_KW_TOKEN_OP_EQ expr                             /* expr == expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_EQ); }
@@ -960,6 +962,9 @@ expr:
     
     | expr FRB_KW_TOKEN_OP_IS expr                           /* expr Is expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IS); }
+
+    | expr FRB_KW_TOKEN_OP_IN expr                           /* expr In expr */
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IN); }
 
 //     | expr FRB_KW_TOKEN_OP_CLASS_TYPEOF expr               /* expr IsTypeOf expr  |definissable sur object ca peut etre sympa */
 //     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr  | monobj.isTypeOf(Type|Object)*/
@@ -1006,6 +1011,7 @@ literal_expr:
     | FRB_KW_TOKEN_NULL { $<expr>$ = new FrBNullExpr(); /*FrBNullExpr::nullExpr();*/ }
     | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
     | identifier_expr { $<expr>$ = $<expr>1; }
+    | array
     ;
 
 identifier_expr:
@@ -1019,21 +1025,6 @@ identifier_expr:
             {
                 FrBCodeFunction * cf = current_fn();
 
-                /*
-                    We look for:
-                    X 1. local var
-                    X 2. function parameter
-                        3. local class member
-                    ---
-                    X 4. local class function/sub
-                        5. local class property
-                    X 6. class names of the inners classes
-                        7. class au même niveau ie ds le mm module
-                    X 8. imported class name
-                    Parent pout accéder a l'outer class
-                    Base.<nom> pour une super classe
-                
-                */
 
                 /* local var */
                 int idvar = cf->findLocalVar(name);
@@ -1054,41 +1045,8 @@ identifier_expr:
             }
 
             $<expr>$ = new FrBUnresolvedIdWithContextExpr(new_me_expr(true), name);
-            //pr le me ici, on peut quand même en faire un seulement pr le type
-
-//             
-//             /* 6. class names of the inners classes */
-//             FrBClass::ClassContainer::const_iterator iit = cc->innerClassList()->find(name);
-//             
-//             if(iit != cc->innerClassList()->end())
-//             {
-//                 /* found */
-//                 
-//                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper( iit->second ));
-//                 
-//                 puts("ID FOUND --  /* 6. class names of the inners classes */\n");
-// 
-//                 break;
-//             }
-//             
-//             
-//             /* 8. imported class name */
-//             const FrBClass * c = FrBClass::getClassFromString(name);
-//             
-//             if(c)
-//             {
-//                 /* found */
-//                 
-//                 $<expr>$ = new FrBObjectIdExpr(new FrBClassWrapper(c));
-//                 
-//                 puts("ID FOUND --  /* 8. imported class name */\n");
-//                 
-//                 break;
-//             }
           
       }
-    | FRB_KW_TOKEN_NOTHING
-    | array
     ;
 
 

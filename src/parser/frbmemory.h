@@ -30,6 +30,8 @@
 // faire un wrapper class pr const
 // mais pour ca ilfaut generaliser un peu, FrBClass aura quaisment tout
 // en pure virtuel et introduire une FrBImplClass et une FrBConstClass
+//
+// il faut plutot trimballer les infos du types dans les FrBExpr*
 
 class FrBExecutionEnvironment;
 

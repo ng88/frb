@@ -124,8 +124,6 @@ frb_deflang           ("DefLang")
                                         {
                                             yytext[ yyleng - 1 ] = 0;
                                             YYLVAL.str = ++yytext;
-                                            //TODO on copie (strdup)?
-                                            
                                             return TOKEN(FRB_TYPE_LITERAL_STRING);
                                         }
                                     }
