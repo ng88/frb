@@ -291,7 +291,6 @@ FrBUnresolvedIdWithContextExpr::ClassEvaluator::ClassEvaluator(FrBClass * f)
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObject * me,
     FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    frb_warning2(false, "using FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval()");
     return e.addGarbagedObject(new FrBClassWrapper(_cl));
 }
 
@@ -329,12 +328,15 @@ FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 {
     if(_evaluator)
         delete _evaluator;
-        
-    delete _context;
+
+    if(_context)
+	delete _context;
 }
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+    frb_assert(_context);
+
     if(!_context_resolved)
         _context->resolveAndCheck(e);
 
@@ -374,6 +376,13 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 	_evaluator = new ClassEvaluator(c);
     }
 
+    /* if _context is not an instance, it is not more useful */
+    if(!_context->isInstance())
+    {
+	delete _context;
+	_context = 0;
+    }
+
 }
 
 FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) const
@@ -383,7 +392,8 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
 
     FrBBaseObject * me = FrBNull::nullValue();
 
-    me = _context->eval(e);
+    if(_context)
+	me = _context->eval(e);
 
     if(_evaluator->needMe() && FrBNull::isNull(me))
 	    throw FrBNullReferenceException();
@@ -426,7 +436,8 @@ void FrBUnresolvedIdWithContextExpr::refAssign(FrBExecutionEnvironment& e, FrBBa
 
     FrBBaseObject * me = FrBNull::nullValue();
 
-    me = _context->eval(e);
+    if(_context)
+	me = _context->eval(e);
 
     if(_evaluator->needMe() && FrBNull::isNull(me))
 	    throw FrBNullReferenceException();

@@ -22,6 +22,9 @@ Public Class Main
         Public v As Int
     End Class
     
+    Public Shared Sub tc(c As Class, a As Int)
+        Dim o As Object := Cast(c, a)
+    End Sub
     
     Public Shared Sub main()
     
@@ -29,8 +32,6 @@ Public Class Main
         
         Dim a As A := New A(5)
         Dim b As B
-        
-        'créé plein de wrappers ! a corriger
         
         Debug.println("typename(Utils.LinkedList)="  + Debug.typename(Utils.LinkedList))
         
@@ -48,6 +49,7 @@ Public Class Main
         Utils.LinkedList.Iterator.aaa()
         
         b := Cast(B, a)
+        tc(Bool, 5)
         
         Debug.println("typename(b)="  + Debug.typename(b))
     
