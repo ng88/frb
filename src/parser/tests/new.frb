@@ -30,7 +30,7 @@ Public Class Main
         list.add(12)
         list.add(45)
         
-        'Dim a As Class := Int
+        Dim a As Class := Int
         
         'For it As Utils.LinkedList.Iterator := list.begin() To list.end()
         

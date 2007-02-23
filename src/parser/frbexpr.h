@@ -61,6 +61,12 @@ public:
     
     /** Get type of expression (can be called ONLY IF resolveAndCheck() was called before) */
     virtual const FrBClass* getClass() const = 0;
+
+    /** Get the real type of expression (can be called ONLY IF resolveAndCheck() was called before)
+      * By default getRealClass()  == getClass(), a typical example where getRealClass()  != getClass() is
+      * for a code like 'Dim a As Class := Int'. Here Int.getClass() == 'Class' & Int.getRealClass()  == 'Int'
+      */
+    virtual const FrBClass* getRealClass() const;
     
     /** Evaluate expression (can be called ONLY IF resolveAndCheck() was called before) */
     virtual FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException) = 0;
@@ -96,7 +102,7 @@ class FrBMeExpr : public FrBExpr
 protected:
     bool _nonSharedContext;
 public:
-
+ 
     /** sharedContext indicates wheter we are in a shared member definition or not
      */
     FrBMeExpr(bool nonSharedContext);
@@ -143,6 +149,7 @@ protected:
      public:
         virtual ~Evaluator() {}
         virtual const FrBClass* getClass() const = 0;
+	virtual const FrBClass* getRealClass()  const { return getClass(); }
 
         /** Return true if the evaluator need the me param to be set for evaluation */
         virtual bool needMe() const = 0;
@@ -208,6 +215,7 @@ protected:
         bool needMe() const;
 	String name() const { return _cl->fullName(); }
 	bool isInstance() const;
+	const FrBClass* getRealClass()  const;
     };
     
     FrBExpr *                _context;
@@ -226,6 +234,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
+    const FrBClass* getRealClass() const;
 
     inline const String& name() const { return _name; }
     inline FrBExpr* context() { return _context; }
@@ -350,6 +359,7 @@ public:
 //
 // For i As Int := 1 To 10 <=> ForEach i In new IntRange(1, 10)
 // pr les templates, generaliser FrBClass, créer FrBImplClass (==actuelle FrBClass) puis FrBTemplatedClass (contient 1 FrBImplClass + les paramètres)
+// ou alors, crée des types génériques qui peuvent prendre n'importe quelle forme en fonction du resolveenv.
 
 
 /*

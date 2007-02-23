@@ -30,6 +30,12 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
     return expr.put(s);
 }
 
+
+const FrBClass* FrBExpr::getRealClass() const
+{
+    return getClass();
+}
+
 bool FrBExpr::isAssignable() const
 {
     return false;
@@ -292,8 +298,12 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObjec
 const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
 {
     return FrBClassWrapper::getCppClass();
-    //return _cl;
-   }
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getRealClass() const
+{
+    return _cl;
+}
 
 bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
 {
@@ -329,7 +339,7 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
         _context->resolveAndCheck(e);
 
     //const_cast pas tres propre mais pour le moment c'est tres bien comme ca :)
-    FrBClass * current_class = const_cast<FrBClass *>(_context->getClass());
+    FrBClass * current_class = const_cast<FrBClass *>(_context->getRealClass());
 
     try
     { /* is this a field ? */
@@ -388,6 +398,12 @@ const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
 {
     frb_assert(_evaluator);
     return _evaluator->getClass();
+}
+
+const FrBClass* FrBUnresolvedIdWithContextExpr::getRealClass() const
+{
+    frb_assert(_evaluator);
+    return _evaluator->getRealClass();
 }
 
 bool FrBUnresolvedIdWithContextExpr::isAssignable() const
@@ -550,7 +566,7 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
             mo->context()->resolveAndCheck(e);
             mo->setContextResolved(); /* to be sure that context'll not be resolved again after */
 
-            _fn = mo->context()->getClass()->findFunction(mo->name(), *_rhs);
+            _fn = mo->context()->getRealClass()->findFunction(mo->name(), *_rhs);
             _me = mo->context();
 
 
@@ -617,7 +633,18 @@ const FrBClass* FrBFunctionCallExpr::getClass() const
 
 std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
 {
-    stream << *_lhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
+    if(_fn)
+    {
+	FrBUnresolvedIdWithContextExpr * mo = dynamic_cast<FrBUnresolvedIdWithContextExpr*>(_lhs);
+    
+	if(mo) 
+	    stream <<  *(mo->context()) << '.' << _fn->name();
+    }
+    else
+	stream << *_lhs;
+
+
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
 
     FrBExprList::const_iterator it = _rhs->begin();
 

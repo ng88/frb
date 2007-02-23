@@ -123,6 +123,42 @@ FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBase
 
 }
 
+/*          FrBBinaryCppFunction          */
+
+
+const FrBClass * FrBBinaryCppFunction::parameterType(int index) const
+{
+    return index ? _arg1 : _arg0;
+}
+
+bool FrBBinaryCppFunction::parameterByVal(int index) const
+{
+    return index ? _arg1_byval : _arg0_byval;
+}
+
+int FrBBinaryCppFunction::parameterCount() const
+{
+    return 2;
+}
+
+
+FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                FrBBaseObject * arg0, FrBBaseObject * arg1) const
+     throw (FrBExecutionException)
+{
+    return _fn(e, me, arg0, arg1);
+}
+
+
+FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject * me,
+                                                const FrBBaseObjectList& args) const
+     throw (FrBExecutionException)
+{
+    frb_assert(args.size() == 2);
+    return _fn(e, me, args[0], args[1]);
+
+}
+
 
 /*          FrBUnaryParamArrayCppFunction          */
 

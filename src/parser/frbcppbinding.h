@@ -164,6 +164,37 @@ public:
         throw (FrBExecutionException);
 };
 
+class FrBBinaryCppFunction : public FrBCppFunction
+{
+    
+public:
+
+    typedef FrBBaseObject * (*BinaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, FrBBaseObject *, FrBBaseObject *);
+    
+private:
+
+    BinaryFunction _fn;
+    FrBClass * _arg0;
+    bool       _arg0_byval;
+    FrBClass * _arg1;
+    bool       _arg1_byval;
+    
+public:
+
+    /** 'fn' is a pointer to the C++ function, 'arg0' is the type of the first argument and 'arg0_byval' indicates if the first arg must be passed byval or not (=byref)  */
+    FrBBinaryCppFunction(BinaryFunction fn, FrBClass *  arg0, bool arg0_byval, FrBClass *  arg1, bool arg1_byval)
+        : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval) {}
+
+    const FrBClass * parameterType(int index) const;
+    bool parameterByVal(int index) const;
+    int parameterCount() const;
+    
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
+        throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
+};
+
 /** fn(ParamArray a As T) */
 class FrBUnaryParamArrayCppFunction : public FrBCppFunction
 {
