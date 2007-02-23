@@ -465,6 +465,26 @@ public:
 };*/
 
 
+//TODO le cast actuel est bridé, il sera débridé avec l'arrivée des templates
+class FrBCastExpr : public FrBExpr
+{
+private:
+    FrBExpr     *_type;
+    FrBExpr     *_val;
+    
+public:
+    FrBCastExpr(FrBExpr* type, FrBExpr* val);
+    ~FrBCastExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const; 
+
+};
+
+
+
 class FrBNewExpr : public FrBExpr
 {
 private:

@@ -18,6 +18,10 @@ Public Class Main
     
     End Class
     
+    Public Class B
+        Public v As Int
+    End Class
+    
     Public Shared Sub main()
         
         Utils.printTitre("debut des tests")
@@ -29,15 +33,38 @@ Public Class Main
         list.add(4)
         list.add(12)
         list.add(45)
+        list.add(78)
+        list.add(0)
+        list.addHead(15)
+        list.add(70)
+        list.addHead(789)
         
-        Dim a As Class := Int
+        Dim n As Int := list.size() - 1
+        
+        Debug.println("list.size() - 1 = "+n)
+        
+        Dim it As Utils.LinkedList.Iterator := list.begin()
+        Dim i As Int
+        
+        For i := 0 To n Step 1
+            Dim v As Int := Cast(Int, it.val())
+            Debug.println("list[" + i + "]=" + v )
+            it.inc()
+        Next   
+        
+        list.reverse()
+
+        it := list.begin()
+        For i := 0 To n Step 1
+            v := Cast(Int, it.val())
+            Debug.println("list[" + i + "]=" + v )
+            it.inc()
+        Next          
+        
         
         'For it As Utils.LinkedList.Iterator := list.begin() To list.end()
         
         'Next
-        
-
-        
         
         Utils.printTitre("fin des tests")
 
@@ -82,6 +109,28 @@ Public Module Utils
                     next.add(n)
                 End If
             End Sub
+            
+            
+            Public Function reverse(prec As Node) As Node
+                Dim n As Node := next
+                next := prec
+
+                If Utils.isNull(n) Then
+                    Return Me
+                Else
+                    Return n.reverse(Me)
+                End If
+                
+            End Function
+            
+            Public Function size() As Int
+                If Utils.isNull(next) Then
+                    Return 1
+                Else
+                    Return next.size() + 1
+                End If
+            End Function
+        
         End Class
         
         Public Class Iterator
@@ -126,6 +175,28 @@ Public Module Utils
             End If
             
         End Sub
+        
+        Public Sub addHead(v As Object)
+            
+            root := New Node(root, v)
+            
+        End Sub
+        
+        Public Sub reverse()
+            If Utils.isNull(root) Then
+                
+            Else
+                root := root.reverse(Null)
+            End If
+        End Sub
+        
+        Public Function size() As Int
+            If Utils.isNull(root) Then
+                Return 0
+            Else
+                Return root.size()
+            End If
+        End Function
         
         Public Function begin() As Iterator
             Return New Iterator(root)

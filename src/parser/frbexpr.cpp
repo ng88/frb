@@ -768,8 +768,8 @@ void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
 
   frb_assert2(_lhs->isAssignable(), "invalid lvalue");
 
-  if(!_rhs->getClass()->isCompatibleWith(_rhs->getClass()))
-    throw FrBIncompatibleClassException(_rhs->getClass(), _rhs->getClass());
+  if(!_rhs->getClass()->isCompatibleWith(_lhs->getClass()))
+    throw FrBIncompatibleClassException(_rhs->getClass(), _lhs->getClass());
 }
 
 bool FrBRefAssignExpr::isAssignable() const
@@ -933,6 +933,51 @@ std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 		      << *_lhs << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op)
 		      << "> " << *_rhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
+
+/*            FrBCastExpr            */
+
+FrBCastExpr::FrBCastExpr(FrBExpr* type, FrBExpr* val)
+    : _type(type), _val(val)
+{
+}
+
+FrBCastExpr::~FrBCastExpr()
+{
+    delete _type;
+    delete _val;
+}
+    
+void FrBCastExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    _type->resolveAndCheck(e);
+    _val->resolveAndCheck(e);
+
+    if(_type->getClass() != FrBClassWrapper::getCppClass())
+	throw FrBIncompatibleClassException(_type->getClass(), FrBClassWrapper::getCppClass());
+
+
+}
+
+FrBBaseObject* FrBCastExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return _val->eval(e);
+}
+
+const FrBClass* FrBCastExpr::getClass() const
+{
+    return _type->getRealClass();
+}
+
+std::ostream& FrBCastExpr::put(std::ostream& stream) const
+{
+    return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_CAST)
+		  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_LT) << *_type
+		  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_GT) 
+		  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET) << *_val 
+		  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
+}
+
+
 
 /*              FrBNewExpr             */
 

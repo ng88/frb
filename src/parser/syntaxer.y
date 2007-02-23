@@ -974,7 +974,12 @@ expr:
 //     | expr FRB_KW_TOKEN_OP_CLASS_INSTANCEOF expr       /* expr IsInstanceOf expr  | monobj.isTypeOf(Type|Object)*/
 //     | expr FRB_KW_TOKEN_OP_CLASS_INHERITS expr           /* expr Inherits expr */
     
-    | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
+//    | FRB_KW_TOKEN_OP_SIZEOF expr                          /* SizeOf expr */
+
+
+   //| FRB_KW_TOKEN_OP_CAST FRB_KW_TOKEN_OP_LT expr FRB_KW_TOKEN_OP_GT FRB_KW_TOKEN_OP_O_BRACKET expr FRB_KW_TOKEN_OP_C_BRACKET  /* Cast<expr>(expr) */
+    | FRB_KW_TOKEN_OP_CAST FRB_KW_TOKEN_OP_O_BRACKET expr  FRB_KW_TOKEN_OP_LIST_SEP expr FRB_KW_TOKEN_OP_C_BRACKET  /* Cast(expr, expr) */
+      { $<expr>$ = new FrBCastExpr($<expr>3, $<expr>5);  }
     
     | expr FRB_KW_TOKEN_OP_MEMBER FRB_KW_TOKEN_OPERATOR operator_overloadable 
       {

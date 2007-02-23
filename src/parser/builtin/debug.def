@@ -132,9 +132,9 @@ FrBCppClass * FrBDebug::initClass()
     f->setName("cast");
     f->setReturnType(FrBInt::getCppClass());
     f->setShared(true);
-    f->setConst(true);*/
+    f->setConst(true);
     
-    _cpp_class->addFunction(f);
+    _cpp_class->addFunction(f);*/
 
     f = new FrBUnaryCppFunction(print_FrBObject<FrBInt>, FrBInt::getCppClass(), false);
     f->setName("print");
