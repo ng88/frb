@@ -243,6 +243,9 @@ public:
     
     /** Check if this and to are compatibles (/!\ a->isCompatibleWith(b) != b->isCompatibleWith(a)) */
     bool isCompatibleWith(const FrBClass * to) const;
+
+    /** Same as isCompatibleWith() */
+    inline bool isAssignableTo(const FrBClass * to) const;
     
     /** Return true if current class inherits from from */
     bool inheritsFrom(const FrBClass * from) const;
@@ -458,6 +461,11 @@ inline void FrBClass::addDestructor(FrBFunction * f)
   frb_assert(f);
   f->setContainer(this);
   _dtor = f;
+}
+
+inline bool FrBClass::isAssignableTo(const FrBClass * to) const
+{
+    return isCompatibleWith(to);
 }
 
 

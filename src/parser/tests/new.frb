@@ -22,9 +22,36 @@ Public Class Main
         Public v As Int
     End Class
     
+    
     Public Shared Sub main()
+    
+        Utils.printTitre("debut des test de cast")    
         
-        Utils.printTitre("debut des tests")
+        Dim a As A := New A(5)
+        Dim b As B
+        
+        'créé plein de wrappers ! a corriger
+        
+        Debug.println("typename(Utils.LinkedList)="  + Debug.typename(Utils.LinkedList))
+        
+        Debug.println("typename(Null)="  + Debug.typename(Null))
+        Debug.println("typename(Utils.LinkedList.Iterator)="  + Debug.typename(Utils.LinkedList.Iterator))
+        Debug.println("typename(Int)="  + Debug.typename(Int))
+        Debug.println("typename(Object)="  + Debug.typename(Object))
+        Debug.println("typename(A)="  + Debug.typename(A))
+        Debug.println("typename(B)="  + Debug.typename(B))
+        Debug.println("typename(b.v)="  + Debug.typename(b.v))
+        Debug.println("typename(a)="  + Debug.typename(a))
+        Debug.println("typename(b)="  + Debug.typename(b))
+        
+        
+        Utils.LinkedList.Iterator.aaa()
+        
+        b := Cast(B, a)
+        
+        Debug.println("typename(b)="  + Debug.typename(b))
+    
+        Utils.printTitre("debut des test de la LinkedList")
         
         
         Dim list As Utils.LinkedList
@@ -138,6 +165,10 @@ Public Module Utils
             
             Public Sub Initialize(n As Node)
                 pos := n
+            End Sub
+            
+            Public Shared Sub aaa()
+                Debug.println("foo")
             End Sub
             
             'to be replaced by operator overloading

@@ -388,10 +388,10 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
     if(_evaluator->needMe() && FrBNull::isNull(me))
 	    throw FrBNullReferenceException();
 
-    if(isInstance())
+    //if(isInstance())
 	return _evaluator->eval(me, e);
-    else
-	return  FrBNull::nullValue();
+//    else
+	//return  FrBNull::nullValue();
 }
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::getClass() const
@@ -960,7 +960,13 @@ void FrBCastExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExc
 
 FrBBaseObject* FrBCastExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return _val->eval(e);
+    FrBBaseObject * o = _val->eval(e);
+    //FrBClassWrapper * true_type =  static_cast<FrBClassWrapper*>(_type->eval(e));
+
+    if(!o->getClass()->isCompatibleWith(_val->getClass()))
+	throw FrBIncompatibleClassException(o->getClass(), _val->getClass());
+
+    return o;
 }
 
 const FrBClass* FrBCastExpr::getClass() const
