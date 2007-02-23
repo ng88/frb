@@ -862,6 +862,10 @@ full_type: /* a.b.c.d.e.f ... */
           $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
           free($<str>1);
       }
+    | intro_id /* Class, Function, ...*/
+      {
+          $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
+      }
     ;
     
     
@@ -1047,8 +1051,17 @@ identifier_expr:
             $<expr>$ = new FrBUnresolvedIdWithContextExpr(new_me_expr(true), name);
           
       }
+    | intro_id
+      {
+	  $<expr>$ = new FrBUnresolvedIdWithContextExpr(new_me_expr(true), $<str>1);
+      }
     ;
 
+/* identifier for introspection */
+intro_id:
+      FRB_KW_TOKEN_CLASS      { $<str>$ = $<str>1; }
+   |  FRB_KW_TOKEN_FUNCTION   { $<str>$ = $<str>1; }
+   ;
 
 array: /* {expr, expr, ...} */
       FRB_KW_TOKEN_OP_ARRAY_INI_BEGIN array_elt_list FRB_KW_TOKEN_OP_ARRAY_INI_END

@@ -258,6 +258,9 @@ FrBBaseObject* FrBClass::forceConvert(FrBBaseObject * from, const FrBClass * to)
 bool FrBClass::isCompatibleWith(const FrBClass * to) const
 {
     frb_assert2(to, "null pointer passed to FrBClass::isCompatibleWith()");
+
+    //if(to == FrBClassWrapper::getCppClass())
+
     //cas particulier si on a une classe à gauche
     //void (ie sub return) can not be converted or used in expression
     if(this == FrBVoid::getCppClass())

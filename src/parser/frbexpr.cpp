@@ -291,8 +291,8 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::ClassEvaluator::eval(FrBBaseObjec
 
 const FrBClass* FrBUnresolvedIdWithContextExpr::ClassEvaluator::getClass() const
 {
-    //return FrBClassWrapper::getCppClass();
-    return _cl;
+    return FrBClassWrapper::getCppClass();
+    //return _cl;
    }
 
 bool FrBUnresolvedIdWithContextExpr::ClassEvaluator::needMe() const
@@ -791,7 +791,7 @@ std::ostream& FrBRefAssignExpr::put(std::ostream& stream) const
 FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
     : _rhs(rhs), _lhs(lhs), _op(op), _fn(0)
 {
-    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBOpExpr::FrBOpExpr()");
+    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBBinOpExpr::FrBBinOpExpr()");
 
 }
 FrBBinOpExpr::~FrBBinOpExpr()

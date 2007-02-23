@@ -1,0 +1,75 @@
+DefLang EN
+
+
+Public Class Main
+
+    
+    Public Shared Sub main()
+
+        Dim c As CouleursDeBase := CouleursDeBase.PURE_BLUE
+        Dim c2 As Couleur := c
+        
+        c := New Jours(c2) 'ne crée pas vraiment d'instance
+        
+        Dim j As Jours := Jours.MARDI
+        
+        j := j.jourSuivant()
+    
+    End Sub
+    
+
+End Class
+
+
+
+
+
+
+Public Enum Jours As Int
+
+    LUNDI := 1,
+    MARDI := 2,
+    MERCREDI := 3,
+    JEUDI := 4,
+    VENDREDI := 5,
+    SAMEDI := 6,
+    DIMANCHE := 7
+    
+    'getClass() renvoie Jours pour Jours.MERCREDI
+    
+    'pas de ctor definissable
+    'toujours un ctor automatique : Initialize(v As Int)
+    
+    Public Function jourSuivant() As Jours
+        If Me == DIMANCHE Then
+            Return LUNDI
+        Else
+            Return New Jours(Me + 1)
+        End If
+    End Function
+
+End Enum
+
+
+
+Public Enum CouleursDeBase As CouleursDeBase.Couleur
+
+    Default PURE_BLUE  := New Couleur(0, 0, 255),
+            PURE_RED   := New Couleur(255, 0, 0),
+            PURE_GREEN := New Couleur(0, 255, 0),
+
+    Public Class Couleur
+        Public Red As Int := Null
+        Public Green As Int := Null
+        Public Blue As Int := Null
+        
+        Public Sub Initialize(r As Int, g As Int, b As Int)
+            Red := r
+            Green := g
+            Blue := b
+        End Sub
+    End Class
+   
+
+End Enum
+   

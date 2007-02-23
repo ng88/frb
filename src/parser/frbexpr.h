@@ -342,14 +342,14 @@ public:
 //
 //    ca ne dispense pas des templates
 //
-// introspection :
+//7 introspection :
 //
 // Dim c As Class, f As Function
 // c := MyClass    <-- utilise un operator de conversion qui retournera un FrBClassWrapper(MyClass.getClass())
 // d := myFunction
 //
 // For i As Int := 1 To 10 <=> ForEach i In new IntRange(1, 10)
-
+// pr les templates, generaliser FrBClass, créer FrBImplClass (==actuelle FrBClass) puis FrBTemplatedClass (contient 1 FrBImplClass + les paramètres)
 
 
 /*
