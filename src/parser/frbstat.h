@@ -29,7 +29,7 @@
 class FrBExpr;
 class FrBTypeExpr;
 class FrBClass;
-class FrBBinOpExpr;
+class FrBBinOpBaseExpr;
 class FrBCodeFunction;
 class FrBStatement;
 
@@ -224,9 +224,9 @@ class FrBForLoopStatement : public FrBBlockStatement
 {
 private:
 
-    FrBBinOpExpr * _incrementor;
-    FrBBinOpExpr *  _bounds_checker;
-    FrBExpr *  _assignator;
+    FrBExpr * _incrementor;
+    FrBBinOpBaseExpr *  _bounds_checker;
+    FrBBinOpBaseExpr *  _assignator;
 
 public:
     FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step);

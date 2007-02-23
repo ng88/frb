@@ -27,10 +27,32 @@ FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * 
 
 FrBBaseObject * operator_add_assign_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    FrBInt * i = static_cast<FrBInt*>(me);
-    i->setValue(i->value() + (static_cast<FrBInt*>(arg0))->value());
+    static_cast<FrBInt*>(me)->valuePtr() += static_cast<FrBInt*>(arg0)->value();
     return me;
 }
+
+FrBBaseObject * operator_sub_assign_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
+{
+    static_cast<FrBInt*>(me)->valuePtr() -= static_cast<FrBInt*>(arg0)->value();
+    return me;
+}
+
+FrBBaseObject * operator_incr_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    static_cast<FrBInt*>(me)->valuePtr()++;
+    return me;
+}
+
+FrBBaseObject * operator_decr_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    static_cast<FrBInt*>(me)->valuePtr()--;
+    return me;
+}
+FrBBaseObject * operator_unary_min_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
+{
+    return e.addGarbagedObject(new FrBInt( - static_cast<FrBInt*>(me)->value() ));
+}
+
 
 FrBBaseObject * operator_sub_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
@@ -143,13 +165,36 @@ FrBCppClass * FrBInt::initClass()
     
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD, f);
 
+    f = new FrBNoParamCppFunction(operator_unary_min_FrBInt);
+    f->setReturnType(_cpp_class);
+    f->setName("operator-()");
+    f->setScope(SC_PUBLIC);
+    f->setConst(true);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_SUB, f);
+
     f = new FrBUnaryCppFunction(operator_add_assign_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);
     f->setName("operator+=(Int)");
-    f->setConst(true);
     f->setScope(SC_PUBLIC);
-    
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ADD_ASSIGN, f);
+
+    f = new FrBUnaryCppFunction(operator_sub_assign_FrBInt, _cpp_class, false);
+    f->setReturnType(_cpp_class);
+    f->setName("operator-=(Int)");
+    f->setScope(SC_PUBLIC);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_SUB_ASSIGN, f);
+
+    f = new FrBNoParamCppFunction(operator_incr_FrBInt);
+    f->setReturnType(_cpp_class);
+    f->setName("operator++()");
+    f->setScope(SC_PUBLIC);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_INCR, f);
+
+    f = new FrBNoParamCppFunction(operator_decr_FrBInt);
+    f->setReturnType(_cpp_class);
+    f->setName("operator--()");
+    f->setScope(SC_PUBLIC);
+    _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_DECR, f);
 
     f = new FrBUnaryCppFunction(operator_sub_FrBInt, _cpp_class, false);
     f->setReturnType(_cpp_class);

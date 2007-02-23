@@ -401,53 +401,61 @@ public:
     const FrBClass* getClass() const;
 };
 
-//TODO il y a du code a factoriser entre refassign et binop
-
-/** Ref assignment <expr> := <expr> */
-class FrBRefAssignExpr : public FrBExpr
+class FrBBinOpBaseExpr : public FrBExpr
 {
-private:
+protected:
     FrBExpr     *_lhs;
     FrBExpr     *_rhs;
+
+public:
+
+    FrBBinOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs);
+    ~FrBBinOpBaseExpr();
+
+    /** Do not resolve lhs, operator & rhs only, used for some optimizations only */
+    virtual void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
+
+    /** Resolve lhs and call partialResolveAndCheck */
+    void resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException);
+
+    /** Used for some optimizations only */
+    inline void setLHS(FrBExpr * e) { _lhs = e; }   
+    /** Used for some optimizations only */
+    inline void setRHS(FrBExpr * e) { _rhs = e; }
+
+};
+
+
+/** Ref assignment <expr> := <expr> */
+class FrBRefAssignExpr : public FrBBinOpBaseExpr
+{
     
 public:
-    FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException);
-    ~FrBRefAssignExpr();
+    FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs);
     
     bool isAssignable() const;
     void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void  partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;    
 };
 
-
-class FrBBinOpExpr : public FrBExpr
+class FrBBinOpExpr : public FrBBinOpBaseExpr
 {
 private:
-    FrBExpr     *_rhs;
-    FrBExpr     *_lhs;
     int          _op;
     FrBFunction *_fn;
     
 public:
     FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op);
-    ~FrBBinOpExpr();
     
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-
-    /** Do not resolve lhs, operator & rhs only, used for some optimizations only */
     void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const; 
 
-    /** Used for some optimizations only */
-    inline void setLHS(FrBExpr * e) { _lhs = e; }   
-    /** Used for some optimizations only */
-    inline void setRHS(FrBExpr * e) { _rhs = e; }   
 };
 
 

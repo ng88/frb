@@ -401,38 +401,26 @@ FrBReturnStatement::~FrBReturnStatement()
 
 FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int direction, FrBExpr * max, FrBExpr * step)
 {
-    //TODO : _step = -step si direction = -1
-    //      si _step == 0 -> on utilse un incréenteur ++
-//    if(direction == -1)
-    //
+    if(step) /* var += step / var -= step */
+	_incrementor = new FrBBinOpExpr(var, step, (direction == 1) ? FrBKeywords::FRB_KW_OP_ADD_ASSIGN : FrBKeywords::FRB_KW_OP_SUB_ASSIGN);
+    else /* var++ / var-- */
+	_incrementor = new FrBUnaryOpExpr(var, (direction == 1) ? FrBKeywords::FRB_KW_OP_INCR : FrBKeywords::FRB_KW_OP_DECR);
 
-    if(step)
-    {
-	if(direction == -1)
-	    step = new FrBUnaryOpExpr(step, FrBKeywords::FRB_KW_OP_MINUS);
-
-	_incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
-    }
-    else         ++++ verifier que tout ce delete bien ++++
-    {
-	if(direction == 1)
-	    _incrementor = new FrBUnaryOpExpr(var, FrBKeywords::FRB_KW_OP_INCR);
-	else
-	    _incrementor = new FrBUnaryOpExpr(var, FrBKeywords::FRB_KW_OP_DECR);
-    }
-
+    /* var := init */
     _assignator = new FrBRefAssignExpr(var, init);
 
-    _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE);
-
+    /* var <= max / var >= max */
+    _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE)
+;
 }
 
 
 void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    _assignator->resolveAndCheck(e);
 
-    _incrementor->partialResolveAndCheck(e);
+    _incrementor->resolveAndCheck(e);
+
+    _assignator->partialResolveAndCheck(e);
     _bounds_checker->partialResolveAndCheck(e);
 
     if(!_bounds_checker->getClass()->isCompatibleWith(FrBBool::getCppClass()))
@@ -456,7 +444,6 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
     {
 	FrBBlockStatement::execute(e);
 
-	/*var++ or var-- or var += step */
 	_incrementor->eval(e);
     }
 
@@ -490,12 +477,12 @@ bool FrBForLoopStatement::allPathContainsAReturn() const
 FrBForLoopStatement::~FrBForLoopStatement()
 {
 
-    _incrementor->setLHS(0);
+    _assignator->setLHS(0);
     _bounds_checker->setLHS(0);
 
+    delete _incrementor;
     delete _assignator;
     delete _bounds_checker;
-    delete _incrementor;
 
 }
 

@@ -73,7 +73,7 @@ int main(int argc, char ** argv)
         {
             argv[0],
             "--file",
-            "tests/new.frb",
+            "tests/for.frb",
         };
     if(argc == 1)
     {

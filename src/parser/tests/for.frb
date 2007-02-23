@@ -7,31 +7,49 @@ Public Class Main
     Public Shared Sub main()
         Dim a As Int
 
-        For a := 1 To 5 Step 1
+        For a := 1 To 5
             Debug.println("dans for 1 , a vaut " + a)
         Next
         
-        For a := 10 DownTo 5 Step 1-2
+        For a := 10 DownTo 5
             Debug.println("dans for 2 , a vaut " + a)
         Next
         
         For a := 1 To 5 Step 2
             Debug.println("dans for 3 , a vaut " + a)
         Next
+        
+        For a := 30 DownTo 5 Step 8
+            Debug.println("dans for 4 , a vaut " + a)
+        Next
+        
+        For a := -5 To -1
+            Debug.println("dans for 5 , a vaut " + a)
+        Next
+        
+        For a := -5 To -1 Step 2
+            Debug.println("dans for 6 , a vaut " + a)
+        Next
        
-          Dim b As Int
-'         
-'         For a := 1 To 3 Step 1
-'             For b := 1 To 3 Step 1
-'                 Debug.println("dans for/for 4 , a=" + a + " b=" + b + " ((a+b) >= 5)=" +bool2str( (a+b) >= 5 ))
-'             Next
-'         Next
+        For a := -5 DownTo -19 Step 3
+            Debug.println("dans for 7 , a vaut " + a)
+        Next
         
-'         For a := 1 To 1024 Step 1
-'            b = a * b + 411
-'         Next
+        Dim b As Int
+        'probleme du ConstInt / Int
+        For a := 1 To 3
+            b := 1
+            b++
+            Debug.println("b="+b)
+        Next
         
-      '  Debug.showMem()
+        For a := 1 To 3
+            Debug.println("d")
+            For b := 1 To 3
+                Debug.println("dans for/for 4 , a=" + a + " b=" + b)
+            Next
+        Next
+
      
     End Sub
 

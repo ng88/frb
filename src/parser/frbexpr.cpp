@@ -751,33 +751,48 @@ const FrBClass* FrBOutsideMeExpr::getClass() const
   return _field->container();
 }
 
+/*           FrBBinOpBaseExpr            */
 
 
+FrBBinOpBaseExpr::FrBBinOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs)
+    : _lhs(lhs), _rhs(rhs)
+{
+    frb_assert(lhs && rhs);
+}
+
+
+FrBBinOpBaseExpr::~FrBBinOpBaseExpr()
+{
+    if(_rhs)
+	delete _rhs;
+
+    if(_lhs)
+	delete _lhs;
+}
+
+
+void FrBBinOpBaseExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    _lhs->resolveAndCheck(e);
+    partialResolveAndCheck(e);
+}
 
 
 
 /*           FrBRefAssignExpr                    */
 
 
-FrBRefAssignExpr::FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs) throw (FrBFunctionNotFoundException)
- : _lhs(lhs), _rhs(rhs)
+FrBRefAssignExpr::FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs)
+ : FrBBinOpBaseExpr(lhs, rhs)
 {
-    frb_assert(_lhs && _rhs);
 }
 
-FrBRefAssignExpr::~FrBRefAssignExpr()
-{
-    delete _lhs;
-    delete _rhs;
-}
 
-void FrBRefAssignExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBRefAssignExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+  frb_assert2(_lhs->isAssignable(), "invalid lvalue");
 
   _rhs->resolveAndCheck(e);
-  _lhs->resolveAndCheck(e);
-
-  frb_assert2(_lhs->isAssignable(), "invalid lvalue");
 
   if(!_rhs->getClass()->isCompatibleWith(_lhs->getClass()))
     throw FrBIncompatibleClassException(_rhs->getClass(), _lhs->getClass());
@@ -821,31 +836,15 @@ std::ostream& FrBRefAssignExpr::put(std::ostream& stream) const
 }
 
 
-
   
 
 
 /*        FrBBinOpExpr            */
 FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
-    : _rhs(rhs), _lhs(lhs), _op(op), _fn(0)
+    : FrBBinOpBaseExpr(lhs, rhs), _op(op), _fn(0)
 {
-    frb_assert2(rhs && lhs, "frbexpr.cpp::FrBBinOpExpr::FrBBinOpExpr()");
-
-}
-FrBBinOpExpr::~FrBBinOpExpr()
-{
-    if(_rhs)
-	delete _rhs;
-
-    if(_lhs)
-	delete _lhs;
 }
 
-void FrBBinOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
-{
-    _lhs->resolveAndCheck(e);
-    partialResolveAndCheck(e);
-}
 
 void FrBBinOpExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
@@ -1027,11 +1026,11 @@ std::ostream& FrBUnaryOpExpr::put(std::ostream& stream) const
 {
     if(_fn)
       return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET)
-		    << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_e << ' '
+		    << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_e
 		    << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
     else
       return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET)
-		    << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op) << "> " << *_e << ' '
+		    << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op) << "> " << *_e
 		    << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
 

@@ -740,10 +740,6 @@ arg:
     ;
 
     
-array_expr_list: /* [expt, expr, ...] */
-      FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN expr_list FRB_KW_TOKEN_OP_ARRAY_SUB_END
-    | FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN /* empty */ FRB_KW_TOKEN_OP_ARRAY_SUB_END
-    ;
 
 parent_expr_list: /* (expt, expr, ...) */
       FRB_KW_TOKEN_OP_O_BRACKET expr_list FRB_KW_TOKEN_OP_C_BRACKET { $<exprs>$ = $<exprs>2; }
@@ -1011,8 +1007,9 @@ expr:
       {
           $<expr>$ = new FrBFunctionCallExpr($<expr>1, $<exprs>2);
       }
-      
-    | expr array_expr_list                /* array sub expr[expr, expr...] */
+
+    | expr FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN expr FRB_KW_TOKEN_OP_ARRAY_SUB_END           /* array sub expr[expr] */
+      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_ARRAY_SUB_BEGIN); }
     | literal_expr
     ;
 
