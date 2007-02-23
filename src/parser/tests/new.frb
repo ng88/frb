@@ -94,6 +94,7 @@ Public Class Main
         'For it As Utils.LinkedList.Iterator := list.begin() To list.end()
         
         'Next
+        i++
         
         Utils.printTitre("fin des tests")
 

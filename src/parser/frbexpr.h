@@ -436,17 +436,22 @@ public:
     ~FrBBinOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+
+    /** Do not resolve lhs, operator & rhs only, used for some optimizations only */
     void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const; 
 
+    /** Used for some optimizations only */
     inline void setLHS(FrBExpr * e) { _lhs = e; }   
+    /** Used for some optimizations only */
     inline void setRHS(FrBExpr * e) { _rhs = e; }   
 };
 
 
-/*class FrBUnaryOpExpr : public FrBExpr
+class FrBUnaryOpExpr : public FrBExpr
 {
 private:
     FrBExpr     *_e;
@@ -458,11 +463,10 @@ public:
     ~FrBUnaryOpExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const; 
-};*/
+};
 
 
 //TODO le cast actuel est bridé, il sera débridé avec l'arrivée des templates

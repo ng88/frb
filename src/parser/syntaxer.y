@@ -136,11 +136,15 @@ enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
 %left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_IN FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
 %nonassoc FRB_KW_TOKEN_OP_SIZEOF
 
-%nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_CARD FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END
+/* 8. Operateurs unaires */
+%nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_CARD  FRB_KW_TOKEN_INCR FRB_KW_TOKEN_OP_DECR
 
+
+/* 9. Parenthèses */
+%nonassoc FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN
 %%
 
-/* 10 shift/reduce a cause du empty dans member_scope_attr */
+
 
 new_line:
        FRB_KW_TOKEN_OP_NEWLINE /* opérateur nouvelle ligne, ':' par défaut */
@@ -642,10 +646,10 @@ operator_overloadable:
     | FRB_KW_TOKEN_OP_BITW_LSHIFT
     | FRB_KW_TOKEN_OP_BITW_RSHIFT
     | FRB_KW_TOKEN_OP_MOD
-   /* | FRB_KW_TOKEN_OP_LOG_AND     pas surchargeable
-    | FRB_KW_TOKEN_OP_LOG_OR        pour activer l'évaluation 
-    | FRB_KW_TOKEN_OP_LOG_XOR       paresseuse
-    | FRB_KW_TOKEN_OP_LOG_NOT*/
+    | FRB_KW_TOKEN_OP_LOG_AND
+    | FRB_KW_TOKEN_OP_LOG_OR
+    | FRB_KW_TOKEN_OP_LOG_XOR
+    | FRB_KW_TOKEN_OP_LOG_NOT
     ;
 
 fn_arg_list: /* ( [arg list] )  */
@@ -929,8 +933,16 @@ expr:
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_POW); }
       
     | FRB_KW_TOKEN_OP_SUB expr %prec FRB_KW_TOKEN_OP_UNARY_MINUS      /* -expr */
+      { $<expr>$ = new FrBUnaryOpExpr($<expr>2, FrBKeywords::FRB_KW_OP_SUB); }
 
     | FRB_KW_TOKEN_OP_CARD expr                                          /* #expr */
+      { $<expr>$ = new FrBUnaryOpExpr($<expr>2, FrBKeywords::FRB_KW_OP_CARD); }
+
+    | expr FRB_KW_TOKEN_OP_INCR                                         /* expr++       generates 30 shift/reduce conflicts*/
+      { $<expr>$ = new FrBUnaryOpExpr($<expr>1, FrBKeywords::FRB_KW_OP_INCR); }
+
+    | expr FRB_KW_TOKEN_OP_DECR                                          /* expr-- */
+      { $<expr>$ = new FrBUnaryOpExpr($<expr>1, FrBKeywords::FRB_KW_OP_DECR); }
     
     | expr FRB_KW_TOKEN_OP_EQ expr                             /* expr == expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_EQ); }
@@ -963,6 +975,7 @@ expr:
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_XOR); }
       
     | FRB_KW_TOKEN_OP_LOG_NOT expr                      /* Not expr */
+      { $<expr>$ = new FrBUnaryOpExpr($<expr>2, FrBKeywords::FRB_KW_OP_LOG_NOT); }
     
     | expr FRB_KW_TOKEN_OP_IS expr                           /* expr Is expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IS); }

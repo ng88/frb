@@ -620,7 +620,7 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
         rval.push_back((*it)->eval(e));
 
-    FrBBaseObject* me = 0;
+    FrBBaseObject* me = FrBNull::nullValue();
 
     if(!_fn->shared()) /* non-shared fn, me must be provided */
     {
@@ -918,7 +918,7 @@ FrBBaseObject* FrBBinOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEv
     FrBBaseObject* rval = _rhs->eval(e);
     
     if(_fn->shared())
-        return _fn->execute(e, 0, lval, rval);
+        return _fn->execute(e, FrBNull::nullValue(), lval, rval);
     else
         return _fn->execute(e, lval, rval);
         
@@ -944,6 +944,97 @@ std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 		      << *_lhs << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op)
 		      << "> " << *_rhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
+
+/*           FrBUnaryOpExpr         */
+//  FrBExpr     *_e;
+//  int          _op;
+//  FrBFunction *_fn;
+    
+FrBUnaryOpExpr::FrBUnaryOpExpr(FrBExpr* e, int op)
+    : _e(e), _op(op), _fn(0)
+{
+    frb_assert(e);
+}
+
+FrBUnaryOpExpr::~FrBUnaryOpExpr()
+{
+    delete _e;
+}
+    
+void FrBUnaryOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    _e->resolveAndCheck(e);
+   
+    const FrBClass * ce = _e->getClass();
+    
+    FrBConstClassList args;
+    args.push_back(ce);
+    
+    try
+    {
+        _fn = ce->findOperator(_op, args);
+        if(!_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
+    }
+    catch(FrBFunctionNotFoundException)
+    {
+	try
+	{
+	    args.clear();
+	    _fn = ce->findOperator(_op, args);
+	    if(_fn->shared()) throw FrBFunctionNotFoundException(_fn->name());
+	}
+	catch(FrBFunctionNotFoundException)
+	{
+	    FrBFunctionNotFoundException ex(
+		String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
+		.append(FrBKeywords::getKeywordOrSymbol(_op)),
+		args
+		);
+                
+	    const FrBClass::OperatorContainer * ops = ce->operatorList();
+                
+	    for(FrBClass::OperatorContainer::const_iterator itf = ops->begin(); itf != ops->end(); ++itf)
+		ex.addCandidate(itf->second);
+
+	    throw ex;
+	}
+     
+    }
+}
+
+FrBBaseObject* FrBUnaryOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    frb_assert(_fn);
+        
+    FrBBaseObject* val = _e->eval(e);
+    
+    if(_fn->shared())
+        return _fn->execute(e, FrBNull::nullValue(), val);
+    else
+        return _fn->execute(e, val);
+        
+
+
+}
+
+const FrBClass* FrBUnaryOpExpr::getClass() const
+{
+    frb_assert(_fn);
+    return _fn->returnType();
+}
+
+std::ostream& FrBUnaryOpExpr::put(std::ostream& stream) const
+{
+    if(_fn)
+      return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET)
+		    << FrBKeywords::getKeywordOrSymbol(_op) << ' ' << *_e << ' '
+		    << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
+    else
+      return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET)
+		    << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op) << "> " << *_e << ' '
+		    << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
+}
+
 
 /*            FrBCastExpr            */
 

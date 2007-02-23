@@ -403,7 +403,24 @@ FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int dire
 {
     //TODO : _step = -step si direction = -1
     //      si _step == 0 -> on utilse un incréenteur ++
-    _incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
+//    if(direction == -1)
+    //
+
+    if(step)
+    {
+	if(direction == -1)
+	    step = new FrBUnaryOpExpr(step, FrBKeywords::FRB_KW_OP_MINUS);
+
+	_incrementor = new FrBBinOpExpr(var, step, FrBKeywords::FRB_KW_OP_ADD_ASSIGN);
+    }
+    else         ++++ verifier que tout ce delete bien ++++
+    {
+	if(direction == 1)
+	    _incrementor = new FrBUnaryOpExpr(var, FrBKeywords::FRB_KW_OP_INCR);
+	else
+	    _incrementor = new FrBUnaryOpExpr(var, FrBKeywords::FRB_KW_OP_DECR);
+    }
+
     _assignator = new FrBRefAssignExpr(var, init);
 
     _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE);
