@@ -420,7 +420,10 @@ void FrBForLoopStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 
     _incrementor->resolveAndCheck(e);
 
+    _assignator->rhs()->resolveAndCheck(e);
     _assignator->partialResolveAndCheck(e);
+
+    _bounds_checker->rhs()->resolveAndCheck(e);
     _bounds_checker->partialResolveAndCheck(e);
 
     if(!_bounds_checker->getClass()->isCompatibleWith(FrBBool::getCppClass()))

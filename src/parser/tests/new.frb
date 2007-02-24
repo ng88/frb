@@ -254,7 +254,7 @@ Public Module Utils
     
     Public Shared Function titre(chaine As String, tailleTotale As Int) As String
     
-        If chaine.size() Mod 2 >= 1 Then
+        If #chaine Mod 2 >= 1 Then
             chaine := chaine + " "
         End If
         

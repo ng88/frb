@@ -38,20 +38,24 @@ Public Class Main
         Dim b As Int
         'probleme du ConstInt / Int
         For a := 1 To 3
-            b := 1
+            b = 1
             b++
             Debug.println("b="+b)
         Next
         
         For a := 1 To 3
-            Debug.println("d")
-            For b := 1 To 3
+            For b := copyOf(1) To 3
                 Debug.println("dans for/for 4 , a=" + a + " b=" + b)
             Next
         Next
 
      
     End Sub
+    
+    Public Shared Function copyOf(a As Int) As Int
+        Dim t As Int
+        Return t = a
+    End Function
 
 End Class
 

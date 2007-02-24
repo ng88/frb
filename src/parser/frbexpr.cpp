@@ -774,6 +774,7 @@ FrBBinOpBaseExpr::~FrBBinOpBaseExpr()
 void FrBBinOpBaseExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     _lhs->resolveAndCheck(e);
+    _rhs->resolveAndCheck(e);
     partialResolveAndCheck(e);
 }
 
@@ -791,8 +792,6 @@ FrBRefAssignExpr::FrBRefAssignExpr(FrBExpr* lhs, FrBExpr* rhs)
 void FrBRefAssignExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   frb_assert2(_lhs->isAssignable(), "invalid lvalue");
-
-  _rhs->resolveAndCheck(e);
 
   if(!_rhs->getClass()->isCompatibleWith(_lhs->getClass()))
     throw FrBIncompatibleClassException(_rhs->getClass(), _lhs->getClass());
@@ -848,8 +847,6 @@ FrBBinOpExpr::FrBBinOpExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
 
 void FrBBinOpExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-   
-    _rhs->resolveAndCheck(e);
     
     const FrBClass * cl = _lhs->getClass();
     const FrBClass * cr = _rhs->getClass();
@@ -940,9 +937,76 @@ std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 		    << *_rhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
     else
         return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET)
-		      << *_lhs << " <unresolved:" << FrBKeywords::getKeywordOrSymbol(_op)
+		      << *_lhs << " <ur_or_def:" << FrBKeywords::getKeywordOrSymbol(_op)
 		      << "> " << *_rhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
 }
+
+
+/*                     FrBLogOpBaseExpr                   */
+    
+
+FrBLogOpBaseExpr::FrBLogOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs, int op)
+    : FrBBinOpExpr(lhs, rhs, op)
+{
+}
+    
+void FrBLogOpBaseExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    // That's not the 'operator(Bool, Bool)', try to get the wanted overload
+    if( ! (_rhs->getClass() == FrBBool::getCppClass() && _lhs->getClass() == FrBBool::getCppClass()) )
+	FrBBinOpExpr::partialResolveAndCheck(e);
+}
+
+const FrBClass* FrBLogOpBaseExpr::getClass() const
+{
+    if(_fn)
+	return _fn->returnType();
+    else
+	return FrBBool::getCppClass();
+}
+
+
+/*                     FrBLogAndOpExpr                   */
+    
+
+FrBLogAndOpExpr::FrBLogAndOpExpr(FrBExpr* lhs, FrBExpr* rhs)
+    : FrBLogOpBaseExpr(lhs, rhs, FrBKeywords::FRB_KW_OP_LOG_AND)
+{
+}
+
+
+FrBBaseObject* FrBLogAndOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    frb_assert(_lhs);
+    frb_assert(_rhs);
+
+    if(_fn) /* execute overload */
+	return FrBBinOpExpr::eval(e);
+    else /* execute standard And, with lazy eval */
+	return FrBBool::fromCPPBool( (static_cast<FrBBool*>(_lhs->eval(e))->value()) && (static_cast<FrBBool*>(_rhs->eval(e))->value()) );
+}
+
+/*                     FrBLogOrOpExpr                   */
+    
+
+FrBLogOrOpExpr::FrBLogOrOpExpr(FrBExpr* lhs, FrBExpr* rhs)
+    : FrBLogOpBaseExpr(lhs, rhs, FrBKeywords::FRB_KW_OP_LOG_OR)
+{
+}
+
+
+FrBBaseObject* FrBLogOrOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    frb_assert(_lhs);
+    frb_assert(_rhs);
+
+    if(_fn) /* execute overload */
+	return FrBBinOpExpr::eval(e);
+    else /* execute standard And, with lazy eval */
+	return FrBBool::fromCPPBool( (static_cast<FrBBool*>(_lhs->eval(e))->value()) || (static_cast<FrBBool*>(_rhs->eval(e))->value()) );
+}
+
+
 
 /*           FrBUnaryOpExpr         */
 //  FrBExpr     *_e;

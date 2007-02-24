@@ -962,10 +962,10 @@ expr:
 //     //| expr FRB_KW_TOKEN_OP_BITW_RSHIFT expr                                /* expr >> expr */
 //     //op () et [] et IF THEN ELSE et (-> ?) et ++ et -- et New et Delete
     | expr FRB_KW_TOKEN_OP_LOG_AND expr                   /* expr And expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_AND); }
+      { $<expr>$ = new FrBLogAndOpExpr($<expr>1, $<expr>3); }
       
     | expr FRB_KW_TOKEN_OP_LOG_OR expr                 /* expr Or expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_OR); }
+      { $<expr>$ = new FrBLogOrOpExpr($<expr>1, $<expr>3); }
       
     | expr FRB_KW_TOKEN_OP_LOG_XOR expr                  /* expr Xor expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_LOG_XOR); }

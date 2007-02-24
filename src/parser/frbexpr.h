@@ -401,6 +401,7 @@ public:
     const FrBClass* getClass() const;
 };
 
+/** Any binary operator ie expr <op> expr */
 class FrBBinOpBaseExpr : public FrBExpr
 {
 protected:
@@ -412,16 +413,20 @@ public:
     FrBBinOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs);
     ~FrBBinOpBaseExpr();
 
-    /** Do not resolve lhs, operator & rhs only, used for some optimizations only */
+    /** Do not resolve lhs & rhs, used for some optimizations only */
     virtual void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
 
-    /** Resolve lhs and call partialResolveAndCheck */
+    /** Resolve lhs & rhs and call partialResolveAndCheck */
     void resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException);
 
     /** Used for some optimizations only */
     inline void setLHS(FrBExpr * e) { _lhs = e; }   
+
     /** Used for some optimizations only */
     inline void setRHS(FrBExpr * e) { _rhs = e; }
+
+    inline FrBExpr * rhs() { return _rhs; }
+    inline FrBExpr * lhs() { return _lhs; }
 
 };
 
@@ -441,9 +446,11 @@ public:
     std::ostream& put(std::ostream& stream) const;    
 };
 
+
+/** Overloadable binary operator */
 class FrBBinOpExpr : public FrBBinOpBaseExpr
 {
-private:
+protected:
     int          _op;
     FrBFunction *_fn;
     
@@ -455,6 +462,40 @@ public:
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const; 
+
+};
+
+/** Logicial binary operator base */
+class FrBLogOpBaseExpr : public FrBBinOpExpr
+{
+    
+public:
+    FrBLogOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs, int op);
+    
+    void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    const FrBClass* getClass() const;
+
+};
+
+/** Logicial And, if And is not overloaded, lazy evaluation is used */
+class FrBLogAndOpExpr : public FrBLogOpBaseExpr
+{
+    
+public:
+    FrBLogAndOpExpr(FrBExpr* lhs, FrBExpr* rhs);
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+
+};
+
+/** Logicial Or, if Or is not overloaded, lazy evaluation is used */
+class FrBLogOrOpExpr : public FrBLogOpBaseExpr
+{
+    
+public:
+    FrBLogOrOpExpr(FrBExpr* lhs, FrBExpr* rhs);
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
 
 };
 
