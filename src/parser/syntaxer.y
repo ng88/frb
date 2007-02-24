@@ -706,6 +706,7 @@ operator_overloadable:
     | FRB_KW_TOKEN_OP_LOG_OR        { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_OR; }
     | FRB_KW_TOKEN_OP_LOG_XOR       { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_XOR; }
     | FRB_KW_TOKEN_OP_LOG_NOT       { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_NOT; }
+    | FRB_KW_TOKEN_OP_CARD          { $<vint>$ =FrBKeywords::FRB_KW_OP_CARD; }
     ;
 
 fn_arg_list: /* ( [arg list] )  */

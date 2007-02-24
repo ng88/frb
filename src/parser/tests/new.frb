@@ -38,7 +38,7 @@ Public Class Main
         Utils.printTitre("debut des test de la LinkedList")
         
         
-        Dim list As Utils.LinkedList
+        Dim list, list2 As Utils.LinkedList
         
         list.add(5)
         list.add(4)
@@ -51,26 +51,43 @@ Public Class Main
         list.addHead(789)
         
         
+        list2.add(1)
+        list2.add(2)
+        list2.add(3)
+        
         Dim it As Utils.LinkedList.Iterator := Null
        
         Dim i As Int
         
-        For i := 1 To 2
         
-            Debug.println("Contenu de la liste :")
-            
-            For it := list.begin() To list.end()
-                Dim val As Int := Cast(Int, it.val())
-                Debug.println(" |_ " + val )
-            Next
-            
-            If i == 1 Then
-                Debug.println("Renversement de la liste...")
-                list.reverse()
-            End If
-            
+        Debug.println("Contenu de la liste list2 :")
+        
+        For it := list2.begin() To list2.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+
+        Debug.println("Contenu de la liste list :")
+        
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
+        Debug.println("Renversement de la liste list...")
+        list.reverse()
+        
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+        
+        Debug.println("list += list2")
+        list += list2
+        
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+        
+        Debug.println("Nombre d'éléments dans list : " + #list)
+        Debug.println("Nombre d'éléments dans list2 : " + #list2)
         
         Utils.printTitre("fin des tests")
 
@@ -212,6 +229,20 @@ Public Module Utils
                 Return root.size()
             End If
         End Function
+        
+        Public Operator #() As Int
+            Return size()
+        End Operator
+        
+        Public Operator+=(o As LinkedList) As LinkedList
+            Dim it As Iterator := Null
+            
+            For it := o.begin() To o.end()
+                add(it.val())
+            Next
+            
+            Return Me
+        End Operator
         
         Public Function begin() As Iterator
             Return New Iterator(root)
