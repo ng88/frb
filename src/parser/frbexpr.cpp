@@ -880,7 +880,7 @@ void FrBBinOpExpr::partialResolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
             catch(FrBFunctionNotFoundException)
             {
                 FrBFunctionNotFoundException ex(
-                                String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
+		    String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR)).append(" ")
                                     .append(FrBKeywords::getKeywordOrSymbol(_op)),
                                 args
                                                 );
@@ -1049,7 +1049,7 @@ void FrBUnaryOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolve
 	catch(FrBFunctionNotFoundException)
 	{
 	    FrBFunctionNotFoundException ex(
-		String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR))
+		String(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR)).append(" ")
 		.append(FrBKeywords::getKeywordOrSymbol(_op)),
 		args
 		);

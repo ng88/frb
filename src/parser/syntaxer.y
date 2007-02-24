@@ -399,9 +399,49 @@ function:
 	  block_stack.pop();
       }
       
-    | fn_attr FRB_KW_TOKEN_OPERATOR operator_overloadable fn_arg_list as_type /* operator (function) */
+     | fn_attr /*1*/ FRB_KW_TOKEN_OPERATOR /*2*/ operator_overloadable /*3*/  /* operator (function) */
+       { /*4*/
+           frb_assert2(!class_stack.empty(), "operator declaration");
+           
+           FrBCodeFunction * nfn = new FrBCodeFunction();
+
+           nfn->setContainer(current_class());
+
+           nfn->setName(String("Operator ").append(FrBKeywords::getKeywordOrSymbol($<vint>3)) );
+           
+           nfn->setScope( (scope_t)($<fnattr>1.scope) );
+           nfn->setShared( $<fnattr>1.class_attr == SC_SHARED );
+           nfn->setAbstract( $<fnattr>1.class_attr == SC_ABSTRACT );
+           nfn->setConst( $<fnattr>1.is_const );
+           
+           if(fn_stack.empty())
+               current_class()->addOperator($<vint>3, nfn);
+           else
+               frb_assert2(false, "inner functions not implemented");
+
+               
+           fn_stack.push(nfn);
+	   block_stack.push(nfn);
+           
+      }
+      fn_arg_list /*5*/  as_type /*6*/
+      { /*7*/
+	  current_fn()->setURReturnType($<vtype>6);  
+      }
       function_content_list
       FRB_KW_TOKEN_END FRB_KW_TOKEN_OPERATOR
+      {
+
+	  /* does all path contain a return statement ? */
+	  if(!current_fn()->allPathContainsAReturn())
+            frb_error->error(FrBErrors::FRB_ERR_NO_RETURN_FUNCTION,
+			     FrBErrors::FRB_ERR_SEMANTIC,
+			     frb_lexer->lineno(), "", "", "",
+			     String(frb_lexer->YYText()) );
+
+          fn_stack.pop();
+	  block_stack.pop();
+      }
       
     | fn_attr FRB_KW_TOKEN_PROPERTY FRB_KW_TOKEN_GET FRB_IDENTIFIER fn_arg_list as_type /* autoconst property get  (function) */
       function_content_list
@@ -500,14 +540,14 @@ if_stat:
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF new_line
       { if_stack.pop(); }
 /* inline if */
-/*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN 
+    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN 
       {
 	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);
 
 	current_block()->addStat(b);
 	block_stack.push(b);
       }
-      fn_stat { block_stack.pop(); }*/
+      fn_stat { block_stack.pop();  }
       /*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat FRB_KW_TOKEN_ELSE fn_stat */
     ;
     
@@ -638,34 +678,34 @@ return_stat: /* Return expr */
 
     
 operator_overloadable:
-      FRB_KW_TOKEN_OP_ASSIGN_VAL
-    | FRB_KW_TOKEN_OP_ADD_ASSIGN
-    | FRB_KW_TOKEN_OP_SUB_ASSIGN
-    | FRB_KW_TOKEN_OP_MUL_ASSIGN
-    | FRB_KW_TOKEN_OP_DIV_ASSIGN
-    | FRB_KW_TOKEN_OP_INCR
-    | FRB_KW_TOKEN_OP_DECR
-    | FRB_KW_TOKEN_OP_SUB
-    | FRB_KW_TOKEN_OP_ADD
-    | FRB_KW_TOKEN_OP_MUL
-    | FRB_KW_TOKEN_OP_DIV
-    | FRB_KW_TOKEN_OP_INT_DIV
-    | FRB_KW_TOKEN_OP_POW
-    | FRB_KW_TOKEN_OP_EQ
-    | FRB_KW_TOKEN_OP_NE
-    | FRB_KW_TOKEN_OP_LT
-    | FRB_KW_TOKEN_OP_GT
-    | FRB_KW_TOKEN_OP_LE
-    | FRB_KW_TOKEN_OP_GE
-    | FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET
-    | FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END
-    | FRB_KW_TOKEN_OP_BITW_LSHIFT
-    | FRB_KW_TOKEN_OP_BITW_RSHIFT
-    | FRB_KW_TOKEN_OP_MOD
-    | FRB_KW_TOKEN_OP_LOG_AND
-    | FRB_KW_TOKEN_OP_LOG_OR
-    | FRB_KW_TOKEN_OP_LOG_XOR
-    | FRB_KW_TOKEN_OP_LOG_NOT
+    FRB_KW_TOKEN_OP_ASSIGN_VAL      { $<vint>$ =FrBKeywords::FRB_KW_OP_ASSIGN_VAL; }
+    | FRB_KW_TOKEN_OP_ADD_ASSIGN    { $<vint>$ =FrBKeywords::FRB_KW_OP_ADD_ASSIGN; }
+    | FRB_KW_TOKEN_OP_SUB_ASSIGN    { $<vint>$ =FrBKeywords::FRB_KW_OP_ADD_ASSIGN; }
+    | FRB_KW_TOKEN_OP_MUL_ASSIGN    { $<vint>$ =FrBKeywords::FRB_KW_OP_MUL_ASSIGN; }
+    | FRB_KW_TOKEN_OP_DIV_ASSIGN    { $<vint>$ =FrBKeywords::FRB_KW_OP_DIV_ASSIGN; }
+    | FRB_KW_TOKEN_OP_INCR          { $<vint>$ =FrBKeywords::FRB_KW_OP_INCR; }
+    | FRB_KW_TOKEN_OP_DECR          { $<vint>$ =FrBKeywords::FRB_KW_OP_DECR; }
+    | FRB_KW_TOKEN_OP_SUB           { $<vint>$ =FrBKeywords::FRB_KW_OP_SUB; }
+    | FRB_KW_TOKEN_OP_ADD           { $<vint>$ =FrBKeywords::FRB_KW_OP_ADD; }
+    | FRB_KW_TOKEN_OP_MUL           { $<vint>$ =FrBKeywords::FRB_KW_OP_MUL; }
+    | FRB_KW_TOKEN_OP_DIV           { $<vint>$ =FrBKeywords::FRB_KW_OP_DIV; }
+    | FRB_KW_TOKEN_OP_INT_DIV       { $<vint>$ =FrBKeywords::FRB_KW_OP_INT_DIV; }
+    | FRB_KW_TOKEN_OP_POW           { $<vint>$ =FrBKeywords::FRB_KW_OP_POW; }
+    | FRB_KW_TOKEN_OP_EQ            { $<vint>$ =FrBKeywords::FRB_KW_OP_EQ; }
+    | FRB_KW_TOKEN_OP_NE            { $<vint>$ =FrBKeywords::FRB_KW_OP_NE; }
+    | FRB_KW_TOKEN_OP_LT            { $<vint>$ =FrBKeywords::FRB_KW_OP_LT; }
+    | FRB_KW_TOKEN_OP_GT            { $<vint>$ =FrBKeywords::FRB_KW_OP_GT; }
+    | FRB_KW_TOKEN_OP_LE            { $<vint>$ =FrBKeywords::FRB_KW_OP_LE; }
+    | FRB_KW_TOKEN_OP_GE            { $<vint>$ =FrBKeywords::FRB_KW_OP_GE; }
+    | FRB_KW_TOKEN_OP_O_BRACKET FRB_KW_TOKEN_OP_C_BRACKET             { $<vint>$ =FrBKeywords::FRB_KW_OP_O_BRACKET; }
+    | FRB_KW_TOKEN_OP_ARRAY_SUB_BEGIN FRB_KW_TOKEN_OP_ARRAY_SUB_END   { $<vint>$ =FrBKeywords::FRB_KW_OP_ARRAY_SUB_BEGIN; }
+    | FRB_KW_TOKEN_OP_BITW_LSHIFT   { $<vint>$ =FrBKeywords::FRB_KW_OP_BITW_LSHIFT; }
+    | FRB_KW_TOKEN_OP_BITW_RSHIFT   { $<vint>$ =FrBKeywords::FRB_KW_OP_BITW_RSHIFT; }
+    | FRB_KW_TOKEN_OP_MOD           { $<vint>$ =FrBKeywords::FRB_KW_OP_MOD; }
+    | FRB_KW_TOKEN_OP_LOG_AND       { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_AND; }
+    | FRB_KW_TOKEN_OP_LOG_OR        { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_OR; }
+    | FRB_KW_TOKEN_OP_LOG_XOR       { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_XOR; }
+    | FRB_KW_TOKEN_OP_LOG_NOT       { $<vint>$ =FrBKeywords::FRB_KW_OP_LOG_NOT; }
     ;
 
 fn_arg_list: /* ( [arg list] )  */

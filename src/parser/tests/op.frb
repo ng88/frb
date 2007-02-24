@@ -18,10 +18,20 @@ Public Class Main
     Debug.println(" False Or True = " & bool2str( showEval(False, "v1") Or showEval(True, "v2") ) )
     Debug.println(" False Or False = " & bool2str( showEval(False, "v1") Or showEval(False, "v2") ) )
     
-    
     Dim c As IntComplex, d As IntComplex := New IntComplex(1, 2), e As IntComplex := New IntComplex(0, 5)
     
+    
     Debug.println("i="&IntComplex.i.toString())
+    
+    Debug.println("c=" & c.toString() & " d=" & d.toString() & " e=" & e.toString())
+    
+    c := IntComplex.i + d + e
+    
+    Debug.println("c=" & c.toString() & " d=" & d.toString() & " e=" & e.toString())
+    
+    c := IntComplex.i * 3 + 2
+    
+    c:= -c
     
     Debug.println("c=" & c.toString() & " d=" & d.toString() & " e=" & e.toString())
     
@@ -53,12 +63,42 @@ Public Class IntComplex
     
     Public Sub Initialize()
     End Sub
+    
+    Public Sub Initialize(re As Int)
+        Me.re := re
+    End Sub
 
     Public Sub Initialize(re As Int, im As Int)
         Me.re := re
         Me.im := im
     End Sub
     
+    
+    Public Operator+(re As Int) As IntComplex
+        Return Me + New IntComplex(re)
+    End Operator
+    
+    Public Operator*(re As Int) As IntComplex
+        Return Me * New IntComplex(re)
+    End Operator
+    
+    
+    Public Operator+(o As IntComplex) As IntComplex
+        Return New IntComplex(re + o.re, im + o.im)
+    End Operator
+    
+    Public Operator-(o As IntComplex) As IntComplex
+        Return New IntComplex(re - o.re, im - o.im)
+    End Operator
+    
+    Public Operator-() As IntComplex
+        Return New IntComplex(-re, -im)
+    End Operator
+    
+    
+    Public Operator*(o As IntComplex) As IntComplex
+        Return New IntComplex(Me.re * o.re - Me.im * o.im, o.im * Me.re + Me.im * o.re)
+    End Operator
     
     Public Function toString() As String
         If im == 0 Then
@@ -74,7 +114,11 @@ Public Class IntComplex
             If im == 1 Then
                 Return "" + re + "+i"
             Else
-                Return "" + re + "+" + im + "i"
+                If im > 0 Then
+                    Return "" + re + "+" + im + "i"
+                Else
+                    Return "" + re + "-" + -im + "i"
+                End If
             End If
         End If
     End Function

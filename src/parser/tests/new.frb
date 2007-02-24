@@ -33,31 +33,7 @@ Public Class Main
     End Sub
     
     Public Shared Sub main()
-    
-        Utils.printTitre("debut des test de cast")    
-        
-        Dim a As A := New A(5, 4, "salut")
-        Dim b As B
-        
-        Debug.println("typename(Utils.LinkedList)="  + Debug.typename(Utils.LinkedList))
-        
-        Debug.println("typename(Null)="  + Debug.typename(Null))
-        Debug.println("typename(Utils.LinkedList.Iterator)="  + Debug.typename(Utils.LinkedList.Iterator))
-        Debug.println("typename(Int)="  + Debug.typename(Int))
-        Debug.println("typename(Object)="  + Debug.typename(Object))
-        Debug.println("typename(A)="  + Debug.typename(A))
-        Debug.println("typename(B)="  + Debug.typename(B))
-        Debug.println("typename(b.v)="  + Debug.typename(b.v))
-        Debug.println("typename(a)="  + Debug.typename(a))
-        Debug.println("typename(b)="  + Debug.typename(b))
-        
-        
-        Utils.LinkedList.Iterator.aaa()
-        
-        b := Cast(B, a)
-        tc(Bool, 5)
-        
-        Debug.println("typename(b)="  + Debug.typename(b))
+
     
         Utils.printTitre("debut des test de la LinkedList")
         
@@ -74,33 +50,27 @@ Public Class Main
         list.add(70)
         list.addHead(789)
         
-        Dim n As Int := list.size() - 1
         
-        Debug.println("list.size() - 1 = "+n)
-        
-        Dim it As Utils.LinkedList.Iterator := list.begin()
+        Dim it As Utils.LinkedList.Iterator := Null
+       
         Dim i As Int
         
-        For i := 0 To n Step 1
-            Dim v As Int := Cast(Int, it.val())
-            Debug.println("list[" + i + "]=" + v )
-            it.inc()
-        Next   
+        For i := 1 To 2
         
-        list.reverse()
-
-        it := list.begin()
-        For i := 0 To n Step 1
-            v := Cast(Int, it.val())
-            Debug.println("list[" + i + "]=" + v )
-            it.inc()
-        Next          
+            Debug.println("Contenu de la liste :")
+            
+            For it := list.begin() To list.end()
+                Dim val As Int := Cast(Int, it.val())
+                Debug.println(" |_ " + val )
+            Next
+            
+            If i == 1 Then
+                Debug.println("Renversement de la liste...")
+                list.reverse()
+            End If
+            
+        Next
         
-        
-        'For it As Utils.LinkedList.Iterator := list.begin() To list.end()
-        
-        'Next
-        i++
         
         Utils.printTitre("fin des tests")
 
@@ -172,6 +142,8 @@ Public Module Utils
         Public Class Iterator
             Private pos As Node := Null
             
+            Private Shared end As Iterator := New Iterator(Null)
+            
             Public Sub Initialize(n As Node)
                 pos := n
             End Sub
@@ -180,17 +152,21 @@ Public Module Utils
                 Debug.println("foo")
             End Sub
             
-            'to be replaced by operator overloading
-            Public Function inc() As Iterator
-                If Utils.isNull(pos) Then Return Null
+            Public Operator++() As Iterator
+                If Utils.isNull(pos) Then Return end
                 
                 If Utils.isNull(pos.next) Then
-                    Return Null
+                    pos := Null
+                    Return end
                 Else
                     pos := pos.next
                     Return Me
                 End If
-            End Function
+            End Operator
+            
+            Public Operator<=(o As Iterator) As Bool
+                Return Not Debug.addressof(Me.pos) == Debug.addressof(o.pos)
+            End Operator
             
             Public Function val() As Object
                 If Utils.isNull(pos) Then
@@ -204,7 +180,6 @@ Public Module Utils
     
         Protected root As Node := Null
 
-        
         Public Sub add(v As Object)
             Dim n As Node := New Node(Null, v)
             
@@ -243,11 +218,13 @@ Public Module Utils
         End Function
         
         Public Function end() As Iterator
-            Return Null
+            Return Iterator.end
         End Function
     
     End Class
 
+    
+    
 
     'to be replaced by o Is Null
     Public Shared Function isNull(o As Object) As Bool
@@ -260,7 +237,7 @@ Public Module Utils
     
     Public Shared Function titre(chaine As String, tailleTotale As Int) As String
     
-        If #size Mod 2 >= 1 Then
+        If #chaine Mod 2 >= 1 Then
             chaine := chaine + " "
         End If
         
