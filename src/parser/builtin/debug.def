@@ -64,6 +64,11 @@ FrBBaseObject * dbg_addressof(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBas
     return o;
 }
 
+FrBBaseObject * dbg_isnull(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0)
+{
+    return FrBBool::fromCPPBool( FrBNull::isNull(arg0) );
+}
+
 FrBBaseObject * dbg_typename(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0)
 {
     FrBBaseObject * o = new FrBString( arg0->getClass()->fullName() );
@@ -141,7 +146,13 @@ FrBCppClass * FrBDebug::initClass()
     f->setSub(true);
     f->setShared(true);
     f->setConst(true);
-    
+    _cpp_class->addFunction(f);
+
+    f = new FrBUnaryCppFunction( dbg_isnull, FrBObject::getCppClass(), false);
+    f->setName("isNull");
+    f->setReturnType(FrBBool::getCppClass());
+    f->setShared(true);
+    f->setConst(true);
     _cpp_class->addFunction(f);
     
     f = new FrBUnaryCppFunction(print_FrBObject<FrBString>, FrBString::getCppClass(), false);

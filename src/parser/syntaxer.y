@@ -129,12 +129,12 @@ enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
 %left FRB_KW_TOKEN_OP_DIV FRB_KW_TOKEN_OP_MUL FRB_KW_TOKEN_OP_INT_DIV
 %right FRB_KW_TOKEN_OP_POW
 
-/* 6. Opérateur membre */
-%left FRB_KW_TOKEN_OP_MEMBER
-
 /* 7. Opérateur d'objet */
 %left FRB_KW_TOKEN_OP_IS FRB_KW_TOKEN_OP_IN FRB_KW_TOKEN_OP_TYPEOF FRB_KW_TOKEN_OP_INSTANCEOF FRB_KW_TOKEN_OP_INHERITS
 %nonassoc FRB_KW_TOKEN_OP_SIZEOF
+
+/* 6. Opérateur membre */
+%left FRB_KW_TOKEN_OP_MEMBER
 
 /* 8. Operateurs unaires */
 %nonassoc FRB_KW_TOKEN_OP_UNARY_MINUS FRB_KW_TOKEN_OP_CARD  FRB_KW_TOKEN_INCR FRB_KW_TOKEN_OP_DECR
@@ -1031,7 +1031,7 @@ expr:
       { $<expr>$ = new FrBUnaryOpExpr($<expr>2, FrBKeywords::FRB_KW_OP_LOG_NOT); }
     
     | expr FRB_KW_TOKEN_OP_IS expr                           /* expr Is expr */
-      { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IS); }
+      { $<expr>$ = new FrBIsOpExpr($<expr>1, $<expr>3); }
 
     | expr FRB_KW_TOKEN_OP_IN expr                           /* expr In expr */
       { $<expr>$ = new FrBBinOpExpr($<expr>1, $<expr>3, FrBKeywords::FRB_KW_OP_IN); }

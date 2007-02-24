@@ -465,6 +465,20 @@ public:
 
 };
 
+/** Operator Is (address comparaison) */
+class FrBIsOpExpr : public FrBBinOpBaseExpr
+{
+public:
+    FrBIsOpExpr(FrBExpr* lhs, FrBExpr* rhs);
+    
+    void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const; 
+
+};
+
 /** Logicial binary operator base */
 class FrBLogOpBaseExpr : public FrBBinOpExpr
 {

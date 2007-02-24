@@ -32,6 +32,24 @@ Public Class Main
         Dim o As Object := Cast(c, a)
     End Sub
     
+    'pour pallier temporairement au 'literal bug'
+    Public Shared Function copyOf(a As Int) As Int
+        Dim t As Int
+        Return t = a
+    End Function
+    
+    Public Shared Sub burn(o As Utils.LinkedList)
+        DefLang FR
+        
+        Soit i Comme Entier
+        
+        Pour i := copyOf(1) A 100
+            o.addHead(i*2)
+        Suivant
+        
+        DefLang EN
+    End Sub
+    
     Public Shared Sub main()
 
     
@@ -55,6 +73,10 @@ Public Class Main
         list2.add(2)
         list2.add(3)
         
+        burn(list2)
+        burn(list)
+        
+        
         Dim it As Utils.LinkedList.Iterator := Null
        
         Dim i As Int
@@ -63,27 +85,27 @@ Public Class Main
         Debug.println("Contenu de la liste list2 :")
         
         For it := list2.begin() To list2.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
+            'Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
 
         Debug.println("Contenu de la liste list :")
         
         For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
+            'Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
         Debug.println("Renversement de la liste list...")
         list.reverse()
         
         For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
+            'Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
         Debug.println("list += list2")
-        list += list2
+        'list += list2
         
         For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
+            'Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
         Debug.println("Nombre d'éléments dans list : " + #list)
@@ -126,7 +148,7 @@ Public Module Utils
             End Sub
             
             Public Sub add(n As Node)
-                If Utils.isNull(next) Then
+                If next Is Null Then
                     next := n
                 Else
                     next.add(n)
@@ -138,7 +160,7 @@ Public Module Utils
                 Dim n As Node := next
                 next := prec
 
-                If Utils.isNull(n) Then
+                If n Is Null Then
                     Return Me
                 Else
                     Return n.reverse(Me)
@@ -147,7 +169,7 @@ Public Module Utils
             End Function
             
             Public Function size() As Int
-                If Utils.isNull(next) Then
+                If next Is Null Then
                     Return 1
                 Else
                     Return next.size() + 1
@@ -165,14 +187,10 @@ Public Module Utils
                 pos := n
             End Sub
             
-            Public Shared Sub aaa()
-                Debug.println("foo")
-            End Sub
-            
             Public Operator++() As Iterator
-                If Utils.isNull(pos) Then Return end
+                If pos Is Null Then Return end
                 
-                If Utils.isNull(pos.next) Then
+                If pos.next Is Null Then
                     pos := Null
                     Return end
                 Else
@@ -182,11 +200,11 @@ Public Module Utils
             End Operator
             
             Public Operator<=(o As Iterator) As Bool
-                Return Not Debug.addressof(Me.pos) == Debug.addressof(o.pos)
+               Return Not Me.pos Is o.pos
             End Operator
             
             Public Function val() As Object
-                If Utils.isNull(pos) Then
+                If pos Is Null Then
                     Return Null
                 Else
                     Return pos.value
@@ -200,7 +218,7 @@ Public Module Utils
         Public Sub add(v As Object)
             Dim n As Node := New Node(Null, v)
             
-            If Utils.isNull(root) Then
+            If root Is Null Then
                 root := n
             Else
                 root.add(n)
@@ -209,21 +227,17 @@ Public Module Utils
         End Sub
         
         Public Sub addHead(v As Object)
-            
             root := New Node(root, v)
-            
         End Sub
         
         Public Sub reverse()
-            If Utils.isNull(root) Then
-                
-            Else
+            If Not root Is Null Then
                 root := root.reverse(Null)
             End If
         End Sub
         
         Public Function size() As Int
-            If Utils.isNull(root) Then
+            If root Is Null Then
                 Return 0
             Else
                 Return root.size()
@@ -255,12 +269,6 @@ Public Module Utils
     End Class
 
     
-    
-
-    'to be replaced by o Is Null
-    Public Shared Function isNull(o As Object) As Bool
-        Return Debug.addressof(o) == Debug.addressof(Null)
-    End Function
 
     Public Shared Sub printTitre(t As String)
         Debug.println(titre(t, 50))

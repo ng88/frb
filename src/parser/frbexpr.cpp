@@ -942,6 +942,36 @@ std::ostream& FrBBinOpExpr::put(std::ostream& stream) const
 }
 
 
+/*         FrBIsOpExpr              */
+
+FrBIsOpExpr::FrBIsOpExpr(FrBExpr* lhs, FrBExpr* rhs)
+    : FrBBinOpBaseExpr(lhs, rhs)
+{
+}
+    
+void FrBIsOpExpr::partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+
+FrBBaseObject* FrBIsOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return FrBBool::fromCPPBool( _lhs->eval(e) ==  _rhs->eval(e) );
+}
+
+const FrBClass* FrBIsOpExpr::getClass() const
+{
+    return FrBBool::getCppClass();
+}
+
+std::ostream& FrBIsOpExpr::put(std::ostream& stream) const
+{
+      return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET) << *_lhs << ' '
+		    << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_IS) << ' '
+		    << *_rhs << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_C_BRACKET);
+}
+
+
+
 /*                     FrBLogOpBaseExpr                   */
     
 
