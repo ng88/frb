@@ -1203,8 +1203,15 @@ FrBBaseObject*  FrBNewExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEva
 
 std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 {
-    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_NEW) << ' ' << _type->getClass()->fullName()
-	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_NEW) << ' ';
+
+
+    if(_ctor)
+	stream << _type->getClass()->fullName();
+    else
+	stream << *_type;
+
+    stream  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
 
     FrBExprList::const_iterator it = _args->begin();
 

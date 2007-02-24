@@ -150,7 +150,7 @@ FrBCppClass * FrBString::initClass()
 
 
     f = new FrBNoParamCppFunction(size_FrBString);
-    f->setReturnType(_cpp_class);
+    f->setReturnType(FrBInt::getCppClass());
     f->setName("operator#()");
     f->setConst(true);
     f->setScope(SC_PUBLIC);

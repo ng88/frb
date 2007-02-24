@@ -10,6 +10,12 @@ Public Class Main
         Public Sub Initialize(v As Int)
             val := 8 + v
         End Sub
+
+                
+        Public Sub Initialize(v As Int, w As Int, s As String)
+            Debug.println(s)
+            val := 8 + v * w
+        End Sub
         
     
         Public Sub printMe()
@@ -30,7 +36,7 @@ Public Class Main
     
         Utils.printTitre("debut des test de cast")    
         
-        Dim a As A := New A(5)
+        Dim a As A := New A(5, 4, "salut")
         Dim b As B
         
         Debug.println("typename(Utils.LinkedList)="  + Debug.typename(Utils.LinkedList))
@@ -254,7 +260,7 @@ Public Module Utils
     
     Public Shared Function titre(chaine As String, tailleTotale As Int) As String
     
-        If #chaine Mod 2 >= 1 Then
+        If #size Mod 2 >= 1 Then
             chaine := chaine + " "
         End If
         
