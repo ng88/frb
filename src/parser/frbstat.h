@@ -32,6 +32,7 @@ class FrBClass;
 class FrBBinOpBaseExpr;
 class FrBCodeFunction;
 class FrBStatement;
+class FrBIfStatement;
 
 typedef std::vector<FrBStatement*> FrBStatementlist;
 
@@ -50,6 +51,7 @@ class FrBStatementBlock
 
 
 typedef std::stack<FrBStatementBlock*> FrBBlockStack;
+typedef std::stack<FrBIfStatement*> FrBIfStack;
 
 //TODO optimisation de l'arbre avt serialisation
 // resolution des appeles de fonctions, précalculs d'expressions, résolution de classe

@@ -418,13 +418,17 @@ function_content_list:
      | fn_stat
      | new_line
      ;
-     
-fn_stat: /* stat new_line */
+
+expr_stat:
       expr new_line /* expression */
       {
 	//TODO warning if $<expr>1->getClass() != 0 'result lost
 	current_block()->addStat(new FrBExprStatement($<expr>1));
       }
+    ;
+     
+fn_stat: /* stat new_line */
+      expr_stat
     | dim_stat new_line /* déclaration */
     | if_stat /* if */
     | delete_stat new_line /* destruction */
@@ -436,12 +440,14 @@ fn_stat: /* stat new_line */
 if_def: /* if <expr> then <lf> stats */
       FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
       {
-	current_if = new FrBIfStatement();
-	current_block()->addStat(current_if);
+	FrBIfStatement * cif = new FrBIfStatement();
+	current_block()->addStat(cif);
+	if_stack.push(cif);
+
 
 	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);
 
-	current_if->addCond(b);
+	cif->addCond(b);
 	block_stack.push(b);
       }
       function_content_list
@@ -451,9 +457,13 @@ if_def: /* if <expr> then <lf> stats */
 elseif_def: /* else if <expr> then <lf> stats */
       FRB_KW_TOKEN_ELSE FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN new_line
       {
+        frb_assert(!if_stack.empty());
+
+        FrBIfStatement * cif = if_stack.top();
+
 	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>3);
 
-	current_if->addCond(b);
+	cif->addCond(b);
 	block_stack.push(b);
       }
       function_content_list
@@ -463,10 +473,14 @@ elseif_def: /* else if <expr> then <lf> stats */
 else_def: /* else <lf> stats or nothing */
       FRB_KW_TOKEN_ELSE new_line
       {
+        frb_assert(!if_stack.empty());
+
+        FrBIfStatement * cif = if_stack.top();
+
 	FrBElseStatement * b = new FrBElseStatement();
 
-	current_if->addCond(b);
-	current_if->setHasElse(true);
+	cif->addCond(b);
+	cif->setHasElse(true);
 	block_stack.push(b);
       }
       function_content_list
@@ -484,14 +498,16 @@ if_stat:
       elseif_list
       else_def
       FRB_KW_TOKEN_END FRB_KW_TOKEN_IF new_line
-    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN /* inline if */
+      { if_stack.pop(); }
+/* inline if */
+/*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN 
       {
 	FrBElseIfStatement * b = new FrBElseIfStatement($<expr>2);
 
 	current_block()->addStat(b);
 	block_stack.push(b);
       }
-      fn_stat { block_stack.pop(); }
+      fn_stat { block_stack.pop(); }*/
       /*    | FRB_KW_TOKEN_IF expr FRB_KW_TOKEN_THEN fn_stat FRB_KW_TOKEN_ELSE fn_stat */
     ;
     

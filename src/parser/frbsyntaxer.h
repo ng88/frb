@@ -20,8 +20,7 @@
 
 #ifndef YY_FrBSyntaxicalParser_CONSTRUCTOR_CODE
 #define YY_FrBSyntaxicalParser_CONSTRUCTOR_CODE \
-       _current_field = 0; \
-       current_if = 0;
+       _current_field = 0;
 
 #endif
 
@@ -34,8 +33,8 @@
         FrBErrorCollector * frb_error; \
      private: \
          FrBCodeField * _current_field; \
-         FrBIfStatement * current_if;\
          FrBCodeClassStack class_stack; \
+         FrBIfStack if_stack; \
          FrBCodeFunctionStack fn_stack; \
          FrBBlockStack block_stack; \
          CStringList id_list; \

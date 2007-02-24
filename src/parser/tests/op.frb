@@ -18,6 +18,13 @@ Public Class Main
     Debug.println(" False Or True = " & bool2str( showEval(False, "v1") Or showEval(True, "v2") ) )
     Debug.println(" False Or False = " & bool2str( showEval(False, "v1") Or showEval(False, "v2") ) )
     
+    
+    Dim c As IntComplex, d As IntComplex := New IntComplex(1, 2), e As IntComplex := New IntComplex(0, 5)
+    
+    Debug.println("i="&IntComplex.i.toString())
+    
+    Debug.println("c=" & c.toString() & " d=" & d.toString() & " e=" & e.toString())
+    
     End Sub
     
     Public Shared Function showEval(c As Bool, s As String) As Bool
@@ -33,5 +40,44 @@ Public Class Main
         End If
     End Function
     
+End Class
+
+
+Public Class IntComplex
+
+    Private re As Int
+    Private im As Int
+    
+    Public Shared i As IntComplex := New IntComplex(0, 1)
+    
+    
+    Public Sub Initialize()
+    End Sub
+
+    Public Sub Initialize(re As Int, im As Int)
+        Me.re := re
+        Me.im := im
+    End Sub
+    
+    
+    Public Function toString() As String
+        If im == 0 Then
+            Return "" + re
+        Else If re == 0 Then
+            If im == 1 Then
+                Return "i"
+            Else
+                Return "" + im + "i"
+           End If
+           1
+        Else
+            If im == 1 Then
+                Return "" + re + "+i"
+            Else
+                Return "" + re + "+" + im + "i"
+            End If
+        End If
+    End Function
+
 End Class
 
