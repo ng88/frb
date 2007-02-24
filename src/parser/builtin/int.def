@@ -48,6 +48,7 @@ FrBBaseObject * operator_decr_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject *
     static_cast<FrBInt*>(me)->valuePtr()--;
     return me;
 }
+
 FrBBaseObject * operator_unary_min_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
 {
     return e.addGarbagedObject(new FrBInt( - static_cast<FrBInt*>(me)->value() ));

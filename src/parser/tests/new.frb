@@ -44,7 +44,7 @@ Public Class Main
         Soit i Comme Entier
         
         Pour i := copyOf(1) A 100
-            o.addHead(i*2)
+            o.addHead(i)
         Suivant
         
         DefLang EN
