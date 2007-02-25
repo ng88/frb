@@ -55,6 +55,7 @@
 #include "frbfunction.h"
 #include "frbclass.h"
 #include "../common/assert.h"
+#include <stack>
 
 struct FnCParam
 {
@@ -71,6 +72,15 @@ struct FnAttr
 
 enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
 
+struct WithInfos
+{
+    FrBExpr * expr;
+    FrBCurrentExpr * last_current;
+
+    WithInfos(FrBExpr * e) : expr(e), last_current(0) {}
+};
+
+typedef std::stack<WithInfos> FrBWithStack;
 
 %}
 
@@ -466,6 +476,22 @@ expr_stat:
 	current_block()->addStat(new FrBExprStatement($<expr>1));
       }
     ;
+
+with_stat:
+      FRB_KW_TOKEN_WITH expr new_line /* expression */
+      {
+	  with_stack.push(WithInfos($<expr>2));
+      }
+      function_content_list
+      FRB_KW_TOKEN_END FRB_KW_TOKEN_WITH new_line
+      {
+	  FrBCurrentExpr * last = with_stack.top().last_current;
+	  if(last)
+	      last->setDeletable();
+	      
+	  with_stack.pop();
+      }
+    ;
      
 fn_stat: /* stat new_line */
       expr_stat
@@ -475,6 +501,7 @@ fn_stat: /* stat new_line */
     | return_stat new_line /* return  */
     | typedef_stat /* typedef */
     | for_loop new_line /* for */
+    | with_stat /* with */
     ;
     
 if_def: /* if <expr> then <lf> stats */
@@ -1088,6 +1115,21 @@ literal_expr:
     | FRB_KW_TOKEN_ME { $<expr>$ = new_me_expr(); }  
     | identifier_expr { $<expr>$ = $<expr>1; }
     | array
+    | FRB_KW_TOKEN_CURRENT
+      {
+	  if(with_stack.empty())
+	      frb_error->error(FrBErrors::FRB_ERR_NO_WITH_CURRENT,
+			       FrBErrors::FRB_ERR_SEMANTIC,
+			       frb_lexer->lineno(), "", "", "",
+			       String(frb_lexer->YYText()));
+
+	  FrBCurrentExpr * e = new FrBCurrentExpr(with_stack.top().expr);
+
+	  with_stack.top().last_current = e;
+
+	  $<expr>$ = e;
+
+      }
     ;
 
 identifier_expr:

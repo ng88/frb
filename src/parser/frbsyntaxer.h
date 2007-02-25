@@ -38,6 +38,7 @@
          FrBCodeFunctionStack fn_stack; \
          FrBBlockStack block_stack; \
          CStringList id_list; \
+         FrBWithStack with_stack; \
          inline FrBCodeField* current_field() \
          { \
              /*frb_assert2(_current_field, "frbsyntaxer.h::FrBSynater::current_field()")*/;  \

@@ -43,8 +43,8 @@ Public Class Main
         
         Soit i Comme Entier
         
-        Pour i := copyOf(1) A 100
-            o.addHead(i)
+        Pour i := copyOf(1) A 4'00
+            o.add(copyOf(i))
         Suivant
         
         DefLang EN
@@ -85,27 +85,27 @@ Public Class Main
         Debug.println("Contenu de la liste list2 :")
         
         For it := list2.begin() To list2.end()
-            'Debug.println(" |_ " + Cast(Int, it.val()) )
+            Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
 
         Debug.println("Contenu de la liste list :")
         
         For it := list.begin() To list.end()
-            'Debug.println(" |_ " + Cast(Int, it.val()) )
+            Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
-        
+       
         Debug.println("Renversement de la liste list...")
         list.reverse()
-        
+      
         For it := list.begin() To list.end()
-            'Debug.println(" |_ " + Cast(Int, it.val()) )
+            Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
         Debug.println("list += list2")
-        'list += list2
+        list += list2
         
         For it := list.begin() To list.end()
-            'Debug.println(" |_ " + Cast(Int, it.val()) )
+            Debug.println(" |_ " + Cast(Int, it.val()) )
         Next
         
         Debug.println("Nombre d'éléments dans list : " + #list)
@@ -147,15 +147,6 @@ Public Module Utils
                 value := v
             End Sub
             
-            Public Sub add(n As Node)
-                If next Is Null Then
-                    next := n
-                Else
-                    next.add(n)
-                End If
-            End Sub
-            
-            
             Public Function reverse(prec As Node) As Node
                 Dim n As Node := next
                 next := prec
@@ -166,14 +157,6 @@ Public Module Utils
                     Return n.reverse(Me)
                 End If
                 
-            End Function
-            
-            Public Function size() As Int
-                If next Is Null Then
-                    Return 1
-                Else
-                    Return next.size() + 1
-                End If
             End Function
         
         End Class
@@ -214,6 +197,8 @@ Public Module Utils
         End Class
     
         Protected root As Node := Null
+        Protected lastNode As Node := Null
+        Protected size As Int
 
         Public Sub add(v As Object)
             Dim n As Node := New Node(Null, v)
@@ -221,39 +206,55 @@ Public Module Utils
             If root Is Null Then
                 root := n
             Else
-                root.add(n)
+                lastNode.next := n
             End If
+            
+            lastNode := n
+            
+            size++
             
         End Sub
         
         Public Sub addHead(v As Object)
             root := New Node(root, v)
+            size++
         End Sub
         
         Public Sub reverse()
             If Not root Is Null Then
+                lastNode := root
                 root := root.reverse(Null)
             End If
         End Sub
         
         Public Function size() As Int
-            If root Is Null Then
-                Return 0
-            Else
-                Return root.size()
-            End If
+            Return size
         End Function
         
         Public Operator #() As Int
-            Return size()
+            Return size
         End Operator
         
         Public Operator+=(o As LinkedList) As LinkedList
-            Dim it As Iterator := Null
+            If #o == 0 Then Return Me
             
-            For it := o.begin() To o.end()
-                add(it.val())
+            Dim it As Iterator := o.begin()
+            
+            Dim n As Node := New Node(Null, it.val())
+            
+            If root Is Null Then
+                root := n
+            Else
+                lastNode.next := n
+            End If
+            
+            lastNode := n
+            
+            For it := it++ To o.end()
+                lastNode := lastNode.next := New Node(Null, it.val())
             Next
+            
+            size += #o
             
             Return Me
         End Operator
@@ -276,7 +277,7 @@ Public Module Utils
     
     Public Shared Function titre(chaine As String, tailleTotale As Int) As String
     
-        If #chaine Mod 2 >= 1 Then
+        If #chaine Mod 2 == 1 Then
             chaine := chaine + " "
         End If
         

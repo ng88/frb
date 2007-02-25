@@ -22,6 +22,7 @@
 #include "frbexceptions.h"
 #include "frbexecutionenvironment.h"
 #include "frbexprlist.h"
+#include <stack>
 
 class FrBCodeFunction;
 
@@ -86,6 +87,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
+
 
 
 /** Represent a type expr, actually, only FrBUnresolvedTypeExpr is a type expr
@@ -660,6 +662,31 @@ public:
 
     std::ostream& put(std::ostream& stream) const;    
 
+};
+
+
+/** Current expression (ie Current.something or .something in a With statement) */
+class FrBCurrentExpr : public FrBExpr
+{
+private:
+    bool _del;
+    FrBExpr * _e;
+
+public:
+
+    FrBCurrentExpr(FrBExpr * e);
+    ~FrBCurrentExpr();
+
+    inline void setDeletable() { _del = true; }
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    const FrBClass* getClass() const;
+    const FrBClass* getRealClass() const;
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    bool isAssignable() const;
+    void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
+    bool isInstance() const;
+    std::ostream& put(std::ostream& stream) const;
 };
 
 

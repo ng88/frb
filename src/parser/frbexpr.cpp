@@ -1325,3 +1325,65 @@ std::ostream& FrBNullExpr::put(std::ostream& stream) const
 }    
 
 
+/*               FrBCurrentExpr               */
+
+FrBCurrentExpr::FrBCurrentExpr(FrBExpr * e)
+    : _del(false), _e(e)
+{
+}
+
+FrBCurrentExpr::~FrBCurrentExpr()
+{
+    if(_del)
+	delete _e;
+}
+
+void FrBCurrentExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    _e->resolveAndCheck(e);
+}
+
+const FrBClass* FrBCurrentExpr::getClass() const
+{
+    return _e->getClass();
+}
+
+const FrBClass* FrBCurrentExpr::getRealClass() const
+{
+    return _e->getRealClass();
+}
+
+FrBBaseObject* FrBCurrentExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return _e->eval(e);
+}
+
+bool FrBCurrentExpr::isAssignable() const
+{
+    return _e->isAssignable();
+}
+
+void FrBCurrentExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* o) const throw (FrBEvaluationException)
+{
+    _e->refAssign(e, o);
+}
+
+bool FrBCurrentExpr::isInstance() const
+{
+    return _e->isInstance();
+}
+
+std::ostream& FrBCurrentExpr::put(std::ostream& stream) const
+{
+    stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CURRENT) << '[';
+    //_e->put(stream);
+    return stream << ']';
+
+}
+
+
+
+
+
+
+
