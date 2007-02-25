@@ -54,7 +54,12 @@ class FrBCodeFunction;
 */
 class FrBExpr
 {
+private:
+    /** Used for intrenal mem management, don't care about it */
+    int _ref_count;
+
 public:
+    inline FrBExpr();
     virtual ~FrBExpr() {}
     
     /** Resolve unresolved identifier (class, function) and check type compatibility */
@@ -84,7 +89,25 @@ public:
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
 
+
+
+
+    /** Indicates that the current expr is used one time more and will be deleted one time more too.
+      * The mem system ensures that this expr'll be really deleted only the last time
+      */
+    inline void addRef(int nb = 1);
+
+    /** Used for internal mem management, don't care about it */
+    inline void delRef();
+    /** Used for internal mem management, don't care about it */
+    inline bool deletable();
+    /** Used for internal mem management, don't care about it */    
+    inline void operator delete(void * p);
+
 };
+
+/** You MUST use this to delete an FrBExpr instance */
+void delete_expr(FrBExpr* e);
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
 
@@ -415,17 +438,11 @@ public:
     FrBBinOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs);
     ~FrBBinOpBaseExpr();
 
-    /** Do not resolve lhs & rhs, used for some optimizations only */
+    /** Do not resolve lhs & rhs */
     virtual void partialResolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
 
     /** Resolve lhs & rhs and call partialResolveAndCheck */
     void resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException);
-
-    /** Used for some optimizations only */
-    inline void setLHS(FrBExpr * e) { _lhs = e; }   
-
-    /** Used for some optimizations only */
-    inline void setRHS(FrBExpr * e) { _rhs = e; }
 
     inline FrBExpr * rhs() { return _rhs; }
     inline FrBExpr * lhs() { return _lhs; }
@@ -665,30 +682,56 @@ public:
 };
 
 
-/** Current expression (ie Current.something or .something in a With statement) */
-class FrBCurrentExpr : public FrBExpr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*          Inlined        */
+
+inline FrBExpr::FrBExpr()
+    : _ref_count(1)
 {
-private:
-    bool _del;
-    FrBExpr * _e;
+}
 
-public:
+inline void FrBExpr::addRef(int nb)
+{
+    _ref_count += nb;
+}
 
-    FrBCurrentExpr(FrBExpr * e);
-    ~FrBCurrentExpr();
+inline void FrBExpr::delRef()
+{
+    frb_warning2(_ref_count, "FrBExpr instance too many deleted !");
+    _ref_count--;
+}
 
-    inline void setDeletable() { _del = true; }
+inline bool FrBExpr::deletable()
+{
+    return !_ref_count;
+}
     
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
-    const FrBClass* getClass() const;
-    const FrBClass* getRealClass() const;
-    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
-    bool isAssignable() const;
-    void refAssign(FrBExecutionEnvironment&, FrBBaseObject*) const throw (FrBEvaluationException);
-    bool isInstance() const;
-    std::ostream& put(std::ostream& stream) const;
-};
-
+inline void FrBExpr::operator delete(void * p)
+{
+    frb_assert(p);
+    frb_assert2(((FrBExpr*)p)->deletable(), "you MUST delete an FrBExpr instance with delete_expr()");
+    free(p);
+}
 
 #endif
 

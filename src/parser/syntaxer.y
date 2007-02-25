@@ -72,15 +72,8 @@ struct FnAttr
 
 enum { FN_UNKNOW, FN_NORMAL, FN_CTOR, FN_DTOR };
 
-struct WithInfos
-{
-    FrBExpr * expr;
-    FrBCurrentExpr * last_current;
 
-    WithInfos(FrBExpr * e) : expr(e), last_current(0) {}
-};
-
-typedef std::stack<WithInfos> FrBWithStack;
+typedef std::stack<FrBExpr*> FrBWithStack;
 
 %}
 
@@ -480,16 +473,16 @@ expr_stat:
 with_stat:
       FRB_KW_TOKEN_WITH expr new_line /* expression */
       {
-	  with_stack.push(WithInfos($<expr>2));
+	  with_stack.push($<expr>2);
       }
       function_content_list
       FRB_KW_TOKEN_END FRB_KW_TOKEN_WITH new_line
       {
-	  FrBCurrentExpr * last = with_stack.top().last_current;
-	  if(last)
-	      last->setDeletable();
-	      
 	  with_stack.pop();
+
+	  /* Will be really deleted only if the With statement does not use it */
+	  delete_expr($<expr>2);
+
       }
     ;
      
@@ -1123,10 +1116,9 @@ literal_expr:
 			       frb_lexer->lineno(), "", "", "",
 			       String(frb_lexer->YYText()));
 
-	  FrBCurrentExpr * e = new FrBCurrentExpr(with_stack.top().expr);
-
-	  with_stack.top().last_current = e;
-
+//TODO mal fait il faut pas que l'expr soit revaluée a chaque fois.
+	  FrBExpr * e = with_stack.top();
+	  e->addRef();
 	  $<expr>$ = e;
 
       }

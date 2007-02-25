@@ -55,6 +55,15 @@ void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw 
 }
 
 
+void delete_expr(FrBExpr* e)
+{
+    if(!e) return;
+
+    e->delRef();
+    
+    if(e->deletable())
+        delete e;
+}
 
 /*         FrBLocalVarExpr        */
 
@@ -124,7 +133,7 @@ void FrBUnresolvedTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrB
         _context->resolveAndCheck(e);
         _type = e.getNextClassFromName(_name, _context->getContext());
         
-        delete _context; /* we don't need _context anymore */
+        delete_expr(_context); /* we don't need _context anymore */
         _context = 0;
     }
     else
@@ -326,11 +335,8 @@ FrBUnresolvedIdWithContextExpr::FrBUnresolvedIdWithContextExpr(FrBExpr * context
 
 FrBUnresolvedIdWithContextExpr::~FrBUnresolvedIdWithContextExpr()
 {
-    if(_evaluator)
-        delete _evaluator;
-
-    if(_context)
-	delete _context;
+    delete _evaluator;
+    delete_expr(_context);
 }
 
 void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -379,7 +385,7 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     /* if _context is not an instance, it is not more useful */
     if(!_context->isInstance())
     {
-	delete _context;
+	delete_expr(_context);
 	_context = 0;
     }
 
@@ -547,10 +553,10 @@ FrBFunctionCallExpr::FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs)
 
 FrBFunctionCallExpr::~FrBFunctionCallExpr()
 {
-    delete _lhs;
+    delete_expr(_lhs);
 
     for(FrBExprList::iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-        delete (*it);
+        delete_expr(*it);
 
     _rhs->clear();
 
@@ -763,11 +769,8 @@ FrBBinOpBaseExpr::FrBBinOpBaseExpr(FrBExpr* lhs, FrBExpr* rhs)
 
 FrBBinOpBaseExpr::~FrBBinOpBaseExpr()
 {
-    if(_rhs)
-	delete _rhs;
-
-    if(_lhs)
-	delete _lhs;
+    delete_expr(_rhs);
+    delete_expr(_lhs);
 }
 
 
@@ -1051,7 +1054,7 @@ FrBUnaryOpExpr::FrBUnaryOpExpr(FrBExpr* e, int op)
 
 FrBUnaryOpExpr::~FrBUnaryOpExpr()
 {
-    delete _e;
+    delete_expr(_e);
 }
     
 void FrBUnaryOpExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -1138,8 +1141,8 @@ FrBCastExpr::FrBCastExpr(FrBExpr* type, FrBExpr* val)
 
 FrBCastExpr::~FrBCastExpr()
 {
-    delete _type;
-    delete _val;
+    delete_expr(_type);
+    delete_expr(_val);
 }
     
 void FrBCastExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -1190,10 +1193,10 @@ FrBNewExpr::FrBNewExpr(FrBTypeExpr *type, FrBExprList * args)
 
 FrBNewExpr::~FrBNewExpr()
 {
-    delete _type;
+    delete_expr(_type);
 
     for(FrBExprList::iterator it = _args->begin(); it != _args->end(); ++it)
-        delete (*it);
+        delete_expr(*it);
 
     _args->clear();
 
@@ -1323,67 +1326,4 @@ std::ostream& FrBNullExpr::put(std::ostream& stream) const
 {
     return stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_NULL);
 }    
-
-
-/*               FrBCurrentExpr               */
-
-FrBCurrentExpr::FrBCurrentExpr(FrBExpr * e)
-    : _del(false), _e(e)
-{
-}
-
-FrBCurrentExpr::~FrBCurrentExpr()
-{
-    if(_del)
-	delete _e;
-}
-
-void FrBCurrentExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
-{
-    _e->resolveAndCheck(e);
-}
-
-const FrBClass* FrBCurrentExpr::getClass() const
-{
-    return _e->getClass();
-}
-
-const FrBClass* FrBCurrentExpr::getRealClass() const
-{
-    return _e->getRealClass();
-}
-
-FrBBaseObject* FrBCurrentExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
-{
-    return _e->eval(e);
-}
-
-bool FrBCurrentExpr::isAssignable() const
-{
-    return _e->isAssignable();
-}
-
-void FrBCurrentExpr::refAssign(FrBExecutionEnvironment& e, FrBBaseObject* o) const throw (FrBEvaluationException)
-{
-    _e->refAssign(e, o);
-}
-
-bool FrBCurrentExpr::isInstance() const
-{
-    return _e->isInstance();
-}
-
-std::ostream& FrBCurrentExpr::put(std::ostream& stream) const
-{
-    stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CURRENT) << '[';
-    //_e->put(stream);
-    return stream << ']';
-
-}
-
-
-
-
-
-
 

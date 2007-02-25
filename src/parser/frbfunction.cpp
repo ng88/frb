@@ -230,11 +230,8 @@ FrBCodeFunction::~FrBCodeFunction()
 
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
     {
-
-	delete it->type;
-
-	if(it->init)
-	    delete it->init;
+	delete_expr(it->type);
+	delete_expr(it->init);
     }
     _param.clear();
 
@@ -243,8 +240,7 @@ FrBCodeFunction::~FrBCodeFunction()
     _var.clear();
 	
 
-    if(_unresolvedRetType)
-	delete _unresolvedRetType;
+    delete_expr(_unresolvedRetType);
 
 }
 

@@ -150,7 +150,7 @@ std::ostream& FrBElseIfStatement::put(std::ostream& stream, int indent) const
     
 FrBElseIfStatement::~FrBElseIfStatement()
 {
-    delete _cond;
+    delete_expr(_cond);
 }
 
 /*         FrBElseStatement            */
@@ -309,12 +309,11 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 
 FrBDeclareStatement::~FrBDeclareStatement()
 {
-    if(_init)
-	delete _init;
+    delete_expr(_init);
 
     _varsid.clear();
 
-    delete _type;
+    delete_expr(_type);
 }
 
 
@@ -344,7 +343,7 @@ std::ostream& FrBExprStatement::put(std::ostream& stream, int) const
 
 FrBExprStatement::~FrBExprStatement()
 {
-    delete _expr;
+    delete_expr(_expr);
 }
 
 
@@ -393,7 +392,7 @@ std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
     
 FrBReturnStatement::~FrBReturnStatement()
 {
-  delete _val;
+  delete_expr(_val);
 }
 
 
@@ -410,8 +409,10 @@ FrBForLoopStatement::FrBForLoopStatement(FrBExpr * var, FrBExpr * init, int dire
     _assignator = new FrBRefAssignExpr(var, init);
 
     /* var <= max / var >= max */
-    _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE)
-;
+    _bounds_checker = new FrBBinOpExpr(var, max, (direction == 1) ? FrBKeywords::FRB_KW_OP_LE : FrBKeywords::FRB_KW_OP_GE);
+
+    /* var is used in 3 differents exprs, so we add 2 refs */
+    var->addRef(2);
 }
 
 
@@ -480,12 +481,9 @@ bool FrBForLoopStatement::allPathContainsAReturn() const
 FrBForLoopStatement::~FrBForLoopStatement()
 {
 
-    _assignator->setLHS(0);
-    _bounds_checker->setLHS(0);
-
-    delete _incrementor;
-    delete _assignator;
-    delete _bounds_checker;
+    delete_expr(_incrementor);
+    delete_expr(_assignator);
+    delete_expr(_bounds_checker);
 
 }
 
