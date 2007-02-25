@@ -1117,6 +1117,7 @@ literal_expr:
 			       String(frb_lexer->YYText()));
 
 //TODO mal fait il faut pas que l'expr soit revaluée a chaque fois.
+//il faudra bien créer une structure with + current
 	  FrBExpr * e = with_stack.top();
 	  e->addRef();
 	  $<expr>$ = e;

@@ -242,6 +242,14 @@ public:
 
 };
 
+
+/** The With statement */
+class FrBWithStaement : public FrBBlockStatement
+{
+private:
+public:
+};
+
 #endif
 
 
