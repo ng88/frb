@@ -1,0 +1,155 @@
+/***************************************************************************
+ *   This file is part of the FrB project                                  *
+ *                                                                         *
+ *   FrB project                                                           *
+ *                                                                         *
+ *   Copyright (C) 2006, 2007 by GUILLAUME Nicolas                         *
+ *   ng@ngsoft-fr.com                                                      *
+ *                                                                         *
+ *   http://frb.ngsoft-fr.com/                                             *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; version 2 of the License only.          *
+ *   See the COPYING file.                                                 *
+ ***************************************************************************/
+
+
+/** The FrB Debug class, used for debuging and testing purpose, contains methods like print(), showStack(), ... */
+class FrBDebug : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    static FrBCppClass * initClass();
+    
+    inline FrBDebug()  {};
+    
+
+    virtual ~FrBDebug();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != 0, "FrBDebug::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrBDebug(); }
+    };
+        
+    
+};
+
+
+/** Testing classes */
+
+class FrCsvDb : public FrBCppObject
+{
+public:
+    typedef FrBString* elt_t;
+    typedef std::vector<elt_t> row_t;
+    typedef std::map<elt_t, int> keys_t;
+    typedef std::vector< row_t  > data_t;
+
+private:
+    static FrBCppClass * _cpp_class;
+    
+    data_t data;
+    keys_t keys;
+
+public:
+
+    inline elt_t element(int index, elt_t key)
+    {
+	return data[index][ keys[key] ];
+    }
+
+    inline void setElement(int index, elt_t key, elt_t val)
+    {
+	data[index][ keys[key] ] = val;
+    }
+
+    inline int rowCount()
+    {
+	return data.size();
+    }
+
+    inline int colCount()
+    {
+	return keys.size();
+    }
+
+    inline void addRow(const FrBBaseObjectList& elts)
+    {
+	size_t s = elts.size();
+	data.push_back( row_t (s) );
+	for(FrBBaseObjectList::const_iterator it = elts.begin(); it != elts.end(); ++it)
+	    data[s].push_back(dynamic_cast<FrBString*>(*it));
+    }
+
+    void fromFile(FrBString*);
+    void toFile(FrBString*);
+
+
+    static FrBCppClass * initClass();
+    
+    inline FrCsvDb()  {};
+    
+
+    virtual ~FrCsvDb();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != 0, "FrBFrBDev::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrCsvDb(); }
+    };
+        
+    
+};
+
+
+class FrBFrBDev : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    static FrBCppClass * initClass();
+    
+    inline FrBFrBDev()  {};
+    
+
+    virtual ~FrBFrBDev();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != 0, "FrBFrBDev::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrBFrBDev(); }
+    };
+        
+    
+};
