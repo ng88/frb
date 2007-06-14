@@ -599,4 +599,34 @@
   Abstract Public Sub test()
   Dec Public Sub test()
  
- 
+ --
+ Operateur ~= : egalité approximative (pour flottant (a epsilon pret) et chaine (insensible à la casse))
+
+ --
+ Dim v As Vector<Int>
+ v.add(5) : v.add(12)
+ for_all(v, (Lambda(x As Int) -> (x * 2) As Int))
+
+
+ Sub for_all(v As Collection, f As Function)
+   For it As v::Iterator := v.begin() To v.end()
+     s.set(f(v.val()))
+   Next
+ End Sub
+
+ --
+ Profiter que les scalaires sont des objets
+   1.sin() ...
+
+ --
+ Héritage de champs avec surcharge type dérivé
+
+ --
+ Mode embedded pour le lexer
+
+ --
+ Solution pour le literal bug : const
+
+ --
+ Solution pour const : :)
+
