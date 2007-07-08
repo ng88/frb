@@ -242,6 +242,19 @@ FrBCppClass * FrBInt::initClass()
     _cpp_class->addOperator(FrBKeywords::FRB_KW_OP_ASSIGN_VAL, f);
 
 
+    f = new FrBUnaryCppFunction(operator_affect_FrBInt, _cpp_class, false);
+    f->setName("Ctor(PInt)");
+    f->setSub(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addConstructor(f);
+
+    f = new FrBNopCppFunction();
+    f->setName("Ctor()");
+    f->setSub(true);
+    f->setScope(SC_PUBLIC);
+    _cpp_class->addConstructor(f);
+
 
     //TODO ajouter _cpp_class au module frb::std
     

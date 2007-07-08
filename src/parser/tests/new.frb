@@ -3,36 +3,7 @@ DefLang EN
 
 Public Class Main
 
-    Public Class A
-    
-        Private val As Int := Null
-    
-        Public Sub Initialize(v As Int)
-            val := 8 + v
-        End Sub
 
-                
-        Public Sub Initialize(v As Int, w As Int, s As String)
-            Debug.println(s)
-            val := 8 + v * w
-        End Sub
-        
-    
-        Public Sub printMe()
-            Debug.println("A at " + Debug.addressof(Me) + ", val=" + val)
-        End Sub
-    
-    End Class
-    
-    Public Class B
-        Public v As Int
-    End Class
-    
-    Public Shared Sub tc(c As Class, a As Int)
-        Dim o As Object := Cast(c, a)
-    End Sub
-    
-    'pour pallier temporairement au 'literal bug'
     Public Shared Function copyOf(a As Int) As Int
         Dim t As Int
         Return t = a
@@ -43,8 +14,8 @@ Public Class Main
         
         Soit i Comme Entier
         
-        Pour i := copyOf(1) A 4'00
-            o.add(copyOf(i))
+        Pour i := 1 A 4'00
+            o.add( Nouv Entier(i) )
         Suivant
         
         DefLang EN
@@ -77,7 +48,7 @@ Public Class Main
         burn(list)
         
         
-        Dim it As Utils.LinkedList.Iterator := Null
+        Dim it As Utils.LinkedList.Iterator := Nothing
        
         Dim i As Int
         
@@ -139,8 +110,8 @@ Public Module Utils
     Public Class LinkedList
     
         Private Class Node
-            Public next As Node := Null
-            Public value As Object := Null
+            Public next As Node := Nothing
+            Public value As Object := Nothing
             
             Public Sub Initialize(n As Node, v As Object)
                 next := n
@@ -151,7 +122,7 @@ Public Module Utils
                 Dim n As Node := next
                 next := prec
 
-                If n Is Null Then
+                If n Is Nothing Then
                     Return Me
                 Else
                     Return n.reverse(Me)
@@ -162,19 +133,19 @@ Public Module Utils
         End Class
         
         Public Class Iterator
-            Private pos As Node := Null
+            Private pos As Node := Nothing
             
-            Private Shared end As Iterator := New Iterator(Null)
+            Private Shared end As Iterator := New Iterator(Nothing)
             
             Public Sub Initialize(n As Node)
                 pos := n
             End Sub
             
             Public Operator++() As Iterator
-                If pos Is Null Then Return end
+                If pos Is Nothing Then Return end
                 
-                If pos.next Is Null Then
-                    pos := Null
+                If pos.next Is Nothing Then
+                    pos := Nothing
                     Return end
                 Else
                     pos := pos.next
@@ -187,8 +158,8 @@ Public Module Utils
             End Operator
             
             Public Function val() As Object
-                If pos Is Null Then
-                    Return Null
+                If pos Is Nothing Then
+                    Return Nothing
                 Else
                     Return pos.value
                 End If
@@ -196,14 +167,14 @@ Public Module Utils
             
         End Class
     
-        Protected root As Node := Null
-        Protected lastNode As Node := Null
+        Protected root As Node := Nothing
+        Protected lastNode As Node := Nothing
         Protected size As Int
 
         Public Sub add(v As Object)
-            Dim n As Node := New Node(Null, v)
+            Dim n As Node := New Node(Nothing, v)
             
-            If root Is Null Then
+            If root Is Nothing Then
                 root := n
             Else
                 lastNode.next := n
@@ -221,9 +192,9 @@ Public Module Utils
         End Sub
         
         Public Sub reverse()
-            If Not root Is Null Then
+            If Not root Is Nothing Then
                 lastNode := root
-                root := root.reverse(Null)
+                root := root.reverse(Nothing)
             End If
         End Sub
         
@@ -240,9 +211,9 @@ Public Module Utils
             
             Dim it As Iterator := o.begin()
             
-            Dim n As Node := New Node(Null, it.val())
+            Dim n As Node := New Node(Nothing, it.val())
             
-            If root Is Null Then
+            If root Is Nothing Then
                 root := n
             Else
                 lastNode.next := n
@@ -251,7 +222,7 @@ Public Module Utils
             lastNode := n
             
             For it := it++ To o.end()
-                lastNode := lastNode.next := New Node(Null, it.val())
+                lastNode := lastNode.next := New Node(Nothing, it.val())
             Next
             
             size += #o
