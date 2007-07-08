@@ -597,20 +597,18 @@ class FrBLiteralExpr : public FrBExpr
 {
 protected:
     T* _value;
-    typename T::ptype _pvalue;
 
 
     FrBLiteralExpr(T* o)
     {
         _value = o;
-	_pvalue = o->value();
     }
     
 public:
     FrBLiteralExpr(const typename T::ptype& v)
     {
-	_pvalue = v;
         _value = new T(v);
+	_value->setMemInfo(FrBBaseObject::CST_MEM_AREA);
     }
     
     ~FrBLiteralExpr()
@@ -622,13 +620,6 @@ public:
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
     {
-
-	/** use const cast because currently, the literal (frb contsant) are stored in this class.
-	 *  normally they are stored in "constant memory"
-	 */
-	if(_value->changed())
-	    (const_cast<FrBLiteralExpr<T>*>(this))->_value = new T(_pvalue);
-
 	if(!_value->isManaged())
 	    e.addGarbagedObject(_value);
 
@@ -642,7 +633,7 @@ public:
 
     inline const typename T::ptype& value() const
     {
-	return _pvalue;
+	return _value->value();
     }
 
     std::ostream& put(std::ostream& stream) const;    

@@ -1,0 +1,27 @@
+
+
+/** The FrB Boolean class */
+typedef FrBPrimitive<bool> FrBBaseBool;
+
+
+class FrBBool : public FrBBaseBool
+{
+protected:
+	static FrBBool * _trueValue;
+	static FrBBool * _falseValue;
+
+public:
+
+	inline FrBBool(const bool& v) :  FrBBaseBool(v) {}
+	FrBBool(const bool& v, frbmem_info_t i) :  FrBBaseBool(v) { setMemInfo(i); }
+
+	inline static FrBBool * trueValue() { return _trueValue; }
+	inline static FrBBool * falseValue() { return _falseValue; }
+
+
+	inline static FrBBool * fromCPPBool(bool v) { return v ? _trueValue : _falseValue;  }
+
+
+
+
+};

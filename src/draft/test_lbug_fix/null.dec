@@ -1,0 +1,59 @@
+/***************************************************************************
+ *   This file is part of the FrB project                                  *
+ *                                                                         *
+ *   FrB project                                                           *
+ *                                                                         *
+ *   Copyright (C) 2006, 2007 by GUILLAUME Nicolas                         *
+ *   ng@ngsoft-fr.com                                                      *
+ *                                                                         *
+ *   http://frb.ngsoft-fr.com/                                             *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; version 2 of the License only.          *
+ *   See the COPYING file.                                                 *
+ ***************************************************************************/
+
+
+/** The FrB Null class (ie type of the Null expression) */
+class FrBNull : public FrBCppObject
+{
+private:
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    static FrBCppClass * initClass();
+    
+    inline FrBNull()  { setMemInfo(CST_MEM_AREA); };
+    virtual ~FrBNull();
+    
+    FrBClass * getClass();
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != 0, "FrBNull::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      private:
+          static FrBNull * _null_value;
+          
+      public:
+          static FrBNull * getInstance();
+          FrBCppObject * createObject() const;
+    };
+    
+    inline static FrBNull * nullValue() { return Allocator::getInstance(); }
+    inline static bool isNull(FrBBaseObject * o)
+    {
+	frb_assert(o);
+	frb_assert( (nullValue() == o) == (o->getClass() == getCppClass()) );
+
+	return (nullValue() == o);
+    }
+
+    
+};

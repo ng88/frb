@@ -1,0 +1,95 @@
+/***************************************************************************
+ *   This file is part of the FrB project                                  *
+ *                                                                         *
+ *   FrB project                                                           *
+ *                                                                         *
+ *   Copyright (C) 2006, 2007 by GUILLAUME Nicolas                         *
+ *   ng@ngsoft-fr.com                                                      *
+ *                                                                         *
+ *   http://frb.ngsoft-fr.com/                                             *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; version 2 of the License only.          *
+ *   See the COPYING file.                                                 *
+ ***************************************************************************/
+
+
+/** Generic class that defines FrB classes from C++ primitives */
+template<class primitive_t>
+class FrBPrimitive : public FrBCppObject
+{
+private:
+    primitive_t _val;
+    static FrBCppClass * _cpp_class;
+
+public:
+
+    typedef primitive_t ptype;
+
+    static FrBCppClass * initClass();
+    
+    inline FrBPrimitive() : _val(0) {};
+    inline FrBPrimitive(const primitive_t& v) : _val(v) {};
+    
+    ~FrBPrimitive() {}
+    
+    inline void setValue(const primitive_t& v) { _val = v; }
+    inline const primitive_t& value() { return _val; }
+    inline primitive_t& valuePtr() { return _val; } 
+    
+    
+    inline static FrBClass * getCppClass()
+    {
+        frb_assert2(_cpp_class != 0, "FrBInt::getClass(), call initClass() first");
+        return _cpp_class;
+    }
+
+    FrBClass * getClass() { return getCppClass(); }
+
+    /** This function is used in the optimization pass to compute constant values
+      * Typically, when an expression like 1+1 is seen, 
+      * int.operatorOptimizationEnabled(FrBKeywords::FRB_KW_OP_ADD, int, int) is
+      * called to know if we can compute this value at compile time (of course
+      * arguments that are given to this function always are littral expressions)
+      * Note: This function does not need to check is the operator is definied, because
+      * the caller had already done this check
+      */
+    virtual bool operatorOptimizationEnabled(int op/*, ArgContainer args*/) { return false; }
+
+
+    FrBBaseObject * duplicate2() const
+    {
+	printf("duplicate2 called\n");
+	return new FrBPrimitive<primitive_t>(_val);
+    }
+    
+    class Allocator : public FrBCppObjectAllocator
+    {
+      public:
+        FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(); }
+    };
+    
+};
+
+/** The FrB Integer class */
+typedef FrBPrimitive<long signed int> FrBInt;
+
+/** The FrB Integer class */
+typedef FrBPrimitive<long signed int> FrBInt;
+
+/** The FrB String class */
+typedef FrBPrimitive<String> FrBString;
+
+/** The FrB Class class (used for introspection) */
+typedef FrBPrimitive<const FrBClass*> FrBClassWrapper;
+
+/** The FrB Function class (used for introspection) */
+typedef FrBPrimitive<const FrBFunction*> FrBFunctionWrapper;
+
+
+/** Macro used for check the object constness (to avoid the 'literal bug')
+  * /!\ Warning /!\ the parameter 'me' can be evaluated several times and can be assigned
+  */
+#define CHECK_LITERAL_CONSTNESS(me, e) \
+    if((me)->isInConstantArea()) { /*(e).memory()->delLink((me));*/  (me) = e.addGarbagedObject((static_cast<FrBInt*>(me))->duplicate2()); frb_assert(!FrBNull::isNull(me));  }

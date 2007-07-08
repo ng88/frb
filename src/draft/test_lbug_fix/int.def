@@ -27,28 +27,30 @@ FrBBaseObject * operator_add_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * 
 
 FrBBaseObject * operator_add_assign_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    me->setChanged(); // literal bug fix
+    CHECK_LITERAL_CONSTNESS(me, e); // literal bug fix
     static_cast<FrBInt*>(me)->valuePtr() += static_cast<FrBInt*>(arg0)->value();
     return me;
 }
 
 FrBBaseObject * operator_sub_assign_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    me->setChanged(); // literal bug fix
+    CHECK_LITERAL_CONSTNESS(me, e); // literal bug fix
     static_cast<FrBInt*>(me)->valuePtr() -= static_cast<FrBInt*>(arg0)->value();
     return me;
 }
 
 FrBBaseObject * operator_incr_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
 {
-    me->setChanged(); // literal bug fix
+    printf("pme=%p\n", me);
+    CHECK_LITERAL_CONSTNESS(me, e); // literal bug fix
+    printf("nme=%p\n", me);
     static_cast<FrBInt*>(me)->valuePtr()++;
     return me;
 }
 
 FrBBaseObject * operator_decr_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me)
 {
-    me->setChanged(); // literal bug fix
+    CHECK_LITERAL_CONSTNESS(me, e); // literal bug fix
     static_cast<FrBInt*>(me)->valuePtr()--;
     return me;
 }
@@ -90,7 +92,7 @@ FrBBaseObject * operator_mod_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * 
 
 FrBBaseObject * operator_affect_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * me, FrBBaseObject * arg0)
 {
-    me->setChanged(); // literal bug fix
+    CHECK_LITERAL_CONSTNESS(me, e); // literal bug fix
     (static_cast<FrBInt*>(me))->setValue( (static_cast<FrBInt*>(arg0))->value() );
     return me;
 }

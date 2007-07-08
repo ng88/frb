@@ -38,7 +38,7 @@ public:
 
     typedef unsigned char frbmem_info_t;
 
-    enum { NO_INFO = 0, CHANGED = 1, TMP_MEM_AREA = 2};
+    enum { STD_MEM_AREA = 0, CST_MEM_AREA = 1, TMP_MEM_AREA = 2};
 
 protected:
 
@@ -52,7 +52,7 @@ protected:
 
 public:
 
-    inline FrBBaseObject() : /*_const(false),*/_mem_pos(UNMANAGED_OBJECT), _mem_info(NO_INFO) { }
+    inline FrBBaseObject() : /*_const(false),*/_mem_pos(UNMANAGED_OBJECT), _mem_info(STD_MEM_AREA) { }
     //    inline FrBBaseObject(bool v) : _const(v) { }
     
     virtual ~FrBBaseObject() { }
@@ -77,16 +77,18 @@ public:
 
 
     /** Memory information
-      * CHANGED: indicate if the object has changed (used with literal expression)
-      * TMP_MEM_AREA: indicate is the object is a temporary object (used for optimization)
-      */
+     * STD_MEM_AREA: standard (managed heap)
+     * CST_MEM_AREA: constant area (where are stored literal values)
+     * TMP_MEM_AREA: temporary area (where are stored intermediate result)
+     */
     inline void setMemInfo(frbmem_info_t infos) { _mem_info = infos; }
     inline frbmem_info_t memInfo() const { return _mem_info; }
-    inline bool isInTmpArea() const { return (_mem_info & TMP_MEM_AREA); }
-    inline bool changed() const { return (_mem_info & CHANGED); }
-    
-    inline void setChanged() { _mem_info |= CHANGED; }
+    inline bool isInConstantArea() const { return (_mem_info & CST_MEM_AREA); }
+    inline bool isInTemporaryArea() const { return (_mem_info & TMP_MEM_AREA); }
+    inline bool isInStandardArea() const { return (_mem_info & STD_MEM_AREA); }
 
+    /** Duplicate current instance, return Null if not implemented */
+    virtual FrBBaseObject * duplicate() const;
     
     /** used by the garbage collector */
     inline void setMemPos(int v) { _mem_pos = v; }
