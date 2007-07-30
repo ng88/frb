@@ -260,9 +260,12 @@ public:
 class FrBInheritsSealedException : public FrBResolveException
 {
 
+protected:
+
+    const FrBClass * _cl;
 
 public:
-    FrBInheritsSealedException();
+    FrBInheritsSealedException(const FrBClass * c);
 
     std::ostream& put(std::ostream& stream) const;
 

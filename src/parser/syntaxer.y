@@ -263,10 +263,16 @@ member_scope_attr:
 
 
 inherits_stat:
-      FRB_KW_TOKEN_INHERITS type new_line
+      FRB_KW_TOKEN_INHERITS inherits_type_list new_line
       {
-	  current_class()->addURBaseClasse($<vtype>2);
+	  
       }
+    ;
+
+inherits_type_list:
+      type { current_class()->addURBaseClasse($<vtype>1); }
+    | inherits_type_list FRB_KW_TOKEN_OP_LIST_SEP type { current_class()->addURBaseClasse($<vtype>3); }
+    ;
 
 fn_class_attr:
       FRB_KW_TOKEN_SHARED       { $<vint>$ = SC_SHARED; }

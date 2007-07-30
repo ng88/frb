@@ -31,6 +31,9 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 
 void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+
+    //if(_resolved) return;
+
     if(!shared() && !hasDefaultCtor() &&  constructorList()->size() == 0)
     {
 	FrBFunction * f = new FrBNopCppFunction();
@@ -73,15 +76,20 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
         it->second->resolvePrototype(e);
     }
 
+/*
     for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolvePrototype(e);
     }
+
+    */
 }
 
 void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+
+    //if(_resolved) return;
     
     for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
     {
@@ -115,12 +123,16 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
         it->second->resolveAndCheck(e);
     }
 
+/*
     for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
     }
 
+
+    _resolved = true;
+*/
 
 }
 
@@ -209,6 +221,11 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    << FrBKeywords::abstractToString(abstract()) << ' '
 	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
 	    << name() << "\t' " << specString() << endl;
+
+    for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
+    {
+	sout << ident << "\t Inherits " << it->second->fullName() << endl;
+    }
 
     for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
     {
@@ -361,8 +378,10 @@ FrBCodeClass::~FrBCodeClass()
 
 }
 
-void resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
+void resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
+
+    //if(_resolved) return;
 
     for(URClassContainer::iterator it = _urBaseClasses.begin(); it != _urBaseClasses.end(); ++it)
     {
@@ -371,7 +390,7 @@ void resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
     }
 
 
-    FrBClass::resolvePrototype(e);
+    FrBClass::resolveAndCheck(e);
 }
 
 FrBBaseObject * FrBCodeClass::allocateInstance(FrBExecutionEnvironment& e) const

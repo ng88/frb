@@ -82,6 +82,8 @@ protected:
     FrBFunction * _dtor;
 
     ClassContainer _baseClasses;
+
+    //bool _resolved;
     
     /** Create a new non-initialized instance
       * when redefining allocateInstance() you can choose to use the GC or not
@@ -293,7 +295,7 @@ public:
     inline void addURBaseClasse(FrBUnresolvedTypeExpr *c);
 
 
-    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
@@ -342,7 +344,7 @@ typedef std::stack<FrBCodeClass*> FrBCodeClassStack;
 
 
 inline FrBClass::FrBClass()
-  : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)
+    : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)//, _resolved(false)
 {
 }
 
@@ -431,6 +433,9 @@ inline int FrBClass::sharedFieldCount() const
 inline void FrBClass::addBaseClass(FrBClass * c)  throw (FrBResolveException)
 {
   frb_assert(c);
+
+  if(c->sealed())
+      throw FrBInheritsSealedException(c);
 
   _baseClasses[c->name()] = c;
 }

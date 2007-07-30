@@ -231,14 +231,15 @@ std::ostream& FrBMeInSharedException::put(std::ostream& stream) const
 
 /*            FrBInheritsSealedException               */
 
-FrBInheritsSealedException::FrBInheritsSealedException()
+FrBInheritsSealedException::FrBInheritsSealedException(const FrBClass*c)
+    : _cl(c)
 {
 }
 
 
 std::ostream& FrBInheritsSealedException::put(std::ostream& stream) const
 {
-    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INHERITS_SEALED);
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INHERITS_SEALED, _cl->fullName());
 }
 
 
