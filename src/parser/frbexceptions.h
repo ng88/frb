@@ -257,4 +257,17 @@ public:
 };
 
 
+class FrBInheritsSealedException : public FrBResolveException
+{
+
+
+public:
+    FrBInheritsSealedException();
+
+    std::ostream& put(std::ostream& stream) const;
+
+
+};
+
+
 #endif

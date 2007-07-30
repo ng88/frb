@@ -72,6 +72,12 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
         frb_assert(it->second);
         it->second->resolvePrototype(e);
     }
+
+    for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolvePrototype(e);
+    }
 }
 
 void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -108,6 +114,14 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
     }
+
+    for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
+    {
+        frb_assert(it->second);
+        it->second->resolveAndCheck(e);
+    }
+
+
 }
 
 void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
@@ -345,7 +359,20 @@ FrBCodeClass::FrBCodeClass() {};
 FrBCodeClass::~FrBCodeClass()
 {
 
-};
+}
+
+void resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+
+    for(URClassContainer::iterator it = _urBaseClasses.begin(); it != _urBaseClasses.end(); ++it)
+    {
+	it->resolveAndCheck(e);
+	addBaseClass(it->getClass());
+    }
+
+
+    FrBClass::resolvePrototype(e);
+}
 
 FrBBaseObject * FrBCodeClass::allocateInstance(FrBExecutionEnvironment& e) const
   throw (FrBAllocationException)

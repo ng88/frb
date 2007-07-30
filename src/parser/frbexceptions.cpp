@@ -229,6 +229,20 @@ std::ostream& FrBMeInSharedException::put(std::ostream& stream) const
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_ME_IN_SHARED);
 }
 
+/*            FrBInheritsSealedException               */
+
+FrBInheritsSealedException::FrBInheritsSealedException()
+{
+}
+
+
+std::ostream& FrBInheritsSealedException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INHERITS_SEALED);
+}
+
+
+
 /*          FrBDecWithoutDefaultCtorException          */
 
 FrBDecWithoutDefaultCtorException::FrBDecWithoutDefaultCtorException(const FrBMember * f)

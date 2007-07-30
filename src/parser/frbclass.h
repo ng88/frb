@@ -80,6 +80,8 @@ protected:
     ConstructorContainer _ctors;
     FrBFunction * _defaultCtor;
     FrBFunction * _dtor;
+
+    ClassContainer _baseClasses;
     
     /** Create a new non-initialized instance
       * when redefining allocateInstance() you can choose to use the GC or not
@@ -149,7 +151,13 @@ public:
     virtual FrBBaseObject * getProperty(String name, FrBBaseObjectList args) = 0;
     virtual FrBBaseObject * setProperty(String name, FrBBaseObjectList args) = 0;// faire une binaryOperator pr optimiser
     virtual FrBBaseObject * getMember(String name) = 0;*/
+
+
+    //TODO /* throw si existe deja */
+    /** Add 'c' as a base for this */
+    inline void addBaseClass(FrBClass * c) throw (FrBResolveException);
     
+
     //TODO /* throw si existe deja */
     /** Add 'c' as an inner class for this */
     inline void addInnerClass(FrBClass * c);
@@ -261,8 +269,14 @@ public:
 /** FrB class from FrB code */
 class FrBCodeClass : public FrBClass
 {
+public:
+
+    typedef std::vector<FrBUnresolvedTypeExpr *> URClassContainer;
 
 protected:
+
+    URClassContainer _urBaseClasses;
+
 
   FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const
     throw (FrBAllocationException);
@@ -275,6 +289,11 @@ public:
     ~FrBCodeClass();
 
 
+    /** Add the unresolved type c as base class for this  */
+    inline void addURBaseClasse(FrBUnresolvedTypeExpr *c);
+
+
+    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
@@ -409,6 +428,13 @@ inline int FrBClass::sharedFieldCount() const
     return ret;
 }
 
+inline void FrBClass::addBaseClass(FrBClass * c)  throw (FrBResolveException)
+{
+  frb_assert(c);
+
+  _baseClasses[c->name()] = c;
+}
+
 
 inline void FrBClass::addInnerClass(FrBClass * c)
 {
@@ -469,6 +495,15 @@ inline bool FrBClass::isAssignableTo(const FrBClass * to) const
 }
 
 
+
+
+
+inline void FrBCodeClass::addURBaseClasse(FrBUnresolvedTypeExpr *c)
+{
+    frb_assert(c);
+
+    _urBaseClasses.add(c);
+}
 
 
 #endif

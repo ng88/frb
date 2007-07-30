@@ -237,10 +237,12 @@ class_content_list:
        class_content_list member
      | class_content_list class
      | class_content_list typedef_stat
+     | class_content_list inherits_stat
      | class_content_list new_line
      | member
      | class
      | typedef_stat
+     | inherits_stat
      | new_line
      ;
 
@@ -258,6 +260,13 @@ member_scope_attr:
     | FRB_KW_TOKEN_FRIEND      { $<vint>$ = SC_FRIEND; }
     //| /* empty  */             { $<vint>$ = SC_DEFAULT; }
     ;
+
+
+inherits_stat:
+      FRB_KW_TOKEN_INHERITS type new_line
+      {
+	  current_class()->addURBaseClasse($<vtype>2);
+      }
 
 fn_class_attr:
       FRB_KW_TOKEN_SHARED       { $<vint>$ = SC_SHARED; }
@@ -278,6 +287,8 @@ fn_attr:
           $<fnattr>$.is_const = $<vbool>3;
       }
     ;
+
+
     
       /*Public|Private|Protected|Friend [Shared|Virtual|PureVirtual] [Const] [Function|Sub|Operator|Property (Set|Get)] id( [ByVal|ByRef] id As type,
          [Optional id As type = expr]|[ParamArray args[] As type) As type*/ 
