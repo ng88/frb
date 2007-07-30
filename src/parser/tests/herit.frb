@@ -1,2 +1,40 @@
 DefLang EN
 
+
+Public Module MonAppli
+
+    Public Class A
+    
+        Public Sub Initialize()
+            Debug.println("ctor A")
+        End Sub
+
+    
+    End Class
+    
+    
+    
+    Public Class B
+        Inherits A
+        
+        Public Sub Initialize()
+            Debug.println("ctor B")
+        End Sub
+    
+    End Class
+    
+    
+End Module
+
+
+
+
+
+Public Class Main
+
+    Public Shared Sub main()
+        New MonAppli.B()
+    End Sub
+
+End Class
+

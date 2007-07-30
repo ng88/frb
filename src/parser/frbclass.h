@@ -293,7 +293,8 @@ public:
     void addURBaseClasse(FrBUnresolvedTypeExpr *c);
 
 
-    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    /** We must know the base class before resolving function calls... */
+    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);

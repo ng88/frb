@@ -124,7 +124,7 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
     }
 
 /*
-    for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
+    for(ClassContainer::iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
@@ -139,11 +139,39 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
 void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   throw (FrBExecutionException)
 {
+
+  /* put 'Me' at the top of the stack */
   e.stack().push(o);
-  
+
+
+  /* init fields of 'Me' */
   for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
       if(!it->second->shared())
 	  o->addField(it->second, it->second->evalDefaultValue(e));
+
+
+  /* call bases constructors */
+  for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
+  {
+       // call def ctor, for testing
+      it->second->findConstructor()->execute(e, o);
+  }
+
+
+  /*
+
+    pos <- 0
+    for each base b
+    {
+      call initializer of class b from pos
+
+      pos <- pos + field_count_of_b
+    }
+
+    init fields from base_count to base_count + field_count - 1
+    
+!!!!!!!!! index différent pour un mm champs
+  */
     
   e.stack().pop();
 }
@@ -378,7 +406,7 @@ FrBCodeClass::~FrBCodeClass()
 
 }
 
-void FrBCodeClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBCodeClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
 
     //if(_resolved) return;
@@ -390,7 +418,7 @@ void FrBCodeClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveEx
     }
 
 
-    FrBClass::resolveAndCheck(e);
+    FrBClass::resolvePrototype(e);
 }
 
 FrBBaseObject * FrBCodeClass::allocateInstance(FrBExecutionEnvironment& e) const
