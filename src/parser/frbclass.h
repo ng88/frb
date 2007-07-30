@@ -31,9 +31,7 @@
 #include "frbkeywords.h"
 
 
-
-
-
+class FrBUnresolvedTypeExpr;
 class FrBClass;
 
 
@@ -292,7 +290,7 @@ public:
 
 
     /** Add the unresolved type c as base class for this  */
-    inline void addURBaseClasse(FrBUnresolvedTypeExpr *c);
+    void addURBaseClasse(FrBUnresolvedTypeExpr *c);
 
 
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -499,16 +497,6 @@ inline bool FrBClass::isAssignableTo(const FrBClass * to) const
     return isCompatibleWith(to);
 }
 
-
-
-
-
-inline void FrBCodeClass::addURBaseClasse(FrBUnresolvedTypeExpr *c)
-{
-    frb_assert(c);
-
-    _urBaseClasses.add(c);
-}
 
 
 #endif

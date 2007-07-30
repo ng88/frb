@@ -20,7 +20,7 @@
 #include "frbkeywords.h"
 #include "../common/assert.h"
 #include "frbbuiltinclasses.h"
-
+#include "frbexpr.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 {
@@ -222,7 +222,7 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
 	    << name() << "\t' " << specString() << endl;
 
-    for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
+    for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
     {
 	sout << ident << "\t Inherits " << it->second->fullName() << endl;
     }
@@ -378,15 +378,15 @@ FrBCodeClass::~FrBCodeClass()
 
 }
 
-void resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+void FrBCodeClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
 
     //if(_resolved) return;
 
     for(URClassContainer::iterator it = _urBaseClasses.begin(); it != _urBaseClasses.end(); ++it)
     {
-	it->resolveAndCheck(e);
-	addBaseClass(it->getClass());
+	(*it)->resolveAndCheck(e);
+	addBaseClass((*it)->getContext());
     }
 
 
@@ -405,6 +405,14 @@ void FrBCodeClass::freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) con
   throw (FrBAllocationException)
 {
   delete o;
+}
+
+
+void FrBCodeClass::addURBaseClasse(FrBUnresolvedTypeExpr *c)
+{
+    frb_assert(c);
+
+    _urBaseClasses.push_back(c);
 }
 
 
