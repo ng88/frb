@@ -1,0 +1,38 @@
+DefLang EN
+
+Public Class MyApp
+
+    Public Event recordCountChanged(newCount As Int)
+    
+    
+    Public Sub foo
+    
+        '...
+        
+        Debug.RaiseEvent(recordCountChanged, 5)
+        
+        '...
+    
+    End Sub
+
+End Class
+
+
+Public Class GUI
+
+    Public Sub Initialize()
+        Debug.RegisterEvent(MyApp.recordCountChanged, onRecordCountChanged)
+    End Sub
+
+    Public Sub onRecordCountChanged(newCount As Int)
+    
+        Debug.println("Count changed ! new count = " & newCount)
+    
+    End Sub
+    
+    
+End Class
+
+'dans execution environnement
+'on a un multimap (FrBFunction*, FrBBaseObject*) -> FrBFunction*
+

@@ -20,12 +20,35 @@
 
 #include "frbbaseobject.h"
 #include "frbmemory.h"
+#include <map>
 
+class FrBFunction;
+class FrBEvent;
 class FrBResolveEnvironment;
 
 /** This class contains the execution environment (heap & stack...) */
 class FrBExecutionEnvironment
 {
+public:
+
+    /** Represent a event for an instance of a class */
+    class FrBEventInstance
+    {
+    public:
+	FrBEvent * event;
+	FrBBaseObject * instance;
+
+	FrBEventInstance(FrBBaseObject * inst, FrBEvent * e)
+	    : event(e), instance(inst)
+        {
+	    frb_assert(instance && event);
+	    frb_assert2( FrBNull::isNull(instance) || instance->getClass()->isCompatibleWith(event->getContainer), "invalid instance");
+	}
+    };
+
+    typedef std::multimap<FrBEventInstance, FrBFunction*> FrBEventPool;
+    typedef std::pair<FrBEventPool::const_iterator, FrBEventPool::const_iterator>  FrBEventPairIterator;
+w
 private:
 
     /** Memory stack */
@@ -36,6 +59,10 @@ private:
 
     /** Shared memory (for shared data members) */
     FrBSharedMem _sharedMem;
+
+
+    /** Event pool */
+    FrBEventPool _eventPool;
 
     FrBResolveEnvironment * _resolveEnv;
     
@@ -65,6 +92,19 @@ public:
         return o;
     }
 
+
+    /** Register an event in the event pool
+      * @param instance instance of the class concerned by the registration. If this parameter is FrBNull,
+      * the registration concern all the instance. Note: instance->getClass() must be compatible with event->getContainer()
+      * @param event event
+      * @param handler function that will be called when event is raised
+      */
+    void registerEvent(FrBBaseObject * instance, FrBEvent * event, FrBFunction * handler);
+ 
+    void unregisterEvent(FrBBaseObject * instance, FrBEvent * event);
+
+    void raiseEvent(FrBBaseObject * instance, FrBEvent * event, FrBBaseObject * caller, const FrBBaseObjectList& args)
+	throw (FrBExecutionException);
     
     
     

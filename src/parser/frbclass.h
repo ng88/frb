@@ -53,6 +53,7 @@ public:
     typedef FrBClassMap                                 ClassContainer;
     typedef FunctionContainer::const_iterator           FnContIt;
     typedef std::pair<FnContIt, FnContIt>               FnPairIt;
+    typedef FunctionContainer                           EventContainer;
 
 private:
 
@@ -69,6 +70,7 @@ protected:
 
 
     FunctionContainer _functions;
+    EventContainer _events;
     ClassContainer _innerClasses;
 
     FieldContainer _fields;
@@ -168,6 +170,9 @@ public:
     /** Add 'f' as a function/sub for this */
     inline void addFunction(FrBFunction * f);
 
+    /** Add 'e' as an event for this */
+    inline void addEvent(FrBEvent * e);
+
     //TODO vérifier que au moins l'un des params concerne la classe (ie pour int il faut 
     // op(int, int) op(int, double) ou op(double, int) mais pas op(double, single)
     /** Add 'f' as an operator for 'op' for this */
@@ -184,6 +189,7 @@ public:
     inline const FieldContainer* fieldList() const { return &_fields; }
     inline const OperatorContainer* operatorList() const { return &_operators; }
     inline const FunctionContainer* functionList() const { return &_functions; }
+    inline const EventContainer* eventList() const { return &_event; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
 
@@ -466,6 +472,14 @@ inline void FrBClass::addFunction(FrBFunction * f)
   f->setContainer(this);
   _functions.insert(std::make_pair(f->name(), f)); 
 }
+
+inline void FrBClass::addEvent(FrBEvent * e)
+{
+  frb_assert(e);
+  e->setContainer(this);
+  _events.insert(std::make_pair(e->name(), e)); 
+}
+
 
 inline void FrBClass::addOperator(int op, FrBFunction * f)
 {

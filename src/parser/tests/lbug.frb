@@ -1,0 +1,27 @@
+DefLang EN
+
+Public Class Main
+
+    
+    Public Shared Sub main()
+    
+    
+        Dim i, j As Integer := Null
+        
+        For i := 1 To 10
+        
+            j := 100
+            
+            j++
+        
+            Debug.println("i=" + i + " j=" + j)
+            True
+            
+        Next
+        
+    
+    End Sub
+    
+    
+End Class
+

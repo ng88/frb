@@ -873,7 +873,7 @@ data_member: /* eg Public Shared var As String [:= "e"] */
 
 event: member_scope_attr /*1*/ FRB_KW_TOKEN_EVENT/*2*/ FRB_IDENTIFIER/*3*/ /* Public Event foo(...) */
        {
-           FrBCodeFunction * nfn = new FrBCodeFunction();
+           FrBCodeFunction * nfn = new FrBCodeEvent();
 
            nfn->setContainer(current_class());
 

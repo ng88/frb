@@ -18,4 +18,38 @@
 #include "frbexecutionenvironment.h"
 #include "frbresolveenvironment.h"
 
+#include "frbfunction.h"
+
+
+
+voidr FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, FrBEvent * event, FrBFunction * handler)
+{
+    frb_assert(handler);
+
+    FrBEventInstance inst(instance, event);
+
+    _eventPool.insert(std::make_pair(inst, handler)); 
+
+}
+
+void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * instance, FrBEvent * event)
+{
+
+    FrBEventInstance inst(instance, event);
+
+    _eventPool.erase(inst);
+
+}
+
+void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * instance, FrBEvent * event, FrBBaseObject * caller, const FrBBaseObjectList& args) throw (FrBExecutionException)
+{
+
+    FrBEventInstance inst(instance, event);
+
+    FrBEventPairIterator seq = _eventPool.equal_range(inst);
+
+    for(; seq.first != seq.second; seq.first++)
+	seq.first->second->execute(*this, caller, args);
+
+}
 

@@ -220,6 +220,9 @@ public:
 };
 
 
+typedef FrBFunction FrBEvent;
+typedef FrBCodeFunction FrBCodeEvent;
+
 
 class FrBProperty
 {

@@ -293,6 +293,16 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     
     for(FunctionContainer::const_iterator itf = fns->begin(); itf != fns->end(); ++itf)
             itf->second->put(sout, level);
+
+
+    const EventContainer * evs = eventList();
+    
+    for(EventContainer::const_iterator itf = evs->begin(); itf != evs->end(); ++itf)
+    {
+      sout << ident << "\t'As Event " << endl;
+      itf->second->put(sout, level);
+    }
+
     
     const OperatorContainer * ops = operatorList();
         

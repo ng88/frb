@@ -1,0 +1,86 @@
+DefLang EN
+
+
+Public Class Main
+
+    
+    Public Shared Sub main()
+        Debug.println("''''''''''''''' SANS WITH '''''''''''''''")
+        
+        Dim c As A_Test.C
+        Dim d As A_Test.B.B1.B2.B3
+               
+        Debug.println("c.c1.d1.e1="+c.c1.d1.e1)
+        Debug.println("c.c1.d1.e2="+c.c1.d1.e2)
+        Debug.println("c.c1.d1.e3="+c.c1.d1.e3)
+        Debug.println("c.c1.d1.e4="+c.c1.d1.e4)
+        Debug.println("d.fin="+d.fin)
+        Debug.println("")
+        
+        c.c1.d1.e1 := 5
+        c.c1.d1.e2 := 2 * c.c1.d1.e1
+        c.c1.d1.e3 := c.c1.d1.e1 + c.c1.d1.e2
+        c.c1.d1.e4 := c.c1.d1.e3 + 4
+        d.fin := c.c1.d1.e1 * 3
+        
+        Debug.println("c.c1.d1.e1="+c.c1.d1.e1)
+        Debug.println("c.c1.d1.e2="+c.c1.d1.e2)
+        Debug.println("c.c1.d1.e3="+c.c1.d1.e3)
+        Debug.println("c.c1.d1.e4="+c.c1.d1.e4)
+        Debug.println("d.fin="+d.fin)
+        Debug.println("")
+        
+        Debug.println("''''''''''''''' AVEC WITH '''''''''''''''")
+        
+        With New A_Test.C()
+            Debug.println("Current.c1.d1.e1="+ (New A_Test.C()).c1.d1.e1 )
+            Debug.println("Current.c1.d1.e1="+ (New A_Test.C()).c1.d1.e2 )
+            Debug.println("Current.c1.d1.e1="+ (New A_Test.C()).c1.d1.e3 )
+           ' Debug.println("Current.c1.d1.e1="+ Current.test() )
+        End With
+        
+    End Sub
+
+End Class
+
+
+Public Class A_Test
+
+    Public Class B
+    
+        Public a As Int
+        
+        Public Class B1
+        
+            Public a1 As Int
+            
+            Public Class B2
+            
+                Public a2 As Int
+                
+                Public Class B3
+                    Public fin As Int    
+                End Class            
+            End Class        
+        End Class    
+    End Class
+    
+    Public Class C
+        Public c1 As D
+        Public Sub test()
+            Debug.println("test, c1=" + c1)
+        End Sub
+    End Class
+    
+    Public Class D
+        Public d1 As E
+    End Class
+    
+    Public Class E
+        Public e1 As Int
+        Public e2 As Int
+        Public e3 As Int
+        Public e4 As Int
+    End Class
+
+End Class
