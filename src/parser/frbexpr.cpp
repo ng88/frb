@@ -367,19 +367,32 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
     catch(FrBFieldNotFoundException ex)
     { 
 
-//         FrBClass::FnPairIt pit = current_class->findFunctions(_name);
-//         
-//         if(pit.second->second)
-//             throw FrBFunctionAmbiguityException(_name);
-//         else if(pit.first != current_class->functionList()->end())
-//             _evaluator = new FunctionEvaluator( pit.first->second );
-//         else /* look for a class */
+	std::cout << "resolve&check sur " << _name << std::endl;
 
-       /* no, is this a class ? */
-	FrBClass * c = e.getClassFromName(_name, current_class);
+	FrBClass::FnPairIt pit = current_class->findFunctions(_name); //is this a function ?
+	std::cout << "1\n";
+	if(pit.first == current_class->functionList()->end())
+	 {std::cout << "11\n";
+	     /* no, is this a class ? */
+	     FrBClass * c = e.getClassFromName(_name, current_class);
+std::cout << "12\n";
+	     /* ok fine, we'll behave like a class now */
+	     _evaluator = new ClassEvaluator(c);
+	     std::cout << " <- classe\n";
+	 }
+	 else if(pit.first == --pit.second)
+	 {std::cout << "21\n";
+	     /* yes it is */
+	     _evaluator = new FunctionEvaluator( pit.first->second );
+	 }
+	else
+	{
+std::cout << "31               bug ici on va ici sans raison \n"; !!!
+	     /* no it matches several functions */
+	     throw FrBFunctionAmbiguityException(_name);
+	}
+	std::cout << "4\n";
 
-       /* ok fine, we'll behave like a class now */
-	_evaluator = new ClassEvaluator(c);
     }
 
     /* if _context is not an instance, it is not more useful */

@@ -57,7 +57,7 @@ Public Class GUI
     Public Sub test2()
         Debug.println("begin GUI::test2()")
         
-        Debug.UnregisterEvent(app, app.foo)
+        'Debug.UnregisterEvent(app, app.foo)
         
         Debug.println("end GUI::test2()")
     End Sub
