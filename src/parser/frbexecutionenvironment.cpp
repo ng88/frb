@@ -30,7 +30,7 @@ FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(const FrBEventInstan
 }
 
 
-FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, FrBEvent * e)
+FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, const FrBEvent * e)
    : event(e), instance(inst)
 {
     frb_assert(instance && event);
@@ -38,7 +38,7 @@ FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst
 }
 
 
-void FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, FrBEvent * event, FrBFunction * handler)
+void FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, const FrBEvent * event, const FrBFunction * handler)
 {
     frb_assert(handler);
 
@@ -48,7 +48,7 @@ void FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, FrBEvent *
 
 }
 
-void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * instance, FrBEvent * event)
+void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * instance, const FrBEvent * event)
 {
 
     FrBEventInstance inst(instance, event);
@@ -57,7 +57,7 @@ void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * instance, FrBEvent
 
 }
 
-void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * instance, FrBEvent * event, FrBBaseObject * caller, const FrBBaseObjectList& args) throw (FrBExecutionException)
+void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * instance, const FrBEvent * event, FrBBaseObject * caller, const FrBBaseObjectList& args) throw (FrBExecutionException)
 {
 
     FrBEventInstance inst(instance, event);

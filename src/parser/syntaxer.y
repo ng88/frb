@@ -878,6 +878,7 @@ event: member_scope_attr /*1*/ FRB_KW_TOKEN_EVENT/*2*/ FRB_IDENTIFIER/*3*/ /* Pu
            nfn->setContainer(current_class());
 
            nfn->setName($<str>3);
+	   nfn->setSub(true);
 	   free($<str>3);
            
            nfn->setScope( $<vint>1 );

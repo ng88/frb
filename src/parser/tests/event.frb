@@ -4,14 +4,22 @@ Public Class MyApp
 
     Public Event recordCountChanged(newCount As Int)
     
+    Public Sub Initialize()
+        Debug.println("MyApp::Initialize()")
+    End Sub
     
-    Public Sub foo
+    Public Sub foo()
+    
+        Debug.println("begin MyApp::foo()")
     
         '...
         
-        Debug.RaiseEvent(recordCountChanged, 5)
+        'Me.RaiseEvent(recordCountChanged, 5)
+        'Debug.RaiseEvent(Me, recordCountChanged, 5)
         
         '...
+        
+        Debug.println("end MyApp::foo()")
     
     End Sub
 
@@ -20,19 +28,51 @@ End Class
 
 Public Class GUI
 
+    Public app As MyApp
+
     Public Sub Initialize()
-        Debug.RegisterEvent(MyApp.recordCountChanged, onRecordCountChanged)
+        Debug.println("GUI::Initialize()")
+        
+        'Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
     End Sub
 
     Public Sub onRecordCountChanged(newCount As Int)
-    
+        
+        Debug.println("GUI::onRecordCountChanged(Int)")
+        
         Debug.println("Count changed ! new count = " & newCount)
     
     End Sub
     
     
+    
+    Public Sub test()
+        Debug.println("begin GUI::test()")
+        
+        app.foo()
+        
+        Debug.println("end GUI::test()")
+    End Sub
+    
+    Public Sub test2()
+        Debug.println("begin GUI::test2()")
+        
+        Debug.UnregisterEvent(app, app.foo)
+        
+        Debug.println("end GUI::test2()")
+    End Sub
+    
 End Class
 
-'dans execution environnement
-'on a un multimap (FrBFunction*, FrBBaseObject*) -> FrBFunction*
+
+
+
+Public Class Main
+    Public Shared Sub main()
+        Dim g As GUI
+        g.test()
+        g.test2()
+        g.test()
+    End Sub
+End Class
 

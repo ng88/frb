@@ -76,6 +76,12 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
         it->second->resolvePrototype(e);
     }
 
+    for(EventContainer::iterator itf = _events.begin(); itf != _events.end(); ++itf)
+    {
+        frb_assert(itf->second);
+        itf->second->resolvePrototype(e);
+    }
+
 /*
     for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
     {
@@ -153,6 +159,10 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
 
 
   /* init fields of 'Me' */
+  for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+      if(!it->second->shared())
+	  o->addField(it->second->index(), it->second->evalDefaultValue(e));
+
   /*int pos = 0;
   for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
   {
@@ -168,7 +178,7 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
   {
        // call def ctor, for testing
-      it->second->findConstructor()->execute(e, o);
+      //it->second->findConstructor()->execute(e, o);
   }
 
 

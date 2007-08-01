@@ -98,6 +98,12 @@ FrBBaseObject * show_mem(FrBExecutionEnvironment& e, FrBBaseObject * me)
 }
 
 
+FrBBaseObject * dbg_unregister_event(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0, FrBBaseObject * arg1)
+{
+    e.unregisterEvent(arg0, static_cast<FrBFunctionWrapper*>(arg1)->valuePtr());
+    return 0;
+}
+
 FrBCppClass * FrBDebug::initClass()
 {
     frb_assert2(_cpp_class == NULL, "FrBDebug::initClass(), already initialized");
@@ -212,7 +218,17 @@ FrBCppClass * FrBDebug::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addFunction(f);
+
+
+    f = new FrBBinaryCppFunction(dbg_unregister_event, FrBObject::getCppClass(), false, FrBFunctionWrapper::getCppClass(), false);
+    f->setName("UnregisterEvent");
+    f->setConst(true);
+    f->setSub(true);
+    f->setShared(true);
+    f->setScope(SC_PUBLIC);
     
+    _cpp_class->addFunction(f);
+
     return _cpp_class;
 }
 
