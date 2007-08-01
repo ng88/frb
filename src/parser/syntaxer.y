@@ -249,7 +249,8 @@ class_content_list:
 
 member:
       function
-    | data_member /* event aussi */
+    | data_member
+    | event 
     ;
 
 
@@ -870,6 +871,30 @@ data_member: /* eg Public Shared var As String [:= "e"] */
       }
     ;
 
+event: member_scope_attr /*1*/ FRB_KW_TOKEN_EVENT/*2*/ FRB_IDENTIFIER/*3*/ /* Public Event foo(...) */
+       {
+           FrBCodeFunction * nfn = new FrBCodeFunction();
+
+           nfn->setContainer(current_class());
+
+           nfn->setName($<str>3);
+	   free($<str>3);
+           
+           nfn->setScope( $<vint>1 );
+           
+           if(fn_stack.empty())
+               current_class()->addEvent(nfn);
+           else
+               frb_assert2(false, "inner functions not implemented");
+
+               
+           fn_stack.push(nfn);
+       }/*4*/
+       fn_arg_list/*5*/
+       {
+
+	   fn_stack.pop();
+       }
 
 
 as_type:
