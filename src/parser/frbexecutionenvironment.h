@@ -18,12 +18,13 @@
 #ifndef FRBEXECUTIONENVIRONMENT_H
 #define FRBEXECUTIONENVIRONMENT_H
 
+#include "../common/assert.h"
 #include "frbbaseobject.h"
 #include "frbmemory.h"
 #include <map>
 
-class FrBFunction;
-class FrBEvent;
+#include "frbevent.h"
+
 class FrBResolveEnvironment;
 
 /** This class contains the execution environment (heap & stack...) */
@@ -38,17 +39,17 @@ public:
 	FrBEvent * event;
 	FrBBaseObject * instance;
 
-	FrBEventInstance(FrBBaseObject * inst, FrBEvent * e)
-	    : event(e), instance(inst)
-        {
-	    frb_assert(instance && event);
-	    frb_assert2( FrBNull::isNull(instance) || instance->getClass()->isCompatibleWith(event->getContainer), "invalid instance");
-	}
+
+	bool operator<(const FrBEventInstance&) const;
+
+	FrBEventInstance(FrBBaseObject * inst, FrBEvent * e);
+	FrBEventInstance(const FrBEventInstance&);
+
     };
 
     typedef std::multimap<FrBEventInstance, FrBFunction*> FrBEventPool;
     typedef std::pair<FrBEventPool::const_iterator, FrBEventPool::const_iterator>  FrBEventPairIterator;
-w
+
 private:
 
     /** Memory stack */

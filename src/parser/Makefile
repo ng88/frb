@@ -42,7 +42,7 @@ $(EXE): start main.o
 main.o: frbparser.o
 frbparser.o: frbparser.h frbparser.cpp parser
 frberrordesc.o: error_msg keywords_db
-frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbfield.o
+frbclass.o: frbclass.h frbclass.cpp frbbaseobject.o frbfunction.o frbfield.o frbevent.h
 frbexpr.o: frbexpr.h frbexpr.cpp frbbaseobject.o ../common/assert.h frbbuiltinclasses.o frbexecutionenvironment.o
 frbstat.o: frbstat.h frbstat.cpp frbbaseobject.o frbmemory.o frbclass.h frbclass.cpp ../common/assert.h frbexceptions.o
 frbfunction.o: frbfunction.h frbfunction.cpp frbstat.o frbmember.o
@@ -50,12 +50,13 @@ frbbaseobject.o: frbbaseobject.h frbbaseobject.cpp
 frbmemory.o: frbmemory.h frbmemory.cpp
 frbbuiltinclasses.o: frbbuiltinclasses.h frbbuiltinclasses.cpp frbmemory.o frbcppbinding.o
 frbcppbinding.o: frbcppbinding.h frbcppbinding.cpp frbclass.o ../common/assert.h frbbaseobject.o
-frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o frbresolveenvironment.o
+frbexecutionenvironment.o: frbexecutionenvironment.h frbexecutionenvironment.cpp frbmemory.o frbresolveenvironment.o frbevent.h
 frbresolveenvironment.o: frbresolveenvironment.h frbresolveenvironment.cpp
 frbexceptions.o: frbexceptions.h frbexceptions.cpp
 frbbuiltinclasses.h: $(BUILTIN_DEC)
 frbbuiltinclasses.cpp: $(BUILTIN_DEF)
 frbfield.o: frbfield.h frbfield.cpp frbmember.o
+frbevent.o: frbevent.h frbevent.cpp
 frbmember.o: frbmember.h frbmember.cpp
 
 .PHONY: exe clean install touchall force doc cleandoc

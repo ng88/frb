@@ -17,12 +17,28 @@
 
 #include "frbexecutionenvironment.h"
 #include "frbresolveenvironment.h"
+#include "frbbuiltinclasses.h"
 
-#include "frbfunction.h"
+bool FrBExecutionEnvironment::FrBEventInstance::operator<(const FrBEventInstance& o) const
+{
+    return event < o.event;
+}
+
+FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(const FrBEventInstance& o)
+   : event(o.event), instance(o.instance)
+{
+}
 
 
+FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, FrBEvent * e)
+   : event(e), instance(inst)
+{
+    frb_assert(instance && event);
+    frb_assert2( FrBNull::isNull(instance) || instance->getClass()->isCompatibleWith(event->container()), "invalid instance");
+}
 
-voidr FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, FrBEvent * event, FrBFunction * handler)
+
+void FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, FrBEvent * event, FrBFunction * handler)
 {
     frb_assert(handler);
 

@@ -28,6 +28,7 @@
 #include "frbbaseobject.h"
 #include "frbfunction.h"
 #include "frbfield.h"
+#include "frbevent.h"
 #include "frbkeywords.h"
 
 
@@ -189,7 +190,7 @@ public:
     inline const FieldContainer* fieldList() const { return &_fields; }
     inline const OperatorContainer* operatorList() const { return &_operators; }
     inline const FunctionContainer* functionList() const { return &_functions; }
-    inline const EventContainer* eventList() const { return &_event; }
+    inline const EventContainer* eventList() const { return &_events; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
 

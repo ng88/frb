@@ -136,13 +136,13 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
 
 }
 
-void FrBClass::initField(FrBExecutionEnvironment& e, FrBBaseObject * o, int start_index = 0) const
+/*void FrBClass::initField(FrBExecutionEnvironment& e, FrBBaseObject * o, int start_index = 0) const
   throw (FrBExecutionException)
 {
   for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
       if(!it->second->shared())
 	  o->addField(it->second->index() + start_index, it->second->evalDefaultValue(e));
-}
+}*/
 
 void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   throw (FrBExecutionException)
@@ -153,14 +153,14 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
 
 
   /* init fields of 'Me' */
-  int pos = 0;
+  /*int pos = 0;
   for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
   {
       it->second->initField(e, o, pos);
       pos +=  it->second->fieldList()->size();
-  }
+      }*/
 
-  initField(e, o, pos);
+  //initField(e, o, pos);
 //TODO prévoir l'allocation des champs
 
 
