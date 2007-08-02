@@ -16,8 +16,8 @@ Public Class TestDelegate
      
      
      Public Function compute(a As Int, b As Int) As Int
-     
-         Return fn(a, b) * 2
+
+         Return Cast(Int, fn(a, b)) * 2
          
      End Function
     
@@ -26,14 +26,25 @@ End Class
 Public Class Main
 
     Public Shared Sub main()
-
+    
         Dim a As TestDelegate
         
+        
         a.setFunction(test1)
+
         Debug.println("test1=" & a.compute(5, 2))
         
         a.setFunction(test2)
         Debug.println("test2=" & a.compute(5, 2))
+        
+        
+        
+        '''''''''''''''''''''''''
+        
+        Dim comp As Function := TestDelegate.compute
+        
+        Debug.println("test3=" & Cast(Int, comp(a, 10, 2)))
+        
 
         
     End Sub

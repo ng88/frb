@@ -1,0 +1,35 @@
+DefLang EN
+
+
+Public Class Matrix22
+
+   Private Shared lastID As Int
+   Private id As Int
+   
+   Public Sub Initialize()
+       id = lastID++
+   End Sub
+
+   Public Operator()(a As Int, b As Int) As Matrix22
+       Debug.println("requested (" & a & ", " & b & ") on matrix " & id)
+       
+       Return Me
+   End Operator
+    
+End Class
+
+Public Class Main
+
+    Public Shared Sub main()
+
+        Dim m1, m2 As Matrix22
+
+        m1(5, 6)(1,2)
+        
+        m2(144, 155)
+        
+    End Sub
+    
+    
+End Class
+

@@ -415,7 +415,7 @@ FrBBaseObject* FrBUnresolvedIdWithContextExpr::eval(FrBExecutionEnvironment& e) 
     if(_context)
 	me = _context->eval(e);
 
-    if(_evaluator->needMe() && FrBNull::isNull(me))
+    if( !Misc::isKindOf<FunctionEvaluator>(_evaluator) && _evaluator->needMe() && FrBNull::isNull(me))
 	    throw FrBNullReferenceException();
 
     //if(isInstance())
@@ -620,11 +620,16 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 		throw FrBInvalidNonSharedException(_fn);
 	}
 
-    }
-    else
-	dbg_name = "not_urwc_expr";
+	return;
 
-    throw FrBFunctionNotFoundException(dbg_name);
+    }
+
+    /* case of the overload of the () operator */
+    
+    _lhs->resolveAndCheck(e);
+    _fn = _lhs->getClass()->findOperator(FrBKeywords::FRB_KW_OP_O_BRACKET, *_rhs);
+    _me = _lhs;
+
 
 }
 
@@ -676,6 +681,9 @@ std::ostream& FrBFunctionCallExpr::put(std::ostream& stream) const
     
 	if(mo) 
 	    stream <<  *(mo->context()) << '.' << _fn->name();
+	else
+	    stream << *_lhs;
+	
     }
     else
 	stream << *_lhs;
