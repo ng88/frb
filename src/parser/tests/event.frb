@@ -18,6 +18,7 @@ Public Class MyApp
         
         'Me.RaiseEvent(recordCountChanged, 5)
         recordCountChanged(5)
+        recordCountChanged(8)
         
         '...
         
@@ -30,6 +31,8 @@ End Class
 
 Public Class GUI
 
+    Public Event GUIChanged()
+
     Public app As MyApp
 
     Public Sub Initialize()
@@ -37,6 +40,9 @@ Public Class GUI
         
         
         Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
+        
+        'event connected to event (event relay)
+        Debug.RegisterEvent(app, app.recordCountChanged, Me, GUIChanged)
     End Sub
 
     Public Sub onRecordCountChanged(newCount As Int)
@@ -73,6 +79,9 @@ End Class
 Public Class Main
     Public Shared Sub main()
         Dim g As GUI
+        
+        Debug.RegisterEvent(g, g.GUIChanged, Nothing, onGUIChanged)
+        
         g.test()
         g.test2()
         
@@ -84,9 +93,15 @@ Public Class Main
     End Sub
     
     
-    Public Shared Sub test()
+    Public Shared Sub test(i As Int)
     
-    Debug.println("Count changed depuis main !" )    
+        Debug.println("Count changed depuis main !" & i)
+    End Sub
+    
+    Public Shared Sub onGUIChanged()
+    
+        Debug.println("GUI Changed!")
+        
     End Sub
     
 End Class

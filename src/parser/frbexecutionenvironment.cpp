@@ -82,7 +82,10 @@ void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * callerInstance, const F
     FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
     for(FrBEventIterator it = seq.first ; it != seq.second; ++it)
-        it->second.event->execute(*this, it->second.instance, args);
+	if(it->second.event->event())
+	    raiseEvent(it->second.instance, it->second.event, args);
+	else
+	    it->second.event->execute(*this, it->second.instance, args);
 
 }
 
