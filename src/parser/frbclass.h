@@ -54,7 +54,6 @@ public:
     typedef FrBClassMap                                 ClassContainer;
     typedef FunctionContainer::const_iterator           FnContIt;
     typedef std::pair<FnContIt, FnContIt>               FnPairIt;
-    typedef std::map<const String, FrBEvent*>           EventContainer;
 
 private:
 
@@ -71,7 +70,6 @@ protected:
 
 
     FunctionContainer _functions;
-    EventContainer _events;
     ClassContainer _innerClasses;
 
     FieldContainer _fields;
@@ -128,9 +126,6 @@ public:
     /** Return the default constructor if it exists  */
     inline FrBFunction * findConstructor() const throw (FrBFunctionNotFoundException);
 
-    /** Return the event named 'name' or 0 if not found */
-    inline FrBEvent* findEvent(const String& name) const;
-    
     /** Return a sequence of all the functions named 'name' */
     inline FnPairIt findFunctions(const String& name) const;
 
@@ -193,7 +188,6 @@ public:
     inline const FieldContainer* fieldList() const { return &_fields; }
     inline const OperatorContainer* operatorList() const { return &_operators; }
     inline const FunctionContainer* functionList() const { return &_functions; }
-    inline const EventContainer* eventList() const { return &_events; }
     inline const ConstructorContainer* constructorList() const { return &_ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
 
@@ -373,19 +367,6 @@ inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
                                        _ctors.begin(), _ctors.end(), args);
 }
 
-inline FrBEvent* FrBClass::findEvent(const String& name) const
-{
-    EventContainer::const_iterator f = _events.find(name);
-    
-    if(f == _events.end())
-        return 0;
-    else
-    {
-        frb_assert(f->second);
-        return f->second;
-    }
-
-}
 
 inline FrBClass::FnPairIt FrBClass::findFunctions(const String& name) const
 {
@@ -493,9 +474,8 @@ inline void FrBClass::addFunction(FrBFunction * f)
 
 inline void FrBClass::addEvent(FrBEvent * e)
 {
-  frb_assert(e);
-  e->setContainer(this);
-  _events[e->name()] = e; 
+    e->setEvent(true);
+    addFunction(e);
 }
 
 

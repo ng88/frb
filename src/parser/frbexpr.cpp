@@ -378,28 +378,19 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 
 	}
 	catch(FrBClassNotFoundException ex2)
-	{ /* this is not a class, try for an event*/
+	{ /* this is not a class, try for a function*/
 
-	    const FrBEvent * event = current_class->findEvent(_name);
+	    FrBClass::FnPairIt pit = current_class->findFunctions(_name); //is this a function ?
 
-	    if(event)
-	    { /* it is an event */
-
-	    }
-	    else /* no :( try for a function */
-	    {
-		FrBClass::FnPairIt pit = current_class->findFunctions(_name); //is this a function ?
-
-		if(pit.first == current_class->functionList()->end())
-		    /* nop */
-		    throw ex2; 
-		else if(pit.first == --pit.second)
-		    /* yes it is */
-		    _evaluator = new FunctionEvaluator( pit.first->second );
-		else
-		    /* damned, it matches several functions */
-		    throw FrBFunctionAmbiguityException(_name);
-	    }
+	    if(pit.first == current_class->functionList()->end())
+		/* nop */
+		throw ex2; 
+	    else if(pit.first == --pit.second)
+		/* yes it is */
+		_evaluator = new FunctionEvaluator( pit.first->second );
+	    else
+		/* damned, it matches several functions */
+		throw FrBFunctionAmbiguityException(_name);
 
 	}
 
@@ -661,7 +652,10 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
 	    throw FrBNullReferenceException();
     }
 
-    return _fn->execute(e, me, rval);
+    if(_fn->event())
+	e.raiseEvent(me, _fn, rval);
+    else
+	return _fn->execute(e, me, rval);
 
 }
 

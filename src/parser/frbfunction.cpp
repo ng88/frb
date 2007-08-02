@@ -145,6 +145,23 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBExprList& args)
 }
 
 
+void FrBFunction::putFunctionName(std::ostream& stream) const
+{ 
+
+    stream  << FrBKeywords::scopeToString(scope()) << ' '
+	    << FrBKeywords::sharedToString(shared()) << ' '
+	    << FrBKeywords::constToString(isConst()) << ' '
+	    << FrBKeywords::abstractToString(abstract()) << ' ';
+
+    if(event())
+	stream << FrBKeywords::FRB_KW_EVENT;
+    else if(function())
+	stream << FrBKeywords::FRB_KW_FUNCTION;
+    else
+	stream << FrBKeywords::FRB_KW_SUB;
+
+    stream << ' ' << name() << '(';
+}
 
 std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 {
@@ -153,14 +170,10 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
     frb_assert(sub() || (!sub() && returnType()));
     
     String str_indent(indent, '\t');
-    
-    stream  << str_indent << FrBKeywords::scopeToString(scope()) << ' '
-	    << FrBKeywords::sharedToString(shared()) << ' '
-	    << FrBKeywords::constToString(isConst()) << ' '
-	    << FrBKeywords::abstractToString(abstract()) << ' '
-	    << FrBKeywords::fnToString(sub()) << ' '
-	    << name() << '(';
-            
+
+    stream << str_indent;
+    putFunctionName(stream);
+        
     int pcount = parameterCount();
     for(int i = 0; i < pcount; ++i)
     {
@@ -339,13 +352,9 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     frb_assert(sub() || (!sub() && _unresolvedRetType));
     
     String str_indent(indent, '\t');
-    
-    stream  << str_indent << FrBKeywords::scopeToString(scope()) << ' '
-	    << FrBKeywords::sharedToString(shared()) << ' '
-	    << FrBKeywords::constToString(isConst()) << ' '
-	    << FrBKeywords::abstractToString(abstract()) << ' '
-	    << FrBKeywords::fnToString(sub()) << ' '
-	    << name() << '(';
+
+    stream << str_indent;
+    putFunctionName(stream);
             
     int pcount = parameterCount();
     for(int i = 0; i < pcount; ++i)
@@ -376,16 +385,20 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
             
     indent++;
 
-    for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+    if(!event())
     {
-      stream << str_indent << '\t';
-      (*it)->put(stream, indent);
-      stream << endl;
-    }
+
+	for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+	{
+	    stream << str_indent << '\t';
+	    (*it)->put(stream, indent);
+	    stream << endl;
+	}
     
-    return stream << str_indent
-		  << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END)
-		  << ' ' << FrBKeywords::fnToString(sub()) << endl;
+	return stream << str_indent
+		      << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END)
+		      << ' ' << FrBKeywords::fnToString(sub()) << endl;
+    }
 }
 
 

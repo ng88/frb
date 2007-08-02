@@ -159,6 +159,36 @@ FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBas
 
 }
 
+/*             FrBNaryCppFunction              */
+
+    typedef FrBBaseObject * (*NaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList& args);
+
+const FrBClass * FrBNaryCppFunction::parameterType(int index) const
+{
+    frb_assert(index < _size);
+    return _arg_class[index];
+}
+
+bool FrBNaryCppFunction::parameterByVal(int index) const
+{
+    frb_assert(index < _size);
+    return _arg_byval[index];
+}
+
+int FrBNaryCppFunction::parameterCount() const
+{
+    return _size;
+}
+
+    
+FrBBaseObject * FrBNaryCppFunction::execute(FrBExecutionEnvironment&e, FrBBaseObject * me, const FrBBaseObjectList& args) const
+    throw (FrBExecutionException)
+{
+    frb_assert(args.size() == _size);
+    return _fn(e, me, args);
+}
+
+
 
 /*          FrBUnaryParamArrayCppFunction          */
 

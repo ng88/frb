@@ -36,7 +36,7 @@ Public Class GUI
         Debug.println("GUI::Initialize()")
         
         
-        'Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
+        Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
     End Sub
 
     Public Sub onRecordCountChanged(newCount As Int)
@@ -60,7 +60,7 @@ Public Class GUI
     Public Sub test2()
         Debug.println("begin GUI::test2()")
         
-        Debug.UnregisterEvent(app, app.foo)
+        Debug.UnregisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
         
         Debug.println("end GUI::test2()")
     End Sub

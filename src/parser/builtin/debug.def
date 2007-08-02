@@ -98,9 +98,18 @@ FrBBaseObject * show_mem(FrBExecutionEnvironment& e, FrBBaseObject * me)
 }
 
 
-FrBBaseObject * dbg_unregister_event(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0, FrBBaseObject * arg1)
+static FrBClass * dbg_register_event_type[4] = { FrBObject::getCppClass(), FrBFunctionWrapper::getCppClass(), FrBObject::getCppClass(), FrBFunctionWrapper::getCppClass() };
+static bool dbg_register_event_byval[4] = { false, false, false, false };
+
+FrBBaseObject * dbg_register_event(FrBExecutionEnvironment& e, FrBBaseObject*, const FrBBaseObjectList& args)
 {
-    e.unregisterEvent(arg0, static_cast<FrBEventWrapper*>(arg1)->valuePtr());
+    e.registerEvent(args[0], static_cast<FrBFunctionWrapper*>(args[1])->valuePtr(), args[2], static_cast<FrBFunctionWrapper*>(args[3])->valuePtr());
+    return 0;
+}
+
+FrBBaseObject * dbg_unregister_event(FrBExecutionEnvironment& e, FrBBaseObject*, const FrBBaseObjectList& args)
+{
+    e.unregisterEvent(args[0], static_cast<FrBEventWrapper*>(args[1])->valuePtr(), args[2], static_cast<FrBEventWrapper*>(args[3])->valuePtr());
     return 0;
 }
 
@@ -220,7 +229,16 @@ FrBCppClass * FrBDebug::initClass()
     _cpp_class->addFunction(f);
 
 
-    f = new FrBBinaryCppFunction(dbg_unregister_event, FrBObject::getCppClass(), false, FrBEventWrapper::getCppClass(), false);
+    f = new FrBNaryCppFunction(dbg_register_event, dbg_register_event_type, dbg_register_event_byval)
+    f->setName("RegisterEvent");
+    f->setConst(true);
+    f->setSub(true);
+    f->setShared(true);
+    f->setScope(SC_PUBLIC);
+    
+    _cpp_class->addFunction(f);
+
+    f = new FrBNaryCppFunction(dbg_unregister_event, dbg_register_event_type, dbg_register_event_byval)
     f->setName("UnregisterEvent");
     f->setConst(true);
     f->setSub(true);

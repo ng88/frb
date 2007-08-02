@@ -26,48 +26,63 @@ bool FrBExecutionEnvironment::FrBEventInstance::operator<(const FrBEventInstance
     return event < o.event;
 }
 
+bool FrBExecutionEnvironment::FrBEventInstance::operator==(const FrBEventInstance& o) const
+{
+    return event == o.event && instance == o.instance;
+}
+
 FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(const FrBEventInstance& o)
    : event(o.event), instance(o.instance)
 {
 }
 
 
-FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, const FrBEvent * e)
+FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, const FrbFunction * e)
    : event(e), instance(inst)
 {
     frb_assert(instance && event);
     frb_assert2( FrBNull::isNull(instance) || instance->getClass()->isCompatibleWith(event->container()), "invalid instance");
 }
 
-
-void FrBExecutionEnvironment::registerEvent(FrBBaseObject * instance, const FrBEvent * event, const FrBFunction * handler)
+    
+void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
 {
-    frb_assert(handler);
 
-    FrBEventInstance inst(instance, event);
+    FrBEventInstance caller(callerInstance, signal);
+    FrBEventInstance called(calledInstance, slot);
 
-    _eventPool.insert(std::make_pair(inst, handler)); 
+    _eventPool.insert(std::make_pair(caller, called)); 
 
 }
 
-void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * instance, const FrBEvent * event)
+void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
 {
 
-    FrBEventInstance inst(instance, event);
+    FrBEventInstance caller(callerInstance, signal);
+    FrBEventInstance called(calledInstance, slot);
 
-    _eventPool.erase(inst);
-
-}
-
-void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * instance, const FrBEvent * event, FrBBaseObject * caller, const FrBBaseObjectList& args) throw (FrBExecutionException)
-{
-
-    FrBEventInstance inst(instance, event);
-
-    FrBEventPairIterator seq = _eventPool.equal_range(inst);
+    FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
     for(; seq.first != seq.second; seq.first++)
-	seq.first->second->execute(*this, caller, args);
+	if( *(seq.first->second) == called )
+	{
+	    _eventPool.erase(seq.first);
+	    break;
+	}
+
+
+}
+
+void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, const FrBBaseObjectList& args)
+    throw (FrBExecutionException);
+{
+
+    FrBEventInstance caller(callerInstance, signal);
+
+    FrBEventPairIterator seq = _eventPool.equal_range(caller);
+
+    for(; seq.first != seq.second; seq.first++)
+	seq.first->second->event->execute(*this, seq.first->second->instance, args);
 
 }
 

@@ -182,7 +182,7 @@ private:
 public:
 
     /** 'fn' is a pointer to the C++ function, 'arg0' is the type of the first argument and 'arg0_byval' indicates if the first arg must be passed byval or not (=byref)  */
-    FrBBinaryCppFunction(BinaryFunction fn, FrBClass *  arg0, bool arg0_byval, FrBClass *  arg1, bool arg1_byval)
+    FrBBinaryCppFunction(BinaryFunction fn, FrBClass *  arg0, bool arg0_byval, FrBClass *  arg1, bool arg1_byval, int size)
         : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval), _arg1(arg1), _arg1_byval(arg1_byval) { frb_assert(fn && arg0 && arg1); }
 
     const FrBClass * parameterType(int index) const;
@@ -191,6 +191,37 @@ public:
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
         throw (FrBExecutionException);
+    FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
+        throw (FrBExecutionException);
+};
+
+
+class FrBNaryCppFunction : public FrBCppFunction
+{
+    
+public:
+
+    typedef FrBBaseObject * (*NaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList& args);
+    
+private:
+
+    NaryFunction _fn;
+    FrBClass **  _arg_class;
+    bool      *  _arg_byval;
+    int          _size;
+
+public:
+
+    /** arg_class & arg_byval arrays are not freed */
+    FrBNaryCppFunction(NaryFunction fn, FrBClass ** arg_class, bool * arg_byval)
+        : _fn(fn), _arg_class(arg_class), _arg_byval(arg_byval), _size(size) { frb_assert(fn && arg_byval && arg_class && size >= 0); }
+
+    //~FrBNaryCppFunction();
+
+    const FrBClass * parameterType(int index) const;
+    bool parameterByVal(int index) const;
+    int parameterCount() const;
+    
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 };

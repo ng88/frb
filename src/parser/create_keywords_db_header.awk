@@ -109,10 +109,6 @@ END {
     print "    inline static int getCurrentSet() { return currentSet; }"
     print "    inline static void setCurrentSet(int i) { currentSet = i; }\n"
 
-    print "    /** Return FRB_KW_SUB string if is_sub is true, FRB_KW_FUNCTION string otherwise */"
-    print "    inline static const CString fnToString(bool is_sub)"
-    print "       { return getKeyword(is_sub ? FRB_KW_SUB : FRB_KW_FUNCTION); }"
-
     print "    /** Return FRB_KW_BYVAL string if vb is true, FRB_KW_BYREF string otherwise */"
     print "    inline static const CString byvalToString(bool vb)"
     print "       { return getKeyword(vb ? FRB_KW_BYVAL : FRB_KW_BYREF); }"
