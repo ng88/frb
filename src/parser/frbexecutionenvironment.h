@@ -50,7 +50,7 @@ public:
 
     /** (signal, instance) -> (slot, instance) */
     typedef std::multimap<FrBEventInstance, FrBEventInstance> FrBEventPool;
-    typedef FrBEventPool::const_iterator                      FrBEventIterator;
+    typedef FrBEventPool::iterator                            FrBEventIterator;
     typedef std::pair<FrBEventIterator, FrBEventIterator>     FrBEventPairIterator;
 
 private:

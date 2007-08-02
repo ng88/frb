@@ -65,7 +65,7 @@ bool FrBNoParamCppFunction::parameterByVal(size_t index) const
     return false;
 }
 
-int FrBNoParamCppFunction::parameterCount() const
+size_t FrBNoParamCppFunction::parameterCount() const
 {
     return 0;
 }
@@ -100,7 +100,7 @@ bool FrBUnaryCppFunction::parameterByVal(size_t index) const
     return _arg0_byval;
 }
 
-int FrBUnaryCppFunction::parameterCount() const
+size_t FrBUnaryCppFunction::parameterCount() const
 {
     return 1;
 }
@@ -136,7 +136,7 @@ bool FrBBinaryCppFunction::parameterByVal(size_t index) const
     return index ? _arg1_byval : _arg0_byval;
 }
 
-int FrBBinaryCppFunction::parameterCount() const
+size_t FrBBinaryCppFunction::parameterCount() const
 {
     return 2;
 }
@@ -175,7 +175,7 @@ bool FrBNaryCppFunction::parameterByVal(size_t index) const
     return _arg_byval[index];
 }
 
-int FrBNaryCppFunction::parameterCount() const
+size_t FrBNaryCppFunction::parameterCount() const
 {
     return _size;
 }
@@ -203,7 +203,7 @@ bool FrBUnaryParamArrayCppFunction::parameterByVal(size_t index) const
     return false;
 }
 
-int FrBUnaryParamArrayCppFunction::parameterCount() const
+size_t FrBUnaryParamArrayCppFunction::parameterCount() const
 {
     return 1;
 }

@@ -653,7 +653,10 @@ FrBBaseObject* FrBFunctionCallExpr::eval(FrBExecutionEnvironment& e) const throw
     }
 
     if(_fn->event())
+    {
 	e.raiseEvent(me, _fn, rval);
+	return FrBNull::nullValue();
+    }
     else
 	return _fn->execute(e, me, rval);
 

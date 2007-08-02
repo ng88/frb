@@ -62,8 +62,8 @@ const FrBClass * FrBFunction::returnType() const
 
 // Pas tres propre mais j'ai pas mieux pour le moment :
 #define COMMON_MATCH_PARAM_BODY(ARGS) \
-   int count = parameterCount(); \
-    int pcount = args.size(); \
+    size_t count = parameterCount(); \
+    size_t pcount = args.size(); \
      \
     bool full_match = true; \
      \
@@ -75,7 +75,7 @@ const FrBClass * FrBFunction::returnType() const
         if(pcount < count - 1) \
             return NO_MATCH; \
              \
-        for(int i = 0; i < count - 1; ++i)  \
+        for(size_t i = 0; i < count - 1; ++i)  \
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
@@ -86,7 +86,7 @@ const FrBClass * FrBFunction::returnType() const
             } \
         } \
          \
-        for(int i = count - 1; i < pcount; ++i) \
+        for(size_t i = count - 1; i < pcount; ++i) \
         { \
             if( (a = parameterType(count - 1)) != (b = ARGS) ) \
             { \
@@ -109,10 +109,10 @@ const FrBClass * FrBFunction::returnType() const
         if(!opt_match && pcount != count ) \
             return NO_MATCH; \
              \
-        if(opt_match && pcount < _firstOptional ) \
+        if(opt_match && pcount < (size_t)_firstOptional ) \
             return NO_MATCH; \
           \
-        for(int i = 0; i < pcount; ++i) \
+        for(size_t i = 0; i < pcount; ++i) \
         { \
             if( (a = parameterType(i)) != (b = ARGS) ) \
             { \
@@ -179,10 +179,10 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
     stream << str_indent;
     putFunctionName(stream);
         
-    int pcount = parameterCount();
-    for(int i = 0; i < pcount; ++i)
+    size_t pcount = parameterCount();
+    for(size_t i = 0; i < pcount; ++i)
     {
-      if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
+      if(firstOptionalParameter() > -1 && i >= (size_t)firstOptionalParameter())
 	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPTIONAL) << ' ';
             
       if(paramArrayUsed() && i == parameterCount() - 1)
@@ -260,19 +260,19 @@ FrBCodeFunction::~FrBCodeFunction()
 
 }
 
-const FrBClass * FrBCodeFunction::parameterType(int index) const
+const FrBClass * FrBCodeFunction::parameterType(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::parameterType(int) / index out of bounds");
 
     return _param[index].type->getClass();
 }
 
-int FrBCodeFunction::parameterCount() const
+size_t FrBCodeFunction::parameterCount() const
 {
     return _param.size();
 }
 
-bool FrBCodeFunction::parameterByVal(int index) const
+bool FrBCodeFunction::parameterByVal(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::parameterByVal(int) / index out of bounds");
     return _param[index].byval;
@@ -361,10 +361,10 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     stream << str_indent;
     putFunctionName(stream);
             
-    int pcount = parameterCount();
-    for(int i = 0; i < pcount; ++i)
+    size_t pcount = parameterCount();
+    for(size_t i = 0; i < pcount; ++i)
     {
-      if(firstOptionalParameter() > -1 && i >= firstOptionalParameter())
+      if(firstOptionalParameter() > -1 && i >= (size_t)firstOptionalParameter())
 	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPTIONAL) << ' ';
             
       if(paramArrayUsed() && i == parameterCount() - 1)

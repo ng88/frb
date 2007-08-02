@@ -94,7 +94,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const { return 0; }
     bool parameterByVal(size_t index) const { return false; }
-    int parameterCount() const { return 0; }
+    size_t parameterCount() const { return 0; }
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject *) const
         throw (FrBExecutionException) { return 0; }
@@ -124,7 +124,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const;
     bool parameterByVal(size_t index) const;
-    int parameterCount() const;
+    size_t parameterCount() const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me) const
         throw (FrBExecutionException);
@@ -156,7 +156,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const;
     bool parameterByVal(size_t index) const;
-    int parameterCount() const;
+    size_t parameterCount() const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0) const
         throw (FrBExecutionException);
@@ -187,7 +187,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const;
     bool parameterByVal(size_t index) const;
-    int parameterCount() const;
+    size_t parameterCount() const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, FrBBaseObject * arg0, FrBBaseObject * arg1) const
         throw (FrBExecutionException);
@@ -220,7 +220,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const;
     bool parameterByVal(size_t index) const;
-    int parameterCount() const;
+    size_t parameterCount() const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
@@ -246,7 +246,7 @@ public:
 
     const FrBClass * parameterType(size_t index) const;
     bool parameterByVal(size_t index) const;
-    int parameterCount() const;
+    size_t parameterCount() const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);

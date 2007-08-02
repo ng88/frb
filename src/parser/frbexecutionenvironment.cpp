@@ -64,11 +64,9 @@ void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * callerInstance, co
     FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
     for(FrBEventIterator it = seq.first ; it != seq.second; ++it)
-//	if( *(seq.first->second) == called)
-//	if( seq.first->second->event == called.event
-	//    && seq.first->second->instance == called.instance )
+	if( it->second == called )
 	{
-	    //_eventPool.erase(seq.first);
+	    _eventPool.erase(it);
 	    break;
 	}
 
@@ -84,7 +82,7 @@ void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * callerInstance, const F
     FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
     for(FrBEventIterator it = seq.first ; it != seq.second; ++it)
-	;//	seq.first->second->event->execute(*this, seq.first->second->instance, args);
+        it->second.event->execute(*this, it->second.instance, args);
 
 }
 

@@ -103,7 +103,7 @@ public:
     
     virtual const FrBClass * parameterType(size_t index) const = 0;
     virtual bool parameterByVal(size_t index) const = 0;
-    virtual int parameterCount() const = 0;
+    virtual size_t parameterCount() const = 0;
     
     inline void setReturnType(const FrBClass * t) { _returnType = t; }
     const FrBClass * returnType() const;
@@ -207,9 +207,9 @@ public:
     /** Display on stream a string representation of this */
     std::ostream& put(std::ostream& stream, int indent = 0) const;
     
-    const FrBClass * parameterType(int index) const;
-    int parameterCount() const;
-    bool parameterByVal(int index) const;
+    const FrBClass * parameterType(size_t index) const;
+    size_t parameterCount() const;
+    bool parameterByVal(size_t index) const;
     
     FrBBaseObject * execute(FrBExecutionEnvironment& env, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
@@ -233,7 +233,7 @@ public:
     inline void setURReturnType(FrBTypeExpr*);
     
     /** Get unresolved param */
-    inline FrBTypeExpr * getURParam(int index) const;
+    inline FrBTypeExpr * getURParam(size_t index) const;
  
     bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
@@ -317,7 +317,7 @@ inline void FrBCodeFunction::setURReturnType(FrBTypeExpr* t)
     _unresolvedRetType = t;
 }
 
-inline FrBTypeExpr * FrBCodeFunction::getURParam(int index) const
+inline FrBTypeExpr * FrBCodeFunction::getURParam(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::getURParam(int) / index out of bounds");
 
