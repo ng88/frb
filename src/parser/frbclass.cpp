@@ -76,11 +76,6 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
         it->second->resolvePrototype(e);
     }
 
-    for(EventContainer::iterator itf = _events.begin(); itf != _events.end(); ++itf)
-    {
-        frb_assert(itf->second);
-        itf->second->resolvePrototype(e);
-    }
 
 /*
     for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
@@ -303,15 +298,6 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
     
     for(FunctionContainer::const_iterator itf = fns->begin(); itf != fns->end(); ++itf)
             itf->second->put(sout, level);
-
-
-    const EventContainer * evs = eventList();
-    
-    for(EventContainer::const_iterator itf = evs->begin(); itf != evs->end(); ++itf)
-    {
-      sout << ident << "\t'As Event " << endl;
-      itf->second->put(sout, level);
-    }
 
     
     const OperatorContainer * ops = operatorList();

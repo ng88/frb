@@ -37,7 +37,7 @@ FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(const FrBEventInstan
 }
 
 
-FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, const FrbFunction * e)
+FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst, const FrBFunction * e)
    : event(e), instance(inst)
 {
     frb_assert(instance && event);
@@ -45,7 +45,7 @@ FrBExecutionEnvironment::FrBEventInstance::FrBEventInstance(FrBBaseObject * inst
 }
 
     
-void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
+void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, FrBBaseObject * calledInstance, const FrBFunction * slot)
 {
 
     FrBEventInstance caller(callerInstance, signal);
@@ -55,7 +55,7 @@ void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, cons
 
 }
 
-void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
+void FrBExecutionEnvironment::unregisterEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, FrBBaseObject * calledInstance, const FrBFunction * slot)
 {
 
     FrBEventInstance caller(callerInstance, signal);
@@ -63,26 +63,28 @@ void FrBExecutionEnvironment::registerEvent(FrBBaseObject * callerInstance, cons
 
     FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
-    for(; seq.first != seq.second; seq.first++)
-	if( *(seq.first->second) == called )
+    for(FrBEventIterator it = seq.first ; it != seq.second; ++it)
+//	if( *(seq.first->second) == called)
+//	if( seq.first->second->event == called.event
+	//    && seq.first->second->instance == called.instance )
 	{
-	    _eventPool.erase(seq.first);
+	    //_eventPool.erase(seq.first);
 	    break;
 	}
 
 
 }
 
-void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, const FrBBaseObjectList& args)
-    throw (FrBExecutionException);
+void FrBExecutionEnvironment::raiseEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, const FrBBaseObjectList& args)
+    throw (FrBExecutionException)
 {
 
     FrBEventInstance caller(callerInstance, signal);
 
     FrBEventPairIterator seq = _eventPool.equal_range(caller);
 
-    for(; seq.first != seq.second; seq.first++)
-	seq.first->second->event->execute(*this, seq.first->second->instance, args);
+    for(FrBEventIterator it = seq.first ; it != seq.second; ++it)
+	;//	seq.first->second->event->execute(*this, seq.first->second->instance, args);
 
 }
 

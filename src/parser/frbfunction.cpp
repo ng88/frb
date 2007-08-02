@@ -145,6 +145,16 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBExprList& args)
 }
 
 
+void FrBFunction::putFunctionType(std::ostream& stream) const
+{
+    if(event())
+	stream << FrBKeywords::FRB_KW_EVENT;
+    else if(sub())
+	stream << FrBKeywords::FRB_KW_SUB;
+    else
+	stream << FrBKeywords::FRB_KW_FUNCTION;
+}
+
 void FrBFunction::putFunctionName(std::ostream& stream) const
 { 
 
@@ -153,12 +163,7 @@ void FrBFunction::putFunctionName(std::ostream& stream) const
 	    << FrBKeywords::constToString(isConst()) << ' '
 	    << FrBKeywords::abstractToString(abstract()) << ' ';
 
-    if(event())
-	stream << FrBKeywords::FRB_KW_EVENT;
-    else if(function())
-	stream << FrBKeywords::FRB_KW_FUNCTION;
-    else
-	stream << FrBKeywords::FRB_KW_SUB;
+    putFunctionType(stream);
 
     stream << ' ' << name() << '(';
 }
@@ -395,10 +400,15 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 	    stream << endl;
 	}
     
-	return stream << str_indent
-		      << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END)
-		      << ' ' << FrBKeywords::fnToString(sub()) << endl;
+	stream << str_indent
+	       << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END)
+	       << ' ';
+
+	putFunctionType(stream);
+	stream << endl;
     }
+
+    return stream;
 }
 
 

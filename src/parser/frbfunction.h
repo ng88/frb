@@ -81,6 +81,9 @@ public:
                            _paramArray(false)  {};
                              
     virtual ~FrBFunction() {}
+
+    void putFunctionName(std::ostream& stream) const;
+    void putFunctionType(std::ostream& stream) const;
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
     inline void setSub(bool v) { _fn_type = SET_BIT(_fn_type, FN_IS_SUB, v); }
@@ -98,8 +101,8 @@ public:
     inline void setFirstOptionalParameter(int v) { _firstOptional = v; }
     inline int firstOptionalParameter() const { return _firstOptional; }
     
-    virtual const FrBClass * parameterType(int index) const = 0;
-    virtual bool parameterByVal(int index) const = 0;
+    virtual const FrBClass * parameterType(size_t index) const = 0;
+    virtual bool parameterByVal(size_t index) const = 0;
     virtual int parameterCount() const = 0;
     
     inline void setReturnType(const FrBClass * t) { _returnType = t; }

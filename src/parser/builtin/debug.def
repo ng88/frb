@@ -229,7 +229,7 @@ FrBCppClass * FrBDebug::initClass()
     _cpp_class->addFunction(f);
 
 
-    f = new FrBNaryCppFunction(dbg_register_event, dbg_register_event_type, dbg_register_event_byval)
+    f = new FrBNaryCppFunction(dbg_register_event, dbg_register_event_type, dbg_register_event_byval, 4);
     f->setName("RegisterEvent");
     f->setConst(true);
     f->setSub(true);
@@ -238,7 +238,7 @@ FrBCppClass * FrBDebug::initClass()
     
     _cpp_class->addFunction(f);
 
-    f = new FrBNaryCppFunction(dbg_unregister_event, dbg_register_event_type, dbg_register_event_byval)
+    f = new FrBNaryCppFunction(dbg_unregister_event, dbg_register_event_type, dbg_register_event_byval, 4);
     f->setName("UnregisterEvent");
     f->setConst(true);
     f->setSub(true);

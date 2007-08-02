@@ -50,7 +50,8 @@ public:
 
     /** (signal, instance) -> (slot, instance) */
     typedef std::multimap<FrBEventInstance, FrBEventInstance> FrBEventPool;
-    typedef std::pair<FrBEventPool::const_iterator, FrBEventPool::const_iterator>  FrBEventPairIterator;
+    typedef FrBEventPool::const_iterator                      FrBEventIterator;
+    typedef std::pair<FrBEventIterator, FrBEventIterator>     FrBEventPairIterator;
 
 private:
 
@@ -102,11 +103,11 @@ public:
       * @param event event
       * @param handler function that will be called when event is raised
       */
-    void registerEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
+    void registerEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
  
-    void unregisterEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
+    void unregisterEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, FrBBaseObject * calledInstance, const FrBFunction * slot);
 
-    void raiseEvent(FrBBaseObject * callerInstance, const FrBEvent * signal, const FrBBaseObjectList& args)
+    void raiseEvent(FrBBaseObject * callerInstance, const FrBFunction * signal, const FrBBaseObjectList& args)
 	throw (FrBExecutionException);
     
     

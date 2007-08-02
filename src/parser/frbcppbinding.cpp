@@ -55,12 +55,12 @@ FrBCppObject::~FrBCppObject()
 
 /*          FrBNoParamCppFunction         */
 
-const FrBClass * FrBNoParamCppFunction::parameterType(int index) const
+const FrBClass * FrBNoParamCppFunction::parameterType(size_t index) const
 {
     return 0;
 }
 
-bool FrBNoParamCppFunction::parameterByVal(int index) const
+bool FrBNoParamCppFunction::parameterByVal(size_t index) const
 {
     return false;
 }
@@ -90,12 +90,12 @@ FrBBaseObject * FrBNoParamCppFunction::execute(FrBExecutionEnvironment& e, FrBBa
 /*          FrBUnaryCppFunction          */
 
 
-const FrBClass * FrBUnaryCppFunction::parameterType(int index) const
+const FrBClass * FrBUnaryCppFunction::parameterType(size_t index) const
 {
     return _arg0;
 }
 
-bool FrBUnaryCppFunction::parameterByVal(int index) const
+bool FrBUnaryCppFunction::parameterByVal(size_t index) const
 {
     return _arg0_byval;
 }
@@ -126,12 +126,12 @@ FrBBaseObject * FrBUnaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBase
 /*          FrBBinaryCppFunction          */
 
 
-const FrBClass * FrBBinaryCppFunction::parameterType(int index) const
+const FrBClass * FrBBinaryCppFunction::parameterType(size_t index) const
 {
     return index ? _arg1 : _arg0;
 }
 
-bool FrBBinaryCppFunction::parameterByVal(int index) const
+bool FrBBinaryCppFunction::parameterByVal(size_t index) const
 {
     return index ? _arg1_byval : _arg0_byval;
 }
@@ -163,13 +163,13 @@ FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBas
 
     typedef FrBBaseObject * (*NaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList& args);
 
-const FrBClass * FrBNaryCppFunction::parameterType(int index) const
+const FrBClass * FrBNaryCppFunction::parameterType(size_t index) const
 {
     frb_assert(index < _size);
     return _arg_class[index];
 }
 
-bool FrBNaryCppFunction::parameterByVal(int index) const
+bool FrBNaryCppFunction::parameterByVal(size_t index) const
 {
     frb_assert(index < _size);
     return _arg_byval[index];
@@ -193,12 +193,12 @@ FrBBaseObject * FrBNaryCppFunction::execute(FrBExecutionEnvironment&e, FrBBaseOb
 /*          FrBUnaryParamArrayCppFunction          */
 
 
-const FrBClass * FrBUnaryParamArrayCppFunction::parameterType(int index) const
+const FrBClass * FrBUnaryParamArrayCppFunction::parameterType(size_t index) const
 {
     return _arg0;
 }
 
-bool FrBUnaryParamArrayCppFunction::parameterByVal(int index) const
+bool FrBUnaryParamArrayCppFunction::parameterByVal(size_t index) const
 {
     return false;
 }
