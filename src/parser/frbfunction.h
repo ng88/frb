@@ -25,6 +25,17 @@
 #include "frbexprlist.h"
 #include "frbmember.h"
 
+/** set the bit number 'bit_index' of 'var' to 'bit_value' 
+ * bit_index is a mask
+ * bit_value is a boolean
+ * return is the new value of 'var' with 'bit_index' changed to 'bit_value'
+ */
+#define SET_BIT(var, bit_index, bit_value) ( (bit_value) ? (var) | (bit_index) : (var) & ~(bit_index)  )
+/** get the bit number 'bit_index' of 'var'
+ * bit_index is a mask
+ * result is a boolean
+ */
+#define GET_BIT(var, bit_index) ((var) & (bit_index))
 
 class FrBClass;
 class FrBFunction;
@@ -35,9 +46,14 @@ typedef std::vector<FrBFunction*> FrBFunctionList;
 
 class FrBFunction : public FrBMember /* a frb function */
 {
+public:
+    enum { FN_IS_SUB = 1, FN_IS_ABSTRACT = 2, FN_IS_EVENT = 4 };
+
 protected:
-    bool _sub;
-    bool _abstract;
+
+    /** type of the function (sub?, abstract?...)  */
+    unsigned char _fn_type;
+
     //TODO, const=true => Me est const dans cette foction
     
     //FrBClassList _argsType;
@@ -61,17 +77,20 @@ public:
                    MATCH_WITH_OPT,
                    MATCH } match_t;
  
-    inline FrBFunction() : _sub(false), _abstract(false), _firstOptional(-1),
+    inline FrBFunction() : _fn_type(0), _firstOptional(-1),
                            _paramArray(false)  {};
                              
     virtual ~FrBFunction() {}
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const;
     
-    inline void setSub(bool v) { _sub = v; }
-    inline bool sub() const { return _sub; }
+    inline void setSub(bool v) { _fn_type = SET_BIT(_fn_type, FN_IS_SUB, v); }
+    inline bool sub() const { return GET_BIT(_fn_type, FN_IS_SUB); }
+
+    inline void setEvent(bool v) { _fn_type = SET_BIT(_fn_type, FN_IS_EVENT | FN_IS_SUB, v); }
+    inline bool event() const { return GET_BIT(_fn_type, FN_IS_EVENT); }
     
-    inline void setAbstract(bool v) { _abstract = v; }
-    inline bool abstract() const { return _abstract; }
+    inline void setAbstract(bool v) { _fn_type = SET_BIT(_fn_type, FN_IS_ABSTRACT, v); }
+    inline bool abstract() const { return GET_BIT(_fn_type, FN_IS_ABSTRACT); }
   
     inline void setParamArrayUsed(bool v) { _paramArray = v; }
     inline bool paramArrayUsed() const { return _paramArray; }

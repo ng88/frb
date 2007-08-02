@@ -70,9 +70,6 @@ public:
 /** The FrB Integer class */
 typedef FrBPrimitive<long signed int> FrBInt;
 
-/** The FrB Integer class */
-typedef FrBPrimitive<long signed int> FrBInt;
-
 /** The FrB String class */
 typedef FrBPrimitive<String> FrBString;
 
@@ -81,4 +78,7 @@ typedef FrBPrimitive<const FrBClass*> FrBClassWrapper;
 
 /** The FrB Function class (used for introspection) */
 typedef FrBPrimitive<const FrBFunction*> FrBFunctionWrapper;
+
+/** The FrB Event class (used for introspection) */
+typedef FrBPrimitive<const FrBEvent*> FrBEventWrapper;
 

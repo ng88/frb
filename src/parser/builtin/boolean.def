@@ -44,5 +44,6 @@ FrBCppClass * FrBBaseBool::initClass()
     return _cpp_class;
 }
 
+
 FrBBool * FrBBool::_trueValue = new FrBBool(true);
 FrBBool * FrBBool::_falseValue = new FrBBool(false);

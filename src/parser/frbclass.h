@@ -26,9 +26,9 @@
 #include "../common/string.h"
 #include "../common/iterators.h"
 #include "frbbaseobject.h"
+#include "frbevent.h"
 #include "frbfunction.h"
 #include "frbfield.h"
-#include "frbevent.h"
 #include "frbkeywords.h"
 
 
@@ -54,7 +54,7 @@ public:
     typedef FrBClassMap                                 ClassContainer;
     typedef FunctionContainer::const_iterator           FnContIt;
     typedef std::pair<FnContIt, FnContIt>               FnPairIt;
-    typedef FunctionContainer                           EventContainer;
+    typedef std::map<const String, FrBEvent*>           EventContainer;
 
 private:
 
@@ -127,10 +127,13 @@ public:
 
     /** Return the default constructor if it exists  */
     inline FrBFunction * findConstructor() const throw (FrBFunctionNotFoundException);
+
+    /** Return the event named 'name' or 0 if not found */
+    inline FrBEvent* findEvent(const String& name) const;
     
     /** Return a sequence of all the functions named 'name' */
     inline FnPairIt findFunctions(const String& name) const;
-    
+
     /** Find a function named 'name' and matching the argument list 'args' */
     template<class ArgContainer>
     inline FrBFunction * findFunction(const String& name, const ArgContainer& args) const
@@ -369,7 +372,21 @@ inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
   return FrBFunction::findOverload(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME),
                                        _ctors.begin(), _ctors.end(), args);
 }
+
+inline FrBEvent* FrBClass::findEvent(const String& name) const
+{
+    EventContainer::const_iterator f = _events.find(name);
     
+    if(f == _events.end())
+        return 0;
+    else
+    {
+        frb_assert(f->second);
+        return f->second;
+    }
+
+}
+
 inline FrBClass::FnPairIt FrBClass::findFunctions(const String& name) const
 {
   return _functions.equal_range(name);
@@ -478,7 +495,7 @@ inline void FrBClass::addEvent(FrBEvent * e)
 {
   frb_assert(e);
   e->setContainer(this);
-  _events.insert(std::make_pair(e->name(), e)); 
+  _events[e->name()] = e; 
 }
 
 

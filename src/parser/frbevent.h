@@ -18,11 +18,13 @@
 #ifndef FRBEVENT_H
 #define FRBEVENT_H
 
+
 class FrBFunction;
 class FrBCodeFunction;
 
 typedef FrBFunction FrBEvent;
 typedef FrBCodeFunction FrBCodeEvent;
+
 
 #endif
 

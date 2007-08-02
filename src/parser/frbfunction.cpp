@@ -57,7 +57,7 @@ FrBBaseObject * FrBFunction::execute(FrBExecutionEnvironment& e, FrBBaseObject *
 
 const FrBClass * FrBFunction::returnType() const
 {
-    return _sub ? FrBVoid::getCppClass() : _returnType;
+    return sub() ? FrBVoid::getCppClass() : _returnType;
 }
 
 // Pas tres propre mais j'ai pas mieux pour le moment :
@@ -213,8 +213,6 @@ FrBCodeFunction::Param::Param(FrBTypeExpr * t, bool b, FrBExpr * i)
 
 FrBCodeFunction::FrBCodeFunction()
 {
-    _sub = false;
-    _shared = false;
     _const = false;
     _unresolvedRetType = 0;
 }

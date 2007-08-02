@@ -173,19 +173,20 @@ int main(int argc, char ** argv)
         addClass(tree, FrBString::initClass());
         addClass(tree, FrBClassWrapper::initClass());
         addClass(tree, FrBFunctionWrapper::initClass());
+        addClass(tree, FrBEventWrapper::getCppClass());
         addClass(tree, FrBDebug::initClass());
         
 	/* Alias EN */
         addClassAlias(tree, FrBBool::getCppClass(), "Boolean");
         addClassAlias(tree, FrBInt::getCppClass(), "Integer");
-        addClassAlias(tree, FrBFunctionWrapper::getCppClass(), "Event");
+
 
 	/* Alias FR */
         addClassAlias(tree, FrBInt::getCppClass(), "Entier");
         addClassAlias(tree, FrBBool::getCppClass(), "Booleen");
         addClassAlias(tree, FrBString::getCppClass(), "Chaine");
         addClassAlias(tree, FrBNull::getCppClass(), "Rien");
-        addClassAlias(tree, FrBFunctionWrapper::getCppClass(), "Evenement");
+        addClassAlias(tree, FrBEventWrapper::getCppClass(), "Evenement");
         
         
         bool success = parser.parse(*arg_in);

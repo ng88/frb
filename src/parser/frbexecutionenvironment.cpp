@@ -19,6 +19,8 @@
 #include "frbresolveenvironment.h"
 #include "frbbuiltinclasses.h"
 
+#include "frbfunction.h"
+
 bool FrBExecutionEnvironment::FrBEventInstance::operator<(const FrBEventInstance& o) const
 {
     return event < o.event;

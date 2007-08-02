@@ -365,33 +365,43 @@ void FrBUnresolvedIdWithContextExpr::resolveAndCheck(FrBResolveEnvironment& e) t
 	_evaluator = new FieldEvaluator(f);
     }
     catch(FrBFieldNotFoundException ex)
-    { 
+    {
 
-	std::cout << "resolve&check sur " << _name << std::endl;
+	try /* try for a class */
+	{
 
-	FrBClass::FnPairIt pit = current_class->findFunctions(_name); //is this a function ?
-	std::cout << "1\n";
-	if(pit.first == current_class->functionList()->end())
-	 {std::cout << "11\n";
 	     /* no, is this a class ? */
 	     FrBClass * c = e.getClassFromName(_name, current_class);
-std::cout << "12\n";
+
 	     /* ok fine, we'll behave like a class now */
 	     _evaluator = new ClassEvaluator(c);
-	     std::cout << " <- classe\n";
-	 }
-	 else if(pit.first == --pit.second)
-	 {std::cout << "21\n";
-	     /* yes it is */
-	     _evaluator = new FunctionEvaluator( pit.first->second );
-	 }
-	else
-	{
-std::cout << "31               bug ici on va ici sans raison \n"; !!!
-	     /* no it matches several functions */
-	     throw FrBFunctionAmbiguityException(_name);
+
 	}
-	std::cout << "4\n";
+	catch(FrBClassNotFoundException ex2)
+	{ /* this is not a class, try for an event*/
+
+	    const FrBEvent * event = current_class->findEvent(_name);
+
+	    if(event)
+	    { /* it is an event */
+
+	    }
+	    else /* no :( try for a function */
+	    {
+		FrBClass::FnPairIt pit = current_class->findFunctions(_name); //is this a function ?
+
+		if(pit.first == current_class->functionList()->end())
+		    /* nop */
+		    throw ex2; 
+		else if(pit.first == --pit.second)
+		    /* yes it is */
+		    _evaluator = new FunctionEvaluator( pit.first->second );
+		else
+		    /* damned, it matches several functions */
+		    throw FrBFunctionAmbiguityException(_name);
+	    }
+
+	}
 
     }
 

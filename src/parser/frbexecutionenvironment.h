@@ -23,7 +23,7 @@
 #include "frbmemory.h"
 #include <map>
 
-#include "frbevent.h"
+class FrBFunction;
 
 class FrBResolveEnvironment;
 
@@ -36,13 +36,13 @@ public:
     class FrBEventInstance
     {
     public:
-	const FrBEvent * event;
+	const FrBFunction * event;
 	FrBBaseObject * instance;
 
 
 	bool operator<(const FrBEventInstance&) const;
 
-	FrBEventInstance(FrBBaseObject * inst, const FrBEvent * e);
+	FrBEventInstance(FrBBaseObject * inst, const FrBFunction * e);
 	FrBEventInstance(const FrBEventInstance&);
 
     };

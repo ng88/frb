@@ -100,7 +100,7 @@ FrBBaseObject * show_mem(FrBExecutionEnvironment& e, FrBBaseObject * me)
 
 FrBBaseObject * dbg_unregister_event(FrBExecutionEnvironment& e, FrBBaseObject*, FrBBaseObject * arg0, FrBBaseObject * arg1)
 {
-    e.unregisterEvent(arg0, static_cast<FrBFunctionWrapper*>(arg1)->valuePtr());
+    e.unregisterEvent(arg0, static_cast<FrBEventWrapper*>(arg1)->valuePtr());
     return 0;
 }
 
@@ -220,7 +220,7 @@ FrBCppClass * FrBDebug::initClass()
     _cpp_class->addFunction(f);
 
 
-    f = new FrBBinaryCppFunction(dbg_unregister_event, FrBObject::getCppClass(), false, FrBFunctionWrapper::getCppClass(), false);
+    f = new FrBBinaryCppFunction(dbg_unregister_event, FrBObject::getCppClass(), false, FrBEventWrapper::getCppClass(), false);
     f->setName("UnregisterEvent");
     f->setConst(true);
     f->setSub(true);

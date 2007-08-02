@@ -120,7 +120,7 @@ private:
 public:
 
     /** 'f' is a pointer to the C++ function */
-    FrBNoParamCppFunction(NoParamFunction f) : _fn(f) {};
+    FrBNoParamCppFunction(NoParamFunction f) : _fn(f) { frb_assert(f); }
 
     const FrBClass * parameterType(int index) const;
     bool parameterByVal(int index) const;
@@ -152,7 +152,7 @@ public:
 
     /** 'fn' is a pointer to the C++ function, 'arg0' is the type of the first argument and 'arg0_byval' indicates if the first arg must be passed byval or not (=byref)  */
     FrBUnaryCppFunction(UnaryFunction fn, FrBClass *  arg0, bool arg0_byval)
-        : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval) {}
+        : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval) { frb_assert(fn && arg0); }
 
     const FrBClass * parameterType(int index) const;
     bool parameterByVal(int index) const;
@@ -183,7 +183,7 @@ public:
 
     /** 'fn' is a pointer to the C++ function, 'arg0' is the type of the first argument and 'arg0_byval' indicates if the first arg must be passed byval or not (=byref)  */
     FrBBinaryCppFunction(BinaryFunction fn, FrBClass *  arg0, bool arg0_byval, FrBClass *  arg1, bool arg1_byval)
-        : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval) {}
+        : _fn(fn), _arg0(arg0), _arg0_byval(arg0_byval), _arg1(arg1), _arg1_byval(arg1_byval) { frb_assert(fn && arg0 && arg1); }
 
     const FrBClass * parameterType(int index) const;
     bool parameterByVal(int index) const;

@@ -8,6 +8,8 @@ Public Class MyApp
         Debug.println("MyApp::Initialize()")
     End Sub
     
+    
+    
     Public Sub foo()
     
         Debug.println("begin MyApp::foo()")
@@ -15,7 +17,7 @@ Public Class MyApp
         '...
         
         'Me.RaiseEvent(recordCountChanged, 5)
-        'Debug.RaiseEvent(Me, recordCountChanged, 5)
+        'recordCountChanged(5)
         
         '...
         
@@ -32,6 +34,7 @@ Public Class GUI
 
     Public Sub Initialize()
         Debug.println("GUI::Initialize()")
+        
         
         'Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
     End Sub
@@ -57,7 +60,7 @@ Public Class GUI
     Public Sub test2()
         Debug.println("begin GUI::test2()")
         
-        'Debug.UnregisterEvent(app, app.foo)
+        Debug.UnregisterEvent(app, app.foo)
         
         Debug.println("end GUI::test2()")
     End Sub
