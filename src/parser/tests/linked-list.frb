@@ -3,11 +3,6 @@ DefLang EN
 
 Public Class Main
 
-
-    Public Shared Function copyOf(a As Int) As Int
-        Dim t As Int
-        Return t = a
-    End Function
     
     Public Shared Sub burn(o As Utils.LinkedList)
         DefLang FR
