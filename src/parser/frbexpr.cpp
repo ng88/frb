@@ -602,9 +602,14 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 
 
         }
-        catch(...)  /* no, this is not a real funtion call */
+        catch(FrBFunctionNotFoundException ex)  /* no, this is not a real funtion call */
         {
-	    throw FrBFunctionNotFoundException(dbg_name);
+	    /* case of the overload of the () operator */
+
+	    _lhs->resolveAndCheck(e);
+            _fn = _lhs->getClass()->findOperator(FrBKeywords::FRB_KW_OP_O_BRACKET, *_rhs);
+            _me = _lhs;
+	 
         }
 
 	/* yes. is the context an instance or a class ? */
@@ -614,15 +619,10 @@ void FrBFunctionCallExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 	    if(!_fn->shared())
 		throw FrBInvalidNonSharedException(_fn);
 	}
-	
-	return;
-        
+
     }
-
-    /* case of the overload of the () operator */
-    //frb_assert2(false, "overload of ()/[] not yet implemented");
-
-    //_lhs->resolveAndCheck(e);
+    else
+	dbg_name = "not_urwc_expr";
 
     throw FrBFunctionNotFoundException(dbg_name);
 

@@ -19,17 +19,61 @@
 
 /*            FrBFunctionWrapper            */
 
-FrBBaseObject * function_call(FrBExecutionEnvironment& e, FrBBaseObject * me, const FrBBaseObjectList& p)
+FrBBaseObject * function_call(FrBExecutionEnvironment& e, FrBBaseObject * cme, const FrBBaseObjectList& p)
     throw (FrBExecutionException)
 {
+    //frb_assert2(false, "not yet implemented");
     
-    FrBFunctionWrapper * fw = dynamic_cast<FrBFunctionWrapper*>(me);
+    FrBFunctionWrapper * fw = dynamic_cast<FrBFunctionWrapper*>(cme);
     frb_assert(fw);
     
     const FrBFunction * f = fw->value();
     frb_assert(f);
 
-    return f->execute(e, me, p);
+    FrBBaseObject* me = FrBNull::nullValue();
+
+
+    FrBBaseObjectList * targs = 0;
+
+    if(!f->shared()) /* non-shared fn, me must be provided */
+    {
+
+	if(p.size() == 0)
+	    throw FrBInvalidNonSharedException(f);
+
+	me = p[0];
+
+	if(!me->getClass()->isCompatibleWith(f->container()))
+	   throw FrBIncompatibleClassException(me->getClass(), f->container());
+
+        
+
+	if(!me || FrBNull::isNull(me))
+	    throw FrBNullReferenceException();
+
+	
+	targs = new FrBBaseObjectList(++(p.begin()), p.end());
+	
+	
+    }
+
+
+    FrBBaseObject * ret;
+
+    if(f->event())
+    {
+	e.raiseEvent(me, f, targs ? *targs : p);
+	ret = FrBNull::nullValue();
+    }
+    else
+	ret = f->execute(e, me, targs ? *targs : p);
+	
+
+    if(targs)
+	delete targs;
+
+    return ret;
+
 }
 
 FrBCppClass * FrBFunctionWrapper::initClass()

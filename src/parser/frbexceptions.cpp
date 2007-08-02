@@ -194,7 +194,7 @@ std::ostream& FrBMemberNotFoundException::put(std::ostream& stream) const
 /*      FrBInvalidNonSharedException       */
 
 
-FrBInvalidNonSharedException::FrBInvalidNonSharedException(FrBMember * f)
+FrBInvalidNonSharedException::FrBInvalidNonSharedException(const FrBMember * f)
     : _fl(f)
 {
 }

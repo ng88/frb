@@ -211,10 +211,10 @@ public:
 class FrBInvalidNonSharedException : public FrBResolveException
 {
 protected:
-    FrBMember *  _fl;
+    const FrBMember *  _fl;
 public:
 
-    FrBInvalidNonSharedException(FrBMember * f);
+    FrBInvalidNonSharedException(const FrBMember * f);
     std::ostream& put(std::ostream& stream) const;
 
 };

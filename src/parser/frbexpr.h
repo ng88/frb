@@ -305,7 +305,7 @@ class FrBFunctionCallExpr : public FrBExpr
     FrBExprList           *_rhs;
     
     /** function to call (resolved from rhs & lhs) */
-    FrBFunction           *_fn;
+    const FrBFunction     *_fn;
     
     /** expr that provides a me value for non-shared function */
     FrBExpr               *_me;
