@@ -98,7 +98,7 @@ FrBBaseObject * show_mem(FrBExecutionEnvironment& e, FrBBaseObject * me)
 }
 
 
-static FrBClass * dbg_register_event_type[4] = { FrBObject::getCppClass(), FrBFunctionWrapper::getCppClass(), FrBObject::getCppClass(), FrBFunctionWrapper::getCppClass() };
+static FrBClass * dbg_register_event_type[4] = { 0, 0, 0, 0 };
 static bool dbg_register_event_byval[4] = { false, false, false, false };
 
 FrBBaseObject * dbg_register_event(FrBExecutionEnvironment& e, FrBBaseObject*, const FrBBaseObjectList& args)
@@ -227,6 +227,11 @@ FrBCppClass * FrBDebug::initClass()
     f->setScope(SC_PUBLIC);
     
     _cpp_class->addFunction(f);
+
+    dbg_register_event_type[0] = FrBObject::getCppClass();
+    dbg_register_event_type[1] = FrBFunctionWrapper::getCppClass();
+    dbg_register_event_type[2] = dbg_register_event_type[0];
+    dbg_register_event_type[3] = dbg_register_event_type[1];
 
 
     f = new FrBNaryCppFunction(dbg_register_event, dbg_register_event_type, dbg_register_event_byval, 4);

@@ -148,11 +148,11 @@ FrBFunction::match_t FrBFunction::matchParameters(const FrBExprList& args)
 void FrBFunction::putFunctionType(std::ostream& stream) const
 {
     if(event())
-	stream << FrBKeywords::FRB_KW_EVENT;
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_EVENT);
     else if(sub())
-	stream << FrBKeywords::FRB_KW_SUB;
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_SUB);
     else
-	stream << FrBKeywords::FRB_KW_FUNCTION;
+	stream << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_FUNCTION);
 }
 
 void FrBFunction::putFunctionName(std::ostream& stream) const

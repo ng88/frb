@@ -17,7 +17,7 @@ Public Class MyApp
         '...
         
         'Me.RaiseEvent(recordCountChanged, 5)
-        'recordCountChanged(5)
+        recordCountChanged(5)
         
         '...
         
@@ -75,7 +75,19 @@ Public Class Main
         Dim g As GUI
         g.test()
         g.test2()
+        
+        Debug.RegisterEvent(g.app, g.app.recordCountChanged, Nothing, test)
+        
         g.test()
+        
+        
     End Sub
+    
+    
+    Public Shared Sub test()
+    
+    Debug.println("Count changed depuis main !" )    
+    End Sub
+    
 End Class
 
