@@ -6,8 +6,8 @@ Public Class Main
 
     Public Shared Sub main()
     
-
-
+        Dim t As Test := New Test(Object)
+        
         
     End Sub
     
@@ -23,4 +23,26 @@ End Class
 ' lors de l'utilisation, on regarde si NomClasse#valeurParam1 existe si oui c'est bien
 ' sinon il faut le creer par recopie de NomClasse en remplacant les instances bidons par
 ' le bon type et on resolveAndCheck
-'
+' (pour pas prendre de place utiliser une autre classe vide a la place de FrbClass et forcer la convertion)
+
+
+
+Public Class Test
+
+    Protected T As Class := Nothing
+    Protected elmt As T := Nothing
+    
+    Public Sub Initialize(type As Class)
+        T := type
+    End Sub
+    
+    Public Sub setElement(e As T)
+        'Debug.checkCompatibility(TypeOf e, T)
+        elmt := e
+    End Sub
+    
+    Public Function element() As T
+        Return elmt
+    End Function
+
+End Class

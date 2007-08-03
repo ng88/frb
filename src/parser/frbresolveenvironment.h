@@ -21,10 +21,34 @@
 #include "frbfunction.h"
 class FrBClass;
 
+/* Templates:
+ *  1) at parse time: we associate a fake class to each template parameter
+ *                    and we do not resolveAndCheck
+ *  2) at resolve time: 1) if a template is used for the first time, we clone
+ *                      its class and replace the fake class by the real class
+ *                      (parameters). then the new class is resolved an added
+ *                      to the class tree.
+ *                      2) we already have resolved the class so we can use
+ *                      it directly.
+ */
 
 /** This class contains the resolve environment (class tree) */
 class FrBResolveEnvironment
 {
+public:
+    !!! draft !!!
+    /** Fake class class */
+    class FrBTemplateClass
+    {
+	std::vector<FrBClass*> array;
+	std::map<FrBClass*, int> assoc;
+	FrBClass * getFake(int i);
+	int getFakeNumber(const FrBClass*);
+    };
+    
+    /** give the association argument_number -> new_real_class for the current remplate */
+    typedef std::stack<FrBConstClassList> FrBTemplateStack
+
 private:
 
     FrBClassMap * _root;

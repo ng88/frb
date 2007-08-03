@@ -39,9 +39,6 @@ class FrBClass;
 std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 
 
-//TODO: utiliser une hash_map à la place
-typedef std::map<const String, FrBFunction*> FrBFunctionMap;
-
 /** Represents an FrB class in memory */
 class FrBClass : public FrBMember
 {
@@ -269,6 +266,8 @@ public:
     /** Can resolve any type of member (function, inner class, field, ...) */
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
+
+    virtual FrBClass * specializeTemplate(const FrBConstClassList& args) const;
     
 };
 
