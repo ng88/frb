@@ -72,4 +72,26 @@ Public Enum CouleursDeBase As CouleursDeBase.Couleur
    
 
 End Enum
+
+
+
+Public Class CouleursDeBase
+
+    Public Shared PURE_BLUE  As CouleursDeBase := New Couleur(0, 0, 255),
+    Public Shared PURE_RED   As CouleursDeBase := New Couleur(255, 0, 0),
+    Public Shared PURE_GREEN As CouleursDeBase := New Couleur(0, 255, 0),
+
+    
+    Private Red As Int   := Nothing
+    Private Green As Int := Nothing
+    Private Blue As Int  := Nothing
+    
+    Private Sub Initialize(r As Int, g As Int, b As Int)
+        Red := r
+        Green := g
+        Blue := b
+    End Sub
+   
+End Class
+   
    

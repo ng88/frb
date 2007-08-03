@@ -1,0 +1,26 @@
+DefLang EN
+
+
+
+Public Class Main
+
+    Public Shared Sub main()
+    
+
+
+        
+    End Sub
+    
+    
+End Class
+
+'  idée d'implémentation des template
+'
+'
+'  lors de la définition des classes on injecte des faux type (instances bidons de frbclass)
+'  pour chaque argument template
+'
+' lors de l'utilisation, on regarde si NomClasse#valeurParam1 existe si oui c'est bien
+' sinon il faut le creer par recopie de NomClasse en remplacant les instances bidons par
+' le bon type et on resolveAndCheck
+'

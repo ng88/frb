@@ -82,6 +82,10 @@ protected:
 
     ClassContainer _baseClasses;
 
+    //unsigned char _templateParameterCount;
+
+    //FrBClass * evalTemplate(const FrBClassList&) const
+
     //bool _resolved;
     
     /** Create a new non-initialized instance

@@ -6,7 +6,7 @@ Public Class Main
     Public Shared Sub main()
     
     
-        Dim i, j As Integer := Null
+        Dim i, j As Integer := Nothing
         
         For i := 1 To 10
         

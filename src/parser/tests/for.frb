@@ -52,10 +52,6 @@ Public Class Main
      
     End Sub
     
-    Public Shared Function copyOf(a As Int) As Int
-        Dim t As Int
-        Return t = a
-    End Function
 
 End Class
 
