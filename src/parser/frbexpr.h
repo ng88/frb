@@ -85,6 +85,9 @@ public:
 
     /** Return true if expr is an instance (and not a type) (default is true) */
     virtual bool isInstance() const;
+
+    /** Template instanciation */
+    virtual FrBExpr * specializeTemplate(const FrBConstClassVector& args) const = 0;
     
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
@@ -132,7 +135,7 @@ public:
      */
     FrBMeExpr(bool nonSharedContext);
     bool isInstance() const;
-    virtual ~FrBMeExpr() {}
+    virtual ~FrBMeExpr() ;
     std::ostream& put(std::ostream& stream) const;
 };
 
@@ -178,6 +181,24 @@ public:
     bool isAssignable() const;
     bool isInstance() const;
 };
+
+class FrBInstanciedTemplateTypeExpr : public FrBTypeExpr
+{
+protected:
+    const FrBClass *              _class;
+
+public:
+
+    FrBInstanciedTemplateTypeExpr(const FrBClass * c);
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+
+    bool isAssignable() const;
+    bool isInstance() const;
+}
+
 /** Identifier not yet resolved (ie class name, function, field...)
     current class context is provided, typically it's used in an expression like
     FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr)) <=> unresolved_id_wc.unresolved_id
@@ -500,7 +521,18 @@ public:
 
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    std::ostream& put(std::ostream& stream) const; 
+    std::ostream& put(std::ostream& stream) const;
+
+    FrBExpr * specializeTemplate(const FrBConstClassVector& args, FrBExpr * cpy = 0) const;
+    {
+	if(!cpy) cpy = Misc::copy(this);
+	FrBBinOpExpr::specializeTemplate(args, cpy);
+
+	cpy->_lhs = _lhs->specializeTemplate(args);
+	cpy->_rhs = _rhs->specializeTemplate(args);
+
+	return cpy;
+    }
 
 };
 
@@ -538,6 +570,7 @@ public:
     FrBLogAndOpExpr(FrBExpr* lhs, FrBExpr* rhs);
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+
 
 };
 

@@ -273,7 +273,7 @@ public:
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
 
-    virtual FrBClass * specializeTemplate(const FrBConstClassList& args) const;
+    virtual FrBClass * specializeTemplate(const FrBConstClassVector& args) const;
     
 };
 

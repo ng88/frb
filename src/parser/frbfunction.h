@@ -39,10 +39,17 @@
 
 class FrBClass;
 class FrBFunction;
+
 typedef std::vector<FrBClass*> FrBClassList;
 typedef std::vector<const FrBClass*> FrBConstClassList;
+
+typedef std::vector<FrBClass*> FrBClassVector;
+typedef std::vector<const FrBClass*> FrBConstClassVector;
+
 typedef std::map<const String, FrBClass*> FrBClassMap;
+
 typedef std::vector<FrBFunction*> FrBFunctionList;
+typedef std::vector<FrBFunction*> FrBFunctionVector;
 
 class FrBFunction : public FrBMember /* a frb function */
 {

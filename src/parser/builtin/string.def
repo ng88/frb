@@ -51,7 +51,7 @@ FrBBaseObject * operator_unary_sub_FrBString(FrBExecutionEnvironment& e, FrBBase
     return e.addGarbagedObject(new FrBString( (static_cast<FrBString*>(me)->valuePtr())[static_cast<FrBInt*>(arg0)->value()] ));
 }*/
 
-/**
+/*
   *  "abc" - 1 -> "ab"
   *  "absalutc" - "salut" -> "abc"
   *  "salut" In "absalutc" -> true
@@ -62,7 +62,7 @@ FrBBaseObject * operator_unary_sub_FrBString(FrBExecutionEnvironment& e, FrBBase
   *  -"abc" -> "cba"
   */
 
-/**
+/*
   *"abc " * 0 -> ""
   *"abc " * 1 -> "abc "
   *"abc " * 3 -> "abc abc abc "

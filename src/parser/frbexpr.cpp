@@ -255,6 +255,46 @@ std::ostream& FrBTemplateTypeExpr::put(std::ostream& stream) const
 }
 
 
+/*              FrBInstanciedTemplateTypeExpr                      */
+
+
+    const FrBClass *              _class;
+
+
+FrBInstanciedTemplateTypeExpr::FrBInstanciedTemplateTypeExpr(const FrBClass * c)
+    : _class(c)
+{
+}
+    
+
+FrBBaseObject* FrBInstanciedTemplateTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return e.addGarbagedObject(new FrBClassWrapper(getClass()));
+}
+
+const FrBClass* FrBInstanciedTemplateTypeExpr::getClass() const
+{
+    return _class;
+}
+
+std::ostream& FrBInstanciedTemplateTypeExpr::put(std::ostream& stream) const
+{
+    return stream << _class->fullName();
+}
+
+
+bool FrBInstanciedTemplateTypeExpr::isAssignable() const
+{
+    false;
+}
+
+bool FrBInstanciedTemplateTypeExpr::isInstance() const
+{
+    false;
+}
+
+
+
 /*     FrBUnresolvedIdWithContextExpr      */
 
 /*     FrBUnresolvedIdWithContextExpr::*Evalutor      */
