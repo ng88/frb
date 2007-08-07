@@ -31,6 +31,8 @@
         FrBFlexLexerEx * frb_lexer; \
         FrBClassMap * frb_classes; \
         FrBErrorCollector * frb_error; \
+        typedef std::map<String, template_count_t>   TemplateSymbTable; \
+        typedef std::stack<TemplateSymbTable*> TemplateSymbTableStack; \
      private: \
          FrBCodeField * _current_field; \
          FrBCodeClassStack class_stack; \
@@ -39,6 +41,15 @@
          FrBBlockStack block_stack; \
          CStringList id_list; \
          FrBWithStack with_stack; \
+         TemplateSymbTableStack  template_symbols_stack;\
+         \
+         inline int templateParameter(const String& str) \
+         { \
+             if(current_class()->templateParameterCount() == 0) return -1; \
+             frb_assert2(!template_symbols_stack.empty(), "template_symbols_stack is empty"); \
+             TemplateSymbTable::iterator it = template_symbols_stack.top()->find(str); \
+             return it == template_symbols_stack.top()->end() ? -1 : (int)(it->second); \
+         } \
          inline FrBCodeField* current_field() \
          { \
              /*frb_assert2(_current_field, "frbsyntaxer.h::FrBSynater::current_field()")*/;  \

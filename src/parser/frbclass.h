@@ -51,6 +51,7 @@ public:
     typedef FrBClassMap                                 ClassContainer;
     typedef FunctionContainer::const_iterator           FnContIt;
     typedef std::pair<FnContIt, FnContIt>               FnPairIt;
+    typedef unsigned char                               template_count_t;
 
 private:
 
@@ -79,7 +80,7 @@ protected:
 
     ClassContainer _baseClasses;
 
-    //unsigned char _templateParameterCount;
+    unsigned char _templateParameterCount;
 
     //FrBClass * evalTemplate(const FrBClassList&) const
 
@@ -207,10 +208,15 @@ public:
     
     inline void setAbstract(bool v) { _abstract = v; }
     inline void setSealed(bool v) { _sealed = v; }
-    
+
+    /** Set the number of template parameter */
+    inline void  setTemplateParameterCount(template_count_t c) { _templateParameterCount = c; }
+    /** Get the number of template parameter */
+    inline template_count_t  templateParameterCount() { return _templateParameterCount; }
+
     /** Return the unique typeID() of this class
-      *   Important note: typeID() my change from an execution to another and from a machine to another.
-      *                   So typeID() MUST NOT be stored for a furute usage. Typically typeID() have to be
+      *   Important note: typeID() may change from an execution to another and from a machine to another.
+      *                   So typeID() MUST NOT be stored for a future usage. Typically typeID() have to be
       *                   compared only, eg: 
       *                         if(classA->typeID() == classB->typeID())
       *                         {
@@ -226,7 +232,7 @@ public:
     void initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
     /** Allocate instance, resolve and call the default constructor
-      * Note: Here, resolve does not take any time, because it've done when constructor was added) 
+      * Note: Here, resolve does not take any time, because it already has been done when constructor was added
       */
     FrBBaseObject * createInstance(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     
@@ -279,10 +285,13 @@ class FrBCodeClass : public FrBClass
 public:
 
     typedef std::vector<FrBUnresolvedTypeExpr *> URClassContainer;
+    
 
 protected:
 
+    /** Unresolved base classes list */
     URClassContainer _urBaseClasses;
+
 
 
   FrBBaseObject * allocateInstance(FrBExecutionEnvironment& e) const

@@ -194,16 +194,39 @@ class_type:
     | FRB_KW_TOKEN_INTERFACE  { $<vint>$ = FRB_KW_TOKEN_INTERFACE; }
     | FRB_KW_TOKEN_MODULE     { $<vint>$ = FRB_KW_TOKEN_MODULE; }
 
+template_parameters: /* <T1, T2, ...> or nothing */
+      FRB_KW_TOKEN_OP_LT identifier_list FRB_KW_TOKEN_OP_GT { $<vbool>$ = true; }
+    | /* empty */                                           { $<vbool>$ = false; }
+    ;
+
 class:
-       member_scope_attr /*1*/ class_attr /*2*/ class_sealed /*3*/ class_type /*4*/ FRB_IDENTIFIER /*5*/ /* Class id */
+      member_scope_attr /*1*/ class_attr /*2*/ class_sealed /*3*/ class_type /*4*/ FRB_IDENTIFIER /*5*/ /* Class id */ template_parameters /*6*/
        {
            FrBCodeClass * nclass = new FrBCodeClass();
            
            nclass->setName(String($<str>5));
            free($<str>5);
            nclass->setScope($<vint>1);
+
+	   if($<vbool>6)
+	   {
+
+	       size_t i;
+	       size_t count = id_list.size();
+
+	       nclass->setTemplateParameterCount(count);
+
+	       TemplateSymbTable * tsymb = new TemplateSymbTable();
+	       template_symbols_stack.push(tsymb);
+
+	       for(i = 0; i < count, ++i)
+	       {
+		   tsymb[ id_list[i] ] = i;
+		   free(id_list[i]);
+	       }
+	       id_list.clear();
+	   }
            
-           //TODO reverifier tout ca et mettre des if plutot
            nclass->setShared( ($<vint>4 == FRB_KW_TOKEN_MODULE) || ($<vint>2 == SC_SHARED) );
            nclass->setAbstract( ($<vint>4 == FRB_KW_TOKEN_INTERFACE) || ($<vint>2 == SC_ABSTRACT) );
            nclass->setSealed( $<vint>3 == SC_SEALED );
@@ -214,11 +237,11 @@ class:
                class_stack.top()->addInnerClass(nclass);
            
            class_stack.push(nclass);
-       } /*6*/
-       class_content_list /*7*/
-       FRB_KW_TOKEN_END /*8*/ class_type /*9*/ new_line /*10*/ /* End Class */
+       } /*7*/
+       class_content_list /*8*/
+       FRB_KW_TOKEN_END /*9*/ class_type /*10*/ new_line /*11*/ /* End Class */
        {
-           if( $<vint>4 != $<vint>9 )
+           if( $<vint>4 != $<vint>10 )
            {
                frb_error->error(FrBErrors::FRB_ERR_CLASS_DEC_END,
                                     FrBErrors::FRB_ERR_PARSE,
@@ -228,6 +251,8 @@ class:
                YYABORT;
            }
            
+	   delete template_symbols_stack.top();
+	   template_symbols_stack.pop();
            class_stack.pop();
        }  
        
