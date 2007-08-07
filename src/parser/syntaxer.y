@@ -1003,7 +1003,11 @@ full_type: /* a.b.c.d.e.f ... */
       }
     | FRB_IDENTIFIER       /* id */
       {
-          $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
+	  int p = template_parameter($<str>1);
+	  if(p == -1)
+	      $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
+	  else
+	      $<vtype>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)p, current_class());
           free($<str>1);
       }
     | intro_id /* Class, Function, ...*/
@@ -1219,6 +1223,15 @@ identifier_expr:
                     $<expr>$ = new FrBLocalVarExpr(cf, cf->getURParam(idvar),  idvar + 1);
                     break;
                 }
+		
+		/* template parameter */
+		idvar = template_parameter($<str>1);
+		if(idvar > -1)
+		{
+		   $<expr>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)idvar, current_class());
+		   break;
+		}
+
             
             }
 

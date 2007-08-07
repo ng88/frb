@@ -31,7 +31,7 @@
         FrBFlexLexerEx * frb_lexer; \
         FrBClassMap * frb_classes; \
         FrBErrorCollector * frb_error; \
-        typedef std::map<String, template_count_t>   TemplateSymbTable; \
+        typedef std::map<String, FrBClass::template_count_t>   TemplateSymbTable; \
         typedef std::stack<TemplateSymbTable*> TemplateSymbTableStack; \
      private: \
          FrBCodeField * _current_field; \
@@ -43,7 +43,7 @@
          FrBWithStack with_stack; \
          TemplateSymbTableStack  template_symbols_stack;\
          \
-         inline int templateParameter(const String& str) \
+         inline int template_parameter(const String& str) \
          { \
              if(current_class()->templateParameterCount() == 0) return -1; \
              frb_assert2(!template_symbols_stack.empty(), "template_symbols_stack is empty"); \

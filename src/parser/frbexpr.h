@@ -158,6 +158,26 @@ public:
     inline const String& name() const { return _name; }
 };
 
+/** hold a template type (like T in Public Class A<T>) */
+class FrBTemplateTypeExpr : public FrBTypeExpr
+{
+protected:
+    FrBCodeClass *              _currentClass;
+    FrBClass::template_count_t  _p;
+
+public:
+
+    FrBTemplateTypeExpr(FrBClass::template_count_t p,  FrBCodeClass * c);
+    ~FrBTemplateTypeExpr();
+    
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+
+    bool isAssignable() const;
+    bool isInstance() const;
+};
 /** Identifier not yet resolved (ie class name, function, field...)
     current class context is provided, typically it's used in an expression like
     FrBMemberOpExpr(FrBUnresolvedIdWithContextExpr, FrBUnresolvedIdExpr)) <=> unresolved_id_wc.unresolved_id
