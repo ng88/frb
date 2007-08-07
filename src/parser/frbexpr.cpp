@@ -209,6 +209,50 @@ std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
 // }
 
 
+/*         FrBTemplateTypeExpr            */
+
+
+FrBTemplateTypeExpr::FrBTemplateTypeExpr(FrBClass::template_count_t p,  FrBCodeClass * c)
+    : _currentClass(c), _p(p)
+{
+    frb_assert(c);
+}
+
+FrBTemplateTypeExpr::~FrBTemplateTypeExpr()
+{
+}
+    
+void FrBTemplateTypeExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException)
+{
+}
+
+FrBBaseObject* FrBTemplateTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return e.addGarbagedObject(new FrBClassWrapper(getClass()));
+}
+
+const FrBClass* FrBTemplateTypeExpr::getClass() const
+{
+    frb_assert2(false, "uninstancied template");
+    return 0;
+}
+
+
+bool FrBTemplateTypeExpr::isAssignable() const
+{
+    return false;
+}
+
+bool FrBTemplateTypeExpr::isInstance() const
+{
+    return false;
+}
+
+
+std::ostream& FrBTemplateTypeExpr::put(std::ostream& stream) const
+{
+    return stream << "template_parameter_" << _p;
+}
 
 
 /*     FrBUnresolvedIdWithContextExpr      */

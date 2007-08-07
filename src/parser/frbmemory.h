@@ -232,9 +232,9 @@ public:
 
 
 
-/** inlined **/
+/* inlined */
 
-/**** FrBMemory *****/
+/*  FrBMemory  */
 
 inline FrBMemory::FrBMemory(size_t init_size, size_t collect_threshold, size_t geo_step, size_t arith_step)
  : _collect_threshold(collect_threshold / FrBMemory::BLOCK_SIZE + 1),
