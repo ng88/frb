@@ -23,6 +23,8 @@
 #include "frbresolveenvironment.h"
 #include "frbbuiltinclasses.h"
 
+#define expr_copy() if(!cpy) cpy = Misc::copy(this)
+
 /*          FrBExpr          */
 
 std::ostream& operator<<(std::ostream& s, const FrBExpr& expr)
