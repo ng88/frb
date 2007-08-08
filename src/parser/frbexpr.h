@@ -354,7 +354,7 @@ class FrBFunctionCallExpr : public FrBExpr
     FrBExpr               *_lhs;
     
     /** arguments */
-    FrBExprList           *_rhs;
+    FrBExprVector           *_rhs;
     
     /** function to call (resolved from rhs & lhs) */
     const FrBFunction     *_fn;
@@ -364,7 +364,7 @@ class FrBFunctionCallExpr : public FrBExpr
 
     
 public:
-    FrBFunctionCallExpr(FrBExpr* lhs, FrBExprList* rhs);
+    FrBFunctionCallExpr(FrBExpr* lhs, FrBExprVector* rhs);
     ~FrBFunctionCallExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
