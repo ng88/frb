@@ -29,7 +29,7 @@ private:
 
     FrBConstClassVector _args;
     FrBCodeClass *      _currentClass;
-    FrBMember *         _currentMember;// voir si on peut pas se debarasser des currentClass/Function/Field dans les expr (en les mettant dans les *environment)
+    FrBMember *         _currentMember;
 
     
 public:
@@ -40,6 +40,8 @@ public:
     inline void setCurrentMember(const FrBMember * v) { _currentMember = v; }
     inline FrBMember * currentMember() const { return _currentMember; }
 
+
+    inline const FrBClass * getArgument(FrBClass::template_count_t index) const { return _args[index]; }
 
 };
 

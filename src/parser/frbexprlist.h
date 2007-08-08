@@ -20,5 +20,6 @@
 
 class FrBExpr;
 typedef std::vector<FrBExpr*> FrBExprList;
+typedef std::vector<FrBExpr*> FrBExprVector;
 
 #endif
