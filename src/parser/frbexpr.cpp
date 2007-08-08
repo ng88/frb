@@ -1385,6 +1385,15 @@ const FrBClass* FrBUnaryOpExpr::getClass() const
     return _fn->returnType();
 }
 
+FrBExpr * FrBUnaryOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+{
+    expr_cpy(cpy);
+
+    static_cast<FrBUnaryOpExp*>(cpy)->_e = _e->specializeTemplate(e);
+
+    return cpy;
+}
+
 std::ostream& FrBUnaryOpExpr::put(std::ostream& stream) const
 {
     if(_fn)
@@ -1438,6 +1447,20 @@ const FrBClass* FrBCastExpr::getClass() const
     return _type->getRealClass();
 }
 
+
+FrBExpr * FrBCastExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+{
+
+    expr_cpy(cpy);
+
+    FrBCastExpr * c = static_cast<FrBCastExpr*>(cpy);
+
+    c->_type = _type->specializeTemplate(e);
+    c->_val = _val->specializeTemplate(e);
+
+    return cpy;
+}
+
 std::ostream& FrBCastExpr::put(std::ostream& stream) const
 {
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_CAST)
@@ -1452,7 +1475,7 @@ std::ostream& FrBCastExpr::put(std::ostream& stream) const
 /*              FrBNewExpr             */
 
 
-FrBNewExpr::FrBNewExpr(FrBTypeExpr *type, FrBExprList * args)
+FrBNewExpr::FrBNewExpr(FrBTypeExpr *type, FrBExprVector * args)
     : _type(type), _args(args), _ctor(0)
 {
 }
@@ -1499,6 +1522,22 @@ FrBBaseObject*  FrBNewExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEva
     return _type->getClass()->createInstance(e, _ctor, rval);
 }
 
+FrBExpr * FrBNewExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+{
+    expr_cpy(cpy);
+
+    FrBNewExpr * c = static_cast<FrBNewExpr*>(cpy);
+
+    c->_type = _type->specializeTemplate(e);
+
+    c->_args = new FrBExprVector(_args->size());
+
+    for(FrBExprVector::const_iterator it = _rhs->begin(); it != _rhs->end(); ++it)
+	c->push_back(it->specializeTemplate(e));
+
+    return cpy;
+
+}
 
 std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 {
@@ -1586,6 +1625,15 @@ FrBBaseObject* FrBNullExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEva
 const FrBClass* FrBNullExpr::getClass() const
 {
     return FrBNull::getCppClass();
+}
+
+FrBExpr * FrBNullExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+{
+    expr_cpy(cpy);
+
+
+    return cpy;
+
 }
 
 std::ostream& FrBNullExpr::put(std::ostream& stream) const
