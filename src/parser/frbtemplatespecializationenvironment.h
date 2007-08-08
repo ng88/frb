@@ -29,7 +29,8 @@ private:
 
     FrBConstClassVector _args;
     FrBCodeClass *      _currentClass;
-    FrBMember *         _currentMember;
+    FrBMember *         _currentMember;// voir si on peut pas se debarasser des currentClass/Function/Field dans les expr (en les mettant dans les *environment)
+
     
 public:
 
