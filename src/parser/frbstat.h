@@ -43,10 +43,12 @@ class FrBStatementBlock
   FrBStatementlist _stats;
 
  public:
-    ~FrBStatementBlock();
+    virtual ~FrBStatementBlock();
 
-   /** add a statement in the block */
-   inline void addStat(FrBStatement * s) { _stats.push_back(s); }
+    /** add a statement in the block */
+    inline void addStat(FrBStatement * s) { _stats.push_back(s); }
+
+    virtual FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
 };
 
 
@@ -66,6 +68,8 @@ public:
     virtual bool allPathContainsAReturn() const  { return false; }
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
+
+    virtual FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
 
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const = 0;
 };
