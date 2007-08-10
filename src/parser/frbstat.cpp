@@ -19,9 +19,12 @@
 #include "frbexpr.h"
 #include "frbclass.h"
 #include "../common/assert.h"
+#include "../common/misc.h"
 #include "frbmemory.h"
 #include "frbbuiltinclasses.h"
 #include "frbkeywords.h"
+
+#define stat_copy(c) if(!c) c = Misc::copy(this)
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 {
@@ -30,12 +33,38 @@ std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 
 /*                  FrBStatementBlock                  */
 
+FrBStatementBlock::FrBStatementBlock()
+{
+    _stats = new FrBStatementlist();
+}
+
 FrBStatementBlock::~FrBStatementBlock()
 {
-    for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
+    for(FrBStatementlist::iterator it = _stats->begin(); it != _stats->end(); ++it)
         delete (*it);
 
-    _stats.clear();
+    delete _stats;
+}
+
+FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    cpy->_stats = new FrBStatementlist();
+
+    for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
+	cpy->addStat (*it)->specializeTemplate(e) );
+
+    return cpy;
+}
+
+
+/*          FrBStatement               */
+
+FrBStatement * FrBStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    frb_assert2(cpy, "can not specialize this stat");
+    return cpy;
 }
 
 /*        FrBBlockStatement                     */
@@ -66,6 +95,15 @@ void FrBBlockStatement::execute(FrBExecutionEnvironment& e) const
 {
   for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
     (*it)->execute(e);
+}
+
+FrBStatement * FrBBlockStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBStatementBlock::specializeTemplateBlock(e, cpy);
+
+    return cpy;
 }
    
 std::ostream& FrBBlockStatement::put(std::ostream& stream, int indent) const
@@ -110,6 +148,7 @@ bool FrBConditionalBlockStatement::executeCond(FrBExecutionEnvironment& e) const
 }
 
 
+
 /*                    FrBElseIfStatement                  */
 
 
@@ -138,6 +177,17 @@ bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
   return (static_cast<FrBBool*>(o))->value();
 }
 
+FrBStatement * FrBElseIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBBlockStatement::specializeTemplateBlock(e, cpy);
+    static_cast<FrBStatement*>(cpy)->_cond = _cond->specializeTemplate(e);
+
+    return cpy;
+}
+
+
 std::ostream& FrBElseIfStatement::put(std::ostream& stream, int indent) const
 {
   stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_IF) << ' '
@@ -160,12 +210,21 @@ bool FrBElseStatement::evalCond(FrBExecutionEnvironment& e) const throw (FrBExec
   return true;
 }
 
+FrBStatement * FrBElseStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBBlockStatement::specializeTemplateBlock(e, cpy);
+
+    return cpy;
+}
 
 /*       FrBIfStatement                   */
 
 FrBIfStatement::FrBIfStatement()
   : _has_else(false)
 {
+    _cond = new FrBCondList();
 }
 
 bool FrBIfStatement::allPathContainsAReturn() const
@@ -173,7 +232,7 @@ bool FrBIfStatement::allPathContainsAReturn() const
   if(!_has_else)
     return false;
 
-  for(FrBCondList::const_iterator it = _conds.begin(); it != _conds.end(); ++it)
+  for(FrBCondList::const_iterator it = _conds->begin(); it != _conds->end(); ++it)
     if(! (*it)->FrBBlockStatement::allPathContainsAReturn())
       return false;
 
@@ -184,31 +243,46 @@ bool FrBIfStatement::allPathContainsAReturn() const
 void  FrBIfStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
 {
-  for(FrBCondList::iterator it = _conds.begin(); it != _conds.end(); ++it)
+  for(FrBCondList::iterator it = _conds->begin(); it != _conds->end(); ++it)
     (*it)->resolveAndCheck(e);
 }
 
 void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
-  FrBCondList::const_iterator it = _conds.begin();
-  while( it != _conds.end() && (!((*it)->executeCond(e))) )
+  FrBCondList::const_iterator it = _conds->begin();
+  while( it != _conds->end() && (!((*it)->executeCond(e))) )
     ++it;
+}
+
+
+FrBStatement * FrBIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBIfStatement * c = static_cast<FrBIfStatement *>(cpy);
+
+    c->_conds = new FrBCondList();
+
+    for(FrBCondList::const_iterator it = _conds->begin(); it != _conds->end(); ++it)
+	c->addCond((*it)->specializeTemplate(e));
+
+    return cpy;
 }
 
 std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
 {
   String str_indent(indent, '\t');
 
-  FrBCondList::const_iterator it = _conds.begin();
+  FrBCondList::const_iterator it = _conds->begin();
 
 
-  if(it != _conds.end())
+  if(it != _conds->end())
   {
     (*it)->put(stream, indent);
     ++it;
   }
 
-  while(it != _conds.end())
+  while(it != _conds->end())
   {
     stream << std::endl << str_indent
 	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_ELSE)
@@ -225,8 +299,10 @@ std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
     
 FrBIfStatement::~FrBIfStatement()
 {
-    for(FrBCondList::iterator it = _conds.begin(); it != _conds.end(); ++it)
+    for(FrBCondList::iterator it = _conds->begin(); it != _conds->end(); ++it)
         delete (*it);
+
+    delete _conds;
 }
 
 
@@ -276,6 +352,18 @@ void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
         e.stack().setTopValue(*it, init_val);
     }
+}
+
+FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBIfStatement * c = static_cast<FrBIfStatement *>(cpy);
+
+    for(FrBCondList::const_iterator it = _conds.begin(); it != _conds.end(); ++it)
+	c->addCond((*it)->specializeTemplate(e));
+
+    return cpy;
 }
 
 std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const

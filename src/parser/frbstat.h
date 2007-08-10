@@ -34,21 +34,22 @@ class FrBCodeFunction;
 class FrBStatement;
 class FrBIfStatement;
 
-typedef std::vector<FrBStatement*> FrBStatementlist;
+typedef std::list<FrBStatement*> FrBStatementlist;
 
-/** interface that represents a block of statements (function, if, ...) */
+/** class that represents a block of statements (function, if, ...) */
 class FrBStatementBlock
 {
  protected:
-  FrBStatementlist _stats;
+  FrBStatementlist * _stats;
 
  public:
-    virtual ~FrBStatementBlock();
+    FrBStatementBlock();
+    ~FrBStatementBlock();
 
     /** add a statement in the block */
-    inline void addStat(FrBStatement * s) { _stats.push_back(s); }
+    inline void addStat(FrBStatement * s) { _stats->push_back(s); }
 
-    virtual FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
+    FrBStatementBlock * specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
 };
 
 
@@ -69,7 +70,7 @@ public:
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     virtual void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException) = 0;
 
-    virtual FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
+    virtual FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
 
     virtual std::ostream& put(std::ostream& stream, int indent = 0) const = 0;
 };
@@ -86,7 +87,9 @@ public:
     bool allPathContainsAReturn() const;
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
-    
+
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 };
 
@@ -120,6 +123,8 @@ public:
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
+
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
     
     ~FrBElseIfStatement();
 };
@@ -130,17 +135,21 @@ class FrBElseStatement : public FrBConditionalBlockStatement
 protected:
     bool evalCond(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
 
+public:
+
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+
 };
 
 
-typedef std::vector<FrBConditionalBlockStatement*> FrBCondList;
+typedef std::list<FrBConditionalBlockStatement*> FrBCondList;
 
 /** Full if statement, ie with if, else if, else... */
 class FrBIfStatement : public FrBStatement
 {
 private:
-    FrBCondList _conds;
-    bool        _has_else;
+    FrBCondList * _conds;
+    bool          _has_else;
 
 public:
     FrBIfStatement();
@@ -150,8 +159,10 @@ public:
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
-    inline void addCond(FrBConditionalBlockStatement * c) { _conds.push_back(c); }
+    inline void addCond(FrBConditionalBlockStatement * c) { _conds->push_back(c); }
     inline void setHasElse(bool v) { _has_else = v; }
+
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
     
     ~FrBIfStatement();
 };
@@ -185,6 +196,8 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
+
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
     
     ~FrBDeclareStatement();
 };
@@ -203,7 +216,9 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
-    
+
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
+
     ~FrBExprStatement();
 };
 
@@ -222,7 +237,9 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
-    
+
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
+
     ~FrBReturnStatement();
 };
 
@@ -242,17 +259,19 @@ public:
     std::ostream& put(std::ostream& stream, int indent = 0) const;
     bool allPathContainsAReturn() const;
 
+    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+
     ~FrBForLoopStatement();
 
 };
 
 
 /** The With statement */
-class FrBWithStaement : public FrBBlockStatement
+/*class FrBWithStatement : public FrBBlockStatement
 {
 private:
 public:
-};
+};*/
 
 #endif
 
