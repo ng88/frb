@@ -174,10 +174,10 @@ class FrBDeclareStatement : public FrBStatement
 {
 private:
 
-    typedef std::vector<int> VarIDList;
+    typedef std::vector<int> VarIDVector;
 
     FrBCodeFunction *  _fn;
-    VarIDList          _varsid;
+    VarIDVector    *   _varsid;
     FrBTypeExpr *      _type;
     FrBExpr *          _init;
 
@@ -191,7 +191,7 @@ public:
     FrBDeclareStatement(FrBCodeFunction * f, int nb_vars, FrBTypeExpr * t, FrBExpr * init_val = 0);
     
     /** Add the varid v to the declared var list */
-    inline void addVarID(int v) { _varsid.push_back(v); }
+    inline void addVarID(int v) { _varsid->push_back(v); }
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);

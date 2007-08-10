@@ -318,12 +318,12 @@ FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int nb,
     : _fn(f), _type(t), _init(init_val)
 {
     frb_assert(t && nb > 0);
-    _varsid.reserve(nb);
+    _varsid = new VarIDVector(nb);
 }
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    for(VarIDList::iterator it = _varsid.begin(); it != _varsid.end(); ++it)
+    for(VarIDList::iterator it = _varsid->begin(); it != _varsid->end(); ++it)
         *it += _fn->localVarCount();
 
     _type->resolveAndCheck(e);
@@ -345,7 +345,7 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
 
-    for(VarIDList::const_iterator it = _varsid.begin(); it != _varsid.end(); ++it)
+    for(VarIDList::const_iterator it = _varsid->begin(); it != _varsid->end(); ++it)
     {
 	FrBBaseObject * init_val = ((_init == 0) ? _type->getClass()->createInstance(e) :
                                   FrBClass::forceConvert(_init->eval(e), _type->getClass()));
@@ -358,10 +358,23 @@ FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpeciali
 {
     stat_copy(cpy);
 
-    FrBIfStatement * c = static_cast<FrBIfStatement *>(cpy);
+    FrBIfStatement * c = static_cast<FrBDeclareStatement *>(cpy);
 
-    for(FrBCondList::const_iterator it = _conds.begin(); it != _conds.end(); ++it)
-	c->addCond((*it)->specializeTemplate(e));
+    int n = _varsid->size();
+    c->_varsid = new VarIDList(n);
+
+    for(int i = 0; i < n; ++i)
+	c->_varsid[i] = _varsid[i];
+
+    frb_assert(Misc::isKindOf<FrBCodeFunction>(e.currentMember()));
+
+    c->_fn = static_cast<FrBCodeFunction*>(e.currentMember());
+
+
+    c->_type = _type->specializeTemplate(e);
+
+    if(c->_init)
+	c->_init = _init->specializeTemplate(e);
 
     return cpy;
 }
@@ -370,15 +383,15 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 {
     stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_DECLARE);
 
-    VarIDList::const_iterator it = _varsid.begin();
+    VarIDList::const_iterator it = _varsid->begin();
 
-    if(it != _varsid.end())
+    if(it != _varsid->end())
     {
            stream << " local_var_" << *it;
             ++it;
     }
 
-    while(it != _varsid.end())
+    while(it != _varsid->end())
     {
         stream << ", local_var_" << *it;
         ++it;
@@ -402,6 +415,8 @@ FrBDeclareStatement::~FrBDeclareStatement()
     _varsid.clear();
 
     delete_expr(_type);
+
+    delete _varsid;
 }
 
 
@@ -422,6 +437,16 @@ void FrBExprStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
 void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
     _expr->eval(e);
+}
+
+
+FrBStatement * FrBExprStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    static_cast<FrBExprStatement*>(cpy)->_expr = _expr->specializeTemplate(e);
+
+    return cpy;
 }
 
 std::ostream& FrBExprStatement::put(std::ostream& stream, int) const
@@ -476,6 +501,20 @@ std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
     stream << ' ' << *_val;
 
   return stream;
+}
+
+FrBStatement * FrBReturnStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBReturnStatement * c = static_cast<FrBReturnStatement*>(cpy);
+
+    c->_val = _val->specializeTemplate(e);
+    
+    frb_assert(Misc::isKindOf<FrBFunction>(e.currentMember()));
+    c->_fn = static_cast<FrBFunction*>(e.currentMember());
+
+    return cpy;
 }
     
 FrBReturnStatement::~FrBReturnStatement()
@@ -541,6 +580,18 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 }
 
+FrBStatement * FrBForLoopStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    stat_copy(cpy);
+
+    FrBForLoopStatement * c = static_cast<FrBForLoopStatement*>(cpy);
+
+    c->_incrementor = _incrementor->specializeTemplate(e);
+    c->_bounds_checker = _bounds_checker->specializeTemplate(e);
+    c->_assignator = _assignator->specializeTemplate(e);
+
+    return cpy;
+}
 
 std::ostream& FrBForLoopStatement::put(std::ostream& stream, int indent) const
 {
