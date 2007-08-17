@@ -37,3 +37,9 @@ String FrBMember::fullName() const
 }
 
 
+FrBStatement * FrBMember::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const
+{
+    frb_assert2(cpy, "can not specialize this member");
+    return cpy;
+}
+

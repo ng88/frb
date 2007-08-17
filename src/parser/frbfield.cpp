@@ -19,6 +19,9 @@
 #include "frbclass.h"
 #include "frbkeywords.h"
 #include "frbexecutionenvironment.h"
+#include "../common/misc.h"
+
+
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m)
 {
@@ -36,6 +39,11 @@ std::ostream& FrBField::put(std::ostream& stream, int indent) const
 		<< type()->name() << std::endl;
 }
 
+FrBField * FrBField::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const
+{
+    frb_assert2(cpy, "could not specialize this field");
+    return static_cast<FrBField*>(cpy);
+}
 
 
 /*     FrBCodeField        */
@@ -85,6 +93,16 @@ FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e)
      else
        return _unresolvedType->getClass()->createInstance(e);
   }
+}
+
+FrBCodeField * FrBCodeField::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+{
+    FrBCodeField * ret = copy_not_null(cpy);
+
+    ret->_unresolvedType = static_cast<FrBTypeExpr*>(_unresolvedType->specializeTemplate(e));
+    ret->_defaultVal = _defaultVal->specializeTemplate(e);
+
+    return ret;
 }
 
 std::ostream& FrBCodeField::put(std::ostream& stream, int indent) const

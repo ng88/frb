@@ -57,10 +57,6 @@ public:
     virtual FrBBaseObject * evalDefaultValue(FrBExecutionEnvironment& e) const
         throw (FrBExecutionException) = 0;
     
-    
-    /** Used in type resolution */
-    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {};
-    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {};
 
     FRB_ASSERT_CODE(
 	void setShared(bool v)
@@ -69,7 +65,8 @@ public:
 	    FrBMember::setShared(v); 
 	} 
 	           );
-        
+
+    FrBField * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m);
@@ -96,7 +93,9 @@ public:
 
     FrBBaseObject * evalDefaultValue(FrBExecutionEnvironment& e) const 
       throw (FrBExecutionException);
-    
+
+    FrBCodeField * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;    
+
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
 };

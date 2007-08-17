@@ -24,7 +24,6 @@
 #include "frbbuiltinclasses.h"
 #include "frbkeywords.h"
 
-#define stat_copy(c) if(!c) c = Misc::copy(this)
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 {
@@ -48,7 +47,7 @@ FrBStatementBlock::~FrBStatementBlock()
 
 FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     cpy->_stats = new FrBStatementlist();
 
@@ -99,7 +98,7 @@ void FrBBlockStatement::execute(FrBExecutionEnvironment& e) const
 
 FrBStatement * FrBBlockStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBStatementBlock::specializeTemplateBlock(e, cpy);
 
@@ -179,7 +178,7 @@ bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
 
 FrBStatement * FrBElseIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBBlockStatement::specializeTemplateBlock(e, cpy);
     static_cast<FrBStatement*>(cpy)->_cond = _cond->specializeTemplate(e);
@@ -212,7 +211,7 @@ bool FrBElseStatement::evalCond(FrBExecutionEnvironment& e) const throw (FrBExec
 
 FrBStatement * FrBElseStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBBlockStatement::specializeTemplateBlock(e, cpy);
 
@@ -257,7 +256,7 @@ void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecut
 
 FrBStatement * FrBIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBIfStatement * c = static_cast<FrBIfStatement *>(cpy);
 
@@ -356,7 +355,7 @@ void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBIfStatement * c = static_cast<FrBDeclareStatement *>(cpy);
 
@@ -442,7 +441,7 @@ void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecu
 
 FrBStatement * FrBExprStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     static_cast<FrBExprStatement*>(cpy)->_expr = _expr->specializeTemplate(e);
 
@@ -505,7 +504,7 @@ std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
 
 FrBStatement * FrBReturnStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBReturnStatement * c = static_cast<FrBReturnStatement*>(cpy);
 
@@ -582,7 +581,7 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 FrBStatement * FrBForLoopStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
 {
-    stat_copy(cpy);
+    copy_not_null(cpy);
 
     FrBForLoopStatement * c = static_cast<FrBForLoopStatement*>(cpy);
 

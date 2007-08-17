@@ -154,10 +154,6 @@ public:
             
         return bestMatch;
     }
-    
-    /** Used in type resolution */
-    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {};
-    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {};
         
 };
 

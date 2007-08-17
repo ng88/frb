@@ -36,6 +36,7 @@ protected:
 public:
 
     FrBMember();
+    virtual ~FrBMember() {};
     
     inline void setShared(bool v) { _shared = v; }
     inline bool shared() const { return _shared; }
@@ -56,6 +57,14 @@ public:
     inline void setContainer(FrBClass* c);
     inline const FrBClass* container() const;
     inline FrBClass* containerPtr();
+
+    /** Used in type resolution (resolve type of var in function code...)*/
+    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
+
+    /** Used in type resolution (resolve type of field, function prototype, ...) */
+    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
+
+    virtual FrBMember * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
         
 };
 
