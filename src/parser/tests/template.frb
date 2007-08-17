@@ -6,7 +6,10 @@ Public Class Main
 
     Public Shared Sub main()
     
-        Dim t As Test := New Test(Object)
+        Dim t1 As Test := New Test<Int>()
+        Dim t2 As Test := New Test<Boolean>()
+        Dim t3 As Test := New Test<String>()
+        Dim t4 As Test := New Test< Test<Int> >()
         
         
     End Sub
@@ -27,17 +30,15 @@ End Class
 
 
 
-Public Class Test
+Public Class Test<T>
 
-    Protected T As Class := Nothing
     Protected elmt As T := Nothing
     
-    Public Sub Initialize(type As Class)
-        T := type
+    Public Sub Initialize()
+
     End Sub
     
     Public Sub setElement(e As T)
-        'Debug.checkCompatibility(TypeOf e, T)
         elmt := e
     End Sub
     
