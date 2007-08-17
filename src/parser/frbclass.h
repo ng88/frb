@@ -115,10 +115,10 @@ public:
              virtualité partout, trouver une syntaxe plus sympa pour la virtualité pure
              */
     /** Used in type resolution (resolve type of var in function code...)*/
-    virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
 
     /** Used in type resolution (resolve type of field, function prototype, ...) */
-    virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
+    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
     /** Find a constructor matching the argument list 'args' */
     template<class ArgContainer>
@@ -273,7 +273,6 @@ public:
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
 
-    virtual FrBClass * specializeTemplate(const FrBConstClassVector& args) const;
     
 };
 
