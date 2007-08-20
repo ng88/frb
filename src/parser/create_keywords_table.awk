@@ -81,7 +81,7 @@ $1 ~ /^[A-Z]+/ {
        {
 
           # if the keyword can be a wiki page name, we must escape it
-          if( $(i + 2) ~ /^[A-Z]+[a-z]*[A-Z]+/ )
+          if( $(i + 2) ~ /^[A-Z]+[a-z]+[A-Z]+[a-z]+/ )
              printf "!"
 
            printf $(i + 2)"||"
