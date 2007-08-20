@@ -14,10 +14,12 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
+#include "frbresolveenvironment.h"
 #include "frbmember.h"
 #include "frbkeywords.h"
 #include "frbclass.h"
-
+#include "frbtemplatespecializationenvironment.h"
+#include "frbstat.h"
    
 FrBMember::FrBMember()
     : _contClass(0), _shared(false), _const(false), _scope(SC_PUBLIC)

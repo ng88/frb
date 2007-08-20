@@ -20,6 +20,7 @@
 
 
 #include <iostream>
+#include <list>
 #include "../common/string.h"
 
 #include "frbbaseobject.h"
@@ -137,7 +138,7 @@ protected:
 
 public:
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
 
 };
 
@@ -162,7 +163,7 @@ public:
     inline void addCond(FrBConditionalBlockStatement * c) { _conds->push_back(c); }
     inline void setHasElse(bool v) { _has_else = v; }
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
     
     ~FrBIfStatement();
 };
@@ -197,7 +198,7 @@ public:
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
     
     ~FrBDeclareStatement();
 };
@@ -217,7 +218,7 @@ public:
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
 
     ~FrBExprStatement();
 };
@@ -238,7 +239,7 @@ public:
     void execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException);
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;    
 
     ~FrBReturnStatement();
 };
@@ -259,7 +260,7 @@ public:
     std::ostream& put(std::ostream& stream, int indent = 0) const;
     bool allPathContainsAReturn() const;
 
-    FrBStatementBlock * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
+    FrBStatement * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const;
 
     ~FrBForLoopStatement();
 

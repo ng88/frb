@@ -22,6 +22,9 @@
 #include "../common/string.h"
 #include "frbconstants.h"
 
+class FrBResolveEnvironment;
+class FrBTemplateSpecializationEnvironment;
+class FrBStatement;
 class FrBClass;
 
 class FrBMember /* a frb member */
@@ -58,7 +61,7 @@ public:
     inline const FrBClass* container() const;
     inline FrBClass* containerPtr();
 
-    /** Used in type resolution (resolve type of var in function code...)*/
+    /** Used in type resolution (resolve type of var in function code...) */
     virtual void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
 
     /** Used in type resolution (resolve type of field, function prototype, ...) */
