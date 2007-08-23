@@ -25,6 +25,7 @@
 #include <stack>
 
 class FrBCodeFunction;
+class FrBTemplateSpecializationEnvironment;
 
 /** FrBExpr represents a general expression
 
@@ -206,7 +207,7 @@ public:
 
     bool isAssignable() const;
     bool isInstance() const;
-}
+};
 
 /** Identifier not yet resolved (ie class name, function, field...)
     current class context is provided, typically it's used in an expression like
@@ -238,7 +239,7 @@ protected:
         virtual FrBBaseObject* eval(FrBBaseObject * me, FrBExecutionEnvironment& e) const
             throw (FrBEvaluationException) = 0;
 
-	virtual String& name() const = 0;
+	virtual String name() const = 0;
 	virtual bool isInstance() const = 0;
 
     };
@@ -255,7 +256,7 @@ protected:
         const FrBClass* getClass() const;
         bool needMe() const;
         bool isAssignable() const;
-	String& name() const { return _fl->fullName(); }
+	String name() const { return _fl->fullName(); }
         void refAssign(FrBExecutionEnvironment&, FrBBaseObject*, FrBBaseObject*) const throw (FrBEvaluationException);
 	bool isInstance() const;
     };
@@ -273,7 +274,7 @@ protected:
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
         bool needMe() const;
-	String& name() const { return _fn->fullName(); }
+        String name() const { return _fn->fullName(); }
 	bool isInstance() const;
     };
     
@@ -288,7 +289,7 @@ protected:
             throw (FrBEvaluationException);
         const FrBClass* getClass() const;
         bool needMe() const;
-	String& name() const { return _cl->fullName(); }
+	String name() const { return _cl->fullName(); }
 	bool isInstance() const;
 	const FrBClass* getRealClass()  const;
     };
@@ -323,6 +324,7 @@ public:
     bool isInstance() const;
 
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
+
 };
 
 
@@ -753,8 +755,9 @@ public:
  
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
     {
-	addRef();
-	return this;
+	FrBExpr * r = const_cast<FrBBoolExpr*>(this);
+	r->addRef();
+	return r;
     }
 
 };

@@ -45,14 +45,14 @@ FrBStatementBlock::~FrBStatementBlock()
     delete _stats;
 }
 
-FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const
+FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy) const
 {
     copy_not_null(cpy);
 
     cpy->_stats = new FrBStatementlist();
 
     for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
-	cpy->addStat (*it)->specializeTemplate(e) );
+	cpy->addStat( (*it)->specializeTemplate(e) );
 
     return cpy;
 }
@@ -60,7 +60,7 @@ FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplate
 
 /*          FrBStatement               */
 
-FrBStatement * FrBStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     frb_assert2(cpy, "can not specialize this stat");
     return cpy;
@@ -74,7 +74,7 @@ FrBBlockStatement::FrBBlockStatement()
 
 bool FrBBlockStatement::allPathContainsAReturn() const
 {
-  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
     if((*it)->allPathContainsAReturn())
       return true;
 
@@ -84,7 +84,7 @@ bool FrBBlockStatement::allPathContainsAReturn() const
 void FrBBlockStatement::resolveAndCheck(FrBResolveEnvironment& e)
   throw (FrBResolveException)
 {
-  for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
+  for(FrBStatementlist::iterator it = _stats->begin(); it != _stats->end(); ++it)
     (*it)->resolveAndCheck(e);
 
 }
@@ -92,15 +92,15 @@ void FrBBlockStatement::resolveAndCheck(FrBResolveEnvironment& e)
 void FrBBlockStatement::execute(FrBExecutionEnvironment& e) const
   throw (FrBExecutionException)
 {
-  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
     (*it)->execute(e);
 }
 
-FrBStatement * FrBBlockStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBBlockStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
-    FrBStatementBlock::specializeTemplateBlock(e, cpy);
+    FrBStatementBlock::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
 
     return cpy;
 }
@@ -111,7 +111,7 @@ std::ostream& FrBBlockStatement::put(std::ostream& stream, int indent) const
 
   indent++;
 
-  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
   {
     stream << std::endl << str_indent << '\t';
     (*it)->put(stream, indent);
@@ -176,12 +176,12 @@ bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
   return (static_cast<FrBBool*>(o))->value();
 }
 
-FrBStatement * FrBElseIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBElseIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
-    FrBBlockStatement::specializeTemplateBlock(e, cpy);
-    static_cast<FrBStatement*>(cpy)->_cond = _cond->specializeTemplate(e);
+    FrBBlockStatement::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
+    static_cast<FrBElseIfStatement*>(cpy)->_cond = _cond->specializeTemplate(e);
 
     return cpy;
 }
@@ -209,11 +209,11 @@ bool FrBElseStatement::evalCond(FrBExecutionEnvironment& e) const throw (FrBExec
   return true;
 }
 
-FrBStatement * FrBElseStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBElseStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
-    FrBBlockStatement::specializeTemplateBlock(e, cpy);
+    FrBBlockStatement::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
 
     return cpy;
 }
@@ -223,7 +223,7 @@ FrBStatement * FrBElseStatement::specializeTemplate(const FrBTemplateSpecializat
 FrBIfStatement::FrBIfStatement()
   : _has_else(false)
 {
-    _cond = new FrBCondList();
+    _conds = new FrBCondList();
 }
 
 bool FrBIfStatement::allPathContainsAReturn() const
@@ -254,7 +254,7 @@ void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecut
 }
 
 
-FrBStatement * FrBIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBIfStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
@@ -322,7 +322,7 @@ FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int nb,
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    for(VarIDList::iterator it = _varsid->begin(); it != _varsid->end(); ++it)
+    for(VarIDVector::iterator it = _varsid->begin(); it != _varsid->end(); ++it)
         *it += _fn->localVarCount();
 
     _type->resolveAndCheck(e);
@@ -344,7 +344,7 @@ void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBRe
 void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
 
-    for(VarIDList::const_iterator it = _varsid->begin(); it != _varsid->end(); ++it)
+    for(VarIDVector::const_iterator it = _varsid->begin(); it != _varsid->end(); ++it)
     {
 	FrBBaseObject * init_val = ((_init == 0) ? _type->getClass()->createInstance(e) :
                                   FrBClass::forceConvert(_init->eval(e), _type->getClass()));
@@ -353,7 +353,7 @@ void FrBDeclareStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
     }
 }
 
-FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
@@ -439,7 +439,7 @@ void FrBExprStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecu
 }
 
 
-FrBStatement * FrBExprStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBExprStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
@@ -502,7 +502,7 @@ std::ostream& FrBReturnStatement::put(std::ostream& stream, int) const
   return stream;
 }
 
-FrBStatement * FrBReturnStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBReturnStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 
@@ -579,7 +579,7 @@ void FrBForLoopStatement::execute(FrBExecutionEnvironment& e) const throw (FrBEx
 
 }
 
-FrBStatement * FrBForLoopStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy = 0) const
+FrBStatement * FrBForLoopStatement::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
     copy_not_null(cpy);
 

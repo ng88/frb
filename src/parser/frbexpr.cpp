@@ -22,6 +22,7 @@
 #include "frbfunction.h"
 #include "frbresolveenvironment.h"
 #include "frbbuiltinclasses.h"
+#include "frbtemplatespecializationenvironment.h"
 
 
 /*          FrBExpr          */
