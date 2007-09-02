@@ -251,8 +251,12 @@ class:
                YYABORT;
            }
            
-	   delete template_symbols_stack.top();
-	   template_symbols_stack.pop();
+	   if($<vbool>6)
+	   {
+	       delete template_symbols_stack.top();
+	       template_symbols_stack.pop();
+	   }
+
            class_stack.pop();
        }  
        

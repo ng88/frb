@@ -825,7 +825,8 @@ FrBExpr * FrBFunctionCallExpr::specializeTemplate(const FrBTemplateSpecializatio
 
     c->_lhs = _lhs->specializeTemplate(e);
 
-    c->_rhs = new FrBExprVector(_rhs->size());
+    c->_rhs = new FrBExprVector();
+    c->_rhs->reserve(_rhs->size());
 
     for(FrBExprVector::const_iterator it = _rhs->begin(); it != _rhs->end(); ++it)
 	c->_rhs->push_back((*it)->specializeTemplate(e));
@@ -1534,7 +1535,8 @@ FrBExpr * FrBNewExpr::specializeTemplate(const FrBTemplateSpecializationEnvironm
 
     c->_type = static_cast<FrBTypeExpr*>(_type->specializeTemplate(e));
 
-    c->_args = new FrBExprVector(_args->size());
+    c->_args = new FrBExprVector();
+    c->_args->reserve(_args->size());
 
     for(FrBExprVector::const_iterator it = _args->begin(); it != _args->end(); ++it)
 	c->_args->push_back((*it)->specializeTemplate(e));

@@ -317,7 +317,8 @@ FrBDeclareStatement::FrBDeclareStatement(FrBCodeFunction * f, int nb,
     : _fn(f), _type(t), _init(init_val)
 {
     frb_assert(t && nb > 0);
-    _varsid = new VarIDVector(nb);
+    _varsid = new VarIDVector();
+    _varsid->reserve(nb);
 }
 
 void FrBDeclareStatement::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -360,7 +361,8 @@ FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpeciali
     FrBDeclareStatement * c = static_cast<FrBDeclareStatement *>(cpy);
 
     int n = _varsid->size();
-    c->_varsid = new VarIDVector(n);
+    c->_varsid = new VarIDVector();
+    c->_varsid->reserve(n);
 
     for(int i = 0; i < n; ++i)
 	c->_varsid[i] = _varsid[i];
