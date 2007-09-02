@@ -238,11 +238,6 @@ FrBCodeFunction::FrBCodeFunction()
 
 FrBCodeFunction::~FrBCodeFunction()
 {
-    for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
-	delete *it;
-
-
-    _stats.clear();
 
     for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
     {
@@ -300,7 +295,7 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     
     try
     {
-      for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+      for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
         (*it)->execute(e);
     }
     catch(FrBReturnException ex)
@@ -317,7 +312,7 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
 
 bool FrBCodeFunction::allPathContainsAReturn() const
 {
-  for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
     if((*it)->allPathContainsAReturn())
       return true;
 
@@ -343,7 +338,7 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
 
 void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    for(FrBStatementlist::iterator it = _stats.begin(); it != _stats.end(); ++it)
+    for(FrBStatementlist::iterator it = _stats->begin(); it != _stats->end(); ++it)
     {
         frb_assert(*it);
         (*it)->resolveAndCheck(e);
@@ -393,7 +388,7 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
     if(!event())
     {
 
-	for(FrBStatementlist::const_iterator it = _stats.begin(); it != _stats.end(); ++it)
+	for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
 	{
 	    stream << str_indent << '\t';
 	    (*it)->put(stream, indent);

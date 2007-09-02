@@ -1,0 +1,7 @@
+faire une classe FrBQtClass héritant de FrBClass
+
+faire FrBClass totalement abstraite
+
+FrBQtClass ira recherché uniquement les infos dont elle a besoin dans
+une
+base de données (genre sqlite)

@@ -36,18 +36,18 @@ class FrBClass;
 class FrBResolveEnvironment
 {
 public:
-    !!! draft !!!
+    //!!! draft !!!
     /** Fake class class */
-    class FrBTemplateClass
+    /*class FrBTemplateClass
     {
 	std::vector<FrBClass*> array;
 	std::map<FrBClass*, int> assoc;
 	FrBClass * getFake(int i);
 	int getFakeNumber(const FrBClass*);
-    };
+	};*/
     
     /** give the association argument_number -> new_real_class for the current remplate */
-    typedef std::stack<FrBConstClassList> FrBTemplateStack
+    //typedef std::stack<FrBConstClassList> FrBTemplateStack
 
 private:
 

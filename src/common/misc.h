@@ -20,6 +20,10 @@
 #define MISC_H
 
 #include <typeinfo>
+#include <cstring>
+#include <cstdlib>
+
+#define copy_not_null(c) (c) ? (c) : ((c) = Misc::copy(this))
 
 /** Miscellaneous functions */
 class Misc
@@ -44,7 +48,19 @@ public:
 	return typeid(b) == typeid(A);
     }
 
+    template<class A>
+    inline static A * copy(A * c)
+    {
+	return (A*)memcpy(malloc(sizeof(A)), c, sizeof(A));
+    }
+
+    template<class A>
+    inline static A * copy(const A * c)
+    {
+	return copy(const_cast<A*>(c));
+    }
+
+
 };
 
 #endif
-
