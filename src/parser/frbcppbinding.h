@@ -82,6 +82,9 @@ class FrBCppFunction : public FrBFunction
 {
 private:
 public:
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
+    void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {}
+
 };
 
 /** Function that does nothing */

@@ -456,7 +456,7 @@ void FrBCodeClass::freeInstance(FrBExecutionEnvironment&, FrBBaseObject * o) con
 }
 
 
-void FrBCodeClass::addURBaseClasse(FrBUnresolvedTypeExpr *c)
+void FrBCodeClass::addURBaseClasse(FrBTypeExpr *c)
 {
     frb_assert(c);
 

@@ -84,7 +84,7 @@ typedef std::stack<FrBExpr*> FrBWithStack;
     CString                    str;
     FrBBaseObject *            obj;
     FrBExpr *                  expr;
-    FrBUnresolvedTypeExpr *    vtype;
+    FrBTypeExpr *              vtype;
     FrBStatement *             stat;
     FrBExprList*               exprs;
     int                        vint;
@@ -219,9 +219,9 @@ class:
 	       TemplateSymbTable * tsymb = new TemplateSymbTable();
 	       template_symbols_stack.push(tsymb);
 
-	       for(i = 0; i < count, ++i)
+	       for(i = 0; i < count; ++i)
 	       {
-		   tsymb[ id_list[i] ] = i;
+		   (*tsymb)[ id_list[i] ] = i;
 		   free(id_list[i]);
 	       }
 	       id_list.clear();

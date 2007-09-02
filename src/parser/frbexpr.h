@@ -123,6 +123,9 @@ std::ostream& operator<<(std::ostream& s, const FrBExpr& expr);
   */
 class FrBTypeExpr : public FrBExpr
 {
+public:
+    /** Return the resolved type */
+    virtual FrBClass* getContext() = 0;
 };
 
 /** Represent a me expr, actually (ouside or inside)
@@ -137,7 +140,7 @@ public:
      */
     FrBMeExpr(bool nonSharedContext);
     bool isInstance() const;
-    virtual ~FrBMeExpr() ;
+
     std::ostream& put(std::ostream& stream) const;
 
 };
@@ -148,17 +151,17 @@ class FrBUnresolvedTypeExpr : public FrBTypeExpr
 protected:
     const String            _name;
     FrBClass *              _type;
-    FrBUnresolvedTypeExpr * _context;
+    FrBTypeExpr *           _context;
     FrBCodeClass *          _currentClass;
     
 public:
-    FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* current, FrBUnresolvedTypeExpr * ctxt = 0);
+    FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* current, FrBTypeExpr * ctxt = 0);
     ~FrBUnresolvedTypeExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
-    inline FrBClass* getContext() { return _type; }   
+    FrBClass* getContext() { return _type; }   
     std::ostream& put(std::ostream& stream) const;
 
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
@@ -186,6 +189,8 @@ public:
     bool isAssignable() const;
     bool isInstance() const;
 
+    FrBClass* getContext() { return 0; }   
+
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
 
 };
@@ -202,6 +207,8 @@ public:
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
     std::ostream& put(std::ostream& stream) const;
+
+    FrBClass* getContext();
 
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
 
@@ -511,6 +518,8 @@ public:
     inline FrBExpr * rhs() { return _rhs; }
     inline FrBExpr * lhs() { return _lhs; }
 
+    FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
+
 };
 
 
@@ -729,8 +738,9 @@ public:
 
     FrBExpr * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
     {
-	addRef();
-	return this;
+	FrBExpr * r = const_cast<FrBLiteralExpr<T>*>(this);
+	r->addRef();
+	return r;
     }
 
     std::ostream& put(std::ostream& stream) const;    

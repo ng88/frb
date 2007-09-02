@@ -123,7 +123,7 @@ FrBExpr * FrBLocalVarExpr::specializeTemplate(const FrBTemplateSpecializationEnv
     frb_assert(Misc::isKindOf<FrBCodeFunction>(e.currentMember()));
 
     c->_fn = static_cast<FrBCodeFunction*>(e.currentMember());
-    c->_type = _type->specializeTemplate(e);
+    c->_type = static_cast<FrBTypeExpr*>(_type->specializeTemplate(e));
 
     return cpy;
 }
@@ -137,7 +137,7 @@ std::ostream& FrBLocalVarExpr::put(std::ostream& stream) const
 
 
 FrBUnresolvedTypeExpr::FrBUnresolvedTypeExpr(const String& name, FrBCodeClass* current,
-                                                        FrBUnresolvedTypeExpr * ctxt)
+                                                        FrBTypeExpr * ctxt)
  : _name(name), _type(0), _context(ctxt), _currentClass(current)
 {
 }
@@ -192,14 +192,14 @@ std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
 
 FrBExpr * FrBUnresolvedTypeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
-    copy_not_null(cpy);
+    FrBUnresolvedTypeExpr* r =  static_cast<FrBUnresolvedTypeExpr*>(copy_not_null(cpy));
 
     if(_context)
-	static_cast<FrBUnresolvedTypeExpr*>(cpy)->_context = _context->specializeTemplate(e);
+	r->_context = static_cast<FrBUnresolvedTypeExpr*>(_context->specializeTemplate(e));
 
-    cpy->_currentClass = e.currentClass();
+    r->_currentClass = e.currentClass();
 
-    return cpy;
+    return r;
 }
 
 // /*     FrBUnresolvedIdExpr      */
@@ -323,12 +323,12 @@ std::ostream& FrBInstanciedTemplateTypeExpr::put(std::ostream& stream) const
 
 bool FrBInstanciedTemplateTypeExpr::isAssignable() const
 {
-    false;
+    return false;
 }
 
 bool FrBInstanciedTemplateTypeExpr::isInstance() const
 {
-    false;
+    return false;
 }
 
 FrBExpr * FrBInstanciedTemplateTypeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
@@ -337,6 +337,10 @@ FrBExpr * FrBInstanciedTemplateTypeExpr::specializeTemplate(const FrBTemplateSpe
     return cpy;
 }
 
+FrBClass* FrBInstanciedTemplateTypeExpr::getContext()
+{
+    return const_cast<FrBClass*>(_class);
+}
 
 /*     FrBUnresolvedIdWithContextExpr      */
 
@@ -824,7 +828,7 @@ FrBExpr * FrBFunctionCallExpr::specializeTemplate(const FrBTemplateSpecializatio
     c->_rhs = new FrBExprVector(_rhs->size());
 
     for(FrBExprVector::const_iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-	c->push_back((*it)->specializeTemplate(e));
+	c->_rhs->push_back((*it)->specializeTemplate(e));
 
     return cpy;
 }
@@ -1389,7 +1393,7 @@ FrBExpr * FrBUnaryOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvi
 {
     copy_not_null(cpy);
 
-    static_cast<FrBUnaryOpExp*>(cpy)->_e = _e->specializeTemplate(e);
+    static_cast<FrBUnaryOpExpr*>(cpy)->_e = _e->specializeTemplate(e);
 
     return cpy;
 }
@@ -1528,12 +1532,12 @@ FrBExpr * FrBNewExpr::specializeTemplate(const FrBTemplateSpecializationEnvironm
 
     FrBNewExpr * c = static_cast<FrBNewExpr*>(cpy);
 
-    c->_type = _type->specializeTemplate(e);
+    c->_type = static_cast<FrBTypeExpr*>(_type->specializeTemplate(e));
 
     c->_args = new FrBExprVector(_args->size());
 
-    for(FrBExprVector::const_iterator it = _rhs->begin(); it != _rhs->end(); ++it)
-	c->push_back((*it)->specializeTemplate(e));
+    for(FrBExprVector::const_iterator it = _args->begin(); it != _args->end(); ++it)
+	c->_args->push_back((*it)->specializeTemplate(e));
 
     return cpy;
 

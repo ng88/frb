@@ -283,7 +283,7 @@ class FrBCodeClass : public FrBClass
 {
 public:
 
-    typedef std::vector<FrBUnresolvedTypeExpr *> URClassContainer;
+    typedef std::vector<FrBTypeExpr *> URClassContainer;
     
 
 protected:
@@ -305,7 +305,7 @@ public:
 
 
     /** Add the unresolved type c as base class for this  */
-    void addURBaseClasse(FrBUnresolvedTypeExpr *c);
+    void addURBaseClasse(FrBTypeExpr *c);
 
 
     /** We must know the base class before resolving function calls... */
