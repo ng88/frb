@@ -23,7 +23,7 @@
 #include "frbmemory.h"
 #include "frbbuiltinclasses.h"
 #include "frbkeywords.h"
-
+#include "frbtemplatespecializationenvironment.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBStatement& stat)
 {
@@ -263,7 +263,7 @@ FrBStatement * FrBIfStatement::specializeTemplate(const FrBTemplateSpecializatio
     c->_conds = new FrBCondList();
 
     for(FrBCondList::const_iterator it = _conds->begin(); it != _conds->end(); ++it)
-	c->addCond((*it)->specializeTemplate(e));
+	c->addCond( static_cast<FrBConditionalBlockStatement*>( (*it)->specializeTemplate(e) ) );
 
     return cpy;
 }
@@ -357,10 +357,10 @@ FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpeciali
 {
     copy_not_null(cpy);
 
-    FrBIfStatement * c = static_cast<FrBDeclareStatement *>(cpy);
+    FrBDeclareStatement * c = static_cast<FrBDeclareStatement *>(cpy);
 
     int n = _varsid->size();
-    c->_varsid = new VarIDList(n);
+    c->_varsid = new VarIDVector(n);
 
     for(int i = 0; i < n; ++i)
 	c->_varsid[i] = _varsid[i];
@@ -370,7 +370,7 @@ FrBStatement * FrBDeclareStatement::specializeTemplate(const FrBTemplateSpeciali
     c->_fn = static_cast<FrBCodeFunction*>(e.currentMember());
 
 
-    c->_type = _type->specializeTemplate(e);
+    c->_type = static_cast<FrBTypeExpr*>(_type->specializeTemplate(e));
 
     if(c->_init)
 	c->_init = _init->specializeTemplate(e);
@@ -382,7 +382,7 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 {
     stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_DECLARE);
 
-    VarIDList::const_iterator it = _varsid->begin();
+    VarIDVector::const_iterator it = _varsid->begin();
 
     if(it != _varsid->end())
     {
@@ -410,8 +410,6 @@ std::ostream& FrBDeclareStatement::put(std::ostream& stream, int) const
 FrBDeclareStatement::~FrBDeclareStatement()
 {
     delete_expr(_init);
-
-    _varsid.clear();
 
     delete_expr(_type);
 
@@ -586,8 +584,8 @@ FrBStatement * FrBForLoopStatement::specializeTemplate(const FrBTemplateSpeciali
     FrBForLoopStatement * c = static_cast<FrBForLoopStatement*>(cpy);
 
     c->_incrementor = _incrementor->specializeTemplate(e);
-    c->_bounds_checker = _bounds_checker->specializeTemplate(e);
-    c->_assignator = _assignator->specializeTemplate(e);
+    c->_bounds_checker = static_cast<FrBBinOpBaseExpr*>(_bounds_checker->specializeTemplate(e));
+    c->_assignator = static_cast<FrBBinOpBaseExpr*>(_assignator->specializeTemplate(e));
 
     return cpy;
 }

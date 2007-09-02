@@ -34,10 +34,10 @@ private:
     
 public:
 
-    inline void setCurrentClass(const FrBCodeClass * v) { _currentClass = v; }
+    inline void setCurrentClass(FrBCodeClass * v) { _currentClass = v; }
     inline FrBCodeClass * currentClass() const { return _currentClass; }
 
-    inline void setCurrentMember(const FrBMember * v) { _currentMember = v; }
+    inline void setCurrentMember(FrBMember * v) { _currentMember = v; }
     inline FrBMember * currentMember() const { return _currentMember; }
 
 
