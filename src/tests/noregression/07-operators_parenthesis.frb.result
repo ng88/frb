@@ -1,0 +1,6 @@
+Shared initialization...
+init Matrix22.lastID @ADDR@ @ADDR@
+Call to Main::main()...
+requested (5, 6) on matrix 1
+requested (1, 2) on matrix 1
+requested (144, 155) on matrix 2

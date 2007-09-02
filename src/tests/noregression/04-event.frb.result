@@ -1,0 +1,24 @@
+Shared initialization...
+Call to Main::main()...
+MyApp::Initialize()
+GUI::Initialize()
+begin GUI::test()
+begin MyApp::foo()
+GUI::onRecordCountChanged(Int)
+Count changed ! new count = 5
+GUI Changed!
+GUI::onRecordCountChanged(Int)
+Count changed ! new count = 8
+GUI Changed!
+end MyApp::foo()
+end GUI::test()
+begin GUI::test2()
+end GUI::test2()
+begin GUI::test()
+begin MyApp::foo()
+GUI Changed!
+Count changed depuis main !5
+GUI Changed!
+Count changed depuis main !8
+end MyApp::foo()
+end GUI::test()

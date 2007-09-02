@@ -1,0 +1,22 @@
+Shared initialization...
+Call to Main::main()...
+v1 is evaluated
+v2 is evaluated
+ True And True = True
+v1 is evaluated
+v2 is evaluated
+ True And False = False
+v1 is evaluated
+ False And True = False
+v1 is evaluated
+ False And False = False
+v1 is evaluated
+ True Or True = True
+v1 is evaluated
+ True Or False = True
+v1 is evaluated
+v2 is evaluated
+ False Or True = True
+v1 is evaluated
+v2 is evaluated
+ False Or False = False

@@ -1,0 +1,8 @@
+Shared initialization...
+Debug.Initialize() called
+init Main.dbg @ADDR@ @ADDR@
+Call to Main::main()...
+Debug.Initialize() called
+Debug.Initialize() called
+fact(a = 5)=120
+ (a = 5) > 5 = False

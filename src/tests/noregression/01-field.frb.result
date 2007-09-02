@@ -1,0 +1,42 @@
+Shared initialization...
+init MonAppli.A.c @ADDR@ @ADDR@
+Static init... a=5
+init MonAppli.Dem.t @ADDR@ @ADDR@
+init TTTT.as @ADDR@ @ADDR@
+init TTTT.bs @ADDR@ @ADDR@
+init TTTT.cs @ADDR@ @ADDR@
+init TTTT.ds @ADDR@ @ADDR@
+init TTTT.es @ADDR@ @ADDR@
+init TTTT.fs @ADDR@ @ADDR@
+Call to Main::main()...
+app.champs=75
+a.a=7
+b.a=7
+c.a=7
+d.a=7
+
+a.a=7
+b.a=20
+c.a=5
+d.a=7
+
+a.a=12
+b.a=-100
+c.a=-88
+d.a=7
+
+MonAppli.Dem.t=6
+Static init... a=3
+MonAppli.Dem.test(3) + 2=6
+MonAppli.Dem.test().a=14
+
+MonAppli.A.c=1024
+a.c 1024
+b.c 1024
+c.c 1024
+d.c 1024
+MonAppli.A.c=2048
+a.c 2048
+b.c 2048
+c.c 2048
+d.c 2048

@@ -1,0 +1,126 @@
+DefLang EN
+
+Public Class MonAppli
+    Public Class Dem
+    
+        Public champs As Int := 5
+    
+        Public Sub Initialize()
+            Dim a As Int := 30 + Me.champs
+' 
+            Me.champs :=   2 * a + 5
+            1+1
+        End Sub
+        
+        Public Shared t As Int := Dem.test(5)
+
+        Public Shared Function test(a As Int) As Int
+            Debug.println("Static init... a=" + a)
+            Return a + 1
+        End Function
+        
+        
+        Public Shared Function test() As A
+            Dim a As A
+            a.a := a.a + 12
+            Return a
+        End Function
+    
+    
+    End Class
+
+    Public Class A
+    
+        Public Shared c As Int := 1024
+        Public beee As A := Me
+        
+        Public a As Int :=  2
+        Public b As Int :=  20
+        
+        
+        Public Sub Initialize()
+        End Sub
+        
+    End Class
+End Class
+
+Public Class Main
+
+    Public foo As Int
+    
+    
+    Public Shared Sub main()
+
+         Dim app As MonAppli.Dem
+         Dim a, b, c, d As MonAppli.A
+
+         a.a:= b.a := c.a := d.a := 7
+
+        Debug.println("app.champs=" + app.champs)
+        Debug.println("a.a=" + a.a)
+        Debug.println("b.a=" + b.a)
+        Debug.println("c.a=" + c.a)
+        Debug.println("d.a=" + d.a)
+        Debug.println("")
+
+        c.a := 5
+        b.a := 12 + a.a + 1
+
+
+        Debug.println("a.a=" + a.a)
+        Debug.println("b.a=" + b.a)
+        Debug.println("c.a=" + c.a)
+        Debug.println("d.a=" + d.a)
+        Debug.println("")
+        
+        a.a := a.a + 5
+        b.a := -100
+        c.a := b.a + a.a
+    
+        Debug.println("a.a=" + a.a)
+        Debug.println("b.a=" + b.a)
+        Debug.println("c.a=" + c.a)
+        Debug.println("d.a=" + d.a)
+        Debug.println("")
+        
+        Debug.println("MonAppli.Dem.t=" + MonAppli.Dem.t)
+        Debug.println("MonAppli.Dem.test(3) + 2=" + (MonAppli.Dem.test(3) + 2))
+        Debug.println("MonAppli.Dem.test().a=" + MonAppli.Dem.test().a)
+        Debug.println("")
+
+
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println("a.c " + a.c)
+        Debug.println("b.c " + b.c)
+        Debug.println("c.c " + c.c)
+        Debug.println("d.c " + d.c)
+
+        
+        MonAppli.A.c := MonAppli.A.c * 2
+        
+        Debug.println("MonAppli.A.c=" + MonAppli.A.c)
+        Debug.println("a.c " + a.c)
+        Debug.println("b.c " + b.c)
+        Debug.println("c.c " + c.c)
+        Debug.println("d.c " + d.c)
+
+    End Sub
+
+End Class
+
+Public Class TTTT
+
+    Public Shared as As Int := 5
+    Public a As Int := 10
+    Public Shared bs As Int := 6
+    Public b As Int := 9
+    Public Shared cs As Int := 7
+    Public c As Int := 8
+    Public Shared ds As Int := 8
+    Public d As Int := 7
+    Public Shared es As Int := 9
+    Public e As Int := 6
+    Public Shared fs As Int := 10
+    Public f As Int := 5
+End Class
+

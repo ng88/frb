@@ -1,0 +1,40 @@
+DefLang EN
+
+
+Public Class Main
+
+     
+    Public Shared Sub main()
+   
+        'This shows the lazy evaluation for And & Or
+        
+        Debug.println(" True And True = " & bool2str( showEval(True, "v1") And showEval(True, "v2") ) )
+        Debug.println(" True And False = " & bool2str( showEval(True, "v1") And showEval(False, "v2") ) )
+        Debug.println(" False And True = " & bool2str( showEval(False, "v1") And showEval(True, "v2") ) )
+        Debug.println(" False And False = " & bool2str( showEval(False, "v1") And showEval(False, "v2") ) )
+        
+        Debug.println(" True Or True = " & bool2str( showEval(True, "v1") Or showEval(True, "v2") ) )
+        Debug.println(" True Or False = " & bool2str( showEval(True, "v1") Or showEval(False, "v2") ) )
+        Debug.println(" False Or True = " & bool2str( showEval(False, "v1") Or showEval(True, "v2") ) )
+        Debug.println(" False Or False = " & bool2str( showEval(False, "v1") Or showEval(False, "v2") ) )
+    
+    End Sub
+    
+    Public Shared Function showEval(c As Bool, s As String) As Bool
+        Debug.println(s & " is evaluated")
+        Return c
+    End Function
+    
+    Public Shared Function bool2str(c As Bool) As String
+        If c Then
+            Return "True"
+        Else
+            Return "False"
+        End If
+    End Function
+    
+End Class
+
+
+
+

@@ -1,0 +1,108 @@
+DefLang EN
+
+Public Class MyApp
+
+    Public Event recordCountChanged(newCount As Int)
+    
+    Public Sub Initialize()
+        Debug.println("MyApp::Initialize()")
+    End Sub
+    
+    
+    
+    Public Sub foo()
+    
+        Debug.println("begin MyApp::foo()")
+    
+        '...
+        
+        'Me.RaiseEvent(recordCountChanged, 5)
+        recordCountChanged(5)
+        recordCountChanged(8)
+        
+        '...
+        
+        Debug.println("end MyApp::foo()")
+    
+    End Sub
+
+End Class
+
+
+Public Class GUI
+
+    Public Event GUIChanged()
+
+    Public app As MyApp
+
+    Public Sub Initialize()
+        Debug.println("GUI::Initialize()")
+        
+        
+        Debug.RegisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
+        
+        'event connected to event (event relay)
+        Debug.RegisterEvent(app, app.recordCountChanged, Me, GUIChanged)
+    End Sub
+
+    Public Sub onRecordCountChanged(newCount As Int)
+        
+        Debug.println("GUI::onRecordCountChanged(Int)")
+        
+        Debug.println("Count changed ! new count = " & newCount)
+    
+    End Sub
+    
+    
+    
+    Public Sub test()
+        Debug.println("begin GUI::test()")
+        
+        app.foo()
+        
+        Debug.println("end GUI::test()")
+    End Sub
+    
+    Public Sub test2()
+        Debug.println("begin GUI::test2()")
+        
+        Debug.UnregisterEvent(app, app.recordCountChanged, Me, onRecordCountChanged)
+        
+        Debug.println("end GUI::test2()")
+    End Sub
+    
+End Class
+
+
+
+
+Public Class Main
+    Public Shared Sub main()
+        Dim g As GUI
+        
+        Debug.RegisterEvent(g, g.GUIChanged, Nothing, onGUIChanged)
+        
+        g.test()
+        g.test2()
+        
+        Debug.RegisterEvent(g.app, g.app.recordCountChanged, Nothing, test)
+        
+        g.test()
+        
+        
+    End Sub
+    
+    
+    Public Shared Sub test(i As Int)
+    
+        Debug.println("Count changed depuis main !" & i)
+    End Sub
+    
+    Public Shared Sub onGUIChanged()
+    
+        Debug.println("GUI Changed!")
+        
+    End Sub
+    
+End Class
+

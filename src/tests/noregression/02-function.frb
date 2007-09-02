@@ -1,0 +1,53 @@
+
+
+DefLang EN
+
+Public Class A
+
+       Public a As Debug
+       Public b As Debug
+       Public d As A
+
+End Class
+
+Public Class Main
+
+    Private Shared dbg As Debug
+    Private i As Integer := Me.fact(5)
+
+
+    Public Shared Sub main(a As Int)
+	   Dim b As A
+           Debug.println("fact(a = " & a & ")=" & fact(a) )
+           
+           Debug.println(" (a = " & a & ") > 5 = " & Main.bool2string(a > 5) )
+
+           
+    End Sub
+
+    Public Shared Function bool2string(b As Bool) As String
+	   If b Then
+	      Return "True"
+	   Else
+	      Return "False"
+	   End If
+    End Function
+
+
+    Public Shared Function fact(n As Int) As Int
+	   If n > 1 Then
+	      Return n * Main.fact(n - 1)
+	   Else
+	      Return 1
+	   End If
+    End Function
+
+    Public Shared Sub main()
+
+	   main(5)
+
+    End Sub
+
+End Class
+
+

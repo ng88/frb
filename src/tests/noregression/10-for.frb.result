@@ -1,0 +1,45 @@
+Shared initialization...
+Call to Main::main()...
+dans for 1 , a vaut 1
+dans for 1 , a vaut 2
+dans for 1 , a vaut 3
+dans for 1 , a vaut 4
+dans for 1 , a vaut 5
+dans for 2 , a vaut 10
+dans for 2 , a vaut 9
+dans for 2 , a vaut 8
+dans for 2 , a vaut 7
+dans for 2 , a vaut 6
+dans for 2 , a vaut 5
+dans for 3 , a vaut 1
+dans for 3 , a vaut 3
+dans for 3 , a vaut 5
+dans for 4 , a vaut 30
+dans for 4 , a vaut 22
+dans for 4 , a vaut 14
+dans for 4 , a vaut 6
+dans for 5 , a vaut -5
+dans for 5 , a vaut -4
+dans for 5 , a vaut -3
+dans for 5 , a vaut -2
+dans for 5 , a vaut -1
+dans for 6 , a vaut -5
+dans for 6 , a vaut -3
+dans for 6 , a vaut -1
+dans for 7 , a vaut -5
+dans for 7 , a vaut -8
+dans for 7 , a vaut -11
+dans for 7 , a vaut -14
+dans for 7 , a vaut -17
+b=2
+b=2
+b=2
+dans for/for 4 , a=1 b=1
+dans for/for 4 , a=1 b=2
+dans for/for 4 , a=1 b=3
+dans for/for 4 , a=2 b=1
+dans for/for 4 , a=2 b=2
+dans for/for 4 , a=2 b=3
+dans for/for 4 , a=3 b=1
+dans for/for 4 , a=3 b=2
+dans for/for 4 , a=3 b=3

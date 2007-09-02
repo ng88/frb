@@ -1,0 +1,64 @@
+Shared initialization...
+init Utils.LinkedList.Iterator.end @ADDR@ @ADDR@
+Call to Main::main()...
+------- debut des test de la LinkedList  -------
+Contenu de la liste list2 :
+ |_ 1
+ |_ 2
+ |_ 3
+ |_ 1
+ |_ 2
+ |_ 3
+ |_ 4
+Contenu de la liste list :
+ |_ 789
+ |_ 15
+ |_ 5
+ |_ 4
+ |_ 12
+ |_ 45
+ |_ 78
+ |_ 0
+ |_ 70
+ |_ 1
+ |_ 2
+ |_ 3
+ |_ 4
+Renversement de la liste list...
+ |_ 4
+ |_ 3
+ |_ 2
+ |_ 1
+ |_ 70
+ |_ 0
+ |_ 78
+ |_ 45
+ |_ 12
+ |_ 4
+ |_ 5
+ |_ 15
+ |_ 789
+list += list2
+ |_ 4
+ |_ 3
+ |_ 2
+ |_ 1
+ |_ 70
+ |_ 0
+ |_ 78
+ |_ 45
+ |_ 12
+ |_ 4
+ |_ 5
+ |_ 15
+ |_ 789
+ |_ 1
+ |_ 2
+ |_ 3
+ |_ 1
+ |_ 2
+ |_ 3
+ |_ 4
+Nombre d'éléments dans list : 20
+Nombre d'éléments dans list2 : 7
+---------------- fin des tests  ----------------

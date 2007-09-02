@@ -1,0 +1,7 @@
+Shared initialization...
+init IntComplex.i @ADDR@ @ADDR@
+Call to Main::main()...
+i=i
+c=0 d=1+2i e=5i
+c=1+8i d=1+2i e=5i
+c=-2-3i d=1+2i e=5i
