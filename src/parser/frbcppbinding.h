@@ -66,9 +66,8 @@ public:
     
     virtual ~FrBCppClass();
     
-    
-    
-
+        
+    FrBCppClass * FrBCppClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
     
     const CString specString() const;
 

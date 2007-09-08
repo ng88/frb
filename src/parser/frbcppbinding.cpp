@@ -47,6 +47,16 @@ const CString FrBCppClass::specString() const
     return "C++ binding class";
 }
 
+FrBCppClass * FrBCppClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    frb_warning2(false, "templates not fully implemented in cpp binging");
+    FrBCppClass * ret = static_cast<FrBCppClass*>(copy_not_null(cpy));
+
+    FrBClass::specializeTemplate(e, ret);
+
+    return ret;
+}
+
 /*       FrBCppFunction          */
 
 FrBCppFunction * FrBCppFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const

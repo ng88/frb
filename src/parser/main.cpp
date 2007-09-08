@@ -22,6 +22,7 @@
 #include "frbresolveenvironment.h"
 #include "frbkeywords.h"
 #include "frbmemory.h"
+#include "frbtemplatespecializationenvironment.h"
 
 using namespace std;
 
@@ -222,7 +223,11 @@ int main(int argc, char ** argv)
         env.addGarbagedObject(FrBBool::falseValue());
 
         FrBClass * main = renv.getClassFromPath(arg_main_class);
-        
+
+	FrBTemplateSpecializationEnvironment tenv;
+	FrBClass * cpy = main->specializeTemplate(tenv);
+	addClass(tree, cpy);
+
         if(args_switch[EXEC])
         {
     

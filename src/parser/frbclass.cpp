@@ -432,6 +432,33 @@ FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironme
 
     FrBClass * ret = static_cast<FrBClass*>(cpy);
 
+    ret->_innerClasses = new ClassContainer();
+    ret->_functions = new FunctionContainer();
+    ret->_operators = new OperatorContainer();
+    ret->_fields = new FieldContainer();
+    ret->_ctors = new ConstructorContainer();
+    ret->_baseClasses = new ClassContainer();
+
+    for(ClassContainer::const_iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
+        ret->_innerClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+
+    for(FunctionContainer::const_iterator it = _functions->begin(); it != _functions->end(); ++it)
+	ret->_functions->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+
+    for(OperatorContainer::const_iterator it = _operators->begin(); it != _operators->end(); ++it)
+	ret->_operators->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+
+    for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
+	ret->_fields->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+
+    for(ConstructorContainer::const_iterator it = _ctors->begin(); it != _ctors->end(); ++it)
+	ret->_ctors->push_back((*it)->specializeTemplate(e));
+
+     for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
+	 if(it->second->isATemplate())
+	     ret->_baseClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+	 else
+	     ret->_baseClasses->insert(*it);
 
     return ret;
 }
@@ -490,6 +517,12 @@ FrBCodeClass * FrBCodeClass::specializeTemplate(const FrBTemplateSpecializationE
     FrBCodeClass * ret = static_cast<FrBCodeClass*>(copy_not_null(cpy));
 
     FrBClass::specializeTemplate(e, ret);
+
+    ret->_urBaseClasses = new URClassContainer();
+    ret->_urBaseClasses->reserve(_urBaseClasses->size());
+
+    for(URClassContainer::const_iterator it = _urBaseClasses->begin(); it != _urBaseClasses->end(); ++it)
+	ret->_urBaseClasses->push_back(static_cast<FrBTypeExpr*>((*it)->specializeTemplate(e)));
 
     return ret;
 }

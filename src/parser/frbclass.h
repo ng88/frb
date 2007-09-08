@@ -212,7 +212,9 @@ public:
     /** Set the number of template parameter */
     inline void  setTemplateParameterCount(template_count_t c) { _templateParameterCount = c; }
     /** Get the number of template parameter */
-    inline template_count_t  templateParameterCount() { return _templateParameterCount; }
+    inline template_count_t  templateParameterCount() const { return _templateParameterCount; }
+
+    inline bool isATemplate() const { return _templateParameterCount > 0; }
 
     /** Return the unique typeID() of this class
       *   Important note: typeID() may change from an execution to another and from a machine to another.
@@ -315,7 +317,7 @@ public:
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
 
-    FrBCodeClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;   
+    FrBCodeClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 

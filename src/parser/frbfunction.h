@@ -48,7 +48,7 @@ typedef std::vector<const FrBClass*> FrBConstClassVector;
 
 typedef std::map<const String, FrBClass*> FrBClassMap;
 
-typedef std::vector<FrBFunction*> FrBFunctionList;
+typedef std::list<FrBFunction*> FrBFunctionList;
 typedef std::vector<FrBFunction*> FrBFunctionVector;
 
 class FrBFunction : public FrBMember /* a frb function */
