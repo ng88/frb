@@ -371,11 +371,10 @@ FrBStatement * FrBDeclareStatement::specializeTemplate(/*const*/ FrBTemplateSpec
     FrBDeclareStatement * c = static_cast<FrBDeclareStatement *>(cpy);
 
     int n = _varsid->size();
-    c->_varsid = new VarIDVector();
-    c->_varsid->reserve(n);
+    c->_varsid = new VarIDVector(n);
 
     for(int i = 0; i < n; ++i)
-	c->_varsid[i] = _varsid[i];
+	(*c->_varsid)[i] = (*_varsid)[i];
 
     frb_assert(Misc::isKindOf<FrBCodeFunction>(e.currentMember()));
 

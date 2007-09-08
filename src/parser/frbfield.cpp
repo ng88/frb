@@ -102,7 +102,9 @@ FrBCodeField * FrBCodeField::specializeTemplate(/*const*/ FrBTemplateSpecializat
     e.setCurrentMember(ret);
 
     ret->_unresolvedType = static_cast<FrBTypeExpr*>(_unresolvedType->specializeTemplate(e));
-    ret->_defaultVal = _defaultVal->specializeTemplate(e);
+
+    if(_defaultVal)
+	ret->_defaultVal = _defaultVal->specializeTemplate(e);
 
     return ret;
 }

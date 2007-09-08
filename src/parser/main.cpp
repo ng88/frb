@@ -224,9 +224,13 @@ int main(int argc, char ** argv)
 
         FrBClass * main = renv.getClassFromPath(arg_main_class);
 
-	/*FrBTemplateSpecializationEnvironment tenv;
+	cout << "######### Template test. begin #########\n";
+	FrBTemplateSpecializationEnvironment tenv;
 	FrBClass * cpy = main->specializeTemplate(tenv);
-	addClass(tree, cpy);*/
+	addClass(tree, cpy);
+	cout << "orginal main=" << main << endl << *main << endl;
+	cout << "main copy=" << cpy << endl << *cpy << endl;
+	cout << "######### Template test. end #########\n";
 
         if(args_switch[EXEC])
         {

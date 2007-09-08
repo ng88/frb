@@ -49,7 +49,7 @@ const CString FrBCppClass::specString() const
 
 FrBCppClass * FrBCppClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
-    frb_warning2(false, "templates not fully implemented in cpp binging");
+    frb_assert2(false, "templates not fully implemented in cpp binging");
     FrBCppClass * ret = static_cast<FrBCppClass*>(copy_not_null(cpy));
 
     FrBClass::specializeTemplate(e, ret);
@@ -61,7 +61,7 @@ FrBCppClass * FrBCppClass::specializeTemplate(/*const*/ FrBTemplateSpecializatio
 
 FrBCppFunction * FrBCppFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
-    frb_warning2(false, "templates not fully implemented in cpp binging");
+    frb_assert2(false, "templates not fully implemented in cpp binging");
     return const_cast<FrBCppFunction*>(this);
 }
     

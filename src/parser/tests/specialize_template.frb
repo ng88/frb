@@ -1,0 +1,265 @@
+DefLang EN
+
+
+Public Class Main
+
+    
+    Public Shared Sub burn(o As Utils.LinkedList)
+        DefLang FR
+        
+        Soit i Comme Entier
+        
+        Pour i := 1 A 4'00
+            o.add( Nouv Entier(i) )
+        Suivant
+        
+        DefLang EN
+    End Sub
+    
+    Public Shared Sub main()
+
+    
+        Utils.printTitre("debut des test de la LinkedList")
+        
+        
+        Dim list, list2 As Utils.LinkedList
+        
+        list.add(5)
+        list.add(4)
+        list.add(12)
+        list.add(45)
+        list.add(78)
+        list.add(0)
+        list.addHead(15)
+        list.add(70)
+        list.addHead(789)
+        
+        
+        list2.add(1)
+        list2.add(2)
+        list2.add(3)
+        
+        burn(list2)
+        burn(list)
+        
+        
+        Dim it As Utils.LinkedList.Iterator := Nothing
+       
+        Dim i As Int
+        
+        
+        Debug.println("Contenu de la liste list2 :")
+        
+        For it := list2.begin() To list2.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+
+        Debug.println("Contenu de la liste list :")
+        
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+       
+        Debug.println("Renversement de la liste list...")
+        list.reverse()
+      
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+        
+        Debug.println("list += list2")
+        list += list2
+        
+        For it := list.begin() To list.end()
+            Debug.println(" |_ " + Cast(Int, it.val()) )
+        Next
+        
+        Debug.println("Nombre d'éléments dans list : " + #list)
+        Debug.println("Nombre d'éléments dans list2 : " + #list2)
+        
+        Utils.printTitre("fin des tests")
+
+    End Sub
+    
+    
+    Public Module Utils
+    
+    
+        Public Class LinkedList
+        
+            Private Class Node
+                Public next As Node := Nothing
+                Public value As Object := Nothing
+                
+                Public Sub Initialize(n As Node, v As Object)
+                    next := n
+                    value := v
+                End Sub
+                
+                Public Function reverse(prec As Node) As Node
+                    Dim n As Node := next
+                    next := prec
+    
+                    If n Is Nothing Then
+                        Return Me
+                    Else
+                        Return n.reverse(Me)
+                    End If
+                    
+                End Function
+            
+            End Class
+            
+            Public Class Iterator
+                Private pos As Node := Nothing
+                
+                Private Shared end As Iterator := New Iterator(Nothing)
+                
+                Public Sub Initialize(n As Node)
+                    pos := n
+                End Sub
+                
+                Public Operator++() As Iterator
+                    If pos Is Nothing Then Return end
+                    
+                    If pos.next Is Nothing Then
+                        pos := Nothing
+                        Return end
+                    Else
+                        pos := pos.next
+                        Return Me
+                    End If
+                End Operator
+                
+                Public Operator<=(o As Iterator) As Bool
+                Return Not Me.pos Is o.pos
+                End Operator
+                
+                Public Function val() As Object
+                    If pos Is Nothing Then
+                        Return Nothing
+                    Else
+                        Return pos.value
+                    End If
+                End Function
+                
+            End Class
+        
+            Protected root As Node := Nothing
+            Protected lastNode As Node := Nothing
+            Protected size As Int
+    
+            Public Sub add(v As Object)
+                Dim n As Node := New Node(Nothing, v)
+                
+                If root Is Nothing Then
+                    root := n
+                Else
+                    lastNode.next := n
+                End If
+                
+                lastNode := n
+                
+                size++
+                
+            End Sub
+            
+            Public Sub addHead(v As Object)
+                root := New Node(root, v)
+                size++
+            End Sub
+            
+            Public Sub reverse()
+                If Not root Is Nothing Then
+                    lastNode := root
+                    root := root.reverse(Nothing)
+                End If
+            End Sub
+            
+            Public Function size() As Int
+                Return size
+            End Function
+            
+            Public Operator #() As Int
+                Return size
+            End Operator
+            
+            Public Operator+=(o As LinkedList) As LinkedList
+                If #o == 0 Then Return Me
+                
+                Dim it As Iterator := o.begin()
+                
+                Dim n As Node := New Node(Nothing, it.val())
+                
+                If root Is Nothing Then
+                    root := n
+                Else
+                    lastNode.next := n
+                End If
+                
+                lastNode := n
+                
+                For it := it++ To o.end()
+                    lastNode := lastNode.next := New Node(Nothing, it.val())
+                Next
+                
+                size += #o
+                
+                Return Me
+            End Operator
+            
+            Public Function begin() As Iterator
+                Return New Iterator(root)
+            End Function
+            
+            Public Function end() As Iterator
+                Return Iterator.end
+            End Function
+        
+        End Class
+    
+        
+    
+        Public Shared Sub printTitre(t As String)
+            Debug.println(titre(t, 50))
+        End Sub
+        
+        Public Shared Function titre(chaine As String, tailleTotale As Int) As String
+        
+            If #chaine Mod 2 == 1 Then
+                chaine := chaine + " "
+            End If
+            
+            Dim nbTirets As Int := (tailleTotale - chaine.size()) / 2 - 2
+            
+            If nbTirets <= 0 Then
+                Return chaine
+            Else
+                Dim tirets As String := "-" * nbTirets
+                Return tirets + " " + chaine + " " + tirets
+            End If
+        
+        End Function
+        
+        
+    End Module
+    
+   
+
+End Class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
