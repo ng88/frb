@@ -22,6 +22,7 @@
 #include "frbexecutionenvironment.h"
 #include "frbkeywords.h"
 #include "frbbuiltinclasses.h"
+#include "frbtemplatespecializationenvironment.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBFunction& fn)
 {

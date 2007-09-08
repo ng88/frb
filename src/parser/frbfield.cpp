@@ -20,7 +20,7 @@
 #include "frbkeywords.h"
 #include "frbexecutionenvironment.h"
 #include "../common/misc.h"
-
+#include "frbtemplatespecializationenvironment.h"
 
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m)

@@ -178,7 +178,7 @@ FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBas
 
 }
 
-/*FrBBinaryCppFunction * FrBBinaryCppFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+/*FrBBinaryCppFunction * FrBBinaryCppFunction::specializeTemplate(FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     return static_cast<FrBBinaryCppFunction*>(copy_not_null(cpy));
 }*/
@@ -213,7 +213,7 @@ FrBBaseObject * FrBNaryCppFunction::execute(FrBExecutionEnvironment&e, FrBBaseOb
     return _fn(e, me, args);
 }
 
-/*FrBNaryCppFunction *  FrBNaryCppFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+/*FrBNaryCppFunction *  FrBNaryCppFunction::specializeTemplate(FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     return static_cast<FrBNaryCppFunction*>(copy_not_null(cpy));
 }*/
@@ -246,7 +246,7 @@ FrBBaseObject * FrBUnaryParamArrayCppFunction::execute(FrBExecutionEnvironment& 
     return _fn(e, me, args);
 }
 
-/*FrBUnaryParamArrayCppFunction * FrBUnaryParamArrayCppFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+/*FrBUnaryParamArrayCppFunction * FrBUnaryParamArrayCppFunction::specializeTemplate(FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     return static_cast<FrBUnaryParamArrayCppFunction*>(copy_not_null(cpy));
 }*/

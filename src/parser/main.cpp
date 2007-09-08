@@ -224,9 +224,9 @@ int main(int argc, char ** argv)
 
         FrBClass * main = renv.getClassFromPath(arg_main_class);
 
-	FrBTemplateSpecializationEnvironment tenv;
+	/*FrBTemplateSpecializationEnvironment tenv;
 	FrBClass * cpy = main->specializeTemplate(tenv);
-	addClass(tree, cpy);
+	addClass(tree, cpy);*/
 
         if(args_switch[EXEC])
         {

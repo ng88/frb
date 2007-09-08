@@ -22,6 +22,7 @@
 #include "../common/misc.h"
 #include "frbbuiltinclasses.h"
 #include "frbexpr.h"
+#include "frbtemplatespecializationenvironment.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c)
 {
