@@ -51,6 +51,8 @@ class FrBStatementBlock
     inline void addStat(FrBStatement * s) { _stats->push_back(s); }
 
     FrBStatementBlock * specializeTemplateBlock(const FrBTemplateSpecializationEnvironment& e, FrBStatementBlock * cpy = 0) const;
+
+    bool allPathContainsAReturn() const;
 };
 
 

@@ -18,6 +18,7 @@
 #include "frbfunction.h"
 #include "frbclass.h"
 #include "../common/assert.h"
+#include "../common/misc.h"
 #include "frbexecutionenvironment.h"
 #include "frbkeywords.h"
 #include "frbbuiltinclasses.h"
@@ -206,6 +207,12 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
     return stream << endl;
 }
 
+FrBFunction * FrBFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    frb_assert2(cpy, "could not specialize this function");
+    return static_cast<FrBFunction*>(cpy);
+}
+
 
 
 /*           FrBCodeFunction            */
@@ -233,25 +240,31 @@ FrBCodeFunction::FrBCodeFunction()
 {
     _const = false;
     _unresolvedRetType = 0;
+
+    _paramName = new NameParamMap();
+    _param = new ParamVector();
+  
+    _varName = new NameVarMap();
+    _var = new VarVector;
 }
 
 
 FrBCodeFunction::~FrBCodeFunction()
 {
 
-    for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
+    for(ParamVector::iterator it = _param->begin(); it != _param->end(); ++it)
     {
 	delete_expr(it->type);
 	delete_expr(it->init);
     }
-    _param.clear();
-
-
-    //_var element disposal is done in FrBDeclareStatement
-    _var.clear();
 	
 
     delete_expr(_unresolvedRetType);
+
+    delete _paramName;
+    delete _param;
+    delete _varName;
+    delete _var;
 
 }
 
@@ -259,18 +272,18 @@ const FrBClass * FrBCodeFunction::parameterType(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::parameterType(int) / index out of bounds");
 
-    return _param[index].type->getClass();
+    return (*_param)[index].type->getClass();
 }
 
 size_t FrBCodeFunction::parameterCount() const
 {
-    return _param.size();
+    return _param->size();
 }
 
 bool FrBCodeFunction::parameterByVal(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::parameterByVal(int) / index out of bounds");
-    return _param[index].byval;
+    return (*_param)[index].byval;
 }
 
 
@@ -310,16 +323,6 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
     
 }
 
-bool FrBCodeFunction::allPathContainsAReturn() const
-{
-  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
-    if((*it)->allPathContainsAReturn())
-      return true;
-
-  return false;
-}
-
-
 void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
     if(!sub())
@@ -332,7 +335,7 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
         frb_assert(returnType());
     }
 
-    for(ParamList::iterator it = _param.begin(); it != _param.end(); ++it)
+    for(ParamVector::iterator it = _param->begin(); it != _param->end(); ++it)
         it->type->resolveAndCheck(e);
 }
 
@@ -405,6 +408,21 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 
     return stream;
 }
+
+
+FrBCodeFunction * FrBCodeFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    FrBCodeFunction * ret = static_cast<FrBCodeFunction *>(copy_not_null(cpy));
+
+    FrBStatementBlock::specializeTemplateBlock(e, ret);
+
+    //ret->_param
+
+    return ret;
+}
+
+
+
 
 
 

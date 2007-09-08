@@ -57,6 +57,16 @@ FrBStatementBlock * FrBStatementBlock::specializeTemplateBlock(const FrBTemplate
     return cpy;
 }
 
+bool FrBStatementBlock::allPathContainsAReturn() const
+{
+  for(FrBStatementlist::const_iterator it = _stats->begin(); it != _stats->end(); ++it)
+    if((*it)->allPathContainsAReturn())
+      return true;
+
+  return false;
+}
+
+
 
 /*          FrBStatement               */
 

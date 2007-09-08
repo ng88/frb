@@ -154,6 +154,8 @@ public:
             
         return bestMatch;
     }
+
+    FrBFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
         
 };
 
@@ -178,23 +180,23 @@ public:
         
     };
     
-    typedef std::map<const String, int> NameParamList;
-    typedef std::vector<Param>          ParamList;
+    typedef std::map<const String, int> NameParamMap;
+    typedef std::vector<Param>          ParamVector;
     
     typedef int VarID;
     
-    typedef std::map<const String, VarID> NameVarList;
-    typedef std::vector<FrBTypeExpr*>     VarList;
+    typedef std::map<const String, VarID> NameVarMap;
+    typedef std::vector<FrBTypeExpr*>     VarVector;
     
 protected:
+    /* pointer since rev272. this is needed by specializeTemplate() */
+    NameParamMap *       _paramName;
+    ParamVector     *       _param;
     
-    NameParamList        _paramName;
-    ParamList            _param;
+    NameVarMap   *       _varName;
+    VarVector       *       _var;
     
-    NameVarList          _varName;
-    VarList              _var;
-    
-    FrBTypeExpr*         _unresolvedRetType;
+    FrBTypeExpr   *       _unresolvedRetType;
 
     
 public:
@@ -238,10 +240,11 @@ public:
     /** Get unresolved param */
     inline FrBTypeExpr * getURParam(size_t index) const;
  
-    bool allPathContainsAReturn() const;
+    inline bool allPathContainsAReturn() const { return FrBStatementBlock::allPathContainsAReturn(); }
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
+    FrBCodeFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 
@@ -278,40 +281,40 @@ typedef std::stack<FrBCodeFunction*> FrBCodeFunctionStack;
 
 inline void FrBCodeFunction::addParam(const String& name, FrBTypeExpr* v, bool byval, FrBExpr * init)
 {
-    _paramName[name] = _param.size();
-    _param.push_back(Param(v, byval, init));
+    (*_paramName)[name] = _param->size();
+    _param->push_back(Param(v, byval, init));
 }
 
 inline int FrBCodeFunction::getParam(const String& name) const
 {
-    NameParamList::const_iterator it = _paramName.find(name);
+    NameParamMap::const_iterator it = _paramName->find(name);
     
-    return (it == _paramName.end()) ? -1 : it->second;
+    return (it == _paramName->end()) ? -1 : it->second;
 }
 
 inline void FrBCodeFunction::addLocalVar(String name, FrBTypeExpr * type)
 {
-    _varName[name] = _var.size();
-    _var.push_back(type);
+    (*_varName)[name] = _var->size();
+    _var->push_back(type);
 }
 
 
 inline FrBCodeFunction::VarID FrBCodeFunction::findLocalVar(String name) const
 {
-    NameVarList::const_iterator it = _varName.find(name);
+    NameVarMap::const_iterator it = _varName->find(name);
     
-    return (it == _varName.end()) ? -1 : it->second;
+    return (it == _varName->end()) ? -1 : it->second;
 }
 
 inline FrBTypeExpr * FrBCodeFunction::getLocalVar(FrBCodeFunction::VarID id) const
 {
-    frb_assert(id >= 0 && id < (int)_var.size());
-    return _var[id];
+    frb_assert(id >= 0 && id < (int)_var->size());
+    return (*_var)[id];
 }
 
 inline int FrBCodeFunction::localVarCount() const
 {
-    return _varName.size();
+    return _varName->size();
 }
 
 inline void FrBCodeFunction::setURReturnType(FrBTypeExpr* t)
@@ -324,7 +327,7 @@ inline FrBTypeExpr * FrBCodeFunction::getURParam(size_t index) const
 {
     frb_assert2(index < parameterCount(), "FrBCodeFunction::getURParam(int) / index out of bounds");
 
-    return _param[index].type;
+    return (*_param)[index].type;
 }
 
 #endif
