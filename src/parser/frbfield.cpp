@@ -39,7 +39,7 @@ std::ostream& FrBField::put(std::ostream& stream, int indent) const
 		<< type()->name() << std::endl;
 }
 
-FrBField * FrBField::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBField * FrBField::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     frb_assert2(cpy, "could not specialize this field");
     return static_cast<FrBField*>(cpy);
@@ -95,7 +95,7 @@ FrBBaseObject * FrBCodeField::evalDefaultValue(FrBExecutionEnvironment& e)
   }
 }
 
-FrBCodeField * FrBCodeField::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBCodeField * FrBCodeField::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     FrBCodeField * ret = static_cast<FrBCodeField *>(copy_not_null(cpy));
 

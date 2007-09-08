@@ -66,7 +66,7 @@ public:
 	} 
 	           );
 
-    FrBField * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBField * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 std::ostream& operator<<(std::ostream& s, const FrBField& m);
@@ -94,7 +94,7 @@ public:
     FrBBaseObject * evalDefaultValue(FrBExecutionEnvironment& e) const 
       throw (FrBExecutionException);
 
-    FrBCodeField * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;    
+    FrBCodeField * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;    
 
     std::ostream& put(std::ostream& stream, int indent = 0) const;
 

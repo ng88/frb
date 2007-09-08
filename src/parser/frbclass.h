@@ -274,7 +274,7 @@ public:
     /** Can resolve any type of member (function, inner class, field, ...) */
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
-    FrBClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBClass * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
     
 };
@@ -317,7 +317,7 @@ public:
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
 
-    FrBCodeClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBCodeClass * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 

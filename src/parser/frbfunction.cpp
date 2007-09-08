@@ -207,7 +207,7 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
     return stream << endl;
 }
 
-FrBFunction * FrBFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBFunction * FrBFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     frb_assert2(cpy, "could not specialize this function");
     return static_cast<FrBFunction*>(cpy);
@@ -410,7 +410,7 @@ std::ostream& FrBCodeFunction::put(std::ostream& stream, int indent) const
 }
 
 
-FrBCodeFunction * FrBCodeFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBCodeFunction * FrBCodeFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     FrBCodeFunction * ret = static_cast<FrBCodeFunction *>(copy_not_null(cpy));
 

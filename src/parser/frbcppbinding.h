@@ -67,7 +67,7 @@ public:
     virtual ~FrBCppClass();
     
         
-    FrBCppClass * FrBCppClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBCppClass * FrBCppClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
     
     const CString specString() const;
 
@@ -84,7 +84,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException) {}
     void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) {}
 
-    FrBCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
 };
 
@@ -105,7 +105,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList&) const
         throw (FrBExecutionException) { return 0; }
 
-    //FrBCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 
@@ -136,7 +136,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
-    //FrBCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 /** Represents an FrB function that is a C++ exported function with one parameter
@@ -170,7 +170,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
-    //FrBCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
 };
 
@@ -204,7 +204,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
-    //FrBCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
 };
 
@@ -238,7 +238,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
-    //FrBNaryCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBNaryCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
 };
 
@@ -267,7 +267,7 @@ public:
     FrBBaseObject * execute(FrBExecutionEnvironment&, FrBBaseObject * me, const FrBBaseObjectList& args) const
         throw (FrBExecutionException);
 
-    //FrBUnaryParamArrayCppFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    //FrBUnaryParamArrayCppFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
 };
 

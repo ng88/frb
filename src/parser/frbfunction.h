@@ -155,7 +155,7 @@ public:
         return bestMatch;
     }
 
-    FrBFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
         
 };
 
@@ -244,7 +244,7 @@ public:
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
     void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException);
     
-    FrBCodeFunction * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBCodeFunction * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 };
 
 

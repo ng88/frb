@@ -39,7 +39,7 @@ String FrBMember::fullName() const
 }
 
 
-FrBMember * FrBMember::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBMember * FrBMember::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     frb_assert2(cpy, "can not specialize this member");
     return cpy;

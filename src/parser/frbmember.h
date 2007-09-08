@@ -67,7 +67,7 @@ public:
     /** Used in type resolution (resolve type of field, function prototype, ...) */
     virtual void resolvePrototype(FrBResolveEnvironment&) throw (FrBResolveException) = 0;
 
-    virtual FrBMember * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    virtual FrBMember * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
         
 };
 

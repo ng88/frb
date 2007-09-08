@@ -426,7 +426,7 @@ FrBClass::~FrBClass()
 
 };
 
-FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBClass * FrBClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     frb_assert2(cpy, "could not specialize this class");
 
@@ -512,7 +512,7 @@ void FrBCodeClass::addURBaseClasse(FrBTypeExpr *c)
     _urBaseClasses->push_back(c);
 }
 
-FrBCodeClass * FrBCodeClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+FrBCodeClass * FrBCodeClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     FrBCodeClass * ret = static_cast<FrBCodeClass*>(copy_not_null(cpy));
 

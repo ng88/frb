@@ -56,7 +56,7 @@ void FrBExpr::refAssign(FrBExecutionEnvironment&, FrBBaseObject* o) const throw 
     throw FrBInvalidLValueException(this);
 }
 
-FrBExpr *  FrBExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr *  FrBExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     frb_assert2(cpy, "can not specialize this expr");
     return cpy;
@@ -114,7 +114,7 @@ const FrBClass* FrBLocalVarExpr::getClass() const
     return _type->getClass();
 }
 
-FrBExpr * FrBLocalVarExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBLocalVarExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -190,7 +190,7 @@ std::ostream& FrBUnresolvedTypeExpr::put(std::ostream& stream) const
         return stream << "ur_type_" << _name;
 }
 
-FrBExpr * FrBUnresolvedTypeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBUnresolvedTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     FrBUnresolvedTypeExpr* r =  static_cast<FrBUnresolvedTypeExpr*>(copy_not_null(cpy));
 
@@ -282,7 +282,7 @@ bool FrBTemplateTypeExpr::isInstance() const
     return false;
 }
 
-FrBExpr * FrBTemplateTypeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBTemplateTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     return new FrBInstanciedTemplateTypeExpr(e.getArgument(_p));
 }
@@ -331,7 +331,7 @@ bool FrBInstanciedTemplateTypeExpr::isInstance() const
     return false;
 }
 
-FrBExpr * FrBInstanciedTemplateTypeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBInstanciedTemplateTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     frb_assert2(false, "template already instancied!");
     return cpy;
@@ -609,7 +609,7 @@ std::ostream& FrBUnresolvedIdWithContextExpr::put(std::ostream& stream) const
 }
 
 
-FrBExpr * FrBUnresolvedIdWithContextExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBUnresolvedIdWithContextExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
     
@@ -816,7 +816,7 @@ const FrBClass* FrBFunctionCallExpr::getClass() const
     return _fn->returnType();
 }
 
-FrBExpr * FrBFunctionCallExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBFunctionCallExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
 
     copy_not_null(cpy);
@@ -920,7 +920,7 @@ const FrBClass* FrBInsideMeExpr::getClass() const
     return _fn->container();
 }
 
-FrBExpr * FrBInsideMeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBInsideMeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -957,7 +957,7 @@ const FrBClass* FrBOutsideMeExpr::getClass() const
   return _field->container();
 }
 
-FrBExpr * FrBOutsideMeExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBOutsideMeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -994,7 +994,7 @@ void FrBBinOpBaseExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResol
     partialResolveAndCheck(e);
 }
 
-FrBExpr * FrBBinOpBaseExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBBinOpBaseExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
 
     copy_not_null(cpy);
@@ -1055,7 +1055,7 @@ const FrBClass* FrBRefAssignExpr::getClass() const
     return _lhs->getClass();
 }
 
-FrBExpr * FrBRefAssignExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBRefAssignExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1166,7 +1166,7 @@ const FrBClass* FrBBinOpExpr::getClass() const
 }
 
 
-FrBExpr * FrBBinOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBBinOpExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1210,7 +1210,7 @@ const FrBClass* FrBIsOpExpr::getClass() const
     return FrBBool::getCppClass();
 }
 
-FrBExpr * FrBIsOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBIsOpExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1272,7 +1272,7 @@ FrBBaseObject* FrBLogAndOpExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
 	return FrBBool::fromCPPBool( (static_cast<FrBBool*>(_lhs->eval(e))->value()) && (static_cast<FrBBool*>(_rhs->eval(e))->value()) );
 }
 
-FrBExpr * FrBLogAndOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBLogAndOpExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1301,7 +1301,7 @@ FrBBaseObject* FrBLogOrOpExpr::eval(FrBExecutionEnvironment& e) const throw (FrB
 	return FrBBool::fromCPPBool( (static_cast<FrBBool*>(_lhs->eval(e))->value()) || (static_cast<FrBBool*>(_rhs->eval(e))->value()) );
 }
 
-FrBExpr * FrBLogOrOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBLogOrOpExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1390,7 +1390,7 @@ const FrBClass* FrBUnaryOpExpr::getClass() const
     return _fn->returnType();
 }
 
-FrBExpr * FrBUnaryOpExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBUnaryOpExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1453,7 +1453,7 @@ const FrBClass* FrBCastExpr::getClass() const
 }
 
 
-FrBExpr * FrBCastExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBCastExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
 
     copy_not_null(cpy);
@@ -1527,7 +1527,7 @@ FrBBaseObject*  FrBNewExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEva
     return _type->getClass()->createInstance(e, _ctor, rval);
 }
 
-FrBExpr * FrBNewExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBNewExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
@@ -1633,7 +1633,7 @@ const FrBClass* FrBNullExpr::getClass() const
     return FrBNull::getCppClass();
 }
 
-FrBExpr * FrBNullExpr::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
+FrBExpr * FrBNullExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
     copy_not_null(cpy);
 
