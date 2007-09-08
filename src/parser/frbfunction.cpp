@@ -414,6 +414,8 @@ FrBCodeFunction * FrBCodeFunction::specializeTemplate(const FrBTemplateSpecializ
 {
     FrBCodeFunction * ret = static_cast<FrBCodeFunction *>(copy_not_null(cpy));
 
+    e.setCurrentMember(ret);
+
     FrBStatementBlock::specializeTemplateBlock(e, ret);
 
     ret->_paramName = new NameParamMap();

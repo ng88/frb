@@ -99,6 +99,8 @@ FrBCodeField * FrBCodeField::specializeTemplate(const FrBTemplateSpecializationE
 {
     FrBCodeField * ret = static_cast<FrBCodeField *>(copy_not_null(cpy));
 
+    e.setCurrentMember(ret);
+
     ret->_unresolvedType = static_cast<FrBTypeExpr*>(_unresolvedType->specializeTemplate(e));
     ret->_defaultVal = _defaultVal->specializeTemplate(e);
 

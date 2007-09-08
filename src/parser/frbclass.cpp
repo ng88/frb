@@ -439,9 +439,6 @@ FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironme
     ret->_ctors = new ConstructorContainer();
     ret->_baseClasses = new ClassContainer();
 
-    for(ClassContainer::const_iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
-        ret->_innerClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
-
     for(FunctionContainer::const_iterator it = _functions->begin(); it != _functions->end(); ++it)
 	ret->_functions->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
 
@@ -459,6 +456,9 @@ FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironme
 	     ret->_baseClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
 	 else
 	     ret->_baseClasses->insert(*it);
+
+    for(ClassContainer::const_iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
+        ret->_innerClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
 
     return ret;
 }
@@ -515,6 +515,8 @@ void FrBCodeClass::addURBaseClasse(FrBTypeExpr *c)
 FrBCodeClass * FrBCodeClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     FrBCodeClass * ret = static_cast<FrBCodeClass*>(copy_not_null(cpy));
+
+    e.setCurrentClass(ret);
 
     FrBClass::specializeTemplate(e, ret);
 
