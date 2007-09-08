@@ -67,18 +67,18 @@ protected:
     bool     _sealed; /* sealed class */
 
 
-    FunctionContainer * _functions; //TODO
-    ClassContainer    * _innerClasses; //TODO
+    FunctionContainer * _functions;
+    ClassContainer    * _innerClasses;
 
-    FieldContainer    * _fields; //TODO
+    FieldContainer    * _fields;
 
-    OperatorContainer * _operators; //TODO
+    OperatorContainer * _operators;
     
-    ConstructorContainer * _ctors; //TODO
+    ConstructorContainer * _ctors;
     FrBFunction * _defaultCtor;
     FrBFunction * _dtor;
 
-    ClassContainer * _baseClasses; //TODO
+    ClassContainer * _baseClasses;
 
     unsigned char _templateParameterCount;
 
@@ -99,7 +99,7 @@ protected:
     
 public:
 
-    inline FrBClass();
+    FrBClass();
     virtual ~FrBClass();
     
         //TODO:  fn_member_list; ...
@@ -186,11 +186,11 @@ public:
     /** Set 'f' to be the destructor for this */
     inline void addDestructor(FrBFunction * f);
 
-    inline const ClassContainer* innerClassList() const { return &_innerClasses; }
-    inline const FieldContainer* fieldList() const { return &_fields; }
-    inline const OperatorContainer* operatorList() const { return &_operators; }
-    inline const FunctionContainer* functionList() const { return &_functions; }
-    inline const ConstructorContainer* constructorList() const { return &_ctors; }
+    inline const ClassContainer* innerClassList() const { return _innerClasses; }
+    inline const FieldContainer* fieldList() const { return _fields; }
+    inline const OperatorContainer* operatorList() const { return _operators; }
+    inline const FunctionContainer* functionList() const { return _functions; }
+    inline const ConstructorContainer* constructorList() const { return _ctors; }
     inline const FrBFunction* destructor() const { return _dtor; }
 
     /** Return true if this class has a defaultCtor */
@@ -198,7 +198,7 @@ public:
 
     inline void setDefaultCtor(FrBFunction * v) { frb_assert(v->parameterCount() == 0); _defaultCtor = v; }
     
-    inline ClassContainer* innerClassPtr() { return &_innerClasses; }
+    inline ClassContainer* innerClassPtr() { return _innerClasses; }
 
     inline int sharedFieldCount() const;
     
@@ -290,7 +290,7 @@ public:
 protected:
 
     /** Unresolved base classes list */
-    URClassContainer _urBaseClasses;
+    URClassContainer * _urBaseClasses;
 
 
 
@@ -359,11 +359,6 @@ typedef std::stack<FrBCodeClass*> FrBCodeClassStack;
 /*          Inlined         */
 
 
-inline FrBClass::FrBClass()
-    : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)//, _resolved(false)
-{
-}
-
 inline FrBFunction * FrBClass::findConstructor() const throw (FrBFunctionNotFoundException)
 {
     if(_defaultCtor)
@@ -377,20 +372,20 @@ inline FrBFunction * FrBClass::findConstructor(const ArgContainer& args) const
      throw (FrBFunctionNotFoundException)
 {
   return FrBFunction::findOverload(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CONSTRUCTOR_NAME),
-                                       _ctors.begin(), _ctors.end(), args);
+                                       _ctors->begin(), _ctors->end(), args);
 }
 
 
 inline FrBClass::FnPairIt FrBClass::findFunctions(const String& name) const
 {
-  return _functions.equal_range(name);
+  return _functions->equal_range(name);
 }
     
 template<class ArgContainer>
 inline FrBFunction * FrBClass::findFunction(const String& name, const ArgContainer& args) const
      throw (FrBFunctionNotFoundException)
 {
-  FnPairIt seq = _functions.equal_range(name);
+  FnPairIt seq = _functions->equal_range(name);
         
   return FrBFunction::findOverload(name,
 				   const_map_snd_iterator<FunctionContainer>(seq.first),
@@ -403,7 +398,7 @@ inline FrBFunction * FrBClass::findOperator(int op, const ArgContainer& args) co
      throw (FrBFunctionNotFoundException)
 {
   typedef OperatorContainer::const_iterator It;
-  std::pair<It, It> seq = _operators.equal_range(op);
+  std::pair<It, It> seq = _operators->equal_range(op);
         
   return FrBFunction::findOverload(FrBKeywords::getKeyword(FrBKeywords::FRB_KW_OPERATOR) + ((char)op),
 				   const_map_snd_iterator<OperatorContainer>(seq.first),
@@ -424,9 +419,9 @@ inline FrBFunction * FrBClass::findDestructor() const
 inline FrBField * FrBClass::findField(const String& name) const
      throw (FrBFieldNotFoundException)
 {
-    FieldContainer::const_iterator f = _fields.find(name);
+    FieldContainer::const_iterator f = _fields->find(name);
     
-    if(f == _fields.end())
+    if(f == _fields->end())
         throw FrBFieldNotFoundException(name);
     else
     {
@@ -440,7 +435,7 @@ inline int FrBClass::sharedFieldCount() const
 {
     int ret = 0;
 
-    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+    for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
 	if(it->second->shared())
 	    ret++;
 
@@ -454,7 +449,7 @@ inline void FrBClass::addBaseClass(FrBClass * c)  throw (FrBResolveException)
   if(c->sealed())
       throw FrBInheritsSealedException(c);
 
-  _baseClasses[c->name()] = c;
+  (*_baseClasses)[c->name()] = c;
 }
 
 
@@ -463,7 +458,7 @@ inline void FrBClass::addInnerClass(FrBClass * c)
   frb_assert(c);
 
   c->setContainer(this);
-  _innerClasses[c->name()] = c;
+  (*_innerClasses)[c->name()] = c;
 }
 
 inline void FrBClass::addField(FrBField * c)
@@ -472,17 +467,17 @@ inline void FrBClass::addField(FrBField * c)
 
   int shared_count = sharedFieldCount();
 
-  c->setIndex(c->shared() ? shared_count : _fields.size() - shared_count);
+  c->setIndex(c->shared() ? shared_count : _fields->size() - shared_count);
 
   c->setContainer(this);
-  _fields[c->name()] = c;
+  (*_fields)[c->name()] = c;
 }
 
 inline void FrBClass::addFunction(FrBFunction * f)
 {
   frb_assert(f);
   f->setContainer(this);
-  _functions.insert(std::make_pair(f->name(), f)); 
+  _functions->insert(std::make_pair(f->name(), f)); 
 }
 
 inline void FrBClass::addEvent(FrBEvent * e)
@@ -496,7 +491,7 @@ inline void FrBClass::addOperator(int op, FrBFunction * f)
 {
   frb_assert(f);
   f->setContainer(this);
-  _operators.insert(std::make_pair(op, f));
+  _operators->insert(std::make_pair(op, f));
 }
 
 inline void FrBClass::addConstructor(FrBFunction * f, bool no_default)
@@ -508,7 +503,7 @@ inline void FrBClass::addConstructor(FrBFunction * f, bool no_default)
   if(!no_default && f->parameterCount() == 0)
     _defaultCtor = f;
             
-  _ctors.push_back(f);
+  _ctors->push_back(f);
 }
 
 inline void FrBClass::addDestructor(FrBFunction * f) 

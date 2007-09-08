@@ -19,6 +19,7 @@
 #include "frbmemory.h"
 #include "frbkeywords.h"
 #include "../common/assert.h"
+#include "../common/misc.h"
 #include "frbbuiltinclasses.h"
 #include "frbexpr.h"
 
@@ -43,7 +44,7 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
 	addConstructor(f);
     }
 
-    for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
+    for(ConstructorContainer::iterator it = _ctors->begin(); it != _ctors->end(); ++it)
     {
         frb_assert((*it));
         (*it)->resolvePrototype(e);
@@ -51,26 +52,26 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
     
     if(_dtor) _dtor->resolvePrototype(e);
 
-    for(FieldContainer::iterator it = _fields.begin(); it != _fields.end(); ++it)
+    for(FieldContainer::iterator it = _fields->begin(); it != _fields->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolvePrototype(e);
     }
 
 
-    for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
+    for(FunctionContainer::iterator itf = _functions->begin(); itf != _functions->end(); ++itf)
     {
         frb_assert(itf->second);
         itf->second->resolvePrototype(e);
     }
     
-    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf)
+    for(OperatorContainer::iterator itf = _operators->begin(); itf != _operators->end(); ++itf)
     {
         frb_assert(itf->second);
         itf->second->resolvePrototype(e);
     }
     
-    for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it)
+    for(ClassContainer::iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolvePrototype(e);
@@ -78,7 +79,7 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
 
 
 /*
-    for(ClassContainer::iterator it = _baseClasses.begin(); it != _inClasses.end(); ++it)
+    for(ClassContainer::iterator it = _baseClasses->begin(); it != _inClasses->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolvePrototype(e);
@@ -92,7 +93,7 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
 
     //if(_resolved) return;
     
-    for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it)
+    for(ConstructorContainer::iterator it = _ctors->begin(); it != _ctors->end(); ++it)
     {
         frb_assert((*it));
         (*it)->resolveAndCheck(e);
@@ -100,32 +101,32 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
     
     if(_dtor) _dtor->resolveAndCheck(e);
 
-    for(FieldContainer::iterator it = _fields.begin(); it != _fields.end(); ++it)
+    for(FieldContainer::iterator it = _fields->begin(); it != _fields->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
     }
 
-    for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf)
+    for(FunctionContainer::iterator itf = _functions->begin(); itf != _functions->end(); ++itf)
     {
         frb_assert(itf->second);
         itf->second->resolveAndCheck(e);
     }
     
-    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf)
+    for(OperatorContainer::iterator itf = _operators->begin(); itf != _operators->end(); ++itf)
     {
         frb_assert(itf->second);
         itf->second->resolveAndCheck(e);
     }
     
-    for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it)
+    for(ClassContainer::iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
     }
 
 /*
-    for(ClassContainer::iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
+    for(ClassContainer::iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
     {
         frb_assert(it->second);
         it->second->resolveAndCheck(e);
@@ -140,7 +141,7 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
 /*void FrBClass::initField(FrBExecutionEnvironment& e, FrBBaseObject * o, int start_index = 0) const
   throw (FrBExecutionException)
 {
-  for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+  for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
       if(!it->second->shared())
 	  o->addField(it->second->index() + start_index, it->second->evalDefaultValue(e));
 }*/
@@ -154,12 +155,12 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
 
 
   /* init fields of 'Me' */
-  for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+  for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
       if(!it->second->shared())
 	  o->addField(it->second->index(), it->second->evalDefaultValue(e));
 
   /*int pos = 0;
-  for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
+  for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
   {
       it->second->initField(e, o, pos);
       pos +=  it->second->fieldList()->size();
@@ -170,7 +171,7 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
 
 
   /* call bases constructors */
-  for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
+  for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
   {
        // call def ctor, for testing
       //it->second->findConstructor()->execute(e, o);
@@ -240,7 +241,7 @@ void FrBClass::initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecu
     e.sharedMem().addClass(this);
 
     /* initialize fields */
-    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+    for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
 	if(it->second->shared())
 	{
 	    FrBBaseObject * o = it->second->evalDefaultValue(e);
@@ -269,12 +270,12 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
 	    << name() << "\t' " << specString() << endl;
 
-    for(ClassContainer::const_iterator it = _baseClasses.begin(); it != _baseClasses.end(); ++it)
+    for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
     {
 	sout << ident << "\t Inherits " << it->second->fullName() << endl;
     }
 
-    for(FieldContainer::const_iterator it = _fields.begin(); it != _fields.end(); ++it)
+    for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
     {
       sout << ident << '\t';
       it->second->put(sout, level);
@@ -383,34 +384,42 @@ FrBMember* FrBClass::getMember(const String& name) throw (FrBMemberNotFoundExcep
 
 }
 
+FrBClass::FrBClass()
+    : _abstract(false), _sealed(false), _defaultCtor(0), _dtor(0)//, _resolved(false)
+{
+    _functions = new FunctionContainer();
+    _innerClasses = new ClassContainer();
+    _fields = new FieldContainer();
+    _operators = new OperatorContainer();
+    _ctors = new ConstructorContainer();
+    _baseClasses = new ClassContainer();
+}
+
 
 FrBClass::~FrBClass()
 {
 
-    for(ClassContainer::iterator it = _innerClasses.begin(); it != _innerClasses.end(); ++it) //destuct inner classes
+    for(ClassContainer::iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it) //destuct inner classes
         delete it->second;
 
-    _innerClasses.clear();
-
-    for(FunctionContainer::iterator itf = _functions.begin(); itf != _functions.end(); ++itf) //destuct functions
+    for(FunctionContainer::iterator itf = _functions->begin(); itf != _functions->end(); ++itf) //destuct functions
         delete itf->second;
 
-    _functions.clear();
-
-    for(OperatorContainer::iterator itf = _operators.begin(); itf != _operators.end(); ++itf) //destuct operators
+    for(OperatorContainer::iterator itf = _operators->begin(); itf != _operators->end(); ++itf) //destuct operators
         delete itf->second;
 
-    _operators.clear();
-
-    for(FieldContainer::iterator itf = _fields.begin(); itf != _fields.end(); ++itf) //destuct fields
+    for(FieldContainer::iterator itf = _fields->begin(); itf != _fields->end(); ++itf) //destuct fields
         delete itf->second;
 
-    _fields.clear();
-
-    for(ConstructorContainer::iterator it = _ctors.begin(); it != _ctors.end(); ++it) //destuct ctors
+    for(ConstructorContainer::iterator it = _ctors->begin(); it != _ctors->end(); ++it) //destuct ctors
         delete *it;
 
-    _ctors.clear();
+    delete _innerClasses;
+    delete _functions;
+    delete _fields;
+    delete _operators;
+    delete _ctors;
+    delete _baseClasses;
 
     if(_dtor)
         delete _dtor; //destruct dtor
@@ -429,11 +438,14 @@ FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironme
 
 /*        FrBCodeClass            */
 
-FrBCodeClass::FrBCodeClass() {};
+FrBCodeClass::FrBCodeClass() 
+{
+    _urBaseClasses = new URClassContainer();
+};
 
 FrBCodeClass::~FrBCodeClass()
 {
-
+    delete _urBaseClasses;
 }
 
 void FrBCodeClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
@@ -441,7 +453,7 @@ void FrBCodeClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveE
 
     //if(_resolved) return;
 
-    for(URClassContainer::iterator it = _urBaseClasses.begin(); it != _urBaseClasses.end(); ++it)
+    for(URClassContainer::iterator it = _urBaseClasses->begin(); it != _urBaseClasses->end(); ++it)
     {
 	(*it)->resolveAndCheck(e);
 	addBaseClass((*it)->getContext());
@@ -454,7 +466,7 @@ void FrBCodeClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveE
 FrBBaseObject * FrBCodeClass::allocateInstance(FrBExecutionEnvironment& e) const
   throw (FrBAllocationException)
 {
-  FrBBaseObject * o = new FrBUserObject(this, _fields.size());
+  FrBBaseObject * o = new FrBUserObject(this, _fields->size());
   e.addGarbagedObject(o);
   return o;
 }
@@ -470,7 +482,16 @@ void FrBCodeClass::addURBaseClasse(FrBTypeExpr *c)
 {
     frb_assert(c);
 
-    _urBaseClasses.push_back(c);
+    _urBaseClasses->push_back(c);
+}
+
+FrBCodeClass * FrBCodeClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    FrBCodeClass * ret = static_cast<FrBCodeClass*>(copy_not_null(cpy));
+
+    FrBClass::specializeTemplate(e, ret);
+
+    return ret;
 }
 
 
