@@ -51,6 +51,8 @@ fi
 
 cd $1
 
+echo '############' $1 '############'
+
 for i in *.frb
 do
     if [ -r $i -a -r $i.result ]

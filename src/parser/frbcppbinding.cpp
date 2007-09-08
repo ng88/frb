@@ -18,6 +18,7 @@
 #include "frbcppbinding.h"
 #include "frbbuiltinclasses.h"
 #include "../common/assert.h"
+#include "../common/misc.h"
 
 /*       FrBCppClass          */
 
@@ -44,6 +45,14 @@ void FrBCppClass::freeInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 const CString FrBCppClass::specString() const
 {
     return "C++ binding class";
+}
+
+/*       FrBCppFunction          */
+
+FrBCppFunction * FrBCppFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    frb_warning2(false, "templates not fully implemented in cpp binging");
+    return const_cast<FrBCppFunction*>(this);
 }
     
 
@@ -159,6 +168,12 @@ FrBBaseObject * FrBBinaryCppFunction::execute(FrBExecutionEnvironment& e, FrBBas
 
 }
 
+/*FrBBinaryCppFunction * FrBBinaryCppFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    return static_cast<FrBBinaryCppFunction*>(copy_not_null(cpy));
+}*/
+
+
 /*             FrBNaryCppFunction              */
 
     typedef FrBBaseObject * (*NaryFunction)(FrBExecutionEnvironment&, FrBBaseObject *, const FrBBaseObjectList& args);
@@ -188,6 +203,11 @@ FrBBaseObject * FrBNaryCppFunction::execute(FrBExecutionEnvironment&e, FrBBaseOb
     return _fn(e, me, args);
 }
 
+/*FrBNaryCppFunction *  FrBNaryCppFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    return static_cast<FrBNaryCppFunction*>(copy_not_null(cpy));
+}*/
+
 
 
 /*          FrBUnaryParamArrayCppFunction          */
@@ -215,6 +235,12 @@ FrBBaseObject * FrBUnaryParamArrayCppFunction::execute(FrBExecutionEnvironment& 
 {
     return _fn(e, me, args);
 }
+
+/*FrBUnaryParamArrayCppFunction * FrBUnaryParamArrayCppFunction::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    return static_cast<FrBUnaryParamArrayCppFunction*>(copy_not_null(cpy));
+}*/
+
 
 
 

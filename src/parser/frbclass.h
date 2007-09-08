@@ -67,18 +67,18 @@ protected:
     bool     _sealed; /* sealed class */
 
 
-    FunctionContainer _functions;
-    ClassContainer _innerClasses;
+    FunctionContainer * _functions; //TODO
+    ClassContainer    * _innerClasses; //TODO
 
-    FieldContainer _fields;
+    FieldContainer    * _fields; //TODO
 
-    OperatorContainer _operators;
+    OperatorContainer * _operators; //TODO
     
-    ConstructorContainer _ctors;
+    ConstructorContainer * _ctors; //TODO
     FrBFunction * _defaultCtor;
     FrBFunction * _dtor;
 
-    ClassContainer _baseClasses;
+    ClassContainer * _baseClasses; //TODO
 
     unsigned char _templateParameterCount;
 
@@ -272,6 +272,7 @@ public:
     /** Can resolve any type of member (function, inner class, field, ...) */
     FrBMember* getMember(const String& name) throw (FrBMemberNotFoundException);
 
+    FrBClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
 
     
 };
@@ -313,7 +314,8 @@ public:
     
     virtual const CString specString() const;
     //void resolveAndCheck() throw (FrBResolveException);
-   
+
+    FrBCodeClass * specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;   
 };
 
 

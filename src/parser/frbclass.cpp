@@ -417,6 +417,16 @@ FrBClass::~FrBClass()
 
 };
 
+FrBClass * FrBClass::specializeTemplate(const FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
+{
+    frb_assert2(cpy, "could not specialize this class");
+
+    FrBClass * ret = static_cast<FrBClass*>(cpy);
+
+
+    return ret;
+}
+
 /*        FrBCodeClass            */
 
 FrBCodeClass::FrBCodeClass() {};
