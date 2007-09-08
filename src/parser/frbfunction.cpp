@@ -416,7 +416,40 @@ FrBCodeFunction * FrBCodeFunction::specializeTemplate(const FrBTemplateSpecializ
 
     FrBStatementBlock::specializeTemplateBlock(e, ret);
 
-    //ret->_param
+    ret->_paramName = new NameParamMap();
+    ret->_param = new ParamVector(_param->size());
+
+    for(NameParamMap::const_iterator it = _paramName->begin(); it != _paramName->end(); ++it)
+    {
+	int i = it->second;
+
+	FrBExpr * init = (*_param)[i].init;
+
+	if(init)
+	    init = init->specializeTemplate(e);
+
+	(*ret->_param)[i].init = init;
+	(*ret->_param)[i].type = 
+	    static_cast<FrBTypeExpr*>( (*_param)[i].type->specializeTemplate(e) );
+	(*ret->_param)[i].byval = (*_param)[i].byval;
+
+	(*ret->_paramName)[it->first] = i;
+
+    }
+
+    ret->_varName = new NameVarMap();
+    ret->_var = new VarVector(_var->size());
+
+    for(NameVarMap::const_iterator it = _varName->begin(); it != _varName->end(); ++it)
+    {
+	VarID i = it->second;
+
+	(*ret->_var)[i] = 
+	    static_cast<FrBTypeExpr*>( (*_var)[i]->specializeTemplate(e) );
+
+	(*ret->_varName)[it->first] = i;
+
+    }
 
     return ret;
 }
