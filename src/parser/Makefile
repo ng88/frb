@@ -18,7 +18,7 @@
 SRC= $(wildcard *.cpp)
 OBJS= $(SRC:.cpp=.o)
 
-EXE=parser_test
+EXE=frbc
 TRAD_PATH=../trad/
 
 
