@@ -108,9 +108,8 @@ void FrBBlockStatement::execute(FrBExecutionEnvironment& e) const
 
 FrBStatement * FrBBlockStatement::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
-    copy_not_null(cpy);
 
-    FrBStatementBlock::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
+    FrBStatementBlock::specializeTemplateBlock(e, static_cast<FrBBlockStatement*>(copy_not_null(cpy)));
 
     return cpy;
 }
@@ -188,12 +187,12 @@ bool FrBElseIfStatement::evalCond(FrBExecutionEnvironment& e) const
 
 FrBStatement * FrBElseIfStatement::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
-    copy_not_null(cpy);
+    FrBElseIfStatement* ret = static_cast<FrBElseIfStatement*>(copy_not_null(cpy));
 
-    FrBBlockStatement::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
-    static_cast<FrBElseIfStatement*>(cpy)->_cond = _cond->specializeTemplate(e);
+    FrBStatementBlock::specializeTemplateBlock(e, ret);
+    ret->_cond = _cond->specializeTemplate(e);
 
-    return cpy;
+    return ret;
 }
 
 
@@ -223,7 +222,7 @@ FrBStatement * FrBElseStatement::specializeTemplate(/*const*/ FrBTemplateSpecial
 {
     copy_not_null(cpy);
 
-    FrBBlockStatement::specializeTemplateBlock(e, (FrBStatementBlock*)(cpy));
+    FrBStatementBlock::specializeTemplateBlock(e, static_cast<FrBElseStatement*>(cpy));
 
     return cpy;
 }
@@ -266,16 +265,14 @@ void  FrBIfStatement::execute(FrBExecutionEnvironment& e) const throw (FrBExecut
 
 FrBStatement * FrBIfStatement::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBStatement * cpy) const
 {
-    copy_not_null(cpy);
-
-    FrBIfStatement * c = static_cast<FrBIfStatement *>(cpy);
+    FrBIfStatement * c = static_cast<FrBIfStatement *>(copy_not_null(cpy));
 
     c->_conds = new FrBCondList();
 
     for(FrBCondList::const_iterator it = _conds->begin(); it != _conds->end(); ++it)
 	c->addCond( static_cast<FrBConditionalBlockStatement*>( (*it)->specializeTemplate(e) ) );
 
-    return cpy;
+    return c;
 }
 
 std::ostream&  FrBIfStatement::put(std::ostream& stream, int indent) const
