@@ -63,7 +63,7 @@ protected:
 
 
 
-    bool     _abstract; /* abstract class, ie interface */
+    bool     _abstract; /* abstract class  */
     bool     _sealed; /* sealed class */
 
 

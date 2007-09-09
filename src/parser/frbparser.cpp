@@ -21,6 +21,11 @@
 #include <iostream>
 #include <sstream>
 #include "../common/assert.h"
+/*
+  this include is used by the get_dependencies.sh script
+  #include "parser"
+
+*/
 
 using namespace std;
 

@@ -21,6 +21,13 @@
 #include "frbkeywords.h"
 #include <sstream>
 
+/*
+  this include is used by the get_dependencies.sh script
+  #include "error_msg"
+  #include "keywords_db"
+
+*/
+
 /*           FrBErrorDescriptor               */
 
 FrBErrorDescriptor FrBErrorDescriptor::fromYYError(const char * msg, const char * yytext)

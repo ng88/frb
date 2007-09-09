@@ -20,6 +20,7 @@
 
 #include "frbfunction.h"
 class FrBClass;
+class FrBCodeClass;
 
 
 class FrBTemplateSpecializationEnvironment
@@ -41,7 +42,7 @@ public:
     inline FrBMember * currentMember() const { return _currentMember; }
 
 
-    inline const FrBClass * getArgument(FrBClass::template_count_t index) const { return _args[index]; }
+    inline const FrBClass * getArgument(unsigned int index) const { return _args[index]; }
 
 };
 
