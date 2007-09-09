@@ -3,6 +3,7 @@ Projets exemples à réaliser en FrB
 * Tetris (avec moult option genre pièces perso...)
 * Client SimpleComm
 * Poker multijoueur
-
+* binding clearsilver
+* binding sqllite (avec gestion fonctions persos)
 
 Bien sur il faudra faire le binding Qt avant.
