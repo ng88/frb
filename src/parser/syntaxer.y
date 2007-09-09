@@ -232,7 +232,7 @@ class:
            nclass->setSealed( $<vint>3 == SC_SEALED );
            
            if(class_stack.empty())
-               (*frb_classes)[nclass->name()] = nclass;
+	       (*frb_classes)[nclass->name()] = nclass;
            else
                class_stack.top()->addInnerClass(nclass);
            
@@ -999,7 +999,7 @@ type:
     ;
 
 
-full_type: /* a.b.c.d.e.f ... */
+plain_type: /* a.b.c.d.e.f ... */
       full_type FRB_KW_TOKEN_OP_MEMBER FRB_IDENTIFIER       /* expr.id */
       {
           $<vtype>$ = new FrBUnresolvedTypeExpr($<str>3, current_class(), $<vtype>1);
@@ -1019,8 +1019,25 @@ full_type: /* a.b.c.d.e.f ... */
           $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
       }
     ;
-    
-    
+
+template_arg_list:
+      template_arg_list FRB_KW_TOKEN_OP_LIST_SEP full_type
+    | full_type
+    ;
+
+
+full_type: /* a.b.c.d.e.f<T, W, ...> or a.b.c.d.e.f */
+      plain_type  { $<vtype>$ = $<vtype>1; } 
+    | plain_type FRB_KW_TOKEN_OP_LT template_arg_list FRB_KW_TOKEN_OP_GT 
+      {
+	  //il faut ajouter le type dans une liste indiquant que ca devra
+          // etre instancié plus tard
+          // il faut remplacer le nom du type par un nouveau nom
+
+           $<vtype>$ = $<vtype>1;
+      }
+    ;
+
 new_expr:
       FRB_KW_TOKEN_OP_NEW type parent_expr_list /* New type(arg, arg, ...) */
       { $<expr>$ = new FrBNewExpr($<vtype>2, $<exprs>3); }

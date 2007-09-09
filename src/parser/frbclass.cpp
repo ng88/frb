@@ -75,7 +75,8 @@ void FrBClass::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveExcep
     for(ClassContainer::iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
     {
         frb_assert(it->second);
-        it->second->resolvePrototype(e);
+	if(!it->second->isATemplate())
+	    it->second->resolvePrototype(e);
     }
 
 
@@ -123,7 +124,8 @@ void FrBClass::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveExcept
     for(ClassContainer::iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
     {
         frb_assert(it->second);
-        it->second->resolveAndCheck(e);
+	if(!it->second->isATemplate())
+	    it->second->resolveAndCheck(e);
     }
 
 /*
@@ -269,7 +271,23 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    << FrBKeywords::sealedToString(sealed()) << ' '
 	    << FrBKeywords::abstractToString(abstract()) << ' '
 	    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << ' '
-	    << name() << "\t' " << specString() << endl;
+	    << name();
+
+    if(isATemplate())
+    {
+	sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LT) << "T1";
+
+	for(int i = 2; i <= templateParameterCount(); ++i)
+	    sout << ", T" << i;
+
+	return sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT) << "\t' " << specString() << endl
+		    << ident << "\t' not instancied" << endl << ident
+		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END) << ' '
+		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << endl;
+    }
+
+    sout << "\t' " << specString() << endl;
+
 
     for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
     {
@@ -432,6 +450,8 @@ FrBClass * FrBClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvir
     frb_assert2(cpy, "could not specialize this class");
 
     FrBClass * ret = static_cast<FrBClass*>(cpy);
+
+    ret->setTemplateParameterCount(0);
 
     ret->_innerClasses = new ClassContainer();
     ret->_functions = new FunctionContainer();

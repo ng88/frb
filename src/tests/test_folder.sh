@@ -34,7 +34,7 @@
 #
 
 
-[ "$FRB_PATH" = "" ] && FRB_PATH=../parser/parser_test
+[ "$FRB_PATH" = "" ] && FRB_PATH=../parser/frbc
 
 if ! [ -x "$FRB_PATH" ]
 then
