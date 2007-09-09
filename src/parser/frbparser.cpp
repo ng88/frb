@@ -37,6 +37,7 @@ FrBParser::FrBParser()
     
     _syntaxer->frb_lexer = _lexer;
     _syntaxer->frb_classes = &_classes;
+    _syntaxer->frb_templ = &_templates;
     _syntaxer->frb_error = &_errors;
     
     _lexer->frb_syntaxer = _syntaxer;

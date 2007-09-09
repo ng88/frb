@@ -208,7 +208,7 @@ class:
            free($<str>5);
            nclass->setScope($<vint>1);
 
-	   if($<vbool>6)
+	   if($<vbool>6) /* this class is a template */
 	   {
 
 	       size_t i;

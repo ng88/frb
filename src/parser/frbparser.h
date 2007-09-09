@@ -64,6 +64,7 @@ public:
     
 private:
     Tree _classes; /* parsing tree */
+    Tree _templates; /* parsing tree */
     
     FrBFlexLexerEx * _lexer; /* lexer */
     FrBSyntaxicalParser * _syntaxer; /* syntaxer */
@@ -79,6 +80,7 @@ public:
     ~FrBParser();
     
     inline Tree * classList() { return &_classes; }
+    inline Tree * templates() { return &_templates; }
     
     void dispose();
     

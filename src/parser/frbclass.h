@@ -80,7 +80,7 @@ protected:
 
     ClassContainer * _baseClasses;
 
-    unsigned char _templateParameterCount;
+    template_count_t _templateParameterCount;
 
     //FrBClass * evalTemplate(const FrBClassList&) const
 
