@@ -62,12 +62,12 @@ public:
     };
 
     typedef std::stack<FrBInstanciedTemplateEntry*> FrBITEStack;
-    typedef std::vector<FrBInstanciedTemplateEntry*>  FrBITEVector;
+    typedef std::list<FrBInstanciedTemplateEntry*>  FrBITEList;
 
 private:
 
     FrBITEStack _stack;
-    FrBITEVector _list;
+    FrBITEList _list;
     
 public:
 
@@ -79,9 +79,9 @@ public:
 
     /** Add a new instanciation entry for class c.
      *  Template argument must be provided by addArgument().
-     *  Return an id usable with getCreatedClass().
+     *  Return the created entry.
      */
-    inline unsigned int pushEntry(const FrBClass* c);
+    inline FrBInstanciedTemplateEntry * pushEntry(const FrBClass* c);
 
     /** Add an argument to the current entry */
     inline void addArgument(FrBTypeExpr* a);
@@ -94,10 +94,7 @@ public:
      */
     void createInstances(FrBResolveEnvironment& e) throw (FrBResolveException);
 
-    /**
-     * Return the created class #id. must be called after createInstances()
-     */
-    inline const FrBClass * getCreatedClass(unsigned int id) const;
+
 };
 
 
@@ -143,14 +140,14 @@ inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getCreatedCl
     return _createdClass;
 }
 
-inline unsigned int FrBTemplatePool::pushEntry(const FrBClass* c)
+inline FrBInstanciedTemplateEntry * FrBTemplatePool::pushEntry(const FrBClass* c)
 {
     frb_assert(c);
 
     FrBInstanciedTemplateEntry * e = new FrBInstanciedTemplateEntry(c);
     _stack.push(e);
     _list.push_back(e);
-    return _list.size() - 1;
+    return e;
 }
 
 
@@ -165,11 +162,6 @@ inline void FrBTemplatePool::popEntry()
 {
     frb_assert(!_stack.empty());
     _stack.pop();
-}
-
-inline const FrBClass *  FrBTemplatePool::getCreatedClass(unsigned int  id) const
-{
-    return _list[id]->getCreatedClass();
 }
 
 

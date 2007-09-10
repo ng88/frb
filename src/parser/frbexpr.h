@@ -221,10 +221,11 @@ public:
 class FrBTemplateInstanceTypeExpr : public FrBTypeExpr
 {
 protected:
-    unsigned int _id;
+    FrBTemplatePool::FrBInstanciedTemplateEntry * _tentry;
+
 public:
 
-    inline FrBTemplateInstanceTypeExpr(unsigned int id) _id(id) {}
+    inline FrBTemplateInstanceTypeExpr(FrBTemplatePool::FrBInstanciedTemplateEntry * t) _tentry(t) {}
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;

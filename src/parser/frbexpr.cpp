@@ -342,7 +342,12 @@ FrBClass* FrBInstanciedTemplateTypeExpr::getContext()
     return const_cast<FrBClass*>(_class);
 }
 
+
+
 /*          FrBTemplateInstanceTypeExpr             */
+
+
+
 FrBBaseObject* FrBTemplateInstanceTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
     return e.addGarbagedObject(new FrBClassWrapper(getClass()));
@@ -358,11 +363,12 @@ std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
 
 FrBClass* FrBTemplateInstanceTypeExpr::getContext()
 {
-//    sauvegarder l'entry plutot dans la pool
+    return const_cast<FrBClass*>(getClass());
 }
 
 FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
 {
+    ! a faire
 }
 
 bool FrBTemplateInstanceTypeExpr::isAssignable() const
