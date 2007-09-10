@@ -461,25 +461,25 @@ FrBClass * FrBClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvir
     ret->_baseClasses = new ClassContainer();
 
     for(FunctionContainer::const_iterator it = _functions->begin(); it != _functions->end(); ++it)
-	ret->_functions->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+	ret->addFunction(it->second->specializeTemplate(e));
 
     for(OperatorContainer::const_iterator it = _operators->begin(); it != _operators->end(); ++it)
-	ret->_operators->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+	ret->addOperator(it->first, it->second->specializeTemplate(e));
 
     for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
-	ret->_fields->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+	ret->addField(it->second->specializeTemplate(e));
 
     for(ConstructorContainer::const_iterator it = _ctors->begin(); it != _ctors->end(); ++it)
-	ret->_ctors->push_back((*it)->specializeTemplate(e));
+	ret->addConstructor((*it)->specializeTemplate(e));
 
      for(ClassContainer::const_iterator it = _baseClasses->begin(); it != _baseClasses->end(); ++it)
 	 if(it->second->isATemplate())
-	     ret->_baseClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+	     ret->addBaseClass(it->second->specializeTemplate(e));
 	 else
-	     ret->_baseClasses->insert(*it);
+	     ret->addBaseClass(*it);
 
     for(ClassContainer::const_iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
-        ret->_innerClasses->insert(std::make_pair(it->first, it->second->specializeTemplate(e)));
+        ret->addInnerClass(it->second->specializeTemplate(e));
 
     return ret;
 }

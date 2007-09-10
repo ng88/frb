@@ -163,7 +163,8 @@ public:
 
     //TODO /* throw si existe deja */
     /** Add 'c' as an inner class for this */
-    inline void addInnerClass(FrBClass * c);
+    inline void addInnerClass(FrBClass * c, const String& name = c->name());
+//    inline void addInnerClass(FrBClass * c, const String& name);
 
     /** Add 'c' as a field for this */
     inline void addField(FrBField * c);
@@ -455,12 +456,14 @@ inline void FrBClass::addBaseClass(FrBClass * c)  throw (FrBResolveException)
 }
 
 
-inline void FrBClass::addInnerClass(FrBClass * c)
+inline void FrBClass::addInnerClass(FrBClass * c, const String& name)
 {
   frb_assert(c);
+  frb_assert2(name.substr(0, c->name().size()) == c->name(), "invalid name");
+  frb_assert2(name.size() > c->name().size() && name[c->name().size()] == '$', "invalid name");
 
   c->setContainer(this);
-  (*_innerClasses)[c->name()] = c;
+  (*_innerClasses)[name] = c;
 }
 
 inline void FrBClass::addField(FrBField * c)

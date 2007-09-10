@@ -195,6 +195,7 @@ public:
 
 };
 
+/** class that replace FrBTemplateTypeExpr when specialized */
 class FrBInstanciedTemplateTypeExpr : public FrBTypeExpr
 {
 protected:
