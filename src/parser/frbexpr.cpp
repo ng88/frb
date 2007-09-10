@@ -342,6 +342,41 @@ FrBClass* FrBInstanciedTemplateTypeExpr::getContext()
     return const_cast<FrBClass*>(_class);
 }
 
+/*          FrBTemplateInstanceTypeExpr             */
+FrBBaseObject* FrBTemplateInstanceTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
+{
+    return e.addGarbagedObject(new FrBClassWrapper(getClass()));
+}
+
+const FrBClass* FrBTemplateInstanceTypeExpr::getClass() const
+{
+}
+
+std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
+{
+}
+
+FrBClass* FrBTemplateInstanceTypeExpr::getContext()
+{
+//    sauvegarder l'entry plutot dans la pool
+}
+
+FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
+{
+}
+
+bool FrBTemplateInstanceTypeExpr::isAssignable() const
+{
+    return false;
+}
+
+bool FrBTemplateInstanceTypeExpr::isInstance() const
+{
+    return false;
+}
+
+
+
 /*     FrBUnresolvedIdWithContextExpr      */
 
 /*     FrBUnresolvedIdWithContextExpr::*Evalutor      */

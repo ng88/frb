@@ -169,7 +169,7 @@ public:
     inline const String& name() const { return _name; }
 };
 
-/** hold a template type (like T in Public Class A<T>) */
+/** hold a template type in a template class (like T in Public Class A<T>) */
 class FrBTemplateTypeExpr : public FrBTypeExpr
 {
 protected:
@@ -204,6 +204,27 @@ protected:
 public:
 
     FrBInstanciedTemplateTypeExpr(const FrBClass * c);
+    
+    FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
+    const FrBClass* getClass() const;
+    std::ostream& put(std::ostream& stream) const;
+
+    FrBClass* getContext();
+
+    FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
+
+    bool isAssignable() const;
+    bool isInstance() const;
+};
+
+/** hold a template instance (like A<T> in Dim foo As A<T>) */
+class FrBTemplateInstanceTypeExpr : public FrBTypeExpr
+{
+protected:
+    unsigned int _id;
+public:
+
+    inline FrBTemplateInstanceTypeExpr(unsigned int id) _id(id) {}
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;
