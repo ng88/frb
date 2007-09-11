@@ -1022,20 +1022,23 @@ plain_type: /* a.b.c.d.e.f ... */
 
 template_arg_list:
       template_arg_list FRB_KW_TOKEN_OP_LIST_SEP full_type
+      {
+	  templatePool->addArg($<vtype>3);
+      }
     | full_type
+      {
+	  templatePool->addArg($<vtype>1);
+      }
     ;
 
 
 full_type: /* a.b.c.d.e.f<T, W, ...> or a.b.c.d.e.f */
       plain_type  { $<vtype>$ = $<vtype>1; } 
-    | plain_type FRB_KW_TOKEN_OP_LT template_arg_list FRB_KW_TOKEN_OP_GT 
+    | plain_type
       {
-	  //il faut ajouter le type dans une liste indiquant que ca devra
-          // etre instancié plus tard
-          // il faut remplacer le nom du type par un nouveau nom
-
-           $<vtype>$ = $<vtype>1;
+	  $<vtype>$ = new FrBTemplateInstanceTypeExpr($<vtype>1);
       }
+      FRB_KW_TOKEN_OP_LT template_arg_list FRB_KW_TOKEN_OP_GT 
     ;
 
 new_expr:

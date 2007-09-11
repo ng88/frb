@@ -37,7 +37,7 @@ FrBParser::FrBParser()
     
     _syntaxer->frb_lexer = _lexer;
     _syntaxer->frb_classes = &_classes;
-    _syntaxer->frb_templ = &_templates;
+    _syntaxer->frb_templ = &_templatePool;
     _syntaxer->frb_error = &_errors;
     
     _lexer->frb_syntaxer = _syntaxer;
@@ -73,6 +73,8 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
 { 
     if(_disposed)
         return;
+
+    _templatePool->createInstances(e);
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {

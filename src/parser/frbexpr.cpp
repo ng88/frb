@@ -365,10 +365,12 @@ std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
 	   << *_tentry->getArg(0);
 
     unsigned int n = _tentry->argCount();
+
     for(unsigned int i = 1; i < n; ++i)
 	stream << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << ' '
 	       << *_tentry->getArg(i);
-    
+
+    return << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT);
 }
 
 FrBClass* FrBTemplateInstanceTypeExpr::getContext()

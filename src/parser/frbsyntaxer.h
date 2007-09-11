@@ -30,7 +30,6 @@
      public: \
         FrBFlexLexerEx * frb_lexer; \
         FrBClassMap * frb_classes; \
-        FrBClassMap * frb_templ; \
         FrBErrorCollector * frb_error; \
         typedef std::map<String, FrBClass::template_count_t>   TemplateSymbTable; \
         typedef std::stack<TemplateSymbTable*> TemplateSymbTableStack; \
@@ -41,6 +40,7 @@
          FrBCodeFunctionStack fn_stack; \
          FrBBlockStack block_stack; \
          CStringList id_list; \
+         FrBTemplatePool * templatePool; \
          FrBWithStack with_stack; \
          TemplateSymbTableStack  template_symbols_stack;\
          \

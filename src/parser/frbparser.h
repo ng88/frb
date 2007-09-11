@@ -33,6 +33,7 @@
 
 #include "frbsyntaxer.h"
 #include "syntaxer.h"
+#include "frbtemplatepool.h"
 
 /*
 
@@ -64,7 +65,7 @@ public:
     
 private:
     Tree _classes; /* parsing tree */
-    Tree _templates; /* parsing tree */
+    FrBTemplatePool  _templatePool;
     
     FrBFlexLexerEx * _lexer; /* lexer */
     FrBSyntaxicalParser * _syntaxer; /* syntaxer */
@@ -80,7 +81,7 @@ public:
     ~FrBParser();
     
     inline Tree * classList() { return &_classes; }
-    inline Tree * templates() { return &_templates; }
+    inline FrBTemplatePool * templatePool() { return &_templatePool; }
     
     void dispose();
     
