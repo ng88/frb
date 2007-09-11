@@ -46,10 +46,12 @@ public:
     {
     private:
 	FrBTypeVector  _args;
+	FrBTypeVector * _URTemplate;
+
 	const FrBClass* _template;
 	const FrBClass* _createdClass;
     public:
-	inline FrBInstanciedTemplateEntry(const FrBClass* c);
+	inline FrBInstanciedTemplateEntry(FrBTypeVector *);
 	~FrBInstanciedTemplateEntry();
 
 	inline void addArg(FrBTypeExpr* a);
@@ -59,6 +61,11 @@ public:
 	
 	/** must be called after createInstance() */
 	inline const FrBClass* getCreatedClass() const;
+
+	inline FrBTypeExpr* getArg(unsigned int i) const;
+	inline unsigned int argCount() const;
+	inline const FrBClass* getTemplate() const;
+	inline FrBTypeExpr* getURTemplate() const;
     };
 
     typedef std::stack<FrBInstanciedTemplateEntry*> FrBITEStack;
@@ -81,7 +88,7 @@ public:
      *  Template argument must be provided by addArgument().
      *  Return the created entry.
      */
-    inline FrBInstanciedTemplateEntry * pushEntry(const FrBClass* c);
+    inline FrBInstanciedTemplateEntry * pushEntry(FrBTypeExpr*);
 
     /** Add an argument to the current entry */
     inline void addArgument(FrBTypeExpr* a);
@@ -120,12 +127,11 @@ public:
 /*     inlined  */
 
 
-inline FrBTemplatePool::FrBInstanciedTemplateEntry::FrBInstanciedTemplateEntry(const FrBClass* c)
-    : _template(c)
+inline FrBTemplatePool::FrBInstanciedTemplateEntry::FrBInstanciedTemplateEntry(FrBTypeVector * c)
+    : _URTemplate(c), _template(0)
 {
     frb_assert(c);
     FRB_ASSERT_CODE( _createdClass = 0 );
-    _args.reserve(c->templateParameterCount());
 }
 		  
 inline void FrBTemplatePool::FrBInstanciedTemplateEntry::addArg(FrBTypeExpr* a)
@@ -140,7 +146,29 @@ inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getCreatedCl
     return _createdClass;
 }
 
-inline FrBInstanciedTemplateEntry * FrBTemplatePool::pushEntry(const FrBClass* c)
+inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getTemplate() const
+{
+    frb_assert2(_template, "template not resolved");
+    return _template;
+}
+
+inline FrBTypeExpr* gFrBTemplatePool::FrBInstanciedTemplateEntry::getURTemplate() const
+{
+    return _URTemplate;
+}
+
+inline FrBTypeExpr* FrBTemplatePool::FrBInstanciedTemplateEntry::getArg(unsigned int i) const
+{
+    frb_assert(i < argCount());
+    return _args[i];
+}
+
+inline unsigned int FrBTemplatePool::FrBInstanciedTemplateEntry::argCount() const
+{
+    return _args.size();
+}
+
+inline FrBInstanciedTemplateEntry * FrBTemplatePool::pushEntry(FrBTypeExpr*c)
 {
     frb_assert(c);
 
@@ -163,6 +191,7 @@ inline void FrBTemplatePool::popEntry()
     frb_assert(!_stack.empty());
     _stack.pop();
 }
+
 
 
 #endif

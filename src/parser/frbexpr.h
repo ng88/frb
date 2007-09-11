@@ -126,6 +126,7 @@ class FrBTypeExpr : public FrBExpr
 public:
     /** Return the resolved type */
     virtual FrBClass* getContext() = 0;
+    //const FrBClass* FrBExpr::getRealClass() const { return getContext(); }
 };
 
 /** Represent a me expr, actually (ouside or inside)
@@ -221,11 +222,14 @@ public:
 class FrBTemplateInstanceTypeExpr : public FrBTypeExpr
 {
 protected:
+
+    FrBTemplatePool * _pool;
     FrBTemplatePool::FrBInstanciedTemplateEntry * _tentry;
 
 public:
 
-    inline FrBTemplateInstanceTypeExpr(FrBTemplatePool::FrBInstanciedTemplateEntry * t) _tentry(t) {}
+    inline FrBTemplateInstanceTypeExpr(FrBTemplatePool *p, FrBTemplatePool::FrBInstanciedTemplateEntry * t)
+	: _pool(p), _tentry(t) {}
     
     FrBBaseObject* eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException);
     const FrBClass* getClass() const;

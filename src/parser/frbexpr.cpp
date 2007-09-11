@@ -23,7 +23,7 @@
 #include "frbresolveenvironment.h"
 #include "frbbuiltinclasses.h"
 #include "frbtemplatespecializationenvironment.h"
-
+#include "frbtemplatepool.h"
 
 /*          FrBExpr          */
 
@@ -355,10 +355,20 @@ FrBBaseObject* FrBTemplateInstanceTypeExpr::eval(FrBExecutionEnvironment& e) con
 
 const FrBClass* FrBTemplateInstanceTypeExpr::getClass() const
 {
+    return _tentry->getCreatedClass();
 }
 
 std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
 {
+    stream << *_tentry->getURTemplate() 
+	   << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LT)
+	   << *_tentry->getArg(0);
+
+    unsigned int n = _tentry->argCount();
+    for(unsigned int i = 1; i < n; ++i)
+	stream << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << ' '
+	       << *_tentry->getArg(i);
+    
 }
 
 FrBClass* FrBTemplateInstanceTypeExpr::getContext()
@@ -368,7 +378,17 @@ FrBClass* FrBTemplateInstanceTypeExpr::getContext()
 
 FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
 {
-    ! a faire
+
+    FrBTemplateInstanceTypeExpr * ret = static_cast<FrBTemplateInstanceTypeExpr*>(copy_not_null(cpy));
+
+    ret->_tentry = _pool->pushEntry(_tentry->getURTemplate()->specializeTemplate(e));
+
+    unsigned int n = _tentry->argCount();
+
+    for(unsigned int i = 0; i < n; ++i)
+	ret->_tentry->addArg(_tentry->getArg(i)->specializeTemplate(e));
+
+    return ret;
 }
 
 bool FrBTemplateInstanceTypeExpr::isAssignable() const
@@ -385,7 +405,7 @@ bool FrBTemplateInstanceTypeExpr::isInstance() const
 
 /*     FrBUnresolvedIdWithContextExpr      */
 
-/*     FrBUnresolvedIdWithContextExpr::*Evalutor      */
+/*     FrBUnresolvedIdWithContextExpr::*Evaluator      */
         
 
 FrBUnresolvedIdWithContextExpr::FieldEvaluator::FieldEvaluator(FrBField * f)

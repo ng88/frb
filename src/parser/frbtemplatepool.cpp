@@ -35,7 +35,14 @@ FrBTemplatePool::~FrBInstanciedTemplateEntry()
 void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
+    if(_template)
+	return;
+
     frb_assert(_template->templateParameterCount() == _args.size());
+
+    /* Resolve the template */
+    _URTemplate->resolveAndCheck(e);
+    _template = _URTemplate->getContext();
 
     /* Create the new name for the instance */
     std::ostringstream sname;

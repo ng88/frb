@@ -278,7 +278,7 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LT) << "T1";
 
 	for(int i = 2; i <= templateParameterCount(); ++i)
-	    sout << ", T" << i;
+	    sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << " T" << i;
 
 	return sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT) << "\t' " << specString() << endl
 		    << ident << "\t' not instancied" << endl << ident
