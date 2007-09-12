@@ -59,7 +59,7 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 	(*it)->resolveAndCheck(e);
 	env.addArgument((*it)->getContext());
 
-	sname << '$' << (*it)->getContext()->typeID();
+	sname << (*it)->getContext()->typeID() << '$';
     }
 
     String name = sname.str();

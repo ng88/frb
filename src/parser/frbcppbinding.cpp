@@ -63,6 +63,7 @@ FrBCppFunction * FrBCppFunction::specializeTemplate(/*const*/ FrBTemplateSpecial
 {
     //frb_warning2(_name.size() > 0 && _name[0] == '$', "templates not fully implemented in cpp binging (function)");
     frb_warning2(false, "templates not fully implemented in cpp binging (function)");
+    //FrBMember::specializeTemplate(e, cpy);
     return const_cast<FrBCppFunction*>(this);
 }
     

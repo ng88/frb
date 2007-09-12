@@ -281,7 +281,7 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	    sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << " T" << i;
 
 	return sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT) << "\t' " << specString() << endl
-		    << ident << "\t' not instancied" << endl << ident
+		    << ident << "\t' template, not resolved/instancied" << endl << ident
 		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END) << ' '
 		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << endl;
     }
@@ -450,6 +450,8 @@ FrBClass * FrBClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvir
     frb_assert2(cpy, "could not specialize this class");
 
     FrBClass * ret = static_cast<FrBClass*>(cpy);
+
+    //FrBMember::specializeTemplate(e, ret);
 
     ret->setTemplateParameterCount(0);
 

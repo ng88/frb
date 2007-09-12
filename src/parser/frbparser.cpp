@@ -121,10 +121,12 @@ std::ostream& FrBParser::printTree(std::ostream& sout, bool user_class_only) con
         
         if(!user_class_only || (user_class_only && dynamic_cast<FrBCodeClass*>(c) ))
         {
-            if(c->name() != it->first)
-                sout << "' " << it->first << " is an alias for " << c->name() << endl;
+            if(c->name() == it->first)
+		sout << *c;
+	    else if(it->first[it->first.size() - 1] == '$')
+                sout << "' " << it->first << " is a templace instance of " << c->name() << endl << *c;
             else
-                sout << *c;
+                sout << "' " << it->first << " is an alias for " << c->name() << endl;                
         }
         
     }

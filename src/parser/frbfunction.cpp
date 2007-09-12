@@ -211,6 +211,7 @@ std::ostream& FrBFunction::put(std::ostream& stream, int indent) const
 FrBFunction * FrBFunction::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy) const
 {
     frb_assert2(cpy, "could not specialize this function");
+    //FrBMember::specializeTemplate(e, cpy);
     return static_cast<FrBFunction*>(cpy);
 }
 
@@ -417,6 +418,7 @@ FrBCodeFunction * FrBCodeFunction::specializeTemplate(/*const*/ FrBTemplateSpeci
 
     e.setCurrentMember(ret);
 
+    //FrBMember::specializeTemplate(e, ret);
     FrBStatementBlock::specializeTemplateBlock(e, ret);
 
     ret->_paramName = new NameParamMap();
