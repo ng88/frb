@@ -23,6 +23,7 @@
 #include "frbexecutionenvironment.h"
 #include "frbexprlist.h"
 #include <stack>
+#include "frbtemplatepool.h"
 
 class FrBCodeFunction;
 class FrBTemplateSpecializationEnvironment;

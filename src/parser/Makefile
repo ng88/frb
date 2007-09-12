@@ -45,7 +45,7 @@ frberrordesc.o: frberrordesc.h frbkeywords.h error_msg keywords_db
 frbevent.o: frbevent.h
 frbexceptions.o: frbexceptions.h frbkeywords.h frberrors.h frbbaseobject.h frbclass.h frbmember.h frbexpr.h ../common/assert.h
 frbexecutionenvironment.o: frbexecutionenvironment.h frbresolveenvironment.h frbbuiltinclasses.h frbfunction.h
-frbexpr.o: frbexpr.h ../common/assert.h ../common/misc.h frbkeywords.h frbfunction.h frbresolveenvironment.h frbbuiltinclasses.h frbtemplatespecializationenvironment.h
+frbexpr.o: frbexpr.h ../common/assert.h ../common/misc.h frbkeywords.h frbfunction.h frbresolveenvironment.h frbbuiltinclasses.h frbtemplatespecializationenvironment.h frbtemplatepool.h
 frbfield.o: frbfield.h frbexpr.h frbclass.h frbkeywords.h frbexecutionenvironment.h ../common/misc.h frbtemplatespecializationenvironment.h
 frbfunction.o: frbexpr.h frbfunction.h frbclass.h ../common/assert.h ../common/misc.h frbexecutionenvironment.h frbkeywords.h frbbuiltinclasses.h frbtemplatespecializationenvironment.h
 frbmember.o: frbresolveenvironment.h frbmember.h frbkeywords.h frbclass.h frbtemplatespecializationenvironment.h frbstat.h
@@ -53,8 +53,10 @@ frbmemory.o: frbmemory.h frbclass.h
 frbparser.o: frbparser.h ../common/assert.h parser
 frbresolveenvironment.o: frbresolveenvironment.h frbclass.h ../common/assert.h ../common/string.h frbkeywords.h
 frbstat.o: frbstat.h frbexpr.h frbclass.h ../common/assert.h ../common/misc.h frbmemory.h frbbuiltinclasses.h frbkeywords.h frbtemplatespecializationenvironment.h
+frbtemplatepool.o: frbtemplatepool.h ../common/assert.h frbclass.h frbexpr.h
 frbtemplatespecializationenvironment.o: frbtemplatespecializationenvironment.h frbclass.h ../common/assert.h
 main.o: frbparser.h frbresolveenvironment.h frbkeywords.h frbmemory.h frbtemplatespecializationenvironment.h
+
 
 .PHONY: exe clean install touchall force doc cleandoc start
 

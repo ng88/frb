@@ -18,12 +18,18 @@
 #ifndef FRBTEMPLATEPOOL_H
 #define FRBTEMPLATEPOOL_H
 
-class FrBClass;
-class FrBTypeExpr;
 
 #include <stack>
 #include <vector>
 #include <list>
+
+
+#include "../common/assert.h"
+#include "frbexceptions.h"
+
+class FrBClass;
+class FrBTypeExpr;
+class FrBResolveEnvironment;
 
 /**
  * An instance of this class contains the list of the template that will be instancied
@@ -46,12 +52,12 @@ public:
     {
     private:
 	FrBTypeVector  _args;
-	FrBTypeVector * _URTemplate;
+	FrBTypeExpr  * _URTemplate;
 
 	const FrBClass* _template;
 	const FrBClass* _createdClass;
     public:
-	inline FrBInstanciedTemplateEntry(FrBTypeVector *);
+	inline FrBInstanciedTemplateEntry(FrBTypeExpr *);
 	~FrBInstanciedTemplateEntry();
 
 	inline void addArg(FrBTypeExpr* a);
@@ -127,7 +133,7 @@ public:
 /*     inlined  */
 
 
-inline FrBTemplatePool::FrBInstanciedTemplateEntry::FrBInstanciedTemplateEntry(FrBTypeVector * c)
+inline FrBTemplatePool::FrBInstanciedTemplateEntry::FrBInstanciedTemplateEntry(FrBTypeExpr * c)
     : _URTemplate(c), _template(0)
 {
     frb_assert(c);
@@ -152,7 +158,7 @@ inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getTemplate(
     return _template;
 }
 
-inline FrBTypeExpr* gFrBTemplatePool::FrBInstanciedTemplateEntry::getURTemplate() const
+inline FrBTypeExpr* FrBTemplatePool::FrBInstanciedTemplateEntry::getURTemplate() const
 {
     return _URTemplate;
 }
@@ -168,7 +174,7 @@ inline unsigned int FrBTemplatePool::FrBInstanciedTemplateEntry::argCount() cons
     return _args.size();
 }
 
-inline FrBInstanciedTemplateEntry * FrBTemplatePool::pushEntry(FrBTypeExpr*c)
+inline FrBTemplatePool::FrBInstanciedTemplateEntry * FrBTemplatePool::pushEntry(FrBTypeExpr*c)
 {
     frb_assert(c);
 

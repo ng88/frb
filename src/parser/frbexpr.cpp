@@ -370,7 +370,7 @@ std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
 	stream << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << ' '
 	       << *_tentry->getArg(i);
 
-    return << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT);
+    return stream << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT);
 }
 
 FrBClass* FrBTemplateInstanceTypeExpr::getContext()
@@ -378,17 +378,17 @@ FrBClass* FrBTemplateInstanceTypeExpr::getContext()
     return const_cast<FrBClass*>(getClass());
 }
 
-FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const
+FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy) const
 {
 
     FrBTemplateInstanceTypeExpr * ret = static_cast<FrBTemplateInstanceTypeExpr*>(copy_not_null(cpy));
 
-    ret->_tentry = _pool->pushEntry(_tentry->getURTemplate()->specializeTemplate(e));
+    ret->_tentry = _pool->pushEntry(static_cast<FrBTypeExpr*>(_tentry->getURTemplate()->specializeTemplate(e)));
 
     unsigned int n = _tentry->argCount();
 
     for(unsigned int i = 0; i < n; ++i)
-	ret->_tentry->addArg(_tentry->getArg(i)->specializeTemplate(e));
+	ret->_tentry->addArg(static_cast<FrBTypeExpr*>(_tentry->getArg(i)->specializeTemplate(e)));
 
     return ret;
 }

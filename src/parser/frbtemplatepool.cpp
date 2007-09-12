@@ -17,13 +17,13 @@
 
 #include "frbtemplatepool.h"
 
-#include "../common/assert.h"
+#include <sstream>
+#include <string>
 
 #include "frbclass.h"
 #include "frbexpr.h"
+#include "frbresolveenvironment.h"
 
-#include <sstream>
-#include <string>
 
 FrBTemplatePool::~FrBInstanciedTemplateEntry()
 {

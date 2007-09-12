@@ -1023,22 +1023,25 @@ plain_type: /* a.b.c.d.e.f ... */
 template_arg_list:
       template_arg_list FRB_KW_TOKEN_OP_LIST_SEP full_type
       {
-	  templatePool->addArg($<vtype>3);
+	  templatePool->addArgument($<vtype>3);
       }
     | full_type
       {
-	  templatePool->addArg($<vtype>1);
+	  templatePool->addArgument($<vtype>1);
       }
     ;
 
 
 full_type: /* a.b.c.d.e.f<T, W, ...> or a.b.c.d.e.f */
       plain_type  { $<vtype>$ = $<vtype>1; } 
-    | plain_type
+    | plain_type FRB_KW_TOKEN_OP_LT
       {
-	  $<vtype>$ = new FrBTemplateInstanceTypeExpr($<vtype>1);
+	  $<vtype>$ = new FrBTemplateInstanceTypeExpr(templatePool, templatePool->pushEntry($<vtype>1));
       }
-      FRB_KW_TOKEN_OP_LT template_arg_list FRB_KW_TOKEN_OP_GT 
+      template_arg_list FRB_KW_TOKEN_OP_GT
+      {
+	  templatePool->popEntry();
+      }
     ;
 
 new_expr:

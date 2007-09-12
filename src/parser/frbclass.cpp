@@ -476,7 +476,7 @@ FrBClass * FrBClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvir
 	 if(it->second->isATemplate())
 	     ret->addBaseClass(it->second->specializeTemplate(e));
 	 else
-	     ret->addBaseClass(*it);
+	     ret->addBaseClass(it->second);
 
     for(ClassContainer::const_iterator it = _innerClasses->begin(); it != _innerClasses->end(); ++it)
         ret->addInnerClass(it->second->specializeTemplate(e));

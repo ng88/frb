@@ -163,8 +163,8 @@ public:
 
     //TODO /* throw si existe deja */
     /** Add 'c' as an inner class for this */
-    inline void addInnerClass(FrBClass * c, const String& name = c->name());
-//    inline void addInnerClass(FrBClass * c, const String& name);
+    inline void addInnerClass(FrBClass * c);
+    inline void addInnerClass(FrBClass * c, const String& name);
 
     /** Add 'c' as a field for this */
     inline void addField(FrBField * c);
@@ -455,6 +455,13 @@ inline void FrBClass::addBaseClass(FrBClass * c)  throw (FrBResolveException)
   (*_baseClasses)[c->name()] = c;
 }
 
+inline void FrBClass::addInnerClass(FrBClass * c)
+{
+  frb_assert(c);
+
+  c->setContainer(this);
+  (*_innerClasses)[c->name()] = c;
+}
 
 inline void FrBClass::addInnerClass(FrBClass * c, const String& name)
 {
@@ -481,12 +488,15 @@ inline void FrBClass::addField(FrBField * c)
 inline void FrBClass::addFunction(FrBFunction * f)
 {
   frb_assert(f);
+
   f->setContainer(this);
   _functions->insert(std::make_pair(f->name(), f)); 
 }
 
 inline void FrBClass::addEvent(FrBEvent * e)
 {
+    frb_assert(e);
+
     e->setEvent(true);
     addFunction(e);
 }
@@ -520,6 +530,8 @@ inline void FrBClass::addDestructor(FrBFunction * f)
 
 inline bool FrBClass::isAssignableTo(const FrBClass * to) const
 {
+    frb_assert(to);
+
     return isCompatibleWith(to);
 }
 
