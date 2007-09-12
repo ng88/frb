@@ -156,7 +156,6 @@ void FrBClass::initInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) const
   /* put 'Me' at the top of the stack */
   e.stack().push(o);
 
-
   /* init fields of 'Me' */
   for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
       if(!it->second->shared())

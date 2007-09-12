@@ -246,10 +246,9 @@ FrBExpr * FrBUnresolvedTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecial
 /*         FrBTemplateTypeExpr            */
 
 
-FrBTemplateTypeExpr::FrBTemplateTypeExpr(FrBClass::template_count_t p,  FrBCodeClass * c)
-    : _currentClass(c), _p(p)
+FrBTemplateTypeExpr::FrBTemplateTypeExpr(FrBClass::template_count_t p)
+    : _p(p)
 {
-    frb_assert(c);
 }
 
 FrBTemplateTypeExpr::~FrBTemplateTypeExpr()
@@ -262,7 +261,8 @@ void FrBTemplateTypeExpr::resolveAndCheck(FrBResolveEnvironment&) throw (FrBReso
 
 FrBBaseObject* FrBTemplateTypeExpr::eval(FrBExecutionEnvironment& e) const throw (FrBEvaluationException)
 {
-    return e.addGarbagedObject(new FrBClassWrapper(getClass()));
+    frb_assert2(false, "uninstancied template");
+    return 0;
 }
 
 const FrBClass* FrBTemplateTypeExpr::getClass() const

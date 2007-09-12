@@ -57,6 +57,7 @@
 #include "../common/assert.h"
 #include <stack>
 
+
 struct FnCParam
 {
     FrBTypeExpr * type;
@@ -1011,7 +1012,7 @@ plain_type: /* a.b.c.d.e.f ... */
 	  if(p == -1)
 	      $<vtype>$ = new FrBUnresolvedTypeExpr($<str>1, current_class());
 	  else
-	      $<vtype>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)p, current_class());
+	      $<vtype>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)p);
           free($<str>1);
       }
     | intro_id /* Class, Function, ...*/
@@ -1041,6 +1042,7 @@ full_type: /* a.b.c.d.e.f<T, W, ...> or a.b.c.d.e.f */
       template_arg_list FRB_KW_TOKEN_OP_GT
       {
 	  templatePool->popEntry();
+	  $<vtype>$ = $<vtype>3;
       }
     ;
 
@@ -1255,7 +1257,7 @@ identifier_expr:
 		idvar = template_parameter($<str>1);
 		if(idvar > -1)
 		{
-		   $<expr>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)idvar, current_class());
+		   $<expr>$ = new FrBTemplateTypeExpr( (FrBClass::template_count_t)idvar);
 		   break;
 		}
 

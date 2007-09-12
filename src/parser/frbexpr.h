@@ -175,12 +175,12 @@ public:
 class FrBTemplateTypeExpr : public FrBTypeExpr
 {
 protected:
-    FrBCodeClass *              _currentClass;
+
     FrBClass::template_count_t  _p;
 
 public:
 
-    FrBTemplateTypeExpr(FrBClass::template_count_t p,  FrBCodeClass * c);
+    FrBTemplateTypeExpr(FrBClass::template_count_t p);
     ~FrBTemplateTypeExpr();
     
     void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);

@@ -145,7 +145,7 @@ inline void FrBTemplatePool::FrBInstanciedTemplateEntry::addArg(FrBTypeExpr* a)
     frb_assert(a);
     _args.push_back(a);
 }
-
+void s_break1();
 inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getCreatedClass() const
 {
     frb_assert2(_createdClass, "call createInstance() before!");

@@ -421,6 +421,9 @@ FrBCodeFunction * FrBCodeFunction::specializeTemplate(/*const*/ FrBTemplateSpeci
     //FrBMember::specializeTemplate(e, ret);
     FrBStatementBlock::specializeTemplateBlock(e, ret);
 
+    if(!sub())
+	ret->_unresolvedRetType = static_cast<FrBTypeExpr*>(_unresolvedRetType->specializeTemplate(e));
+
     ret->_paramName = new NameParamMap();
     ret->_param = new ParamVector(_param->size());
 

@@ -25,18 +25,21 @@
 #include "frbresolveenvironment.h"
 #include "frbtemplatespecializationenvironment.h"
 
+
 FrBTemplatePool::FrBInstanciedTemplateEntry::~FrBInstanciedTemplateEntry()
 {
     for(FrBTypeVector::iterator it = _args.begin(); it != _args.end(); ++it)
-	delete *it;
+	delete_expr(*it);
 }
-
 
 void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
     if(_template)
+    {
+	frb_assert(_createdClass);
 	return;
+    }
 
     /* Resolve the template */
     _URTemplate->resolveAndCheck(e);
