@@ -42,6 +42,7 @@ public:
     inline FrBMember * currentMember() const { return _currentMember; }
 
 
+    inline void addArgument(const FrBClass * c) { _args.push_back(c); }
     inline const FrBClass * getArgument(unsigned int index) const { return _args[index]; }
 
 };

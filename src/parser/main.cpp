@@ -158,7 +158,7 @@ int main(int argc, char ** argv)
     FrBParser parser;
     FrBParser::Tree * tree = parser.classList();
     
-    FrBResolveEnvironment renv(tree, parser.templates());
+    FrBResolveEnvironment renv(tree);
     
     
 #ifndef DEBUG_NO_CATCH

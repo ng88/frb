@@ -23,9 +23,9 @@
 #include "frbclass.h"
 #include "frbexpr.h"
 #include "frbresolveenvironment.h"
+#include "frbtemplatespecializationenvironment.h"
 
-
-FrBTemplatePool::~FrBInstanciedTemplateEntry()
+FrBTemplatePool::FrBInstanciedTemplateEntry::~FrBInstanciedTemplateEntry()
 {
     for(FrBTypeVector::iterator it = _args.begin(); it != _args.end(); ++it)
 	delete *it;
@@ -46,17 +46,17 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
     /* Create the new name for the instance */
     std::ostringstream sname;
-    sname << _template->name()
+    sname << _template->name();
 
     /* Prepare the specialize env. and complete the name */
     FrBTemplateSpecializationEnvironment env;
 
     for(FrBTypeVector::const_iterator it = _args.begin(); it != _args.end(); ++it)
     {
-	it->resolveAndCheck(e);
-	env.addArgument(it->getContext());
+	(*it)->resolveAndCheck(e);
+	env.addArgument((*it)->getContext());
 
-	sname << '$' << it->getContext()->typeID();
+	sname << '$' << (*it)->getContext()->typeID();
     }
 
     String name = sname.str();
@@ -73,7 +73,7 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
     if(f != cont->end())
     {
         /* yes, return directly */
-	_createdClass = *f;
+	_createdClass = f->second;
 	return; 
     }
 
@@ -91,7 +91,7 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
 FrBTemplatePool::~FrBTemplatePool()
 {
-    for(FrBITEVector::iterator it = _list.begin(); it != _list.end(); ++it)
+    for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
 	delete *it;
 }
 
@@ -99,7 +99,7 @@ FrBTemplatePool::~FrBTemplatePool()
 void FrBTemplatePool::createInstances(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
-    for(FrBITEVector::const_iterator it = _list.begin(); it != _list.end(); ++it)
-	it->createInstance(e);
+    for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
+	(*it)->createInstance(e);
 }
 

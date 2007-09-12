@@ -30,7 +30,6 @@ public:
 private:
 
     FrBClassMap * _root;
-    FrBClassMap * _templates;
     FrBClassMap _importedClass;
     
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
@@ -43,7 +42,7 @@ public:
     /**
       * @param root Class root
       */
-    FrBResolveEnvironment(FrBClassMap * root, FrBClassMap * templates)  : _root(root), _templates(templates) { }
+    FrBResolveEnvironment(FrBClassMap * root)  : _root(root) { }
     
     inline FrBClassMap * classRoot() { return _root; }
  
