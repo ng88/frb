@@ -467,7 +467,7 @@ inline void FrBClass::addInnerClass(FrBClass * c, const String& name)
 {
   frb_assert(c);
   frb_assert2(name.substr(0, c->name().size()) == c->name(), "invalid name");
-  frb_assert2(name.size() > c->name().size() && name[c->name().size()] == '$', "invalid name");
+  frb_assert2(name.size() == c->name().size() || (name.size() > c->name().size() && name[name.size() - 1] == '$'), "invalid name");
 
   c->setContainer(this);
   (*_innerClasses)[name] = c;
