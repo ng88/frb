@@ -272,5 +272,22 @@ public:
 
 };
 
+class FrBTemplateBadArgCountException : public FrBResolveException
+{
+
+protected:
+
+    const FrBClass * _cl;
+    unsigned int     _provided;
+
+public:
+    FrBTemplateBadArgCountException(const FrBClass * c, unsigned int p);
+
+    std::ostream& put(std::ostream& stream) const;
+
+
+};
+
+
 
 #endif

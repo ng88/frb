@@ -38,11 +38,14 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
     if(_template)
 	return;
 
-    frb_assert(_template->templateParameterCount() == _args.size());
-
     /* Resolve the template */
     _URTemplate->resolveAndCheck(e);
     _template = _URTemplate->getContext();
+
+    frb_assert(_template);
+
+    if(_template->templateParameterCount() != _args.size())
+	throw FrBTemplateBadArgCountException(_template, _args.size());
 
     /* Create the new name for the instance */
     std::ostringstream sname;

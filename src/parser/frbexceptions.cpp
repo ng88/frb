@@ -23,6 +23,7 @@
 #include "frbmember.h"
 #include "frbexpr.h"
 #include "../common/assert.h"
+#include "../common/string.h"
 
 std::ostream& operator<<(std::ostream& s, const FrBException& c)
 {
@@ -255,6 +256,23 @@ std::ostream& FrBDecWithoutDefaultCtorException::put(std::ostream& stream) const
 {
     frb_assert(_fl);
     return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_NO_DEF_CTOR, _fl->fullName());
+}
+
+
+/*            FrBTemplateBadArgCountException               */
+
+FrBTemplateBadArgCountException::FrBTemplateBadArgCountException(const FrBClass * c, unsigned int p)
+    : _cl(c), _provided(p)
+{
+}
+
+std::ostream& FrBTemplateBadArgCountException::put(std::ostream& stream) const
+{
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_TEMPL_BAD_ARG_COUNT,
+			           _cl->fullName(),
+			           StringEx::int2string(_provided),
+             			   StringEx::int2string(_cl->templateParameterCount())
+			    );
 }
 
 
