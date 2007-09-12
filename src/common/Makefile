@@ -29,8 +29,8 @@ start:
 
 
 
-string.o: string.h string.cpp
-misc.o: misc.h misc.cpp
+string.o: string.h
+misc.o: misc.h
 
 .PHONY: clean
 
