@@ -30,7 +30,7 @@ start:
 
 $(EXE): start $(OBJS)
 	@echo Linking $@...
-	$(CXX) *.o ../common/*.o -o $@ $(CXXFLAGS)
+	@$(CXX) *.o ../common/*.o -o $@ $(CXXFLAGS)
 	@echo Striping $@...
 	@$(STRIP) $@
 	@echo Done.
