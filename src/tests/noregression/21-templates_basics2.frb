@@ -6,13 +6,14 @@ Public Class Main
 
     Public Shared Sub main()
 
-        'Dim t1 As TestA<Int>
+        Dim t1 As TestA<Int> := New TestA<Int>(5)
 
         
     End Sub
 
 
     
+
 End Class
 
 
@@ -22,6 +23,11 @@ Public Class TestA<T>
 
     Protected elmt As TestB<T> := Nothing
     
+    Public Sub Initialize(t As T)
+        Debug.println(Debug.typename(elmt)) 
+        'elmt := New TestB<T>(Me)
+    End Sub
+    
     Public Function getElmt() As TestB<T>
         Return elmt
     End Function
@@ -30,7 +36,21 @@ End Class
 
 Public Class TestB<T>
 
-    'Protected elmt As TestA<T> := Nothing
+    Protected elmt As TestA<T> := Nothing
+    
+    Public Sub Initialize(t As TestA<T>)
+        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+        elmt := Nothing
+    End Sub
+    
+    Public Sub set(t As TestA<T>)
+        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+        'elmt := t
+    End Sub
+    
+    Public Function getElmt() As TestA<T>
+        Return elmt
+    End Function
     
 End Class
 

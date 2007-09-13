@@ -355,7 +355,14 @@ FrBBaseObject* FrBTemplateInstanceTypeExpr::eval(FrBExecutionEnvironment& e) con
 
 const FrBClass* FrBTemplateInstanceTypeExpr::getClass() const
 {
+    std::cout << "FrBTemplateInstanceTypeExpr::getClass() on " << (unsigned int)this << "\n";
     return _tentry->getCreatedClass();
+}
+
+void FrBTemplateInstanceTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
+{
+    std::cout << "FrBTemplateInstanceTypeExpr::resol() on " << (unsigned int)this << "\n";
+    _tentry->createInstance(e);
 }
 
 std::ostream& FrBTemplateInstanceTypeExpr::put(std::ostream& stream) const
@@ -1610,15 +1617,9 @@ FrBExpr * FrBNewExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvi
 
 std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 {
-    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_NEW) << ' ';
-
-
-    if(_ctor)
-	stream << _type->getClass()->fullName();
-    else
-	stream << *_type;
-
-    stream  << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
+    stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_NEW) << ' '
+	   << *_type
+	   << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_OP_O_BRACKET);
 
     FrBExprList::const_iterator it = _args->begin();
 

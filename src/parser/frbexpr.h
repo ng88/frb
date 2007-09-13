@@ -238,6 +238,8 @@ public:
 
     FrBClass* getContext();
 
+    void resolveAndCheck(FrBResolveEnvironment&) throw (FrBResolveException);
+
     FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
 
     bool isAssignable() const;

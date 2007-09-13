@@ -74,7 +74,7 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
     if(_disposed)
         return;
 
-    _templatePool.createInstances(e);
+    //_templatePool.createInstances(e);
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {

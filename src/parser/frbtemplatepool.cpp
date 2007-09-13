@@ -25,7 +25,7 @@
 #include "frbresolveenvironment.h"
 #include "frbtemplatespecializationenvironment.h"
 
-
+#include <iostream>
 FrBTemplatePool::FrBInstanciedTemplateEntry::~FrBInstanciedTemplateEntry()
 {
     for(FrBTypeVector::iterator it = _args.begin(); it != _args.end(); ++it)
@@ -83,16 +83,20 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 	return; 
     }
 
-
     /* no, we have to create it */
     FrBClass * c = _template->specializeTemplate(env);
 
     _createdClass = c;
 
     if(_template->container())
-	c->containerPtr()->addInnerClass(c, name);
+        c->containerPtr()->addInnerClass(c, name);
     else
-	e.classRoot()->insert(std::make_pair(name, c));
+        e.classRoot()->insert(std::make_pair(name, c));
+
+    /* now we resolve it */
+    c->resolvePrototype(e);
+    c->resolveAndCheck(e);
+
 }
 
 FrBTemplatePool::~FrBTemplatePool()
@@ -105,6 +109,7 @@ FrBTemplatePool::~FrBTemplatePool()
 void FrBTemplatePool::createInstances(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
+    frb_assert2(false, "deprecated");
     for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
 	(*it)->createInstance(e);
 }
