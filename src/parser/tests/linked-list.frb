@@ -22,60 +22,60 @@ Public Class Main
         Utils.printTitre("debut des test de la LinkedList")
         
         
-        Dim list, list2 As Utils.LinkedList
-        
-        list.add(5)
-        list.add(4)
-        list.add(12)
-        list.add(45)
-        list.add(78)
-        list.add(0)
-        list.addHead(15)
-        list.add(70)
-        list.addHead(789)
-        
-        
-        list2.add(1)
-        list2.add(2)
-        list2.add(3)
-        
-        burn(list2)
-        burn(list)
-        
-        
-        Dim it As Utils.LinkedList.Iterator := Nothing
-       
-        Dim i As Int
-        
-        
-        Debug.println("Contenu de la liste list2 :")
-        
-        For it := list2.begin() To list2.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
-        Next
-
-        Debug.println("Contenu de la liste list :")
-        
-        For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
-        Next
-       
-        Debug.println("Renversement de la liste list...")
-        list.reverse()
-      
-        For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
-        Next
-        
-        Debug.println("list += list2")
-        list += list2
-        
-        For it := list.begin() To list.end()
-            Debug.println(" |_ " + Cast(Int, it.val()) )
-        Next
-        
-        Debug.println("Nombre d'éléments dans list : " + #list)
-        Debug.println("Nombre d'éléments dans list2 : " + #list2)
+'         Dim list, list2 As Utils.LinkedList
+'         
+'         list.add(5)
+'         list.add(4)
+'         list.add(12)
+'         list.add(45)
+'         list.add(78)
+'         list.add(0)
+'         list.addHead(15)
+'         list.add(70)
+'         list.addHead(789)
+'         
+'         
+'         list2.add(1)
+'         list2.add(2)
+'         list2.add(3)
+'         
+'         burn(list2)
+'         burn(list)
+'         
+'         
+'         Dim it As Utils.LinkedList.Iterator := Nothing
+'        
+'         Dim i As Int
+'         
+'         
+'         Debug.println("Contenu de la liste list2 :")
+'         
+'         For it := list2.begin() To list2.end()
+'             Debug.println(" |_ " + Cast(Int, it.val()) )
+'         Next
+' 
+'         Debug.println("Contenu de la liste list :")
+'         
+'         For it := list.begin() To list.end()
+'             Debug.println(" |_ " + Cast(Int, it.val()) )
+'         Next
+'        
+'         Debug.println("Renversement de la liste list...")
+'         list.reverse()
+'       
+'         For it := list.begin() To list.end()
+'             Debug.println(" |_ " + Cast(Int, it.val()) )
+'         Next
+'         
+'         Debug.println("list += list2")
+'         list += list2
+'         
+'         For it := list.begin() To list.end()
+'             Debug.println(" |_ " + Cast(Int, it.val()) )
+'         Next
+'         
+'         Debug.println("Nombre d'éléments dans list : " + #list)
+'         Debug.println("Nombre d'éléments dans list2 : " + #list2)
         
         Utils.printTitre("fin des tests")
 
@@ -102,19 +102,19 @@ End Class
 Public Module Utils
 
 
-    Public Class LinkedList
+    Public Class LinkedList<T>
     
-        Private Class Node
-            Public next As Node := Nothing
-            Public value As Object := Nothing
+        Private Class Node<T>
+            Public next As Node<T> := Nothing
+            Public value As T := Nothing
             
-            Public Sub Initialize(n As Node, v As Object)
+            Public Sub Initialize(n As Node<T>, v As T)
                 next := n
                 value := v
             End Sub
             
-            Public Function reverse(prec As Node) As Node
-                Dim n As Node := next
+            Public Function reverse(prec As Node<T>) As Node<T>
+                Dim n As Node<T> := next
                 next := prec
 
                 If n Is Nothing Then
@@ -127,16 +127,16 @@ Public Module Utils
         
         End Class
         
-        Public Class Iterator
-            Private pos As Node := Nothing
+        Public Class Iterator<T>
+            Private pos As Node<T> := Nothing
             
-            Private Shared end As Iterator := New Iterator(Nothing)
+            Private Shared end As Iterator<T> := New Iterator<T>(Nothing)
             
-            Public Sub Initialize(n As Node)
+            Public Sub Initialize(n As Node<T>)
                 pos := n
             End Sub
             
-            Public Operator++() As Iterator
+            Public Operator++() As Iterator<T>
                 If pos Is Nothing Then Return end
                 
                 If pos.next Is Nothing Then
@@ -148,11 +148,11 @@ Public Module Utils
                 End If
             End Operator
             
-            Public Operator<=(o As Iterator) As Bool
+            Public Operator<=(o As Iterator<T>) As Bool
                Return Not Me.pos Is o.pos
             End Operator
             
-            Public Function val() As Object
+            Public Function val() As T
                 If pos Is Nothing Then
                     Return Nothing
                 Else
@@ -162,12 +162,12 @@ Public Module Utils
             
         End Class
     
-        Protected root As Node := Nothing
-        Protected lastNode As Node := Nothing
+        Protected root As Node<T> := Nothing
+        Protected lastNode As Node<T> := Nothing
         Protected size As Int
 
-        Public Sub add(v As Object)
-            Dim n As Node := New Node(Nothing, v)
+        Public Sub add(v As T)
+            Dim n As Node<T> := New Node<T>(Nothing, v)
             
             If root Is Nothing Then
                 root := n
@@ -181,8 +181,8 @@ Public Module Utils
             
         End Sub
         
-        Public Sub addHead(v As Object)
-            root := New Node(root, v)
+        Public Sub addHead(v As T)
+            root := New Node<T>(root, v)
             size++
         End Sub
         
@@ -201,12 +201,12 @@ Public Module Utils
             Return size
         End Operator
         
-        Public Operator+=(o As LinkedList) As LinkedList
+        Public Operator+=(o As LinkedList<T>) As LinkedList<T>
             If #o == 0 Then Return Me
             
-            Dim it As Iterator := o.begin()
+            Dim it As Iterator<T> := o.begin()
             
-            Dim n As Node := New Node(Nothing, it.val())
+            Dim n As Node<T> := New Node<T>(Nothing, it.val())
             
             If root Is Nothing Then
                 root := n
@@ -217,7 +217,7 @@ Public Module Utils
             lastNode := n
             
             For it := it++ To o.end()
-                lastNode := lastNode.next := New Node(Nothing, it.val())
+                lastNode := lastNode.next := New Node<T>(Nothing, it.val())
             Next
             
             size += #o
@@ -225,12 +225,12 @@ Public Module Utils
             Return Me
         End Operator
         
-        Public Function begin() As Iterator
-            Return New Iterator(root)
+        Public Function begin() As Iterator<T>
+            Return New Iterator<T>(root)
         End Function
         
-        Public Function end() As Iterator
-            Return Iterator.end
+        Public Function end() As Iterator<T>
+            Return Nothing 'Iterator<T>.end
         End Function
     
     End Class

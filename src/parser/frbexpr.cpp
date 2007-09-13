@@ -289,7 +289,7 @@ FrBExpr * FrBTemplateTypeExpr::specializeTemplate(/*const*/ FrBTemplateSpecializ
 
 std::ostream& FrBTemplateTypeExpr::put(std::ostream& stream) const
 {
-    return stream << "template_parameter_" << _p;
+    return stream << "T" << ((unsigned int)_p)+1;
 }
 
 

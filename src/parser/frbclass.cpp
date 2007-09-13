@@ -279,10 +279,11 @@ std::ostream& FrBClass::put(std::ostream& sout, int level) const
 	for(int i = 2; i <= templateParameterCount(); ++i)
 	    sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_LIST_SEP) << " T" << i;
 
-	return sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT) << "\t' " << specString() << endl
+	sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT);
+/*	return sout << FrBKeywords::getSymbol(FrBKeywords::FRB_KW_OP_GT) << "\t' " << specString() << endl
 		    << ident << "\t' template, not resolved/instancied" << endl << ident
 		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_END) << ' '
-		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << endl;
+		    << FrBKeywords::getKeyword(FrBKeywords::FRB_KW_CLASS) << endl;*/
     }
 
     sout << "\t' " << specString() << endl;
