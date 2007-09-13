@@ -1,0 +1,64 @@
+DefLang EN
+
+
+
+Public Class Main
+
+    Public Shared Sub main()
+
+        Dim t1 As Test<Int> := New Test<Int>()
+        Dim t2 As Test<Boolean> := New Test<Boolean>()
+        Dim t3 As Test<String> := New Test<String>()
+
+        t1.setElement(5)
+        t2.setElement(t1.element() == 5)
+        t3.setElement("salut vous")
+
+        Debug.println("t1.element(): " & t1.element())
+        Debug.println("t2.element(): " & bool2str(t2.element()))
+        Debug.println("t3.element(): " & t3.element())
+
+        Debug.println(Debug.typename(Debug.typename))
+        Debug.println(Debug.typename(Debug))
+        
+        Debug.println("type of t1.element(): " & t1.typeName())
+        Debug.println("type of t2.element(): " & t2.typeName())
+        Debug.println("type of t3.element(): " & t3.typeName())
+        
+    End Sub
+    
+    Public Shared Function bool2str(v As Bool) As String
+        If v Then
+            Return "Vrai"
+        Else
+            Return "Faux"
+        End If
+    End Function
+
+    
+End Class
+
+
+
+
+Public Class Test<T>
+
+    Protected elmt As T := Nothing
+    
+    Public Sub Initialize()
+
+    End Sub
+    
+     Public Sub setElement(e As T)
+         elmt := e
+     End Sub
+     
+     Public Function element() As T
+         Return elmt
+     End Function
+     
+     Public Function typeName() As String
+        Return Debug.typename(elmt)
+     End Function
+
+End Class

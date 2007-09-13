@@ -17,19 +17,15 @@
 #   See the COPYING file.                                                 #
 ###########################################################################
 
-# Execute all the test in the folder passed as argument
-# for each .frb file in the directory, a .frb.result file
-# must exists (containing the expected result)
+# Create the .result file from the .frb test file
 
 
 
 # USAGE
-# type ./test_folder noregression to execute the no regression tests
+# type ./make_test_result file1.frb ... fileN.frb
 #
-# to create your own test, just write a .frb file and execute
-#
-#    ./make_test_result YOUR_FILE.frb
-#
+
+
 
 [ "$FRB_PATH" = "" ] && FRB_PATH=../parser/frbc
 
@@ -39,24 +35,14 @@ then
     exit 1
 fi
 
-if [ "$1" = "" -o ! -d "$1" ]
-then
-    echo usage: $0 folder >&2
-    exit 2
-fi
 
-
-cd $1
-
-echo '############' $1 '############'
-
-for i in *.frb
+for i in $*
 do
-    if [ -r $i -a -r $i.result ]
+    if [ -r $i ]
     then
-	echo -n "Test $i: "
-	cd - > /dev/null
-	"$FRB_PATH" --file $1/$i 2>&1 | sed -e 's/0x[0-9a-fA-F][0-9a-fA-F]*/@ADDR@/g' | diff -u - $1/$i.result
+	echo -n "Making result for $i: "
+
+	"$FRB_PATH" --file $i 2>&1 | sed -e 's/0x[0-9a-fA-F][0-9a-fA-F]*/@ADDR@/g' > $i.result
 	if [ $? -eq 0 ]
 	then
 	    echo success
@@ -64,9 +50,9 @@ do
 	    echo FAILED
 	    exit 3
 	fi
-	cd - > /dev/null
+
     else
-        echo "warning: can't read $1/$i or $1/$i.result" >&2
+        echo "warning: can't read $i" >&2
     fi
 done
 

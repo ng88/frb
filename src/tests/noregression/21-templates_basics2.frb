@@ -1,0 +1,37 @@
+DefLang EN
+
+
+
+Public Class Main
+
+    Public Shared Sub main()
+
+        'Dim t1 As TestA<Int>
+
+        
+    End Sub
+
+
+    
+End Class
+
+
+
+
+Public Class TestA<T>
+
+    Protected elmt As TestB<T> := Nothing
+    
+    Public Function getElmt() As TestB<T>
+        Return elmt
+    End Function
+
+End Class
+
+Public Class TestB<T>
+
+    'Protected elmt As TestA<T> := Nothing
+    
+End Class
+
+
