@@ -105,7 +105,7 @@ public:
     /** Create all the template instances added to this pool.
      * The created instance are added to e
      */
-    void createInstances(FrBResolveEnvironment& e) throw (FrBResolveException);
+    void  resolveAndCheckCreatedClasses(FrBResolveEnvironment& e) throw (FrBResolveException);
 
 
 };

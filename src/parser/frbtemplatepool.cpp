@@ -95,7 +95,7 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
     /* now we resolve it */
     c->resolvePrototype(e);
-    c->resolveAndCheck(e);
+    //c->resolveAndCheck(e);
 
 }
 
@@ -106,11 +106,18 @@ FrBTemplatePool::~FrBTemplatePool()
 }
 
 
-void FrBTemplatePool::createInstances(FrBResolveEnvironment& e)
+void FrBTemplatePool::resolveAndCheckCreatedClasses(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
-    frb_assert2(false, "deprecated");
+    frb_warning2(false, "enter FrBTemplatePool::resolveAndCheckCreatedClasses()");
+    //frb_assert2(false, "deprecated");
     for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
-	(*it)->createInstance(e);
+    {
+	frb_warning((*it)->getTemplate());
+	frb_warning((*it)->getCreatedClass());
+	if((*it)->getCreatedClass())
+	    const_cast<FrBClass*>((*it)->getCreatedClass())->resolveAndCheck(e);
+
+    }
 }
 

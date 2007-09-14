@@ -17,7 +17,8 @@ Public Class Main
 End Class
 
 
-
+Public Class Foo<T>
+End Class
 
 Public Class TestA<T>
 
@@ -31,6 +32,11 @@ Public Class TestA<T>
     Public Function getElmt() As TestB<T>
         Return elmt
     End Function
+    
+    Public Sub setA(t As Foo<Int>)
+        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+        'Dim a As Foo<Int> := t
+    End Sub
 
 End Class
 
@@ -43,9 +49,10 @@ Public Class TestB<T>
         elmt := Nothing
     End Sub
     
-    Public Sub set(t As TestA<T>)
+    Public Sub setV(t As TestA<T>)
         'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-        'elmt := t
+        elmt := t
+        
     End Sub
     
     Public Function getElmt() As TestA<T>

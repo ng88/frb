@@ -104,7 +104,7 @@ FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
 void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   _varid += _fn->localVarCount();
-
+  std::cout << "FrBLocalVarExpr::resolveAndCheck() " << (unsigned int)this << " - "<<*_type <<"\n";
   //already done by resolvePrototype()
   //_type->resolveAndCheck(e);
 }
