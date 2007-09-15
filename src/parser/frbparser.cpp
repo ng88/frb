@@ -80,14 +80,14 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
     {
         frb_assert(it->second);
 	std::cout << "resolvproto de " << it->first << "\n";
-	if(!it->second->isATemplate() && it->first[it->first.size() - 1] != '$')
+	if(!it->second->isATemplate())
 	    it->second->resolvePrototype(e);
     }
 
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
 	std::cout << "resolvcheck de " << it->first << "\n";
-	if(!it->second->isATemplate())
+	if(!it->second->isATemplate() && it->first[it->first.size() - 1] != '$')
 	    it->second->resolveAndCheck(e);
     }
 

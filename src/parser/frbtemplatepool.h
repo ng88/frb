@@ -72,6 +72,8 @@ public:
 	inline unsigned int argCount() const;
 	inline const FrBClass* getTemplate() const;
 	inline FrBTypeExpr* getURTemplate() const;
+
+	inline bool classCreated() const;
     };
 
     typedef std::stack<FrBInstanciedTemplateEntry*> FrBITEStack;
@@ -155,6 +157,11 @@ inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getCreatedCl
 
     frb_assert2(_createdClass, "call createInstance() before!");
     return _createdClass;
+}
+
+inline bool FrBTemplatePool::FrBInstanciedTemplateEntry::classCreated() const
+{
+    return _createdClass != 0;
 }
 
 inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getTemplate() const

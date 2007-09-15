@@ -62,7 +62,6 @@ FrBExpr *  FrBExpr::specializeTemplate(/*const*/ FrBTemplateSpecializationEnviro
     return cpy;
 }
 
-
 void delete_expr(FrBExpr* e)
 {
     if(!e) return;
@@ -78,11 +77,12 @@ void delete_expr(FrBExpr* e)
 FrBLocalVarExpr::FrBLocalVarExpr(FrBCodeFunction * fn, FrBTypeExpr * t, int varid)
  : _fn(fn), _type(t), _varid(varid)
 {
+    
 }
 
 FrBLocalVarExpr::~FrBLocalVarExpr()
 {
-    //delete _type; //done in functioncode destructor
+    //delete_expr(_type); //done in functioncode destructor
 }
 
 bool FrBLocalVarExpr::isAssignable() const
@@ -106,7 +106,9 @@ void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
   _varid += _fn->localVarCount();
   std::cout << "FrBLocalVarExpr::resolveAndCheck() " << (unsigned int)this << " - "<<*_type <<"\n";
   //already done by resolvePrototype()
-  //_type->resolveAndCheck(e);
+
+  if(!_type->typeAlreadyResolved())
+      _type->resolveAndCheck(e);
 }
 
 const FrBClass* FrBLocalVarExpr::getClass() const
@@ -410,7 +412,10 @@ bool FrBTemplateInstanceTypeExpr::isInstance() const
     return false;
 }
 
-
+bool FrBTemplateInstanceTypeExpr::typeAlreadyResolved() const
+{
+    return _tentry->classCreated();
+}
 
 /*     FrBUnresolvedIdWithContextExpr      */
 

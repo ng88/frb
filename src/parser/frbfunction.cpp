@@ -331,14 +331,17 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
     {
         frb_assert(_unresolvedRetType);
         
-        _unresolvedRetType->resolveAndCheck(e);
+	if(!_unresolvedRetType->typeAlreadyResolved())
+	    _unresolvedRetType->resolveAndCheck(e);
+
         setReturnType(_unresolvedRetType->getClass());
         
         frb_assert(returnType());
     }
 
     for(ParamVector::iterator it = _param->begin(); it != _param->end(); ++it)
-        it->type->resolveAndCheck(e);
+	if(!it->type->typeAlreadyResolved())
+	    it->type->resolveAndCheck(e);
 }
 
 void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)

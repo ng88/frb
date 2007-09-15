@@ -90,11 +90,10 @@ public:
 
     /** Template instanciation 
      */
-    virtual FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
-    
+    virtual FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;    
+
     /** Print expression on stream */
     virtual std::ostream& put(std::ostream& stream) const = 0;
-
 
 
 
@@ -128,6 +127,9 @@ public:
     /** Return the resolved type */
     virtual FrBClass* getContext() = 0;
     //const FrBClass* FrBExpr::getRealClass() const { return getContext(); }
+
+    /** has this type been already resolved ?*/
+    virtual bool typeAlreadyResolved() const = 0;
 };
 
 /** Represent a me expr, actually (ouside or inside)
@@ -169,6 +171,8 @@ public:
     FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
     
     inline const String& name() const { return _name; }
+
+    bool typeAlreadyResolved() const { return _type != 0;}
 };
 
 /** hold a template type in a template class (like T in Public Class A<T>) */
@@ -195,6 +199,8 @@ public:
 
     FrBExpr * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBExpr * cpy = 0) const;
 
+    bool typeAlreadyResolved() const { return false; }
+
 };
 
 /** class that replace FrBTemplateTypeExpr when specialized */
@@ -217,6 +223,8 @@ public:
 
     bool isAssignable() const;
     bool isInstance() const;
+
+    bool typeAlreadyResolved() const { return true; }
 };
 
 /** hold a template instance (like A<T> in Dim foo As A<T>) */
@@ -244,6 +252,8 @@ public:
 
     bool isAssignable() const;
     bool isInstance() const;
+
+    bool typeAlreadyResolved() const;
 };
 
 /** Identifier not yet resolved (ie class name, function, field...)

@@ -35,17 +35,72 @@ private:
     
 public:
 
-    inline void setCurrentClass(FrBCodeClass * v) { _currentClass = v; }
-    inline FrBCodeClass * currentClass() const { return _currentClass; }
+    inline FrBTemplateSpecializationEnvironment();
 
-    inline void setCurrentMember(FrBMember * v) { _currentMember = v; }
-    inline FrBMember * currentMember() const { return _currentMember; }
+    inline void setCurrentClass(FrBCodeClass * v);
+    inline FrBCodeClass * currentClass() const;
+
+    inline void setCurrentMember(FrBMember * v);
+    inline FrBMember * currentMember() const;
 
 
-    inline void addArgument(const FrBClass * c) { _args.push_back(c); }
-    inline const FrBClass * getArgument(unsigned int index) const { return _args[index]; }
+    inline void addArgument(const FrBClass * c);
+    inline const FrBClass * getArgument(unsigned int index) const;
 
 };
+
+
+
+
+
+
+
+
+
+
+
+/*           inlined              */
+
+inline FrBTemplateSpecializationEnvironment::FrBTemplateSpecializationEnvironment()
+{
+    FRB_ASSERT_CODE(_currentClass = 0);
+    FRB_ASSERT_CODE(_currentMember = 0);
+}
+
+inline void FrBTemplateSpecializationEnvironment::setCurrentClass(FrBCodeClass * v)
+{
+    frb_assert(v);
+    _currentClass = v;
+}
+
+inline FrBCodeClass * FrBTemplateSpecializationEnvironment::currentClass() const
+{
+    return _currentClass;
+}
+
+inline void FrBTemplateSpecializationEnvironment::setCurrentMember(FrBMember * v)
+{
+    frb_assert(v);
+    _currentMember = v;
+}
+
+inline FrBMember * FrBTemplateSpecializationEnvironment::currentMember() const
+{
+    return _currentMember;
+}
+
+
+inline void FrBTemplateSpecializationEnvironment::addArgument(const FrBClass * c)
+{
+    frb_assert(c);
+    _args.push_back(c);
+}
+
+inline const FrBClass * FrBTemplateSpecializationEnvironment::getArgument(unsigned int index) const
+{
+    frb_assert(index < _args.size());
+    return _args[index];
+}
 
 
 #endif
