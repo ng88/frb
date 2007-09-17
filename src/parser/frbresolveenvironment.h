@@ -31,6 +31,7 @@ private:
 
     FrBClassMap * _root;
     FrBClassMap _importedClass;
+
     
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
 
@@ -38,7 +39,7 @@ private:
     static FrBClass * findClass(const String& name, FrBClassMap * container);
     
 public:
-
+    FrBClassMap _templateInstances;
     /**
       * @param root Class root
       */

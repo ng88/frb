@@ -60,6 +60,7 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
     for(FrBTypeVector::const_iterator it = _args.begin(); it != _args.end(); ++it)
     {
 	(*it)->resolveAndCheck(e);
+	std::cout << "e="<< *(*it) << std::endl;
 	env.addArgument((*it)->getContext());
 
 	sname << (*it)->getContext()->typeID() << '$';
@@ -69,10 +70,11 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
     /* Does this template instance alreardy exists ? */
     const FrBClassMap * cont;
-    if(_template->container())
+    /*if(_template->container())
 	cont = _template->container()->innerClassList();
     else
-	cont = e.classRoot();
+    cont = e.classRoot();*/
+    cont = &(e._templateInstances);
 
     FrBClassMap::const_iterator f = cont->find(name);
 
@@ -88,10 +90,11 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
     _createdClass = c;
 
-    if(_template->container())
+e._templateInstances.insert(std::make_pair(name, c));
+/*   if(_template->container())
         c->containerPtr()->addInnerClass(c, name);
     else
-        e.classRoot()->insert(std::make_pair(name, c));
+    e.classRoot()->insert(std::make_pair(name, c));*/
 
     /* now we resolve it */
     c->resolvePrototype(e);
@@ -101,22 +104,27 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
 
 FrBTemplatePool::~FrBTemplatePool()
 {
+    frb_assert(_stack.empty());
+
     for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
 	delete *it;
 }
 
-
+#include <iostream>
 void FrBTemplatePool::resolveAndCheckCreatedClasses(FrBResolveEnvironment& e)
     throw (FrBResolveException)
 {
     frb_warning2(false, "enter FrBTemplatePool::resolveAndCheckCreatedClasses()");
-    //frb_assert2(false, "deprecated");
+    std::cout << _list.size() << "\n";
+    frb_assert2(false, "deprecated");
     for(FrBITEList::iterator it = _list.begin(); it != _list.end(); ++it)
     {
-	frb_warning((*it)->getTemplate());
-	frb_warning((*it)->getCreatedClass());
-	if((*it)->getCreatedClass())
-	    const_cast<FrBClass*>((*it)->getCreatedClass())->resolveAndCheck(e);
+	if(!(*it)->classCreated())
+	{
+	    //const_cast<FrBClass*>((*it)->getCreatedClass())->resolvePrototype(e);
+	    //const_cast<FrBClass*>((*it)->getCreatedClass())->resolveAndCheck(e);
+	    (*it)->createInstance(e);
+	}
 
     }
 }

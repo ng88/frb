@@ -326,7 +326,7 @@ FrBBaseObject * FrBCodeFunction::execute(FrBExecutionEnvironment& e, FrBBaseObje
 }
 
 void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResolveException)
-{std::cout<<"resolvep in " << _name << "\n";
+{
     if(!sub())
     {
         frb_assert(_unresolvedRetType);
@@ -345,7 +345,7 @@ void FrBCodeFunction::resolvePrototype(FrBResolveEnvironment& e) throw (FrBResol
 }
 
 void FrBCodeFunction::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
-{std::cout<<"resolveac in " << _name << "\n";
+{
     for(FrBStatementlist::iterator it = _stats->begin(); it != _stats->end(); ++it)
     {
         frb_assert(*it);

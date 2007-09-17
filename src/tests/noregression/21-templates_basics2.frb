@@ -7,11 +7,13 @@ Public Class Main
     Public Shared Sub main()
 
         Dim t1 As TestA<Int> := New TestA<Int>(5)
-
+        Dim t As Foo<Int>
         
     End Sub
 
-
+    'Public Sub foo(f As Foo<Bool>)
+    '    Dim a As Foo<Bool> := f
+    'End Sub
     
 
 End Class
@@ -23,42 +25,49 @@ End Class
 Public Class TestA<T>
 
     Protected elmt As TestB<T> := Nothing
-    
-    Public Sub Initialize(t As T)
-        Debug.println(Debug.typename(elmt)) 
-        'elmt := New TestB<T>(Me)
-    End Sub
+     
+     Public Sub Initialize(t As T)
+         Debug.println(Debug.typename(elmt)) 
+         elmt := New TestB<T>(Me)
+     End Sub
     
     Public Function getElmt() As TestB<T>
         Return elmt
     End Function
     
     Public Sub setA(t As Foo<Int>)
-        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-        'Dim a As Foo<Int> := t
+        Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+        Dim a As Foo<Int> := t
+    End Sub
+    
+    Public Sub foo(f As TestB<T>)
+        Dim a As TestB<T> := f
     End Sub
 
 End Class
 
 Public Class TestB<T>
-
-    Protected elmt As TestA<T> := Nothing
-    
-    Public Sub Initialize(t As TestA<T>)
-        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-        elmt := Nothing
-    End Sub
-    
-    Public Sub setV(t As TestA<T>)
-        'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+' 
+     Protected elmt As TestA<T> := Nothing
+'     
+     Public Sub Initialize(t As TestA<T>)
         elmt := t
+         Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+     End Sub
+    
+     Public Sub setV(t As Foo<Int>)
+        Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
         
-    End Sub
-    
-    Public Function getElmt() As TestA<T>
+     End Sub
+'     
+     Public Function getElmt() As TestA<T>
         Return elmt
-    End Function
-    
+     End Function
+     
+    Public Sub foo(f As TestA<T>)
+        Dim a As TestA<T> := f
+    End Sub
+'     
 End Class
 
 

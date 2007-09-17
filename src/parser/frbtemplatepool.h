@@ -145,16 +145,17 @@ inline FrBTemplatePool::FrBInstanciedTemplateEntry::FrBInstanciedTemplateEntry(F
 inline void FrBTemplatePool::FrBInstanciedTemplateEntry::addArg(FrBTypeExpr* a)
 {
     frb_assert(a);
+    
+#ifdef DEBUG_ASSERT
+    for(FrBTypeVector::iterator it = _args.begin(); it != _args.end(); ++it)
+	frb_assert2((*it) != a, "a already in _args!");
+#endif
+
     _args.push_back(a);
 }
-#include "frbclass.h"
+
 inline const FrBClass* FrBTemplatePool::FrBInstanciedTemplateEntry::getCreatedClass() const
 {
-    if(_template)
-	std::cout << _template->fullName() << "\n";
-    else
-	std::cout << "no template" << "\n";
-
     frb_assert2(_createdClass, "call createInstance() before!");
     return _createdClass;
 }

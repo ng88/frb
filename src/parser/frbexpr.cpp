@@ -67,7 +67,7 @@ void delete_expr(FrBExpr* e)
     if(!e) return;
 
     e->delRef();
-    
+
     if(e->deletable())
         delete e;
 }
@@ -104,7 +104,7 @@ FrBBaseObject* FrBLocalVarExpr::eval(FrBExecutionEnvironment& e) const throw (Fr
 void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
   _varid += _fn->localVarCount();
-  std::cout << "FrBLocalVarExpr::resolveAndCheck() " << (unsigned int)this << " - "<<*_type <<"\n";
+
   //already done by resolvePrototype()
 
   if(!_type->typeAlreadyResolved())
@@ -357,13 +357,11 @@ FrBBaseObject* FrBTemplateInstanceTypeExpr::eval(FrBExecutionEnvironment& e) con
 
 const FrBClass* FrBTemplateInstanceTypeExpr::getClass() const
 {
-    std::cout << "FrBTemplateInstanceTypeExpr::getClass() on " << (unsigned int)this << "\n";
     return _tentry->getCreatedClass();
 }
 
 void FrBTemplateInstanceTypeExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolveException)
 {
-    std::cout << "FrBTemplateInstanceTypeExpr::resol() on " << (unsigned int)this << "\n";
     _tentry->createInstance(e);
 }
 
@@ -399,6 +397,8 @@ FrBExpr * FrBTemplateInstanceTypeExpr::specializeTemplate(/*const*/ FrBTemplateS
     for(unsigned int i = 0; i < n; ++i)
 	ret->_tentry->addArg(static_cast<FrBTypeExpr*>(_tentry->getArg(i)->specializeTemplate(e)));
 
+    _pool->popEntry();
+
     return ret;
 }
 
@@ -416,6 +416,10 @@ bool FrBTemplateInstanceTypeExpr::typeAlreadyResolved() const
 {
     return _tentry->classCreated();
 }
+
+
+
+
 
 /*     FrBUnresolvedIdWithContextExpr      */
 
