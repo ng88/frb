@@ -29,7 +29,6 @@ public:
 
     static FrBCppClass * initClass();
     
-    inline FrBPrimitive() : _val(0) {};
     inline FrBPrimitive(const primitive_t& v) : _val(v) {};
     
     ~FrBPrimitive() {}
@@ -62,10 +61,12 @@ public:
     class Allocator : public FrBCppObjectAllocator
     {
       public:
-        FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(); }
+        FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(0); }
     };
     
 };
+
+
 
 /** The FrB Integer class */
 typedef FrBPrimitive<long signed int> FrBInt;
@@ -82,3 +83,9 @@ typedef FrBPrimitive<const FrBFunction*> FrBFunctionWrapper;
 /** The FrB Event class (used for introspection) */
 typedef FrBPrimitive<const FrBEvent*> FrBEventWrapper;
 
+
+class StringAllocator : public FrBCppObjectAllocator
+{
+public:
+    FrBCppObject * createObject() const { return new FrBString(""); }
+};

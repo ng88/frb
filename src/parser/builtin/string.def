@@ -119,6 +119,8 @@ FrBBaseObject * operator_add_FrBString_FrBObject(FrBExecutionEnvironment& e, FrB
     return r;
 }
 
+
+
 FrBBaseObject * size_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me)
 {
     return e.addGarbagedObject(new FrBInt((static_cast<FrBString*>(me))->valuePtr().size()));
@@ -129,7 +131,7 @@ FrBCppClass * FrBString::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBString::initClass(), already initialized");
     
-    _cpp_class = new FrBCppClass(new FrBPrimitive::Allocator());
+    _cpp_class = new FrBCppClass(new StringAllocator());
     _cpp_class->setName("String");
     _cpp_class->setSealed(true);
     _cpp_class->setScope(SC_PUBLIC);
