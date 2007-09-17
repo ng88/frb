@@ -21,6 +21,7 @@
 #include <iostream>
 #include <sstream>
 #include "../common/assert.h"
+#include "frbresolveenvironment.h"
 /*
   this include is used by the get_dependencies.sh script
   #include "parser"
@@ -69,9 +70,8 @@ bool FrBParser::parse(const String& str)
     return parse(in);
 }
 
-#include "frbresolveenvironment.h"
 void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveException)
-{ 
+{
     if(_disposed)
         return;
 
@@ -81,7 +81,7 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
     {
         frb_assert(it->second);
 
-	if(!it->second->isATemplate() && it->first[it->first.size() - 1] != '$')
+	if(!it->second->isATemplate())
 	    it->second->resolvePrototype(e);
     }
 
@@ -92,10 +92,24 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
 	    it->second->resolveAndCheck(e);
     }
 
-    for(Tree::const_iterator it = e._templateInstances.begin(); it !=  e._templateInstances.end(); ++it)
-    {
+    std::cout << e.templates()->size() << " avant\n";
+    int i = 0;
+/*
+utiliser une pile de std::pair()
+et tant que pas vide on resolve & check & degage
+ */
+    for(Tree::iterator it = e.templates()->begin(); it !=  e.templates()->end(); ++it)
+    {i++;std::cout << "rettrr " << it->first << "\n";
 	it->second->resolveAndCheck(e);
+
+	if(it->second->container())
+	    it->second->containerPtr()->addInnerClass(it->second, it->first);
+	else
+	    e.classRoot()->insert(std::make_pair(it->first, it->second));
     }
+
+    std::cout << i << " apres1\n";
+    std::cout << e.templates()->size() << " apres2\n";
 
     //_templatePool.resolveAndCheckCreatedClasses(e);
 }

@@ -8,6 +8,10 @@ Public Class Main
 
         Dim t1 As TestA<Int> := New TestA<Int>(5)
         Dim t As Foo<Int>
+        Dim t2 As Foo< Foo<String> >
+        t2.e.e := "Salut"
+        Debug.println("t2.e.e="&t2.e.e)
+
         
     End Sub
 
@@ -20,6 +24,8 @@ End Class
 
 
 Public Class Foo<T>
+    Protected e As T
+    Public Shared test As Int := 5
 End Class
 
 Public Class TestA<T>
@@ -32,6 +38,7 @@ Public Class TestA<T>
      End Sub
     
     Public Function getElmt() As TestB<T>
+    Dim f As Foo< TestB<T> > := Nothing
         Return elmt
     End Function
     
@@ -53,6 +60,7 @@ Public Class TestB<T>
      Public Sub Initialize(t As TestA<T>)
         elmt := t
          Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+         Dim f As Foo<Debug> := Nothing
      End Sub
     
      Public Sub setV(t As Foo<Int>)
@@ -66,6 +74,7 @@ Public Class TestB<T>
      
     Public Sub foo(f As TestA<T>)
         Dim a As TestA<T> := f
+        
     End Sub
 '     
 End Class

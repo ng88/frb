@@ -69,32 +69,18 @@ void FrBTemplatePool::FrBInstanciedTemplateEntry::createInstance(FrBResolveEnvir
     String name = sname.str();
 
     /* Does this template instance alreardy exists ? */
-    const FrBClassMap * cont;
-    /*if(_template->container())
-	cont = _template->container()->innerClassList();
-    else
-    cont = e.classRoot();*/
-    cont = &(e._templateInstances);
+    _createdClass  = e.findTemplate(name);
 
-    FrBClassMap::const_iterator f = cont->find(name);
-
-    if(f != cont->end())
-    {
+    if(_createdClass)
         /* yes, return directly */
-	_createdClass = f->second;
 	return; 
-    }
 
     /* no, we have to create it */
     FrBClass * c = _template->specializeTemplate(env);
 
     _createdClass = c;
 
-e._templateInstances.insert(std::make_pair(name, c));
-/*   if(_template->container())
-        c->containerPtr()->addInnerClass(c, name);
-    else
-    e.classRoot()->insert(std::make_pair(name, c));*/
+    e.addTemplate(c, name);
 
     /* now we resolve it */
     c->resolvePrototype(e);

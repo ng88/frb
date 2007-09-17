@@ -239,6 +239,9 @@ void FrBClass::destroyInstance(FrBExecutionEnvironment& e, FrBBaseObject * o) co
 
 void FrBClass::initSharedField(FrBExecutionEnvironment& e) const throw (FrBExecutionException)
 {
+    if(isATemplate())
+	return;
+
     /* add storage space */
     e.sharedMem().addClass(this);
 

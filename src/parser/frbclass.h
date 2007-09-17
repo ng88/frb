@@ -202,6 +202,7 @@ public:
     inline ClassContainer* innerClassPtr() { return _innerClasses; }
 
     inline int sharedFieldCount() const;
+    inline int hasSharedField() const;
     
     
     inline bool abstract() const { return _abstract; }
@@ -432,7 +433,15 @@ inline FrBField * FrBClass::findField(const String& name) const
         return f->second;
     }
 }
-    
+  
+inline int FrBClass::hasSharedField() const
+{
+    for(FieldContainer::const_iterator it = _fields->begin(); it != _fields->end(); ++it)
+	if(it->second->shared())
+	    return true;
+
+    return false;
+}
 
 inline int FrBClass::sharedFieldCount() const
 {

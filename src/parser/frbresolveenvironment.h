@@ -31,7 +31,7 @@ private:
 
     FrBClassMap * _root;
     FrBClassMap _importedClass;
-
+    FrBClassMap _templateInstances;
     
     FrBResolveEnvironment(const FrBResolveEnvironment&) {}
 
@@ -39,13 +39,14 @@ private:
     static FrBClass * findClass(const String& name, FrBClassMap * container);
     
 public:
-    FrBClassMap _templateInstances;
+    
     /**
       * @param root Class root
       */
     FrBResolveEnvironment(FrBClassMap * root)  : _root(root) { }
     
     inline FrBClassMap * classRoot() { return _root; }
+    inline FrBClassMap * templates() { return &_templateInstances; }
  
     
     /** can resolve things like "FrB.String" or "Module1.Application1.Classe1" or "Int"... */
@@ -66,7 +67,36 @@ public:
     void addImportedClass(const String& fullPath, const String& importName = "")
         throw (FrBClassNotFoundException);
 
+
+    inline void addTemplate(FrBClass * c, const String& name);
+
+    inline FrBClass* findTemplate(const String& name);
+
 };
+
+
+
+
+
+
+
+
+
+
+
+/*            inlined         */
+
+inline void FrBResolveEnvironment::addTemplate(FrBClass * c, const String& name)
+{
+    _templateInstances.insert(std::make_pair(name, c));
+}
+
+
+inline FrBClass * FrBResolveEnvironment::findTemplate(const String& name)
+{
+    FrBClassMap::const_iterator f = _templateInstances.find(name);
+    return (f == _templateInstances.end()) ? 0 : f->second;
+}
 
 
 #endif
