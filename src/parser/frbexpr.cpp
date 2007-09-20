@@ -69,7 +69,10 @@ void delete_expr(FrBExpr* e)
     e->delRef();
 
     if(e->deletable())
+    {
+	//std::cout << "expr_del=" << e << "\n";
         delete e;
+    }
 }
 
 /*         FrBLocalVarExpr        */
@@ -108,7 +111,7 @@ void FrBLocalVarExpr::resolveAndCheck(FrBResolveEnvironment& e) throw (FrBResolv
   //already done by resolvePrototype()
 
   if(!_type->typeAlreadyResolved())
-      _type->resolveAndCheck(e);
+    _type->resolveAndCheck(e);
 }
 
 const FrBClass* FrBLocalVarExpr::getClass() const

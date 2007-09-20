@@ -76,7 +76,7 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
         return;
 
     //_templatePool.createInstances(e);
-//copie de tree?
+
     for(Tree::const_iterator it = _classes.begin(); it != _classes.end(); ++it)
     {
         frb_assert(it->second);
@@ -94,18 +94,22 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
 
     std::cout << e.templates()->size() << " avant\n";
     int i = 0;
-/*
-utiliser une pile de std::pair()
-et tant que pas vide on resolve & check & degage
- */
-    for(Tree::iterator it = e.templates()->begin(); it !=  e.templates()->end(); ++it)
-    {i++;std::cout << "rettrr " << it->first << "\n";
+
+//il faut remplacer ca par une pile (vraiment)
+    Tree::iterator it = e.templates()->begin();
+    while( it !=  e.templates()->end())
+    {
 	it->second->resolveAndCheck(e);
 
 	if(it->second->container())
 	    it->second->containerPtr()->addInnerClass(it->second, it->first);
 	else
 	    e.classRoot()->insert(std::make_pair(it->first, it->second));
+
+	e.templates()->erase(it);
+	i++;
+
+	it = e.templates()->begin();
     }
 
     std::cout << i << " apres1\n";

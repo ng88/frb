@@ -6,12 +6,33 @@ Public Class Main
 
     Public Shared Sub main()
 
-        Dim t1 As TestA<Int> := New TestA<Int>(5)
-        Dim t As Foo<Int>
-        Dim t2 As Foo< Foo<String> >
-        t2.e.e := "Salut"
-        Debug.println("t2.e.e="&t2.e.e)
-
+         Dim t1 As TestA<Int> := New TestA<Int>(5)
+         Dim t As Foo<Int>
+         Dim t5 As Foo<Bool>
+         Dim t2 As Foo< Foo<String> >
+'         t2.e.e := "Salut"
+'         Debug.println("t2.e.e="&t2.e.e)
+' 
+'         Debug.println(""&Debug.addressof(t5.test) & " " & t5.test)
+'         Debug.println(""&Debug.addressof(t.test) & " " & t.test)
+'         Debug.println(""&Debug.addressof(t2.test) & " " & t2.test)
+'         Debug.println(""&Debug.addressof(t2.e.test) & " " & t2.e.test)
+' 
+'         't5.test := 6
+'         't.test := 7
+'         't2.test := 8
+'         't2.e.test := 9
+'         
+'         t5.test = 6
+'         t.test = 7
+'         t2.test = 8
+'         t2.e.test = 9
+'      
+'         
+'         Debug.println(""&Debug.addressof(t5.test) & " " & t5.test)
+'         Debug.println(""&Debug.addressof(t.test) & " " & t.test)
+'         Debug.println(""&Debug.addressof(t2.test) & " " & t2.test)
+'         Debug.println(""&Debug.addressof(t2.e.test) & " " & t2.e.test)
         
     End Sub
 
@@ -25,7 +46,7 @@ End Class
 
 Public Class Foo<T>
     Protected e As T
-    Public Shared test As Int := 5
+    Public Shared test As Int := New Int(5)
 End Class
 
 Public Class TestA<T>
@@ -33,23 +54,23 @@ Public Class TestA<T>
     Protected elmt As TestB<T> := Nothing
      
      Public Sub Initialize(t As T)
-         Debug.println(Debug.typename(elmt)) 
-         elmt := New TestB<T>(Me)
+         'Debug.println(Debug.typename(elmt)) 
+         'elmt := New TestB<T>(Me)
      End Sub
     
-    Public Function getElmt() As TestB<T>
-    Dim f As Foo< TestB<T> > := Nothing
-        Return elmt
-    End Function
+'     Public Function getElmt() As TestB<T>
+'         Dim f As Foo< TestB<T> > := Nothing
+'         Return elmt
+'     End Function
     
-    Public Sub setA(t As Foo<Int>)
-        Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-        Dim a As Foo<Int> := t
-    End Sub
-    
-    Public Sub foo(f As TestB<T>)
-        Dim a As TestB<T> := f
-    End Sub
+'     Public Sub setA(t As Foo<Int>)
+'         Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+'         Dim a As Foo<Int> := t
+'     End Sub
+'     
+'     Public Sub foo(f As TestB<T>)
+'         Dim a As TestB<T> := f
+'     End Sub
 
 End Class
 
@@ -59,23 +80,23 @@ Public Class TestB<T>
 '     
      Public Sub Initialize(t As TestA<T>)
         elmt := t
-         Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-         Dim f As Foo<Debug> := Nothing
+         'Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+         'Dim f As Foo<Debug> := Nothing
      End Sub
     
-     Public Sub setV(t As Foo<Int>)
-        Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
-        
-     End Sub
-'     
-     Public Function getElmt() As TestA<T>
-        Return elmt
-     End Function
-     
-    Public Sub foo(f As TestA<T>)
-        Dim a As TestA<T> := f
-        
-    End Sub
+'      Public Sub setV(t As Foo<Int>)
+'         Debug.println(Debug.typename(elmt)  & " of " & Debug.typename(elmt.getElmt())) 
+'         
+'      End Sub
+' '     
+'      Public Function getElmt() As TestA<T>
+'         Return elmt
+'      End Function
+'      
+'     Public Sub foo(f As TestA<T>)
+'         Dim a As TestA<T> := f
+'         
+'     End Sub
 '     
 End Class
 

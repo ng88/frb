@@ -172,7 +172,9 @@ FrBIncompatibleClassException::FrBIncompatibleClassException(const FrBClass * pr
 
 std::ostream& FrBIncompatibleClassException::put(std::ostream& stream) const
 {
-    return stream;
+    stream << "need=" << _needed->typeID()  << " provided=" << _provided->typeID() << "\n";
+
+    return FrBErrors::putMsg(stream, FrBErrors::FRB_ERR_INCOMPATIBLE_CLASS, _needed->fullName(), _provided->fullName());
 }
 
 
