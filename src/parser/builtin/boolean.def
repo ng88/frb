@@ -23,7 +23,7 @@ FrBBaseObject * operator_not_FrBBool(FrBExecutionEnvironment& e, FrBBaseObject *
     return e.addGarbagedObject(new FrBBool( ! static_cast<FrBBool*>(me)->value() ));
 }
 
-FrBCppClass * FrBBaseBool::initClass()
+template<> FrBCppClass * FrBBaseBool::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBBool::initClass(), already initialized");
     

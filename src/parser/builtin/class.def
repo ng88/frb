@@ -18,7 +18,7 @@
 
 /*            FrBClassWrapper            */
 
-FrBCppClass * FrBClassWrapper::initClass()
+template<> FrBCppClass * FrBClassWrapper::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBClassWrapper::initClass(), already initialized");
     

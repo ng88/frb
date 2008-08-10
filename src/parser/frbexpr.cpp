@@ -1658,12 +1658,12 @@ std::ostream&  FrBNewExpr::put(std::ostream& stream) const
 
 
 
-std::ostream& FrBIntExpr::put(std::ostream& stream) const
+template<> std::ostream& FrBIntExpr::put(std::ostream& stream) const
 {
   return stream << value();
 }
 
-std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
+template<> std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
 {
   if(value())
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_TRUE);
@@ -1671,7 +1671,7 @@ std::ostream& FrBBaseBoolExpr::put(std::ostream& stream) const
     return stream << FrBKeywords::getKeywordOrSymbol(FrBKeywords::FRB_KW_FALSE);
 }
 
-std::ostream& FrBStringExpr::put(std::ostream& stream) const
+template<> std::ostream& FrBStringExpr::put(std::ostream& stream) const
 {
   return stream << '\"' << value() << '\"';
 }

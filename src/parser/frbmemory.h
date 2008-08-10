@@ -83,10 +83,10 @@ protected:
 public:
    
     /** all parameters are in byte expect geo_step */
-    inline FrBMemory::FrBMemory(size_t init_size = MB,
-                                size_t collect_threshold = MB,
-                                size_t geo_step = 1,
-                                size_t arith_step = MB);
+    inline FrBMemory(size_t init_size = MB,
+		     size_t collect_threshold = MB,
+		     size_t geo_step = 1,
+		     size_t arith_step = MB);
     
     ~FrBMemory();
 

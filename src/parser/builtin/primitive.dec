@@ -14,7 +14,6 @@
  *   See the COPYING file.                                                 *
  ***************************************************************************/
 
-
 /** Generic class that defines FrB classes from C++ primitives */
 template<class primitive_t>
 class FrBPrimitive : public FrBCppObject
@@ -62,9 +61,12 @@ public:
     {
       public:
         FrBCppObject * createObject() const { return new FrBPrimitive<primitive_t>(0); }
+	virtual ~Allocator() {}
     };
     
 };
+
+
 
 
 
@@ -88,4 +90,5 @@ class StringAllocator : public FrBCppObjectAllocator
 {
 public:
     FrBCppObject * createObject() const { return new FrBString(""); }
+    virtual ~StringAllocator() {}
 };

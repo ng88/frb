@@ -44,6 +44,7 @@ class FrBCppObjectAllocator
 public:
     /** Create an instance */
     virtual FrBCppObject * createObject() const = 0;
+    virtual ~FrBCppObjectAllocator() {}
 };
 
 
@@ -67,7 +68,7 @@ public:
     virtual ~FrBCppClass();
     
         
-    FrBCppClass * FrBCppClass::specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
+    FrBCppClass * specializeTemplate(/*const*/ FrBTemplateSpecializationEnvironment& e, FrBMember * cpy = 0) const;
     
     const CString specString() const;
 

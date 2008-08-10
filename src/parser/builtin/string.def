@@ -127,7 +127,7 @@ FrBBaseObject * size_FrBString(FrBExecutionEnvironment& e, FrBBaseObject * me)
 }
 
 
-FrBCppClass * FrBString::initClass()
+template<> FrBCppClass * FrBString::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBString::initClass(), already initialized");
     

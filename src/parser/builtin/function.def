@@ -76,7 +76,7 @@ FrBBaseObject * function_call(FrBExecutionEnvironment& e, FrBBaseObject * cme, c
 
 }
 
-FrBCppClass * FrBFunctionWrapper::initClass()
+template<> FrBCppClass * FrBFunctionWrapper::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBFunctionWrapper::initClass(), already initialized");
     

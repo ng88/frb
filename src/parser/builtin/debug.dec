@@ -42,6 +42,7 @@ public:
     {
       public:
         FrBCppObject * createObject() const { return new FrBDebug(); }
+	virtual ~Allocator() {}
     };
         
     

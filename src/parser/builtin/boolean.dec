@@ -3,7 +3,6 @@
 /** The FrB Boolean class */
 typedef FrBPrimitive<bool> FrBBaseBool;
 
-
 class FrBBool : public FrBBaseBool
 {
 protected:

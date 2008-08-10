@@ -119,7 +119,7 @@ FrBBaseObject * operator_ge_FrBInt(FrBExecutionEnvironment& e, FrBBaseObject * m
 					(static_cast<FrBInt*>(arg0))->value() );
 }
 
-FrBCppClass * FrBInt::initClass()
+template<> FrBCppClass * FrBInt::initClass()
 {
     frb_assert2(_cpp_class == 0, "FrBInt::initClass(), already initialized");
     

@@ -33,7 +33,6 @@ public:
     typedef typename base_iterator_type::difference_type   difference_type;
     typedef typename base_iterator_type::pointer           pointer;
     typedef typename base_iterator_type::reference         reference;
-    typedef typename base_iterator_type::difference_type   difference_type;
 
     
     map_snd_iterator(base_iterator_type it) : _it(it) {}
@@ -62,7 +61,6 @@ public:
     typedef typename base_iterator_type::difference_type   difference_type;
     typedef typename base_iterator_type::pointer           pointer;
     typedef typename base_iterator_type::reference         reference;
-    typedef typename base_iterator_type::difference_type   difference_type;
 
     const_map_snd_iterator(base_iterator_type it) : _it(it) {}
         
