@@ -92,7 +92,7 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
 	    it->second->resolveAndCheck(e);
     }
 
-    std::cout << e.templates()->size() << " avant\n";
+    //std::cout << e.templates()->size() << " avant\n";
     int i = 0;
 
 //il faut remplacer ca par une pile (vraiment)
@@ -112,8 +112,8 @@ void FrBParser::resolveAndCheckTree(FrBResolveEnvironment& e) throw (FrBResolveE
 	it = e.templates()->begin();
     }
 
-    std::cout << i << " apres1\n";
-    std::cout << e.templates()->size() << " apres2\n";
+    //std::cout << i << " apres1\n";
+    //std::cout << e.templates()->size() << " apres2\n";
 
     //_templatePool.resolveAndCheckCreatedClasses(e);
 }
