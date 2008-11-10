@@ -98,6 +98,7 @@ parser: frberrordesc.h syntaxer.y lexer.l frbexpr.h frbstat.h frbfunction.h frbc
 	@echo Creating syntaxical parser...
 	@rm -f syntaxer.cpp syntaxer.h syntaxer.o
 	@bison++ -dv syntaxer_kw.y && mv -f syntaxer_kw.tab.c syntaxer.cpp && mv -f syntaxer_kw.tab.h syntaxer.h
+	@sed -i 's/ERROR(char \*msg)/ERROR(const char \*msg)/g' syntaxer.cpp     # PATCH for GCC 4.2.3	
 	@echo Creating lexical parser symbol rules...
 	@awk -f create_keywords_db_lexer.awk  -- $(TRAD_PATH)frbkeywords.key > symbols_rules.tmp
 	@./insert.sh '%DECLARE_SYMBOL_RULES' lexer_kw.l lexer.l symbols_rules.tmp

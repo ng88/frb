@@ -101,12 +101,12 @@ int main(int argc, char ** argv)
     args_switch[SHOW_STACK] = false;
     args_switch[EXEC] = true;
     
-    char *     arg_main_class = "Main";
-    char *     arg_main_function = "main";
-    int        arg_tree_set = FrBKeywords::FRB_SET_EN;
-    istream *  arg_in = &cin;
-    ifstream * arg_file = 0;
-    int        arg_int_param = -1;
+    const char *     arg_main_class = "Main";
+    const char *     arg_main_function = "main";
+    int              arg_tree_set = FrBKeywords::FRB_SET_EN;
+    istream  *       arg_in = &cin;
+    ifstream *       arg_file = 0;
+    int              arg_int_param = -1;
     
     
     

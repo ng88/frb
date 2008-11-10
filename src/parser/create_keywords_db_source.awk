@@ -132,7 +132,7 @@ END {
     print "}\n\n"
 
 
-    print "CString FrBKeywords::key_set[FRB_SET__COUNT] ="
+    print "const CString FrBKeywords::key_set[FRB_SET__COUNT] ="
     printf "    {\n"
     
     for(i = 0; i < kwsetc; ++i)
@@ -146,12 +146,12 @@ END {
     print "    };\n\n"
     
     print "int FrBKeywords::currentSet = 0; /* default set: " first_set " */\n"
-    print "CString FrBKeywords::symbol[FRB_KW__SYMBOL_END] ="
+    print "const CString FrBKeywords::symbol[FRB_KW__SYMBOL_END] ="
     print "    {"
     print FRB_SYMBOLS
     print "\n    };\n\n"
     
-    print "CString FrBKeywords::key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END] ="
+    print "const CString FrBKeywords::key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END] ="
     print "    {"
     
     for(i = 0; i < kwsetc; ++i)

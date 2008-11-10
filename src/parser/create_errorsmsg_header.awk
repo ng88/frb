@@ -49,10 +49,10 @@ $1 ~ /^[A-Z]+/ {
 END {
     print "        FRB_ERR__COUNT };\n"
     print "    enum { FRB_ERR_DISPLAYSHIFT = 10 };"
-    print "    static CString key[FRB_ERR__COUNT];"
+    print "    static const CString key[FRB_ERR__COUNT];"
 
     print "    /** Return the message 'index' */"
-    print "    inline static CString getMsg(int index) {"
+    print "    inline static const CString getMsg(int index) {"
     print "        frb_assert2(index >= 0 && index < FRB_ERR__COUNT, \"frberrors.h::FrBErrors::getMsg(int)\");"
     print "        return key[index]; }\n"
     

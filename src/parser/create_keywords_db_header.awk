@@ -134,9 +134,9 @@ END {
 
     print "\nprivate:"
     print "    static int currentSet;"
-    print "    static CString key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END]; /* keyword list */"
-    print "    static CString symbol[FRB_KW__SYMBOL_END]; /* symbol list */"
-    print "    static CString key_set[FRB_SET__COUNT]; /* keyword set list */\n\n };\n"
+    print "    static const CString key[FRB_SET__COUNT][FRB_KW__COUNT - FRB_KW__SYMBOL_END]; /* keyword list */"
+    print "    static const CString symbol[FRB_KW__SYMBOL_END]; /* symbol list */"
+    print "    static const CString key_set[FRB_SET__COUNT]; /* keyword set list */\n\n };\n"
     
     print "#endif\n\n"
 }

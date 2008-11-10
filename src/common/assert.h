@@ -46,7 +46,7 @@
 
 #ifdef DEBUG_ASSERT
 
-inline void __assert(bool cond, int line, char * file, char * str, char * cond_str)
+inline void __assert(bool cond, int line, const char * file, const char * str, const char * cond_str)
 {
     using namespace std;
     
@@ -66,7 +66,7 @@ inline void __assert(bool cond, int line, char * file, char * str, char * cond_s
     }
 }
 
-inline void __warning(bool cond, int line, char * file, char * str, char * cond_str)
+inline void __warning(bool cond, int line, const char * file, const char * str, const char * cond_str)
 {
     if(!(cond))
     {
