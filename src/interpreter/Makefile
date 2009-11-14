@@ -3,7 +3,7 @@
 #                                                                         #
 #   FrB project                                                           #
 #                                                                         #
-#   Copyright (C) 2006, 2007 by GUILLAUME Nicolas                         #
+#   Copyright (C) 2006 - 2010 by GUILLAUME Nicolas                        #
 #   ng@ngsoft-fr.com                                                      #
 #                                                                         #
 #   http://frb.ngsoft-fr.com/                                             #

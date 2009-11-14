@@ -3,7 +3,7 @@
  *                                                                         *
  *   FrB project                                                           *
  *                                                                         *
- *   Copyright (C) 2006, 2007 by GUILLAUME Nicolas                         *
+ *   Copyright (C) 2006 - 2010 by GUILLAUME Nicolas                        *
  *   ng@ngsoft-fr.com                                                      *
  *                                                                         *
  *   http://frb.ngsoft-fr.com/                                             *
@@ -38,6 +38,8 @@ class FrBClass;
 
 std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 
+//TODO séparer l'interpreteur (pattern visiteur)
+//TODO heritage à l'interpretation
 
 /** Represents an FrB class in memory */
 class FrBClass : public FrBMember
