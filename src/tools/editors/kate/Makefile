@@ -17,12 +17,14 @@
 
 TRAD_PATH=../../../trad/
 
+FNAME=frb.xml
 
 all:  highlighter
 
 .PHONY: .highlighter
 
 highlighter: $(TRAD_PATH)/frbkeywords.key
-	@echo Creating kate syntax highlighter...
-	@awk -f create_kate_syntax_highlighter.awk  -- $(TRAD_PATH)frbkeywords.key > frb.xml
-
+	@echo Creating kate syntax highlighter $(FNAME)...
+	@awk -f create_kate_syntax_highlighter.awk  -- $(TRAD_PATH)frbkeywords.key > $(FNAME)
+	@echo Done. $(FNAME) must be moved to KDEDIR/share/apps/katepart/syntax/
+	@echo '(usually /usr/share/apps/katepart/syntax/)'

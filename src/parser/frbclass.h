@@ -43,6 +43,10 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 //TODO ne pas hesiter a simplifier : pas de const...
 //TODO gestion private/public...
 //TODO erreur qd on instancie une abstract class
+//TODO syntaxte Cast(T, v) vers Cast<T>(v)
+//TODO supporter l'utilisation de Dim i As Class := Test<String>
+//TODO supporter les typedefs simplement, pour alias et parametrisation de temmplate
+
 
 /** Represents an FrB class in memory */
 class FrBClass : public FrBMember
