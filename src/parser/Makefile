@@ -133,10 +133,6 @@ error_msg: $(TRAD_PATH)/frberrors.$(TRAD_LANG).key
 install: all
 	@echo "Nothing to do"
 
-highlighter: $(TRAD_PATH)/frbkeywords.key
-	@echo Creating kate syntax highlighter...
-	@awk -f create_kate_syntax_highlighter.awk  -- $(TRAD_PATH)frbkeywords.key > frb.xml
-
 %.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) -c $< $(CXXFLAGS)
