@@ -1,0 +1,26 @@
+DefLang EN
+
+
+Public Abstract Class Forme
+
+End Class
+
+
+Public Class Carre
+
+    Inherits Forme
+    
+End Class
+
+Public Class Main
+
+    
+    Public Shared Sub main()
+    
+	Dim a As Forme := New Carre()
+     
+    End Sub
+    
+
+End Class
+

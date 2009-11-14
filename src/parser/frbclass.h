@@ -40,6 +40,9 @@ std::ostream& operator<<(std::ostream& s, const FrBClass& c);
 
 //TODO séparer l'interpreteur (pattern visiteur)
 //TODO heritage à l'interpretation
+//TODO ne pas hesiter a simplifier : pas de const...
+//TODO gestion private/public...
+//TODO erreur qd on instancie une abstract class
 
 /** Represents an FrB class in memory */
 class FrBClass : public FrBMember
