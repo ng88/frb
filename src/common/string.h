@@ -26,6 +26,7 @@
 #include <stack>
 
 #include <cctype>
+#include <cstring>
 
 /** Alias for std::string (to make a potential change easy) */ 
 typedef std::string String;
@@ -147,4 +148,3 @@ public:
 
 
 #endif
-

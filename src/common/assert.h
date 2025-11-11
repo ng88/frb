@@ -19,6 +19,7 @@
 #define FRB_ASSERT_H
 
 #include <iostream>
+#include <cstdlib>
 
 
 

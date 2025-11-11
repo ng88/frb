@@ -21,15 +21,27 @@
 #include "../common/string.h"
 
 #include <vector>
+#include <map>
+#include <stack>
 
 #include <iostream>
 
+
+#include "frbclass.h"
+#include "frbfield.h"
+#include "frbfunction.h"
+#include "frbstat.h"
+#include "frbexpr.h"
+#include "frberrors.h"
+#include "frberrordesc.h"
 
 #undef yyFlexLexer //lexical parser
 #define yyFlexLexer FrBFlexLexer
 #include <FlexLexer.h>
 
 #include "frblexer.h"
+
+typedef std::stack<FrBExpr*> FrBWithStack;
 
 #include "frbsyntaxer.h"
 #include "syntaxer.h"

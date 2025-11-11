@@ -23,6 +23,7 @@
 #include "frbkeywords.h"
 #include "frbmemory.h"
 #include "frbtemplatespecializationenvironment.h"
+#include <typeinfo>
 
 using namespace std;
 

@@ -21,6 +21,10 @@ OBJS= $(SRC:.cpp=.o)
 EXE=frbc
 TRAD_PATH=../trad/
 GET_DEP=../get_dependencies.sh
+PARSER_DEPS=frberrordesc.h syntaxer.y lexer.l frbexpr.h frbstat.h frbfunction.h frbclass.h frbsyntaxer.h
+
+BISONPP_BIN:=$(shell command -v bison++ 2>/dev/null)
+HAVE_BISONPP:=$(if $(strip $(BISONPP_BIN)),1,0)
 
 
 all: $(EXE)
@@ -84,20 +88,25 @@ force: touchall all
 
 clean:
 	@echo Cleaning parser...
-	@rm -f *.o *~ core *.core core.* *.tmp lexer.cpp *.output error_msg parser keywords_db
-	@rm -f syntaxer.cpp syntaxer.h frbkeywords.h frbkeywords.cpp
+	@rm -f *.o *~ core *.core core.* *.tmp *.output error_msg parser keywords_db
+	@if [ "$(HAVE_BISONPP)" = "1" ]; then rm -f lexer.cpp syntaxer.cpp syntaxer.h; fi
+	@rm -f frbkeywords.h frbkeywords.cpp
 	@rm -f frberrors.h frberrors.cpp
 	@rm -f syntaxer_kw.y lexer_kw.l
 
 
 syntaxer.h: parser
-parser: frberrordesc.h syntaxer.y lexer.l frbexpr.h frbstat.h frbfunction.h frbclass.h frbsyntaxer.h
+ifeq ($(HAVE_BISONPP),1)
+parser: $(PARSER_DEPS)
 	@echo Defining syntaxical parser keyword token...
 	@awk -f create_keywords_db_syntaxer.awk  -- $(TRAD_PATH)frbkeywords.key > token_list.tmp
 	@./insert.sh '%DECLARE_KEYWORDS_TOKEN' syntaxer_kw.y syntaxer.y token_list.tmp
 	@echo Creating syntaxical parser...
 	@rm -f syntaxer.cpp syntaxer.h syntaxer.o
-	@bison++ -dv syntaxer_kw.y && mv -f syntaxer_kw.tab.c syntaxer.cpp && mv -f syntaxer_kw.tab.h syntaxer.h
+	@bison++ -dv syntaxer_kw.y
+	@OUT_C=$$(if [ -f syntaxer_kw.tab.c ]; then echo syntaxer_kw.tab.c; else echo y.tab.c; fi); \
+	 OUT_H=$$(if [ -f syntaxer_kw.tab.h ]; then echo syntaxer_kw.tab.h; else echo y.tab.h; fi); \
+	 mv -f $$OUT_C syntaxer.cpp && mv -f $$OUT_H syntaxer.h
 	@sed -i 's/ERROR(char \*msg)/ERROR(const char \*msg)/g' syntaxer.cpp     # PATCH for GCC 4.2.3	
 	@echo Creating lexical parser symbol rules...
 	@awk -f create_keywords_db_lexer.awk  -- $(TRAD_PATH)frbkeywords.key > symbols_rules.tmp
@@ -110,6 +119,11 @@ parser: frberrordesc.h syntaxer.y lexer.l frbexpr.h frbstat.h frbfunction.h frbc
 	@echo Compiling syntaxer...
 	@$(CXX) -c syntaxer.cpp $(CXXFLAGS)
 	@touch parser
+else
+parser:
+	@echo "Skipping parser regeneration (bison++ not available); using pre-generated lexer/syntaxer sources."
+	@touch parser
+endif
 
 frbkeywords.h: keywords_db
 keywords_db: $(TRAD_PATH)/frbkeywords.key
@@ -136,4 +150,3 @@ install: all
 %.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) -c $< $(CXXFLAGS)
-
