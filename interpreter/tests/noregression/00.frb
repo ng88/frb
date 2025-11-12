@@ -1,0 +1,78 @@
+DefLang EN
+
+Public Class Debug
+    Public Shared Sub println(txt As String)
+        print(txt)
+    End Sub
+End Class
+
+
+
+Public Class Main
+    
+    Public Shared Function Add(a As Int, b As Int) As Int
+        Return a+b
+    End Function
+
+    
+    Public Shared Sub main()
+        Dim a As Int = 1
+        Dim b As String
+        Dim c As String = "100"
+        a = a + 6+5*9
+        b = a * 2
+        Debug.println("C=" + c)
+        Dim d As Int = Main.Add(a, b)
+        print(a, b, d)
+
+        Main.fortest()
+     
+    End Sub
+
+
+    Public Shared Sub fortest()
+        Dim a As Int
+
+        For a := 1 To 5
+            Debug.println("dans for 1 , a vaut " + str(a))
+        Next
+
+        For a = 10 DownTo 5
+            Debug.println("dans for 2 , a vaut " + str(a))
+        Next
+        
+        For a = 1 To 5 Step 2
+            Debug.println("dans for 3 , a vaut " + str(a))
+        Next
+        
+
+        'For a = 30 DownTo 5 Step 8
+        '    Debug.println("dans for 4 , a vaut " + str(a))
+        'Next
+        
+        For a = -5 To -1
+            Debug.println("dans for 5 , a vaut " + str(a))
+        Next
+        
+        For a = -5 To -1 Step 2
+            Debug.println("dans for 6 , a vaut " + str(a))
+        Next
+       
+        'For a = -5 DownTo -19 Step 3
+        '    Debug.println("dans for 7 , a vaut " + str(a))
+        'Next
+        
+
+        Dim b As Int
+
+        
+        For a = 1 To 3
+            For b = 1 To 3
+                Debug.println("dans for/for 4 , a=" + str(a) + " b=" + str(b))
+            Next
+        Next
+     
+    End Sub
+
+    
+End Class
